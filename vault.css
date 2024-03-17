@@ -20,6 +20,22 @@ body {
     align-items: center;
     font-family: 'OptimusPrinceps', sans-serif;
     border-top: 3px solid #4b5267;
+    gap: 10px;
+}
+
+#save-rolls-button, #load-rolls-button {
+    padding: 5px 15px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: var(--ts-background-primary);
+    color: var(--ts-color-primary);
+    cursor: pointer;
+}
+
+#save-rolls-button:hover, #load-rolls-button:hover {
+    background-color: var(--ts-button-hover); 
+    color: #000000;
 }
 
 marquee {
@@ -175,6 +191,59 @@ h1 {
     margin-top: 10px;
     
 }
+
+.saved-rolls-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.roll-type-indicator {
+    font-weight: bold;
+    text-align: center;
+    margin: 5px 0;
+}
+
+
+#sort-options {
+    padding: 8px 16px; 
+    margin-left: 10px; 
+    border: 2px solid var(--ts-color-primary); 
+    border-radius: 4px;
+    background-color: var(--ts-background-secondary); 
+    color: var(--ts-color-primary); 
+    font-family: 'OptimusPrinceps', sans-serif; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
+    appearance: none; 
+    cursor: pointer; 
+    transition: background-color 0.3s, border-color 0.3s; 
+}
+
+#sort-options-container {
+    position: relative;
+}
+
+#sort-options:hover {
+    background-color: var(--ts-button-hover); 
+    border-color: var(--ts-color-secondary); 
+}
+
+
+#sort-options::-ms-expand {
+    display: none; 
+}
+
+#sort-options-container:after {
+    content: '\2193';
+    font-size: 15px;
+    color: var(--ts-color-primary);
+    position: absolute;
+    right: 10px; 
+    top: 45%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
 
 .dice-counter {
     position: relative;
