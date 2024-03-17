@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dice Vault</title>
+    <link rel="stylesheet" href="vault.css">
+    <script src="vault.js"></script>
+    <script type="text/javascript" src="icons.js"></script>
+</head>
+
+<body>
+    <h1 style="margin-top: 0; position: relative; text-align: center;"><i class="ts-icon-lock"></i> Dice Vault <i class="ts-icon-lock"></i></h1>
+<div style="font-family: 'Enchanted Land', cursive; color: #dddddd; font-size: 0.8em; text-align: center;">
+    <i class="ts-icon-shield ts-icon-xsmall"></i> Secure your fate with a roll <i class="ts-icon-shield ts-icon-xsmall"></i>
+</div>
+    <div class="content-col">
+        <label class="field-title" for="roll-name">Roll Label</label>
+        <input id="roll-name" type="text" class="roll-input" placeholder="Enter roll label"></input>
+    </div><br><br>
+    
+    <div class="content-col">
+        <label class="field-title">Dice</label>
+        <div class="dice-selection">
+
+            <!-- COUNTER DICE - THESE IMAGES ARE PLACEHODLERS -->
+            
+
+            <div class="dice-counter" id="d4-counter">
+                <i class="ts-icon-d4 ts-icon-large" onclick="increment('d4')" oncontextmenu="decrement('d4'); return false;"></i>
+                <div class="counter-overlay" id="d4-counter-value">0</div>
+                <div class="dice-label">D4</div>
+            </div>
+
+            <div class="dice-counter" id="d6-counter">
+                <i class="ts-icon-d6 ts-icon-large" onclick="increment('d6')" oncontextmenu="decrement('d6'); return false;"></i>
+                <div class="counter-overlay" id="d6-counter-value">0</div>
+                <div class="dice-label">D6</div>
+            </div>
+
+            <div class="dice-counter" id="d8-counter">
+                <i class="ts-icon-d8 ts-icon-large" onclick="increment('d8')" oncontextmenu="decrement('d8'); return false;"></i>
+                <div class="counter-overlay" id="d8-counter-value">0</div>
+                <div class="dice-label">D8</div>
+            </div>
+
+            <div class="dice-counter" id="d10-counter">
+                <i class="ts-icon-d10 ts-icon-large" onclick="increment('d10')" oncontextmenu="decrement('d10'); return false;"></i>
+                <div class="counter-overlay" id="d10-counter-value">0</div>
+                <div class="dice-label">D10</div>
+            </div>
+
+            <div class="dice-counter" id="d12-counter">
+                <i class="ts-icon-d12 ts-icon-large" onclick="increment('d12')" oncontextmenu="decrement('d12'); return false;"></i>
+                <div class="counter-overlay" id="d12-counter-value">0</div>
+                <div class="dice-label">D12</div>
+            </div>
+
+            <div class="dice-counter" id="d20-counter">
+                <i class="ts-icon-d20 ts-icon-large" onclick="increment('d20')" oncontextmenu="decrement('d20'); return false;"></i>
+                <div class="counter-overlay" id="d20-counter-value">0</div>
+                <div class="dice-label">D20</div>
+            </div>
+
+            <div class="plus-sign">
+                <span>+</span>
+            </div>
+            
+            <div class="dice-counter" id="mod-counter">
+                <i class="ts-icon-circle-dotted ts-icon-large" onclick="increment('mod')" oncontextmenu="decrement('mod'); return false;"></i>
+                <div class="counter-overlay" id="mod-counter-value">0</div>
+                <div class="dice-label">MOD</div>
+            </div>
+
+
+
+
+        </div>
+    </div><br><br>
+
+    
+    <div class="content-row">
+        <div class="roll-type">
+            <input type="radio" id="normal" name="roll-type" value="normal" checked>
+            <label for="normal">Normal</label>
+            <input type="radio" id="advantage" name="roll-type" value="advantage">
+            <label for="advantage">Advantage</label>
+            <input type="radio" id="disadvantage" name="roll-type" value="disadvantage">
+            <label for="disadvantage">Disadvantage</label>
+        </div>
+    </div>
+
+    
+    <div class="button-container">
+        <button id="roll-btn" onclick="roll()">Roll</button>
+        <button id="reset-btn" onclick="reset()">Reset</button>
+        <button id="save-btn" onclick="save()">Save</button>
+    </div><br>
+
+
+
+
+    
+    <label class="field-title">Saved Rolls</label>
+    <div id="saved-rolls" class="saved-rolls-container">
+    </div>
+
+
+    
+    
+    
+</div>
+
+<div class="footer">
+    <i class="ts-icon-character-gamemaster"></i> ~"May the rolls be in your favor"~
+    <!-- <img src="https://i.giphy.com/kfPayPiTSdNZWmhyYY.webp" width="8%"/> -->
+</div>
+
+<!-- <div class="footer">
+    <marquee behavior="scroll" direction="left" scrollamount="10">
+        🎲 Welcome to the adventure! Rolling dice for destiny... 🎲
+    </marquee>
+</div> -->
+</body>
+</html>
