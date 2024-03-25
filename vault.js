@@ -3,7 +3,7 @@ let isGM = false;
 let me;
 let allSavedRolls = [];
 
-function roll(type) {
+function rollInTalespire(type) {
     let name = document.getElementById("roll-name").value || "Check";
     let dice = document.getElementById("roll-content").value || "1d20";
     let typeStr = type == "advantage" ? " (Adv)" : " (Disadv)";
@@ -28,11 +28,6 @@ function decrement(die) {
     }
 }
 
-
-
-
-
-
 // I took this and the bottom of the page JS from Generic_sheets mod and still cant figure out how theirs is supposed to work but this one doesnt :trynottocry:
 async function loadSavedRolls() {
     try {
@@ -55,26 +50,7 @@ function saveCurrentRolls() {
             counts: JSON.parse(roll.dataset.diceCounts)
         };
     });
-
-    try {
-        const savedData = JSON.stringify(savedRolls);
-        TS.localStorage.campaign.setBlob(savedData);
-    } catch (e) {
-        console.error('Failed to save rolls:', e);
-    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 function sortSavedRolls() {
     const sortOption = document.getElementById('sort-options').value;
@@ -103,11 +79,8 @@ function deleteSavedRoll(element) {
     rollEntry.remove();
     allSavedRolls = allSavedRolls.filter(roll => roll !== rollEntry);
 }
+
 document.addEventListener('DOMContentLoaded', sortSavedRolls);
-
-
-
-
 
 function save() {
     const rollName = document.getElementById('roll-name').value || 'Unnamed Roll';
@@ -130,9 +103,9 @@ function addSavedRoll(rollName, rollType, diceCounts) {
     const savedRollsContainer = document.querySelector('.saved-rolls-container');
     const rollEntry = document.createElement('div');
     rollEntry.className = 'saved-roll-entry';
-    rollEntry.dataset.rollType = rollType; 
+    rollEntry.dataset.rollType = rollType;
+    rollEntry.dataset.diceCounts = JSON.stringify(diceCounts); // Set the diceCounts attribute to a stringified version of the object 
     allSavedRolls.push(rollEntry);
-    
 
     let diceDisplay = '';
     const diceOrder = ['d4', 'd6', 'd8', 'd10', 'd12', 'd20', 'mod'];
@@ -183,12 +156,10 @@ function addSavedRoll(rollName, rollType, diceCounts) {
     }
 }
 
-
-function deleteSavedRoll(element) {
-    const rollEntry = element.closest('.saved-roll-entry');
-    rollEntry.remove();
-}
-
+// function deleteSavedRoll(element) {
+//     const rollEntry = element.closest('.saved-roll-entry');
+//     rollEntry.remove();
+// }
 
 function reset() {
     document.getElementById('roll-name').value = '';
@@ -200,10 +171,6 @@ function reset() {
 
     document.getElementById('normal').checked = true;
 }
-
-
-
-
 
 async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
     let rollName = rollNameParam || document.getElementById('roll-name').value || 'Unnamed Roll';
@@ -248,28 +215,11 @@ async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
             trackedIds[diceSetResponse] = 'normal';
         });
     }
-}
-console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 
-quickRollButton.onclick = function() {
-    roll(rollName, rollType, diceCounts);
+    // quickRollButton.onclick = function() {
+    // roll(rollName, rollType, diceCounts);
+    // }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 async function handleRollResult(rollEvent) {
     if (trackedIds[rollEvent.payload.rollId] == undefined) {
@@ -325,11 +275,6 @@ async function displayResult(resultGroup, rollId) {
     TS.dice.sendDiceResult([resultGroup], rollId).catch((response) => console.error("error in sending dice result", response));
 }
 
-
-
-
-
-
 function saveRollsToLocalStorage() {
     let rollsData = [];
     document.querySelectorAll('.saved-roll-entry').forEach(entry => {
@@ -363,4 +308,3 @@ function loadRollsFromLocalStorage() {
 }
 document.getElementById('save-rolls-button').addEventListener('click', saveRollsToLocalStorage);
 document.getElementById('load-rolls-button').addEventListener('click', loadRollsFromLocalStorage);
-

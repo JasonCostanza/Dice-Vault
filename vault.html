@@ -3,8 +3,6 @@
 <head>
     <title>Dice Vault</title>
     <link rel="stylesheet" href="vault.css">
-    <script src="vault.js"></script>
-    <script type="text/javascript" src="icons.js"></script>
 </head>
 
 <body>
@@ -19,11 +17,7 @@
     
     <div class="content-col">
         <label class="field-title">Dice</label>
-        <div class="dice-selection">
-
-            <!-- COUNTER DICE - THESE IMAGES ARE PLACEHODLERS -->
-            
-
+        <div class="dice-selection">      
             <div class="dice-counter" id="d4-counter">
                 <i class="ts-icon-d4 ts-icon-large" onclick="increment('d4')" oncontextmenu="decrement('d4'); return false;"></i>
                 <div class="counter-overlay" id="d4-counter-value">0</div>
@@ -69,13 +63,8 @@
                 <div class="counter-overlay" id="mod-counter-value">0</div>
                 <div class="dice-label">MOD</div>
             </div>
-
-
-
-
         </div>
     </div><br><br>
-
     
     <div class="content-row">
         <div class="roll-type">
@@ -87,16 +76,12 @@
             <label for="disadvantage">Disadvantage</label>
         </div>
     </div>
-
     
     <div class="button-container">
         <button id="roll-btn" onclick="roll()">Roll</button>
         <button id="reset-btn" onclick="reset()">Reset</button>
         <button id="save-btn" onclick="save()">Save</button>
     </div><br>
-
-
-
 
     <div class="saved-rolls-header">
         <label class="field-title">Saved Rolls</label>
@@ -112,15 +97,10 @@
     </div></div>
     <div id="saved-rolls" class="saved-rolls-container"></div>
 
-
     <!-- <label class="field-title">Saved Rolls</label>
     <div id="saved-rolls" class="saved-rolls-container">
     </div> -->
 
-
-    
-    
-    
 </div>
 
 <div class="footer">
@@ -137,5 +117,7 @@
         WEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
     </marquee>
 </div> -->
+    
+<script type="text/javascript" src="vault.js"></script>
 </body>
 </html>
