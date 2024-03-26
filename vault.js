@@ -3,16 +3,6 @@ let isGM = false;
 let me;
 let allSavedRolls = [];
 
-// function rollInTalespire(type) {
-//     console.log("Rolling in Talespire");
-//     let name = document.getElementById("roll-name").value || "Check";
-//     let dice = document.getElementById("roll-content").value || "1d20";
-//     let typeStr = type == "advantage" ? " (Adv)" : " (Disadv)";
-//     TS.dice.putDiceInTray([{ name: name + typeStr, roll: dice }, { name: name + typeStr, roll: dice }], true).then((diceSetResponse) => {
-//         trackedIds[diceSetResponse] = type;
-//     });
-// }
-
 function increment(die) {
     const counter = document.getElementById(die + '-counter-value');
     let currentValue = parseInt(counter.textContent, 10);
@@ -29,7 +19,6 @@ function decrement(die) {
     }
 }
 
-// I took this and the bottom of the page JS from Generic_sheets mod and still cant figure out how theirs is s upposed to work but this one doesnt :trynottocry:
 async function loadSavedRolls() {
     try {
         const savedData = await TS.localStorage.campaign.getBlob();
@@ -105,7 +94,7 @@ function addSavedRoll(rollName, rollType, diceCounts) {
     const rollEntry = document.createElement('div');
     rollEntry.className = 'saved-roll-entry';
     rollEntry.dataset.rollType = rollType;
-    rollEntry.dataset.diceCounts = JSON.stringify(diceCounts); // Set the diceCounts attribute to a stringified version of the object 
+    rollEntry.dataset.diceCounts = JSON.stringify(diceCounts);
     allSavedRolls.push(rollEntry);
 
     let diceDisplay = '';
@@ -140,8 +129,6 @@ function addSavedRoll(rollName, rollType, diceCounts) {
         </div>
     `;
 
-    // <div class="quick-roll-button" onclick="roll('${rollName}', '${rollType}', ${JSON.stringify(diceCounts)})">Quick Roll</div> ((SAVING CUZ IDK WHY THIS BROKE LOL))
-
     const quickRollButton = document.createElement('div');
     quickRollButton.textContent = 'Quick Roll'; 
     quickRollButton.className = 'quick-roll-button';
@@ -156,11 +143,6 @@ function addSavedRoll(rollName, rollType, diceCounts) {
         savedRollsContainer.appendChild(rollEntry);
     }
 }
-
-// function deleteSavedRoll(element) {
-//     const rollEntry = element.closest('.saved-roll-entry');
-//     rollEntry.remove();
-// }
 
 function reset() {
     document.getElementById('roll-name').value = '';
@@ -216,10 +198,6 @@ async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
             trackedIds[diceSetResponse] = 'normal';
         });
     }
-
-    // quickRollButton.onclick = function() {
-    // roll(rollName, rollType, diceCounts);
-    // }
 };
 
 async function handleRollResult(rollEvent) {
