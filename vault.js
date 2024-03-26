@@ -28,7 +28,7 @@ function decrement(die) {
     }
 }
 
-// I took this and the bottom of the page JS from Generic_sheets mod and still cant figure out how theirs is supposed to work but this one doesnt :trynottocry:
+// I took this and the bottom of the page JS from Generic_sheets mod and still cant figure out how theirs is s upposed to work but this one doesnt :trynottocry:
 async function loadSavedRolls() {
     try {
         const savedData = await TS.localStorage.campaign.getBlob();
@@ -223,23 +223,20 @@ async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
 
 async function handleRollResult(rollEvent) {
     if (trackedIds[rollEvent.payload.rollId] == undefined) {
-        //if we haven't tracked that roll, ignore it because it's not from us
         return;
     }
 
+    let roll = rollEvent.payload;
+    let finalResult = 0;
+    let resultGroup = {};
+
     if (rollEvent.kind == "rollResults") {
-        //user rolled the dice we tracked and there's a new result for us to look at
-        let roll = rollEvent.payload
-        let finalResult = 0;
-        let resultGroup = {};
-        if (roll.resultsGroups != undefined && roll.resultsGroups.length >= 2) {
-            //just making sure the roll actually has 2 or more groups. should never be false as we created the roll with 2 groups
+        if (roll.resultsGroups != undefined) {
             if (trackedIds[roll.rollId] == "advantage") {
-                //the incoming roll was stored as an advantage roll
+                //---ADVANTAGE ROLLS---//
                 let max = 0;
                 for (let group of roll.resultsGroups) {
                     let groupSum = await TS.dice.evaluateDiceResultsGroup(group);
-                    //if you want to check if the result returned here has an error, checking for groupSum.cause != undefined works
                     if (groupSum > max) {
                         max = groupSum;
                         resultGroup = group;
@@ -247,29 +244,32 @@ async function handleRollResult(rollEvent) {
                 }
                 finalResult = max;
             } else if (trackedIds[roll.rollId] == "disadvantage") {
-                //the incoming roll was stored as an disadvantage roll
+                //---DISADVANTAGE ROLLS---//
                 let min = Number.MAX_SAFE_INTEGER;
                 for (let group of roll.resultsGroups) {
                     let groupSum = await TS.dice.evaluateDiceResultsGroup(group);
-                    //if you want to check if the result returned here has an error, checking for groupSum.cause != undefined works
                     if (groupSum < min) {
                         min = groupSum;
                         resultGroup = group;
                     }
                 }
                 finalResult = min == Number.MAX_SAFE_INTEGER ? 0 : min;
-            } else {
-                return;
+            } else {//---NORMAL ROLLS---//
+                if (roll.resultsGroups.length > 0) {
+                    resultGroup = roll.resultsGroups[0];
+                    finalResult = await TS.dice.evaluateDiceResultsGroup(resultGroup);
+                }
             }
         }
 
-        //finalResult remains unused in this example, but could be useful for other applications
         displayResult(resultGroup, roll.rollId);
     } else if (rollEvent.kind == "rollRemoved") {
-        //if you want special handling when the user doesn't roll the dice
         delete trackedIds[rollEvent.payload.rollId];
     }
 }
+
+
+
 
 async function displayResult(resultGroup, rollId) {
     TS.dice.sendDiceResult([resultGroup], rollId).catch((response) => console.error("error in sending dice result", response));
