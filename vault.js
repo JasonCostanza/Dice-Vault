@@ -3,14 +3,15 @@ let isGM = false;
 let me;
 let allSavedRolls = [];
 
-function rollInTalespire(type) {
-    let name = document.getElementById("roll-name").value || "Check";
-    let dice = document.getElementById("roll-content").value || "1d20";
-    let typeStr = type == "advantage" ? " (Adv)" : " (Disadv)";
-    TS.dice.putDiceInTray([{ name: name + typeStr, roll: dice }, { name: name + typeStr, roll: dice }], true).then((diceSetResponse) => {
-        trackedIds[diceSetResponse] = type;
-    });
-}
+// function rollInTalespire(type) {
+//     console.log("Rolling in Talespire");
+//     let name = document.getElementById("roll-name").value || "Check";
+//     let dice = document.getElementById("roll-content").value || "1d20";
+//     let typeStr = type == "advantage" ? " (Adv)" : " (Disadv)";
+//     TS.dice.putDiceInTray([{ name: name + typeStr, roll: dice }, { name: name + typeStr, roll: dice }], true).then((diceSetResponse) => {
+//         trackedIds[diceSetResponse] = type;
+//     });
+// }
 
 function increment(die) {
     const counter = document.getElementById(die + '-counter-value');
@@ -211,7 +212,7 @@ async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
             trackedIds[diceSetResponse] = selectedType;
         });
     } else {
-        TS.dice.putDiceInTray([{ name: rollName, roll: diceRollString }], false).then(diceSetResponse => {
+        TS.dice.putDiceInTray([{ name: rollName, roll: diceRollString }], true).then(diceSetResponse => {
             trackedIds[diceSetResponse] = 'normal';
         });
     }
@@ -265,11 +266,8 @@ async function handleRollResult(rollEvent) {
         displayResult(resultGroup, roll.rollId);
     } else if (rollEvent.kind == "rollRemoved") {
         delete trackedIds[rollEvent.payload.rollId];
-    }
+        }
 }
-
-
-
 
 async function displayResult(resultGroup, rollId) {
     TS.dice.sendDiceResult([resultGroup], rollId).catch((response) => console.error("error in sending dice result", response));
