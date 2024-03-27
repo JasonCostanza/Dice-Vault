@@ -1,7 +1,7 @@
 {
   "manifestVersion": 1,
   "name": "Dice Vault",
-  "summary": "A Symbiote to roll dice with advantage or disadvantage",
+  "summary": "Talespire symbiote which offers an expanded dice rolling experience without the complexity of a full character sheet.",
   "entryPoint": "/vault.html",
   "descriptionFilePath": "/readme.md",
   "api": {

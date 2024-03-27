@@ -79,6 +79,7 @@ function save() {
         d4: document.getElementById('d4-counter-value').textContent,
         d6: document.getElementById('d6-counter-value').textContent,
         d8: document.getElementById('d8-counter-value').textContent,
+        d100: document.getElementById('d100-counter-value').textContent,
         d10: document.getElementById('d10-counter-value').textContent,
         d12: document.getElementById('d12-counter-value').textContent,
         d20: document.getElementById('d20-counter-value').textContent,
@@ -98,7 +99,7 @@ function addSavedRoll(rollName, rollType, diceCounts) {
     allSavedRolls.push(rollEntry);
 
     let diceDisplay = '';
-    const diceOrder = ['d4', 'd6', 'd8', 'd10', 'd12', 'd20', 'mod'];
+    const diceOrder = ['d4', 'd6', 'd8', 'd100', 'd10', 'd12', 'd20', 'mod'];
     diceOrder.forEach(die => {
         const count = diceCounts[die];
         if (count !== '0') {
@@ -147,7 +148,7 @@ function addSavedRoll(rollName, rollType, diceCounts) {
 function reset() {
     document.getElementById('roll-name').value = '';
 
-    const diceCounters = ['d4', 'd6', 'd8', 'd10', 'd12', 'd20', 'mod'];
+    const diceCounters = ['d4', 'd6', 'd8', 'd100', 'd10', 'd12', 'd20', 'mod'];
     diceCounters.forEach(die => {
         document.getElementById(die + '-counter-value').textContent = '0';
     });
@@ -162,6 +163,7 @@ async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
         d4: document.getElementById('d4-counter-value').textContent,
         d6: document.getElementById('d6-counter-value').textContent,
         d8: document.getElementById('d8-counter-value').textContent,
+        d100: document.getElementById('d100-counter-value').textContent,
         d10: document.getElementById('d10-counter-value').textContent,
         d12: document.getElementById('d12-counter-value').textContent,
         d20: document.getElementById('d20-counter-value').textContent,
