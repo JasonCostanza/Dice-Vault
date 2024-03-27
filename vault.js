@@ -3,15 +3,6 @@ let isGM = false;
 let me;
 let allSavedRolls = [];
 
-function roll(type) {
-    let name = document.getElementById("roll-name").value || "Check";
-    let dice = document.getElementById("roll-content").value || "1d20";
-    let typeStr = type == "advantage" ? " (Adv)" : " (Disadv)";
-    TS.dice.putDiceInTray([{ name: name + typeStr, roll: dice }, { name: name + typeStr, roll: dice }], true).then((diceSetResponse) => {
-        trackedIds[diceSetResponse] = type;
-    });
-}
-
 function increment(die) {
     const counter = document.getElementById(die + '-counter-value');
     let currentValue = parseInt(counter.textContent, 10);
@@ -28,12 +19,6 @@ function decrement(die) {
     }
 }
 
-
-
-
-
-
-// I took this and the bottom of the page JS from Generic_sheets mod and still cant figure out how theirs is supposed to work but this one doesnt :trynottocry:
 async function loadSavedRolls() {
     try {
         const savedData = await TS.localStorage.campaign.getBlob();
@@ -55,26 +40,7 @@ function saveCurrentRolls() {
             counts: JSON.parse(roll.dataset.diceCounts)
         };
     });
-
-    try {
-        const savedData = JSON.stringify(savedRolls);
-        TS.localStorage.campaign.setBlob(savedData);
-    } catch (e) {
-        console.error('Failed to save rolls:', e);
-    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 function sortSavedRolls() {
     const sortOption = document.getElementById('sort-options').value;
@@ -103,11 +69,8 @@ function deleteSavedRoll(element) {
     rollEntry.remove();
     allSavedRolls = allSavedRolls.filter(roll => roll !== rollEntry);
 }
+
 document.addEventListener('DOMContentLoaded', sortSavedRolls);
-
-
-
-
 
 function save() {
     const rollName = document.getElementById('roll-name').value || 'Unnamed Roll';
@@ -130,9 +93,9 @@ function addSavedRoll(rollName, rollType, diceCounts) {
     const savedRollsContainer = document.querySelector('.saved-rolls-container');
     const rollEntry = document.createElement('div');
     rollEntry.className = 'saved-roll-entry';
-    rollEntry.dataset.rollType = rollType; 
+    rollEntry.dataset.rollType = rollType;
+    rollEntry.dataset.diceCounts = JSON.stringify(diceCounts);
     allSavedRolls.push(rollEntry);
-    
 
     let diceDisplay = '';
     const diceOrder = ['d4', 'd6', 'd8', 'd10', 'd12', 'd20', 'mod'];
@@ -166,8 +129,6 @@ function addSavedRoll(rollName, rollType, diceCounts) {
         </div>
     `;
 
-    // <div class="quick-roll-button" onclick="roll('${rollName}', '${rollType}', ${JSON.stringify(diceCounts)})">Quick Roll</div> ((SAVING CUZ IDK WHY THIS BROKE LOL))
-
     const quickRollButton = document.createElement('div');
     quickRollButton.textContent = 'Quick Roll'; 
     quickRollButton.className = 'quick-roll-button';
@@ -183,13 +144,6 @@ function addSavedRoll(rollName, rollType, diceCounts) {
     }
 }
 
-
-function deleteSavedRoll(element) {
-    const rollEntry = element.closest('.saved-roll-entry');
-    rollEntry.remove();
-}
-
-
 function reset() {
     document.getElementById('roll-name').value = '';
 
@@ -200,10 +154,6 @@ function reset() {
 
     document.getElementById('normal').checked = true;
 }
-
-
-
-
 
 async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
     let rollName = rollNameParam || document.getElementById('roll-name').value || 'Unnamed Roll';
@@ -244,52 +194,28 @@ async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
             trackedIds[diceSetResponse] = selectedType;
         });
     } else {
-        TS.dice.putDiceInTray([{ name: rollName, roll: diceRollString }], false).then(diceSetResponse => {
+        TS.dice.putDiceInTray([{ name: rollName, roll: diceRollString }], true).then(diceSetResponse => {
             trackedIds[diceSetResponse] = 'normal';
         });
     }
-}
-console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-
-quickRollButton.onclick = function() {
-    roll(rollName, rollType, diceCounts);
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 async function handleRollResult(rollEvent) {
     if (trackedIds[rollEvent.payload.rollId] == undefined) {
-        //if we haven't tracked that roll, ignore it because it's not from us
         return;
     }
 
+    let roll = rollEvent.payload;
+    let finalResult = 0;
+    let resultGroup = {};
+
     if (rollEvent.kind == "rollResults") {
-        //user rolled the dice we tracked and there's a new result for us to look at
-        let roll = rollEvent.payload
-        let finalResult = 0;
-        let resultGroup = {};
-        if (roll.resultsGroups != undefined && roll.resultsGroups.length >= 2) {
-            //just making sure the roll actually has 2 or more groups. should never be false as we created the roll with 2 groups
+        if (roll.resultsGroups != undefined) {
             if (trackedIds[roll.rollId] == "advantage") {
-                //the incoming roll was stored as an advantage roll
+                //---ADVANTAGE ROLLS---//
                 let max = 0;
                 for (let group of roll.resultsGroups) {
                     let groupSum = await TS.dice.evaluateDiceResultsGroup(group);
-                    //if you want to check if the result returned here has an error, checking for groupSum.cause != undefined works
                     if (groupSum > max) {
                         max = groupSum;
                         resultGroup = group;
@@ -297,38 +223,33 @@ async function handleRollResult(rollEvent) {
                 }
                 finalResult = max;
             } else if (trackedIds[roll.rollId] == "disadvantage") {
-                //the incoming roll was stored as an disadvantage roll
+                //---DISADVANTAGE ROLLS---//
                 let min = Number.MAX_SAFE_INTEGER;
                 for (let group of roll.resultsGroups) {
                     let groupSum = await TS.dice.evaluateDiceResultsGroup(group);
-                    //if you want to check if the result returned here has an error, checking for groupSum.cause != undefined works
                     if (groupSum < min) {
                         min = groupSum;
                         resultGroup = group;
                     }
                 }
                 finalResult = min == Number.MAX_SAFE_INTEGER ? 0 : min;
-            } else {
-                return;
+            } else {//---NORMAL ROLLS---//
+                if (roll.resultsGroups.length > 0) {
+                    resultGroup = roll.resultsGroups[0];
+                    finalResult = await TS.dice.evaluateDiceResultsGroup(resultGroup);
+                }
             }
         }
 
-        //finalResult remains unused in this example, but could be useful for other applications
         displayResult(resultGroup, roll.rollId);
     } else if (rollEvent.kind == "rollRemoved") {
-        //if you want special handling when the user doesn't roll the dice
         delete trackedIds[rollEvent.payload.rollId];
-    }
+        }
 }
 
 async function displayResult(resultGroup, rollId) {
     TS.dice.sendDiceResult([resultGroup], rollId).catch((response) => console.error("error in sending dice result", response));
 }
-
-
-
-
-
 
 function saveRollsToLocalStorage() {
     let rollsData = [];
@@ -363,4 +284,3 @@ function loadRollsFromLocalStorage() {
 }
 document.getElementById('save-rolls-button').addEventListener('click', saveRollsToLocalStorage);
 document.getElementById('load-rolls-button').addEventListener('click', loadRollsFromLocalStorage);
-
