@@ -18,9 +18,9 @@ Talespire symbiote which offers an expanded dice rolling experience without the 
   
   ## Manually Install
   1. Download all included files
-  2. Extract them to your symbiote directory: `C:\Users\%USERNAME%\AppData\LocalLow\BouncyRock Entertainment\TaleSpire\Symbiotes\Dice Vault`
-  3. Enable Symbiotes in Talespire settings
-  4. Open the Symbiote side-panel
+  2. Launch and enable Symbiotes in Talespire settings
+  3. Extract the files to your symbiote directory: `C:\Users\%USERNAME%\AppData\LocalLow\BouncyRock Entertainment\TaleSpire\Symbiotes\Dice Vault`
+  4. Open the Symbiote side-panel in Talespire
   5. Enable Dice Vault by clicking on it in the `Available` section
   6. Select `Dice Vault` in the `Active` section
 
