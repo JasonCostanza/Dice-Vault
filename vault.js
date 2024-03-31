@@ -19,6 +19,12 @@ function decrement(die) {
     }
 }
 
+function negativeMod(die) {
+    const counter = document.getElementById(die + '-counter-value');
+    let currentValue = parseInt(counter.textContent, 10);
+    counter.textContent = currentValue - 1;
+}
+
 async function loadSavedRolls() {
     try {
         const savedData = await TS.localStorage.campaign.getBlob();
@@ -167,38 +173,51 @@ async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
         d20: document.getElementById('d20-counter-value').textContent,
         mod: document.getElementById('mod-counter-value').textContent,
     };
-
-    let diceRollString = '';
-    Object.entries(diceCounts).forEach(([die, count]) => {
-        if (count !== '0') {
-            if (die !== 'mod') {
-                diceRollString += `${count}${die}+`;
-            } else {
-            }
-        }
-    });
-
-    diceRollString = diceRollString.replace(/\+$/, '');
-
-    if (diceCounts.mod && diceCounts.mod !== '0') {
-        diceRollString += diceRollString ? `+${diceCounts.mod}` : diceCounts.mod;
-    }
+    let diceRollString = constructDiceRollString(diceCounts);
 
     if (!TS.dice.isValidRollString(diceRollString)) {
         console.error('Invalid dice roll string:', diceRollString);
-        return; 
+        return;
     }
 
-    if (selectedType === 'advantage' || selectedType === 'disadvantage') {
-        TS.dice.putDiceInTray([{ name: rollName, roll: diceRollString }, { name: rollName, roll: diceRollString }], true).then(diceSetResponse => {
+    try {
+
+        let trayConfiguration = (selectedType === 'advantage' || selectedType === 'disadvantage') 
+            ? [{ name: rollName, roll: diceRollString }, { name: rollName, roll: diceRollString }]
+            : [{ name: rollName, roll: diceRollString }];
+
+        TS.dice.putDiceInTray(trayConfiguration, true).then(diceSetResponse => {
             trackedIds[diceSetResponse] = selectedType;
         });
-    } else {
-        TS.dice.putDiceInTray([{ name: rollName, roll: diceRollString }], true).then(diceSetResponse => {
-            trackedIds[diceSetResponse] = 'normal';
-        });
+    } catch (error) {
+        console.error('Error creating roll descriptors:', error);
     }
-};
+}
+
+
+function constructDiceRollString(diceCounts) {
+    let diceRollParts = [];
+    for (const [die, count] of Object.entries(diceCounts)) {
+        if (die !== 'mod' && count !== '0') {
+            diceRollParts.push(`${count}${die}`);
+        }
+    }
+    
+    if (diceCounts.mod !== '0') {
+        let modValue = parseInt(diceCounts.mod, 10);
+        let modPart = modValue >= 0 ? `+${modValue}` : `${modValue}`;
+        diceRollParts.push(modPart);
+    }
+
+    let diceRollString = diceRollParts.join('+').replace(/\+\-/, '-');
+    return diceRollString;
+}
+
+
+
+
+
+
 
 async function handleRollResult(rollEvent) {
     if (trackedIds[rollEvent.payload.rollId] == undefined) {
