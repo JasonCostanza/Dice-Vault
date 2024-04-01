@@ -205,7 +205,7 @@ function constructDiceRollString(diceCounts) {
     
     if (diceCounts.mod !== '0') {
         let modValue = parseInt(diceCounts.mod, 10);
-        let modPart = modValue >= 0 ? `+${modValue}` : `${modValue}`;
+        let modPart = modValue >= 0 ? `${modValue}` : `${modValue}`;
         diceRollParts.push(modPart);
     }
 
