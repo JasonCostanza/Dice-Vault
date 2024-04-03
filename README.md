@@ -1,3 +1,6 @@
+<p align="center">
+  <img src="images/DiceVault.png" alt="Dice Vault Logo" width="300">
+</p>
 # Dice-Vault
 Talespire symbiote which offers an expanded dice rolling experience without the complexity of a full character sheet.
 
