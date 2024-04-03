@@ -1,125 +1,118 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Dice Vault</title>
-    <link rel="stylesheet" href="vault.css">
-</head>
+    <head>
+        <title>Dice Vault</title>
+        <link rel="stylesheet" href="vault.css">
+    </head>
 
-<body>
-    <div style="text-align: center; margin-top: 0;">
-        <img src="images/DiceVault.png" alt="Dice Vault - Secure your fate with a roll" style="max-width: 30%; height: auto;">
-        <h1 style="position: absolute; overflow: hidden; clip: rect(0 0 0 0); height: 1px; width: 1px; margin: -1px; padding: 0; border: 0;">
-            <i class="ts-icon-lock"></i> Dice Vault <i class="ts-icon-lock"></i>
-        </h1>
-    </div>
-    <div class="content-col">
-        <label class="field-title" for="roll-name">Roll Label</label>
-        <input id="roll-name" type="text" class="roll-input" placeholder="Enter roll label"></input>
-    </div><br><br>
-    
-    <div class="content-col">
-        <label class="field-title">Dice</label>
-        <div class="dice-selection">      
-            <div class="dice-counter" id="d4-counter">
-                <i class="ts-icon-d4 ts-icon-large" onclick="increment('d4')" oncontextmenu="decrement('d4'); return false;"></i>
-                <div class="counter-overlay" id="d4-counter-value">0</div>
-                <div class="dice-label">D4</div>
+    <body>
+        <div class="content">
+            <div style="text-align: center; margin-top: 0;">
+                <img src="images/DiceVault.png" alt="Dice Vault - Secure your fate with a roll" style="max-width: 20%">
+                <h1 style="position: absolute; overflow: hidden; clip: rect(0 0 0 0); height: 1px; width: 1px; margin: -1px; padding: 0; border: 0;">
+                    <i class="ts-icon-lock"></i> Dice Vault <i class="ts-icon-lock"></i>
+                </h1>
             </div>
+            <div class="content-col">
+                <label class="field-title" for="roll-name">Roll Label</label>
+                <input id="roll-name" type="text" class="roll-input" placeholder="Enter roll label"></input>
+            </div><br>
+            
+            <div class="content-col">
+                <label class="field-title">Dice</label>
+                <div class="dice-selection">      
+                    <div class="dice-counter" id="d4-counter">
+                        <i class="ts-icon-d4 ts-icon-large" onclick="increment('d4')" oncontextmenu="decrement('d4'); return false;"></i>
+                        <div class="counter-overlay" id="d4-counter-value">0</div>
+                        <div class="dice-label">D4</div>
+                    </div>
 
-            <div class="dice-counter" id="d6-counter">
-                <i class="ts-icon-d6 ts-icon-large" onclick="increment('d6')" oncontextmenu="decrement('d6'); return false;"></i>
-                <div class="counter-overlay" id="d6-counter-value">0</div>
-                <div class="dice-label">D6</div>
+                    <div class="dice-counter" id="d6-counter">
+                        <i class="ts-icon-d6 ts-icon-large" onclick="increment('d6')" oncontextmenu="decrement('d6'); return false;"></i>
+                        <div class="counter-overlay" id="d6-counter-value">0</div>
+                        <div class="dice-label">D6</div>
+                    </div>
+
+                    <div class="dice-counter" id="d8-counter">
+                        <i class="ts-icon-d8 ts-icon-large" onclick="increment('d8')" oncontextmenu="decrement('d8'); return false;"></i>
+                        <div class="counter-overlay" id="d8-counter-value">0</div>
+                        <div class="dice-label">D8</div>
+                    </div>
+
+                    <div class="dice-counter" id="d10-counter">
+                        <i class="ts-icon-d10 ts-icon-large" onclick="increment('d10')" oncontextmenu="decrement('d10'); return false;"></i>
+                        <div class="counter-overlay" id="d10-counter-value">0</div>
+                        <div class="dice-label">D10</div>
+                    </div>
+
+                    <div class="dice-counter" id="d12-counter">
+                        <i class="ts-icon-d12 ts-icon-large" onclick="increment('d12')" oncontextmenu="decrement('d12'); return false;"></i>
+                        <div class="counter-overlay" id="d12-counter-value">0</div>
+                        <div class="dice-label">D12</div>
+                    </div>
+
+                    <div class="dice-counter" id="d20-counter">
+                        <i class="ts-icon-d20 ts-icon-large" onclick="increment('d20')" oncontextmenu="decrement('d20'); return false;"></i>
+                        <div class="counter-overlay" id="d20-counter-value">0</div>
+                        <div class="dice-label">D20</div>
+                    </div>
+
+                    <div class="plus-sign">
+                        <span>+</span>
+                    </div>
+                    
+                    <div class="dice-counter" id="mod-counter">
+                        <i class="ts-icon-circle-dotted ts-icon-large" onclick="increment('mod')" oncontextmenu="negativeMod('mod'); return false;"></i>
+                        <div class="counter-overlay" id="mod-counter-value">0</div>
+                        <div class="dice-label">MOD</div>
+                    </div>
+                </div>
             </div>
-
-            <div class="dice-counter" id="d8-counter">
-                <i class="ts-icon-d8 ts-icon-large" onclick="increment('d8')" oncontextmenu="decrement('d8'); return false;"></i>
-                <div class="counter-overlay" id="d8-counter-value">0</div>
-                <div class="dice-label">D8</div>
-            </div>
-
-            <div class="dice-counter" id="d10-counter">
-                <i class="ts-icon-d10 ts-icon-large" onclick="increment('d10')" oncontextmenu="decrement('d10'); return false;"></i>
-                <div class="counter-overlay" id="d10-counter-value">0</div>
-                <div class="dice-label">D10</div>
-            </div>
-
-            <div class="dice-counter" id="d12-counter">
-                <i class="ts-icon-d12 ts-icon-large" onclick="increment('d12')" oncontextmenu="decrement('d12'); return false;"></i>
-                <div class="counter-overlay" id="d12-counter-value">0</div>
-                <div class="dice-label">D12</div>
-            </div>
-
-            <div class="dice-counter" id="d20-counter">
-                <i class="ts-icon-d20 ts-icon-large" onclick="increment('d20')" oncontextmenu="decrement('d20'); return false;"></i>
-                <div class="counter-overlay" id="d20-counter-value">0</div>
-                <div class="dice-label">D20</div>
-            </div>
-
-            <div class="plus-sign">
-                <span>+</span>
+            <br>
+        
+            <div class="content-row">
+                <div class="roll-type">
+                    <input type="radio" id="normal" name="roll-type" value="normal" checked>
+                    <label for="normal">Normal</label>
+                    <input type="radio" id="advantage" name="roll-type" value="advantage">
+                    <label for="advantage">Advantage</label>
+                    <input type="radio" id="disadvantage" name="roll-type" value="disadvantage">
+                    <label for="disadvantage">Disadvantage</label>
+                </div>
             </div>
             
-            <div class="dice-counter" id="mod-counter">
-                <i class="ts-icon-circle-dotted ts-icon-large" onclick="increment('mod')" oncontextmenu="negativeMod('mod'); return false;"></i>
-                <div class="counter-overlay" id="mod-counter-value">0</div>
-                <div class="dice-label">MOD</div>
+            <div class="button-container">
+                <button id="roll-btn" onclick="roll()">Roll</button>
+                <button id="reset-btn" onclick="reset()">Reset</button>
+                <button id="save-btn" onclick="save()">Save</button>
+            </div><br>
+
+            <div class="saved-rolls-header">
+                <label class="field-title">Saved Rolls</label>
+                <div id="sort-options-container">
+                    <select id="sort-options" onchange="sortSavedRolls()">
+                        <option value="all">Display all</option>
+                        <option value="advantage">Advantage</option>
+                        <option value="disadvantage">Disadvantage</option>
+                        <option value="normal">Normal</option>
+                        <option value="newest">Newest</option>
+                        <option value="oldest">Oldest</option>
+                    </select>
+                </div>
             </div>
+            
+            <div id="saved-rolls" class="saved-rolls-container"></div>
+            
         </div>
-    </div><br><br>
-    
-    <div class="content-row">
-        <div class="roll-type">
-            <input type="radio" id="normal" name="roll-type" value="normal" checked>
-            <label for="normal">Normal</label>
-            <input type="radio" id="advantage" name="roll-type" value="advantage">
-            <label for="advantage">Advantage</label>
-            <input type="radio" id="disadvantage" name="roll-type" value="disadvantage">
-            <label for="disadvantage">Disadvantage</label>
+
+        <div class="footer">
+            <button id="save-rolls-button">Save Rolls</button>
+            
+            <i class="ts-icon-character-gamemaster"></i><div style="font-family: 'Enchanted Land', cursive; color: #dddddd; font-size: 0.7em;"> "May the rolls be in your favor"</div>
+
+            <button id="load-rolls-button">Load Rolls</button>
         </div>
-    </div>
-    
-    <div class="button-container">
-        <button id="roll-btn" onclick="roll()">Roll</button>
-        <button id="reset-btn" onclick="reset()">Reset</button>
-        <button id="save-btn" onclick="save()">Save</button>
-    </div><br>
 
-    <div class="saved-rolls-header">
-        <label class="field-title">Saved Rolls</label>
-        <div id="sort-options-container">
-        <select id="sort-options" onchange="sortSavedRolls()">
-            <option value="all">Display all</option>
-            <option value="advantage">Advantage</option>
-            <option value="disadvantage">Disadvantage</option>
-            <option value="normal">Normal</option>
-            <option value="newest">Newest</option>
-            <option value="oldest">Oldest</option>
-        </select>
-    </div></div>
-    <div id="saved-rolls" class="saved-rolls-container"></div>
-
-    <!-- <label class="field-title">Saved Rolls</label>
-    <div id="saved-rolls" class="saved-rolls-container">
-    </div> -->
-
-</div>
-
-<div class="footer">
-    <button id="save-rolls-button">Save Rolls</button>
-    
-    <i class="ts-icon-character-gamemaster"></i><div style="font-family: 'Enchanted Land', cursive; color: #dddddd; font-size: 0.7em;"> "May the rolls be in your favor"</div>
-
-    <button id="load-rolls-button">Load Rolls</button>
-    <!-- <img src="https://i.giphy.com/kfPayPiTSdNZWmhyYY.webp" width="8%"/> -->
-</div>
-
-<!-- <div class="footer">
-    <marquee behavior="scroll" direction="left" scrollamount="10">
-        WEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
-    </marquee>
-</div> -->
-    
-<script type="text/javascript" src="vault.js"></script>
-</body>
+        <script type="text/javascript" src="vault.js"></script>
+    </body>
 </html>

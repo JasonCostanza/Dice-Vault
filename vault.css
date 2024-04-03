@@ -1,13 +1,18 @@
-body {
+html, body {
     background-color: var(--ts-background-primary);
     color: var(--ts-color-primary);
     font-family: 'OptimusPrinceps', sans-serif;
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 10px;
+    height: 100%;
+    margin: 0;
     display: flex;
     flex-direction: column;
-    min-height: 100vh; 
+}
+
+.content {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
 .footer {
@@ -61,8 +66,6 @@ h1 {
     display: block;
     padding: 5px 10px;
     margin-top: 10px;
-    /* background-color: var(--ts-background-primary);
-    color: var(--ts-color-primary); */
     background-color: #284b6b;
     color: rgb(255, 255, 255);
     text-align: center;
@@ -73,7 +76,6 @@ h1 {
 }
 
 .quick-roll-button:hover {
-    /* background-color: var(--ts-background-secondary); */
     background-color: #56a5bd;
 }
 
@@ -133,7 +135,6 @@ h1 {
     display: flex;
     justify-content: center; 
     align-items: center; 
-    /* flex-wrap: wrap;  */
     gap: 5px; 
 }
 
@@ -185,7 +186,7 @@ h1 {
     flex-grow: 1;
     overflow-y: auto;
     margin-bottom: 10px;
-    max-height: 800px;
+    max-height: calc(100vh - 160px);
     border: 1px solid var(--ts-accessibility-border);
     padding: 5px;
     margin-top: 10px;
