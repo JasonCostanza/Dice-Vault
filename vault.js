@@ -214,12 +214,6 @@ function constructDiceRollString(diceCounts) {
     return diceRollString;
 }
 
-
-
-
-
-
-
 async function handleRollResult(rollEvent) {
     if (trackedIds[rollEvent.payload.rollId] == undefined) {
         return;
