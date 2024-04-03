@@ -2,6 +2,7 @@ let trackedIds = {};
 let isGM = false;
 let me;
 let allSavedRolls = [];
+let gmRolls = {};
 
 function increment(die) {
     const counter = document.getElementById(die + '-counter-value');
