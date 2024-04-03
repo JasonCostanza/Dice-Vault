@@ -16,10 +16,10 @@ Talespire symbiote which offers an expanded dice rolling experience without the 
 
 # Install Instructions
   ## Subscribe
-  3. Enable Symbiotes in Talespire settings
-  4. Open the Library bottom bar
-  5. Select `(Beta) Community Mods` tab along the top of the `Library` bar
-  6. `Symbiotes`
+  1. Enable Symbiotes in Talespire settings
+  2. Open the Library bottom bar
+  3. Select `(Beta) Community Mods` tab along the top of the `Library` bar
+  4. `Symbiotes`
   
   ## Manually Install
   1. Download all included files
