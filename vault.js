@@ -131,7 +131,6 @@ function addSavedRoll(rollName, rollType, diceCounts) {
                     <i class="ts-icon-trash ts-icon-medium"></i>
                 </div>
             </div>
-            <div class="roll-type-indicator">${rollType.toUpperCase()}</div>
             <div class="roll-entry-dice">${diceDisplay}</div>
             
         </div>
