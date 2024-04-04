@@ -125,6 +125,7 @@ function addSavedRoll(rollName, rollType, diceCounts) {
     rollEntry.innerHTML = `
         <div class="roll-entry-content">
             <div class="roll-entry-header">
+                <div class="padding-div"></div> <!-- Make this Div the edit-roll eventually -->
                 <div class="roll-entry-label">${rollName}</div>
                 <div class="delete-roll" onclick="deleteSavedRoll(this)">
                     <i class="ts-icon-trash ts-icon-medium"></i>

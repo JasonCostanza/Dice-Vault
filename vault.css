@@ -190,6 +190,16 @@ h1 {
     background-color: #ff0000;
 }
 
+.padding-div{
+    display: flex;
+    align-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    font-size: 18px;
+    margin: 0 5px;
+}
+
 .ts-icon-medium {
     font-size: 50px;
 }
@@ -211,7 +221,7 @@ h1 {
     justify-content: space-between;
 }
 
-.roll-type-indicator {
+.roll-entry-label {
     font-weight: bold;
     text-align: center;
     margin: 5px 0;
