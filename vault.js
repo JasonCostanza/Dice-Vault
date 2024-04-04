@@ -179,9 +179,22 @@ function reset() {
     document.getElementById('normal').checked = true;
 }
 
+function formatRollTypeName(rollType) {
+    const rollTypeMappings = {
+        'normal': 'Normal',
+        'advantage': 'Advantage',
+        'disadvantage': 'Disadvantage',
+        'best-of-three': 'Best of Three',
+    };
+    return rollTypeMappings[rollType] || rollType;
+}
+
 async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
     let rollName = rollNameParam || document.getElementById('roll-name').value || 'Unnamed Roll';
     let selectedType = selectedTypeParam || document.querySelector('input[name="roll-type"]:checked').value;
+    if (selectedType !== 'normal'){
+        rollName += '\n' + formatRollTypeName(selectedType);
+    }
     let diceCounts = diceCountsParam || {
         d4: document.getElementById('d4-counter-value').textContent,
         d6: document.getElementById('d6-counter-value').textContent,
