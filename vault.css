@@ -59,11 +59,11 @@ h1 {
     margin: 0 10px; 
 }
 
-.saved-roll-entry, .quick-roll-button {
+.saved-roll-entry, .roll-button {
     user-select: none;
 }
 
-.quick-roll-button {
+.roll-button {
     display: block;
     padding: 5px 10px;
     margin-top: 10px;
@@ -76,8 +76,19 @@ h1 {
     transition: background-color 0.3s;
 }
 
-.quick-roll-button:hover {
+.roll-button:hover {
     background-color: #56a5bd;
+}
+
+.row-buttons-container{
+    display: flex;
+    margin-top: 5px;
+    justify-content: space-around;
+}
+
+.row-button{
+    flex: 1;
+    margin: 0 5px;
 }
 
 .saved-roll-entry {
