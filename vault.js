@@ -193,9 +193,22 @@ async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
 
     try {
 
-        let trayConfiguration = (selectedType === 'advantage' || selectedType === 'disadvantage') 
-            ? [{ name: rollName, roll: diceRollString }, { name: rollName, roll: diceRollString }]
-            : [{ name: rollName, roll: diceRollString }];
+        let rollObject = { name: rollName, roll: diceRollString };
+        let rollCount;
+
+        switch (selectedType) {
+            case 'advantage':
+            case 'disadvantage':
+                rollCount = 2;
+                break;
+            case 'best-of-three':
+                rollCount = 3;
+                break;
+            default:
+                rollCount = 1;
+        }
+
+        let trayConfiguration = Array(rollCount).fill(rollObject);
 
         TS.dice.putDiceInTray(trayConfiguration, true).then(diceSetResponse => {
             trackedIds[diceSetResponse] = selectedType;
@@ -235,7 +248,7 @@ async function handleRollResult(rollEvent) {
 
     if (rollEvent.kind == "rollResults") {
         if (roll.resultsGroups != undefined) {
-            if (trackedIds[roll.rollId] == "advantage") {
+            if (trackedIds[roll.rollId] == "advantage" || trackedIds[roll.rollId] == "best-of-three") {
                 //---ADVANTAGE ROLLS---//
                 let max = 0;
                 for (let group of roll.resultsGroups) {
