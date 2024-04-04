@@ -151,6 +151,16 @@ function addSavedRoll(rollName, rollType, diceCounts) {
     }
 }
 
+function createRollButton(text, rollName, rollType, diceCounts, classes, parent){
+    const rollButton = document.createElement('div');
+    rollButton.textContent = text;
+    rollButton.className = classes;
+    rollButton.onclick = function() {
+        roll(rollName, rollType, diceCounts);
+    };
+    parent.appendChild(rollButton);
+}
+
 function reset() {
     document.getElementById('roll-name').value = '';
 
