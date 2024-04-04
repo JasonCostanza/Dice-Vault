@@ -136,13 +136,20 @@ function addSavedRoll(rollName, rollType, diceCounts) {
         </div>
     `;
 
-    const quickRollButton = document.createElement('div');
-    quickRollButton.textContent = 'Quick Roll'; 
-    quickRollButton.className = 'quick-roll-button';
-    quickRollButton.onclick = function() {
-        roll(rollName, rollType, diceCounts);
-    };
-    rollEntry.appendChild(quickRollButton);
+    const buttonsContainer = document.createElement('div');
+    buttonsContainer.className = 'roll-buttons-container';
+
+    const rowofButtons = document.createElement('div');
+    rowofButtons.className = 'row-buttons-container';
+
+    createRollButton('Quick Roll', rollName, 'normal', diceCounts, 'roll-button', buttonsContainer);
+    createRollButton('Disadvantage', rollName, 'disadvantage', diceCounts, 'roll-button row-button', rowofButtons);
+    createRollButton('Advantage', rollName, 'advantage', diceCounts, 'roll-button row-button', rowofButtons);
+    createRollButton('Best of 3', rollName, 'best-of-three', diceCounts, 'roll-button row-button', rowofButtons);
+
+    buttonsContainer.appendChild(rowofButtons);
+
+    rollEntry.appendChild(buttonsContainer);
 
     if (savedRollsContainer.firstChild) {
         savedRollsContainer.insertBefore(rollEntry, savedRollsContainer.firstChild);
