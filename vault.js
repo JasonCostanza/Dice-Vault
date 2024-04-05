@@ -58,6 +58,12 @@ function sortSavedRolls() {
         case 'newest':
             savedRollsToDisplay.reverse();
             break;
+        case 'nameAsc':
+            savedRollsToDisplay.sort((a, b) => a.querySelector('.roll-entry-label').textContent.localeCompare(b.querySelector('.roll-entry-label').textContent));
+            break;
+        case 'nameDesc':
+            savedRollsToDisplay.sort((a, b) => b.querySelector('.roll-entry-label').textContent.localeCompare(a.querySelector('.roll-entry-label').textContent));
+            break;
         case 'all':
             break;
     }
