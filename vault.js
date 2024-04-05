@@ -55,11 +55,6 @@ function sortSavedRolls() {
     let savedRollsToDisplay = allSavedRolls.slice();
 
     switch (sortOption) {
-        case 'advantage':
-        case 'disadvantage':
-        case 'normal':
-            savedRollsToDisplay = savedRollsToDisplay.filter(roll => roll.dataset.rollType === sortOption);
-            break;
         case 'newest':
             savedRollsToDisplay.reverse();
             break;
