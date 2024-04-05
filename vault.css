@@ -7,6 +7,7 @@ html, body {
     display: flex;
     flex-direction: column;
     padding: 0 3px;
+    user-select: none;
 }
 
 .content {
@@ -56,7 +57,8 @@ h1 {
 .roll-input {
     flex-grow: 0; 
     width: auto; 
-    margin: 0 10px; 
+    margin: 0 10px;
+    user-select: none; 
 }
 
 .saved-roll-entry, .roll-button {
@@ -202,6 +204,7 @@ h1 {
 
 .ts-icon-medium {
     font-size: 50px;
+    user-select: none;
 }
 
 .saved-rolls-container {
@@ -275,6 +278,7 @@ h1 {
     align-items: center;
     cursor: pointer;
     margin: 5px;
+    user-select: none;
 }
 
 .counter-overlay {
@@ -304,6 +308,7 @@ h1 {
     align-items: center;
     gap: 2%;
     margin-bottom: 0.4em;
+    user-select: none;
 }
 
 .content-col {
@@ -321,6 +326,7 @@ h1 {
     gap: 10px;
     align-items: center;
     padding-top: 2%;
+    user-select: none;
 }
 
 .label-desc {
@@ -333,6 +339,7 @@ h1 {
     flex-shrink: 0;
     font-size: 1.2em;
     color: var(--ts-color-secondary);
+    user-select: none;
 }
 
 .spacer {
