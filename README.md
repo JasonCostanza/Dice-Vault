@@ -6,6 +6,8 @@
 
 Talespire symbiote which offers an expanded dice rolling experience without the complexity of a full character sheet.
 
+Check it out on [Mod.io](https://mod.io/g/talespire/m/dice-vault)
+
   ## Features
   - Name your rolls whatever you want
   - Throw as many dice as you need, including adding or subtracting modifiers
