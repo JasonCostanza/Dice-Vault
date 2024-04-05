@@ -238,7 +238,8 @@ h1 {
     border-radius: 4px;
     background-color: var(--ts-background-secondary); 
     color: var(--ts-color-primary); 
-    font-family: 'OptimusPrinceps', sans-serif; 
+    font-family: 'Gill Sans', sans-serif;
+    font-weight: bold;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
     appearance: none; 
     cursor: pointer; 
