@@ -55,11 +55,6 @@ function sortSavedRolls() {
     let savedRollsToDisplay = allSavedRolls.slice();
 
     switch (sortOption) {
-        case 'advantage':
-        case 'disadvantage':
-        case 'normal':
-            savedRollsToDisplay = savedRollsToDisplay.filter(roll => roll.dataset.rollType === sortOption);
-            break;
         case 'newest':
             savedRollsToDisplay.reverse();
             break;
@@ -125,30 +120,47 @@ function addSavedRoll(rollName, rollType, diceCounts) {
     rollEntry.innerHTML = `
         <div class="roll-entry-content">
             <div class="roll-entry-header">
+                <div class="padding-div"></div> <!-- Make this Div the edit-roll eventually -->
                 <div class="roll-entry-label">${rollName}</div>
                 <div class="delete-roll" onclick="deleteSavedRoll(this)">
                     <i class="ts-icon-trash ts-icon-medium"></i>
                 </div>
             </div>
-            <div class="roll-type-indicator">${rollType.toUpperCase()}</div>
             <div class="roll-entry-dice">${diceDisplay}</div>
             
         </div>
     `;
 
-    const quickRollButton = document.createElement('div');
-    quickRollButton.textContent = 'Quick Roll'; 
-    quickRollButton.className = 'quick-roll-button';
-    quickRollButton.onclick = function() {
-        roll(rollName, rollType, diceCounts);
-    };
-    rollEntry.appendChild(quickRollButton);
+    const buttonsContainer = document.createElement('div');
+    buttonsContainer.className = 'roll-buttons-container';
+
+    const rowofButtons = document.createElement('div');
+    rowofButtons.className = 'row-buttons-container';
+
+    createRollButton('Quick Roll', rollName, 'normal', diceCounts, 'roll-button', buttonsContainer);
+    createRollButton('Disadvantage', rollName, 'disadvantage', diceCounts, 'roll-button row-button', rowofButtons);
+    createRollButton('Advantage', rollName, 'advantage', diceCounts, 'roll-button row-button', rowofButtons);
+    createRollButton('Best of 3', rollName, 'best-of-three', diceCounts, 'roll-button row-button', rowofButtons);
+
+    buttonsContainer.appendChild(rowofButtons);
+
+    rollEntry.appendChild(buttonsContainer);
 
     if (savedRollsContainer.firstChild) {
         savedRollsContainer.insertBefore(rollEntry, savedRollsContainer.firstChild);
     } else {
         savedRollsContainer.appendChild(rollEntry);
     }
+}
+
+function createRollButton(text, rollName, rollType, diceCounts, classes, parent){
+    const rollButton = document.createElement('div');
+    rollButton.textContent = text;
+    rollButton.className = classes;
+    rollButton.onclick = function() {
+        roll(rollName, rollType, diceCounts);
+    };
+    parent.appendChild(rollButton);
 }
 
 function reset() {
@@ -162,9 +174,22 @@ function reset() {
     document.getElementById('normal').checked = true;
 }
 
+function formatRollTypeName(rollType) {
+    const rollTypeMappings = {
+        'normal': 'Normal',
+        'advantage': 'Advantage',
+        'disadvantage': 'Disadvantage',
+        'best-of-three': 'Best of Three',
+    };
+    return rollTypeMappings[rollType] || rollType;
+}
+
 async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
     let rollName = rollNameParam || document.getElementById('roll-name').value || 'Unnamed Roll';
     let selectedType = selectedTypeParam || document.querySelector('input[name="roll-type"]:checked').value;
+    if (selectedType !== 'normal'){
+        rollName += '\n' + formatRollTypeName(selectedType);
+    }
     let diceCounts = diceCountsParam || {
         d4: document.getElementById('d4-counter-value').textContent,
         d6: document.getElementById('d6-counter-value').textContent,
@@ -183,9 +208,22 @@ async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
 
     try {
 
-        let trayConfiguration = (selectedType === 'advantage' || selectedType === 'disadvantage') 
-            ? [{ name: rollName, roll: diceRollString }, { name: rollName, roll: diceRollString }]
-            : [{ name: rollName, roll: diceRollString }];
+        let rollObject = { name: rollName, roll: diceRollString };
+        let rollCount;
+
+        switch (selectedType) {
+            case 'advantage':
+            case 'disadvantage':
+                rollCount = 2;
+                break;
+            case 'best-of-three':
+                rollCount = 3;
+                break;
+            default:
+                rollCount = 1;
+        }
+
+        let trayConfiguration = Array(rollCount).fill(rollObject);
 
         TS.dice.putDiceInTray(trayConfiguration, true).then(diceSetResponse => {
             trackedIds[diceSetResponse] = selectedType;
@@ -225,7 +263,7 @@ async function handleRollResult(rollEvent) {
 
     if (rollEvent.kind == "rollResults") {
         if (roll.resultsGroups != undefined) {
-            if (trackedIds[roll.rollId] == "advantage") {
+            if (trackedIds[roll.rollId] == "advantage" || trackedIds[roll.rollId] == "best-of-three") {
                 //---ADVANTAGE ROLLS---//
                 let max = 0;
                 for (let group of roll.resultsGroups) {
