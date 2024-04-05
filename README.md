@@ -43,10 +43,7 @@ Create an issue in the github reposity on the [Issues Tab](https://github.com/Ja
 Any information you can provide to reproducing your issue is appreciated including reproduction steps, screenshots or video, and anything else you think is important.
 
 # Roadmap
-(not in order)
-- Add different damage types
-- Dice groups: Example is rolling Slashing AND poison damage in the same roll
-- Change modifier to a text box so it's easier to handle big modifiers
+See our github issues tab for bugs and enhancements on the roadmap
 
 # Special Thanks
 [DeeForce](https://github.com/D33Force)
