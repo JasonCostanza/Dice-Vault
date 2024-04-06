@@ -80,7 +80,8 @@ function deleteSavedRoll(element) {
     if (fetchSetting('auto-save')) {
         saveRollsToLocalStorage();
     }else{
-        document.getElementById('save-rolls-button').classList.add('unsaved-changes');
+        disableButtonById('load-rolls-button', false);
+        disableButtonById('save-rolls-button', false);
     }
 }
 
@@ -109,7 +110,7 @@ function save() {
     if (fetchSetting('auto-save')){
         saveRollsToLocalStorage();
     }else{
-        document.getElementById('save-rolls-button').classList.add('unsaved-changes');
+        disableButtonById('save-rolls-button', false);
     }
 }
 
@@ -397,7 +398,8 @@ function saveRollsToLocalStorage() {
     console.log('Saving rolls data:', rollsJson); 
     TS.localStorage.campaign.setBlob(rollsJson).then(() => {
         console.log('Rolls data saved successfully.');
-        document.getElementById('save-rolls-button').classList.remove('unsaved-changes');
+        disableButtonById('save-rolls-button');
+        disableButtonById('load-rolls-button')
     }).catch(error => {
         console.error('Failed to save rolls data:', error);
     });
@@ -410,6 +412,10 @@ function loadRollsFromLocalStorage() {
         rollsData.forEach(rollData => {
             addSavedRoll(rollData.name, rollData.type, rollData.counts);
         });
+        disableButtonById('load-rolls-button');
+        if (!fetchSetting('auto-save')){
+            disableButtonById('save-rolls-button', false);
+        }
     }).catch(error => {
         console.error('Failed to load rolls data:', error);
     });
@@ -425,7 +431,16 @@ function performAutoLoads(){
     if (fetchSetting('auto-load')) {
         console.log('Auto-loading rolls from local storage.');
         loadRollsFromLocalStorage();
+        disableButtonById('load-rolls-button');
     }
+
+    if (fetchSetting('auto-save')) {
+        disableButtonById('save-rolls-button');
+    }
+}
+
+function disableButtonById(id, disable = true){
+    document.getElementById(id).disabled = disable;
 }
 
 document.getElementById('save-rolls-button').addEventListener('click', saveRollsToLocalStorage);
