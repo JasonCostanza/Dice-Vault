@@ -302,7 +302,7 @@ function maximizeDiceResults(resultGroup) {
 async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
     let rollName = rollNameParam || document.getElementById('roll-name').value || 'Unnamed Roll';
     let selectedType = selectedTypeParam || document.querySelector('input[name="roll-type"]:checked').value;
-    if (selectedType !== 'normal'){
+    if (selectedType !== 'normal' && selectedType !== 'crit-dice'){
         rollName += '\n' + formatRollTypeName(selectedType);
     }
     let diceCounts = diceCountsParam || {
@@ -314,6 +314,25 @@ async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
         d20: document.getElementById('d20-counter-value').textContent,
         mod: document.getElementById('mod-counter-value').textContent,
     };
+    let critBehavior = fetchSetting('crit-behavior');
+    if (selectedType === 'crit-dice'){
+        if (critBehavior=== 'double-die-count') {
+            diceCounts = doubleDieCounts(diceCounts);
+            rollName += '\nDouble the Dice';
+        }
+        if (critBehavior === 'double-die-result'){
+            rollName += '\nDouble the Die Results';
+        }
+        if (critBehavior === 'double-total'){
+            rollName += '\nDouble the Total'
+        }
+        if (critBehavior === 'max-die'){
+            rollName += '\nMaximize the Die'
+        }
+        selectedType = 'normal';
+    }else{
+        critBehavior = 'none';
+    }
     let diceRollString = constructDiceRollString(diceCounts);
 
     if (!TS.dice.isValidRollString(diceRollString)) {
@@ -341,7 +360,10 @@ async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
         let trayConfiguration = Array(rollCount).fill(rollObject);
 
         TS.dice.putDiceInTray(trayConfiguration, true).then(diceSetResponse => {
-            trackedIds[diceSetResponse] = selectedType;
+            trackedIds[diceSetResponse] = {
+                type: selectedType,
+                critBehavior: critBehavior
+            };
         });
     } catch (error) {
         console.error('Error creating roll descriptors:', error);
