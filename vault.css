@@ -60,7 +60,7 @@ html, body {
     gap: 10px;
 }
 
-#save-rolls-button, #load-rolls-button {
+.black-button {
     padding: 5px 15px;
     margin: 5px;
     border: 1px solid #ccc;
@@ -70,9 +70,20 @@ html, body {
     cursor: pointer;
 }
 
-#save-rolls-button:hover, #load-rolls-button:hover {
-    background-color: var(--ts-button-hover); 
+.black-button:hover {
+    background-color: var(--ts-button-hover);
     color: #000000;
+}
+
+.black-button:active {
+    background-color: var(--ts-button-background);
+    color: #000000;
+}
+
+.black-button:disabled, .black-button:disabled:hover{
+    background-color: var(--ts-background-primary);
+    color: var(--ts-color-secondary);
+    cursor: not-allowed;
 }
 
 .unsaved-changes{
