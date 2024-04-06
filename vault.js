@@ -363,6 +363,10 @@ function fetchSetting(settingName){
     if (setting.type === 'checkbox'){
         return setting.checked;
     }
+
+    if (setting.type === 'select-one'){
+        return setting.value;
+    }
 }
 
 function saveRollsToLocalStorage() {
