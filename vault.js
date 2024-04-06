@@ -337,7 +337,8 @@ function defaultSettings(settingName){
     const settings = {
         autoLoadRolls: false,
         autoSaveRolls: false,
-        autoResetEdit: false
+        autoResetEdit: false,
+        doubleBehavior: 'double-die-count'
     }
     return settings[settingName];
 }
@@ -346,7 +347,8 @@ function saveGlobalSettings(){
     const settings = {
         autoLoadRolls: document.getElementById('auto-load').checked,
         autoSaveRolls: document.getElementById('auto-save').checked,
-        autoResetEdit: document.getElementById('auto-reset').checked
+        autoResetEdit: document.getElementById('auto-reset').checked,
+        doubleBehavior: document.getElementById('double-behavior').value
     }
     TS.localStorage.global.setBlob(JSON.stringify(settings)).then(() => {
         console.log('Settings saved successfully.');
@@ -361,6 +363,7 @@ function loadGlobalSettings(){
         document.getElementById('auto-load').checked = settings.autoLoadRolls || defaultSettings('autoLoadRolls');
         document.getElementById('auto-save').checked = settings.autoSaveRolls || defaultSettings('autoSaveRolls');
         document.getElementById('auto-reset').checked = settings.autoSaveRolls || defaultSettings('autoResetEdit');
+        document.getElementById('double-behavior').value = settings.doubleBehavior || defaultSettings('doubleBehavior');
         performAutoLoads();
     }).catch(error => {
         console.error('Failed to load settings:', error);

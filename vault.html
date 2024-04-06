@@ -25,6 +25,16 @@
                         <td><label class="field-title">Auto-Reset Dice on Save</label></td>
                         <td><input type="checkbox" id="auto-reset" class="settings-input"onchange="saveGlobalSettings()" unchecked></td>
                     </tr>
+                    <tr>
+                        <td><label class="field-title">x2 Behavior</label></td>
+                        <td>
+                            <select id="double-behavior" class="select-list" onchange="saveGlobalSettings()">
+                                <option value="double-die-count">Double all Die (1d4 + 2) > (2d4 + 2)</option>
+                                <option value="double-die-result">Double all Die Results (1d4[2]+2=4) > (1d4[2]*2+2=6)</option>
+                                <option value="double-total">Double the Total (1d4[2]+2=4) > ((1d4[2]+2)*2=8)</option>
+                            </select>
+                        </td>
+                    </tr>
                 </table>
                 <hr/>
             </div>
