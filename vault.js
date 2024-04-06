@@ -348,6 +348,7 @@ function loadGlobalSettings(){
         document.getElementById('auto-load').checked = settings.autoLoadRolls || defaultSettings('autoLoadRolls');
         document.getElementById('auto-save').checked = settings.autoSaveRolls || defaultSettings('autoSaveRolls');
         document.getElementById('auto-reset').checked = settings.autoSaveRolls || defaultSettings('autoResetEdit');
+        performAutoLoads();
     }).catch(error => {
         console.error('Failed to load settings:', error);
     });
@@ -404,6 +405,13 @@ function loadRollsFromLocalStorage() {
 async function onStateChangeEvent(msg){
     if (msg.kind === 'hasInitialized'){
         loadGlobalSettings();
+    }
+}
+
+function performAutoLoads(){
+    if (fetchSetting('auto-load')) {
+        console.log('Auto-loading rolls from local storage.');
+        loadRollsFromLocalStorage();
     }
 }
 
