@@ -261,7 +261,7 @@ h1 {
 }
 
 
-#sort-options {
+.select-list {
     padding: 8px 16px; 
     margin-left: 10px; 
     border: 2px solid var(--ts-color-primary); 
@@ -280,13 +280,13 @@ h1 {
     position: relative;
 }
 
-#sort-options:hover {
+.select-list:hover {
     background-color: var(--ts-button-hover); 
     border-color: var(--ts-color-secondary); 
 }
 
 
-#sort-options::-ms-expand {
+.select-list::-ms-expand {
     display: none; 
 }
 
