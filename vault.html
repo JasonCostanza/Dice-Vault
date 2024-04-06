@@ -62,8 +62,8 @@
                     </div>
                     
                     <div class="dice-counter" id="mod-counter">
-                        <i class="ts-icon-circle-dotted ts-icon-large" onclick="increment('mod')" oncontextmenu="negativeMod('mod'); return false;"></i>
-                        <div class="counter-overlay" id="mod-counter-value">0</div>
+                        <i class="ts-icon-circle-dotted ts-icon-large mod-holder"></i>
+                        <input type="number" class="counter-overlay mod-counter-overlay" id="mod-counter-value" value="0" min="-999" max="999" onfocus="this.select()" />
                         <div class="dice-label">MOD</div>
                     </div>
                 </div>
