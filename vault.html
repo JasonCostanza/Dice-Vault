@@ -21,37 +21,37 @@
             <div class="content-col">
                 <label class="field-title">Dice</label>
                 <div class="dice-selection">      
-                    <div class="dice-counter" id="d4-counter">
+                    <div class="dice-counter unselectable" id="d4-counter">
                         <i class="ts-icon-d4 ts-icon-large" onclick="increment('d4')" oncontextmenu="decrement('d4'); return false;"></i>
                         <div class="counter-overlay" id="d4-counter-value">0</div>
                         <div class="dice-label">D4</div>
                     </div>
 
-                    <div class="dice-counter" id="d6-counter">
+                    <div class="dice-counter unselectable" id="d6-counter">
                         <i class="ts-icon-d6 ts-icon-large" onclick="increment('d6')" oncontextmenu="decrement('d6'); return false;"></i>
                         <div class="counter-overlay" id="d6-counter-value">0</div>
                         <div class="dice-label">D6</div>
                     </div>
 
-                    <div class="dice-counter" id="d8-counter">
+                    <div class="dice-counter unselectable" id="d8-counter">
                         <i class="ts-icon-d8 ts-icon-large" onclick="increment('d8')" oncontextmenu="decrement('d8'); return false;"></i>
                         <div class="counter-overlay" id="d8-counter-value">0</div>
                         <div class="dice-label">D8</div>
                     </div>
 
-                    <div class="dice-counter" id="d10-counter">
+                    <div class="dice-counter unselectable" id="d10-counter">
                         <i class="ts-icon-d10 ts-icon-large" onclick="increment('d10')" oncontextmenu="decrement('d10'); return false;"></i>
                         <div class="counter-overlay" id="d10-counter-value">0</div>
                         <div class="dice-label">D10</div>
                     </div>
 
-                    <div class="dice-counter" id="d12-counter">
+                    <div class="dice-counter unselectable" id="d12-counter">
                         <i class="ts-icon-d12 ts-icon-large" onclick="increment('d12')" oncontextmenu="decrement('d12'); return false;"></i>
                         <div class="counter-overlay" id="d12-counter-value">0</div>
                         <div class="dice-label">D12</div>
                     </div>
 
-                    <div class="dice-counter" id="d20-counter">
+                    <div class="dice-counter unselectable" id="d20-counter">
                         <i class="ts-icon-d20 ts-icon-large" onclick="increment('d20')" oncontextmenu="decrement('d20'); return false;"></i>
                         <div class="counter-overlay" id="d20-counter-value">0</div>
                         <div class="dice-label">D20</div>
@@ -61,7 +61,7 @@
                         <span>+</span>
                     </div>
                     
-                    <div class="dice-counter" id="mod-counter">
+                    <div class="dice-counter unselectable" id="mod-counter">
                         <i class="ts-icon-circle-dotted ts-icon-large mod-holder"></i>
                         <input type="number" class="counter-overlay mod-counter-overlay" id="mod-counter-value" value="0" min="-999" max="999" onfocus="this.select()" />
                         <div class="dice-label">MOD</div>
@@ -70,7 +70,7 @@
             </div>
             <br>
         
-            <div class="content-row">
+            <div class="content-row unselectable">
                 <div class="roll-type">
                     <input type="radio" id="normal" name="roll-type" value="normal" checked>
                     <label for="normal">Normal</label>
@@ -83,14 +83,14 @@
                 </div>
             </div>
             
-            <div class="button-container">
+            <div class="button-container unselectable">
                 <button id="roll-btn" onclick="roll()">Roll</button>
                 <button id="reset-btn" onclick="reset()">Reset</button>
                 <button id="save-btn" onclick="save()">Save</button>
             </div><br>
 
             <div class="saved-rolls-header">
-                <label class="field-title">Saved Rolls</label>
+                <label class="field-title unselectable">Saved Rolls</label>
                 <div id="sort-options-container">
                     <select id="sort-options" onchange="sortSavedRolls()">
                         <option value="newest">Newest</option>

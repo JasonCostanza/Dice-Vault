@@ -10,6 +10,10 @@ html, body {
     user-select: none;
 }
 
+.unselectable{
+    user-select: none;
+}
+
 .content {
     overflow: hidden;
     display: flex;
@@ -279,7 +283,6 @@ h1 {
     align-items: center;
     cursor: pointer;
     margin: 5px;
-    user-select: none;
 }
 
 .counter-overlay {
@@ -333,7 +336,6 @@ h1 {
     align-items: center;
     gap: 2%;
     margin-bottom: 0.4em;
-    user-select: none;
 }
 
 .content-col {
@@ -351,7 +353,6 @@ h1 {
     gap: 10px;
     align-items: center;
     padding-top: 2%;
-    user-select: none;
 }
 
 .label-desc {
@@ -364,7 +365,6 @@ h1 {
     flex-shrink: 0;
     font-size: 1.2em;
     color: var(--ts-color-secondary);
-    user-select: none;
 }
 
 .spacer {
