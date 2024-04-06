@@ -90,7 +90,7 @@ function save() {
         d10: document.getElementById('d10-counter-value').textContent,
         d12: document.getElementById('d12-counter-value').textContent,
         d20: document.getElementById('d20-counter-value').textContent,
-        mod: document.getElementById('mod-counter-value').textContent,
+        mod: document.getElementById('mod-counter-value').value,
     };
 
     addSavedRoll(rollName, selectedType, diceCounts);
