@@ -309,6 +309,46 @@ async function displayResult(resultGroup, rollId) {
     TS.dice.sendDiceResult([resultGroup], rollId).catch((response) => console.error("error in sending dice result", response));
 }
 
+function toggleSettingsDisplay() {
+    const settingsContainer = document.querySelector('#settings-menu');
+    const settingsButton = document.querySelector('#settings-button');
+    settingsContainer.classList.toggle('hidden');
+    settingsButton.classList.toggle('active-menu');
+}
+
+function defaultSettings(settingName){
+    const settings = {
+        autoLoadRolls: false,
+        autoSaveRolls: false,
+        autoResetEdit: false
+    }
+    return settings[settingName];
+}
+
+function saveGlobalSettings(){
+    const settings = {
+        autoLoadRolls: document.getElementById('auto-load').checked,
+        autoSaveRolls: document.getElementById('auto-save').checked,
+        autoResetEdit: document.getElementById('auto-reset').checked
+    }
+    TS.localStorage.global.setBlob(JSON.stringify(settings)).then(() => {
+        console.log('Settings saved successfully.');
+    }).catch(error => {
+        console.error('Failed to save settings:', error);
+    });
+}
+
+function loadGlobalSettings(){
+    TS.localStorage.global.getBlob().then(settingsJson => {
+        const settings = JSON.parse(settingsJson || '{}');
+        document.getElementById('auto-load').checked = settings.autoLoadRolls || defaultSettings('autoLoadRolls');
+        document.getElementById('auto-save').checked = settings.autoSaveRolls || defaultSettings('autoSaveRolls');
+        document.getElementById('auto-reset').checked = settings.autoSaveRolls || defaultSettings('autoResetEdit');
+    }).catch(error => {
+        console.error('Failed to load settings:', error);
+    });
+}
+
 function saveRollsToLocalStorage() {
     let rollsData = [];
     document.querySelectorAll('.saved-roll-entry').forEach(entry => {
@@ -340,5 +380,12 @@ function loadRollsFromLocalStorage() {
         console.error('Failed to load rolls data:', error);
     });
 }
+
+async function onStateChangeEvent(msg){
+    if (msg.kind === 'hasInitialized'){
+        loadGlobalSettings();
+    }
+}
+
 document.getElementById('save-rolls-button').addEventListener('click', saveRollsToLocalStorage);
 document.getElementById('load-rolls-button').addEventListener('click', loadRollsFromLocalStorage);

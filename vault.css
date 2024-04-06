@@ -10,6 +10,36 @@ html, body {
     user-select: none;
 }
 
+#menu-bar{
+    padding: 5px;
+}
+
+#settings-button{
+    width: 38px;
+    height: 38px;
+    padding-bottom: 15px;
+    background-color: black;
+    color: rgb(0, 0, 0);
+    border-radius: 50%;
+}
+
+#settings-menu{
+    display: block;
+    background-color: var(--ts-background-primary);
+    border: 1px solid var(--ts-accessibility-border);
+    border-radius: 4px;
+    margin: 20px;
+    z-index: 1;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.active-menu{
+    background-color: grey !important;
+}
+
 .content {
     overflow: hidden;
     display: flex;

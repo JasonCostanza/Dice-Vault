@@ -7,6 +7,27 @@
 
     <body>
         <div class="content">
+            <div id="menu-bar">
+                <i class="ts-icon-gear" id="settings-button" onclick="toggleSettingsDisplay()"></i>
+            </div>
+            <div id="settings-menu" class="hidden">
+                <hr/>
+                <table>
+                    <tr>
+                        <td><label class="field-title">Auto-Load Saved Rolls</label></td>
+                        <td><input type="checkbox" id="auto-load" class="settings-input" onchange="saveGlobalSettings()" unchecked></td>
+                    </tr>
+                    <tr>
+                        <td><label class="field-title">Auto-Save Saved Rolls</label></td>
+                        <td><input type="checkbox" id="auto-save" class="settings-input" onchange="saveGlobalSettings()" unchecked></td>
+                    </tr>
+                    <tr>
+                        <td><label class="field-title">Auto-Reset Edit on Save</label></td>
+                        <td><input type="checkbox" id="auto-reset" class="settings-input"onchange="saveGlobalSettings()" unchecked></td>
+                    </tr>
+                </table>
+                <hr/>
+            </div>
             <div style="text-align: center; margin-top: 0;">
                 <img src="images/DiceVault.png" alt="Dice Vault - Secure your fate with a roll" style="max-width: 20%">
                 <h1 style="position: absolute; overflow: hidden; clip: rect(0 0 0 0); height: 1px; width: 1px; margin: -1px; padding: 0; border: 0;">
