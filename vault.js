@@ -95,6 +95,10 @@ function save() {
 
     addSavedRoll(rollName, selectedType, diceCounts);
     saveCurrentRolls();
+
+    if (fetchSetting('auto-reset')){
+        reset();
+    }
 }
 
 function addSavedRoll(rollName, rollType, diceCounts) {
@@ -347,6 +351,18 @@ function loadGlobalSettings(){
     }).catch(error => {
         console.error('Failed to load settings:', error);
     });
+}
+
+function fetchSetting(settingName){
+    const setting = document.getElementById(settingName)
+    if (setting === null){
+        console.error('Setting not found:', settingName);
+        return;
+    }
+
+    if (setting.type === 'checkbox'){
+        return setting.checked;
+    }
 }
 
 function saveRollsToLocalStorage() {
