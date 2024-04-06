@@ -75,6 +75,11 @@ html, body {
     color: #000000;
 }
 
+.unsaved-changes{
+    background-color: var(--ts-background-tertiary) !important;
+    color: var(--ts-accent-hover) !important;
+}
+
 marquee {
     font-size: 18px;
     padding: 10px;

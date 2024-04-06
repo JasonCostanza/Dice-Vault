@@ -76,6 +76,12 @@ function deleteSavedRoll(element) {
     const rollEntry = element.closest('.saved-roll-entry');
     rollEntry.remove();
     allSavedRolls = allSavedRolls.filter(roll => roll !== rollEntry);
+
+    if (fetchSetting('auto-save')) {
+        saveRollsToLocalStorage();
+    }else{
+        document.getElementById('save-rolls-button').classList.add('unsaved-changes');
+    }
 }
 
 document.addEventListener('DOMContentLoaded', sortSavedRolls);
@@ -98,6 +104,12 @@ function save() {
 
     if (fetchSetting('auto-reset')){
         reset();
+    }
+
+    if (fetchSetting('auto-save')){
+        saveRollsToLocalStorage();
+    }else{
+        document.getElementById('save-rolls-button').classList.add('unsaved-changes');
     }
 }
 
@@ -314,8 +326,8 @@ async function displayResult(resultGroup, rollId) {
 }
 
 function toggleSettingsDisplay() {
-    const settingsContainer = document.querySelector('#settings-menu');
-    const settingsButton = document.querySelector('#settings-button');
+    const settingsContainer = document.getElementById('settings-menu');
+    const settingsButton = document.getElementById('settings-button');
     settingsContainer.classList.toggle('hidden');
     settingsButton.classList.toggle('active-menu');
 }
@@ -385,6 +397,7 @@ function saveRollsToLocalStorage() {
     console.log('Saving rolls data:', rollsJson); 
     TS.localStorage.campaign.setBlob(rollsJson).then(() => {
         console.log('Rolls data saved successfully.');
+        document.getElementById('save-rolls-button').classList.remove('unsaved-changes');
     }).catch(error => {
         console.error('Failed to save rolls data:', error);
     });
