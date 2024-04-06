@@ -400,7 +400,8 @@ async function handleRollResult(rollEvent) {
 
     if (rollEvent.kind == "rollResults") {
         if (roll.resultsGroups != undefined) {
-            if (trackedIds[roll.rollId] == "advantage" || trackedIds[roll.rollId] == "best-of-three") {
+            let rollInfo = trackedIds[roll.rollId];
+            if (rollInfo.type == "advantage" || rollInfo.type == "best-of-three") {
                 //---ADVANTAGE ROLLS---//
                 let max = 0;
                 for (let group of roll.resultsGroups) {
@@ -411,7 +412,7 @@ async function handleRollResult(rollEvent) {
                     }
                 }
                 finalResult = max;
-            } else if (trackedIds[roll.rollId] == "disadvantage") {
+            } else if (rollInfo.type == "disadvantage") {
                 //---DISADVANTAGE ROLLS---//
                 let min = Number.MAX_SAFE_INTEGER;
                 for (let group of roll.resultsGroups) {
@@ -428,6 +429,18 @@ async function handleRollResult(rollEvent) {
                     finalResult = await TS.dice.evaluateDiceResultsGroup(resultGroup);
                 }
             }
+
+
+            if (rollInfo.critBehavior === 'double-total') {
+                resultGroup = doubleDiceResults(resultGroup);
+                resultGroup = doubleModifier(resultGroup);
+            } else if (rollInfo.critBehavior === 'double-die-result') {
+                resultGroup = doubleDiceResults(resultGroup);
+            } else if (rollInfo.critBehavior === 'max-die') {
+                resultGroup = maximizeDiceResults(resultGroup);
+            }
+
+
         }
 
         displayResult(resultGroup, roll.rollId);
