@@ -164,6 +164,7 @@ function addSavedRoll(rollName, rollType, diceCounts) {
     createRollButton('Disadvantage', rollName, 'disadvantage', diceCounts, 'roll-button row-button', rowofButtons);
     createRollButton('Advantage', rollName, 'advantage', diceCounts, 'roll-button row-button', rowofButtons);
     createRollButton('Best of 3', rollName, 'best-of-three', diceCounts, 'roll-button row-button', rowofButtons);
+    createRollButton('Crit', rollName, 'crit-dice', diceCounts, 'roll-button row-button', rowofButtons);
 
     buttonsContainer.appendChild(rowofButtons);
 
