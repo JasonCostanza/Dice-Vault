@@ -193,6 +193,7 @@ function reset() {
     diceCounters.forEach(die => {
         document.getElementById(die + '-counter-value').textContent = '0';
     });
+    document.getElementById('mod-counter-value').value = '0';
 
     document.getElementById('normal').checked = true;
 }
