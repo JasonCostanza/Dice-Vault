@@ -368,11 +368,11 @@ h1 {
 }
 
 .mod-counter-overlay:focus-visible {
-    background-color: transparent;
+    background-color: rgba(150, 150, 150, 0.3);
 }
 
 .mod-counter-overlay:hover{
-    background-color: transparent;
+    background-color: rgba(150, 150, 150, 0.3);
 }
 
 .dice-label {
