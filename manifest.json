@@ -18,6 +18,9 @@
     "subscriptions": {
       "dice": {
         "onRollResults": "handleRollResult"
+      },
+      "symbiote": {
+        "onStateChangeEvent": "onStateChangeEvent"
       }
     }
   },

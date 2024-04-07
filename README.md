@@ -9,12 +9,21 @@ Talespire symbiote which offers an expanded dice rolling experience without the 
 Check it out on [Mod.io](https://mod.io/g/talespire/m/dice-vault)
 
   ## Features
-  - Name your rolls whatever you want
-  - Throw as many dice as you need, including adding or subtracting modifiers
-  - Roll using advantage or disadvantage if needed
-  - Save your roll preset to quickly roll it again in the future
-  - Save your saved roll collection to local storage so you never lose your carefully crafted dice vault
+  - Name your rolls whatever you want.
+  - Throw as many dice as you need, including adding or subtracting modifiers.
+  - Roll using advantage or disadvantage if needed.
+  - Save your roll preset to quickly roll it again in the future.
+  - Save your saved roll collection to local storage so you never lose your carefully crafted dice vault.
   - Saved presets are specific to the campaign, have a preset collection for each campaign you're in and never get confused!
+  - Best-of-Three Rolls! Roll a dice three times at once keeping the highest.
+
+# Changelog
+```
+1.1
+- Added ability to roll "Best of Three" (@PanoramicPanda)
+1.0
+- Public Release!
+```
 
 # Install Instructions
   ## Subscribe
