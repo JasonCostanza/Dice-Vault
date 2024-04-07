@@ -325,6 +325,10 @@ h1 {
     background-color: transparent;
 }
 
+.mod-counter-overlay:hover{
+    background-color: transparent;
+}
+
 .dice-label {
     margin-top: 5px;
     font-size: 0.8em;
