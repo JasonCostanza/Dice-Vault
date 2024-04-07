@@ -300,6 +300,38 @@ function maximizeDiceResults(resultGroup) {
     };
 }
 
+function addMaxDieForEachKind(resultGroup) {
+    function addMaxResults(operands) {
+        return operands.map(operand => {
+            if (operand.operator && operand.operands) {
+                // Recursively process for nested operands
+                return { ...operand, operands: addMaxResults(operand.operands) };
+            } else if (operand.kind && operand.results && Array.isArray(operand.results)) {
+                // Extract the maximum die value from the kind (e.g., "d8" => 8)
+                const maxResult = parseInt(operand.kind.substring(1), 10);
+                // Calculate the number of dice rolled of this kind
+                const diceCount = operand.results.length;
+                // Create an array with the max result repeated diceCount times
+                const maxResultsToAdd = new Array(diceCount).fill(maxResult);
+                // Add the array of maximum value for the die kind to the results array
+                return { ...operand, results: [...operand.results, ...maxResultsToAdd] };
+            } else {
+                // Return the operand unchanged if it's not a die result
+                return operand;
+            }
+        });
+    }
+
+    // Apply the logic to add maximum die results according to the count of each kind
+    return {
+        ...resultGroup,
+        result: {
+            ...resultGroup.result,
+            operands: addMaxResults(resultGroup.result.operands)
+        }
+    };
+}
+
 async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
     let rollName = rollNameParam || document.getElementById('roll-name').value || 'Unnamed Roll';
     let selectedType = selectedTypeParam || document.querySelector('input[name="roll-type"]:checked').value;
@@ -325,10 +357,13 @@ async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
             rollName += '\nDouble the Die Results';
         }
         if (critBehavior === 'double-total'){
-            rollName += '\nDouble the Total'
+            rollName += '\nDouble the Total';
         }
         if (critBehavior === 'max-die'){
-            rollName += '\nMaximize the Die'
+            rollName += '\nMaximize the Die';
+        }
+        if (critBehavior === 'max-plus'){
+            rollName += '\nMaximize Die plus Die Result';
         }
         selectedType = 'normal';
     }else{
@@ -439,6 +474,8 @@ async function handleRollResult(rollEvent) {
                 resultGroup = doubleDiceResults(resultGroup);
             } else if (rollInfo.critBehavior === 'max-die') {
                 resultGroup = maximizeDiceResults(resultGroup);
+            } else if (rollInfo.critBehavior === 'max-plus') {
+                resultGroup = addMaxDieForEachKind(resultGroup);
             }
 
 
