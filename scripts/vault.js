@@ -228,19 +228,19 @@ async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
     if (selectedType === 'crit-dice'){
         if (critBehavior=== 'double-die-count') {
             diceCounts = doubleDieCounts(diceCounts);
-            rollName += '\nDouble the Dice';
+            rollName += '\nCrit! Double the Dice';
         }
         if (critBehavior === 'double-die-result'){
-            rollName += '\nDouble the Die Results';
+            rollName += '\nCrit! Double the Die Results';
         }
         if (critBehavior === 'double-total'){
-            rollName += '\nDouble the Total';
+            rollName += '\nCrit! Double the Total';
         }
         if (critBehavior === 'max-die'){
-            rollName += '\nMaximize the Die';
+            rollName += '\nCrit! Maximize the Die';
         }
         if (critBehavior === 'max-plus'){
-            rollName += '\nMaximize Die plus Die Result';
+            rollName += '\nCrit! Maximize Die plus Die Result';
         }
         selectedType = 'normal';
     }else{
