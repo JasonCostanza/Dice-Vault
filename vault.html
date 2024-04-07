@@ -25,6 +25,18 @@
                         <td><label class="field-title">Auto-Reset Dice on Save</label></td>
                         <td><input type="checkbox" id="auto-reset" class="settings-input"onchange="saveGlobalSettings()" unchecked></td>
                     </tr>
+                    <tr>
+                        <td><label class="field-title">Crit Behavior (1d8+2)</label></td>
+                        <td>
+                            <select id="crit-behavior" class="select-list" onchange="saveGlobalSettings()">
+                                <option value="double-die-count">Roll Double the Die (2d8+2)</option>
+                                <option value="double-die-result">Double Sum of Die (1d8[2]*2+2=6)</option>
+                                <option value="double-total">Double the Total Sum ((1d8[2]+2)*2=8)</option>
+                                <option value="max-die">Max the Die Roll (8+2=10)</option>
+                                <option value="max-plus">Max the Die + Raw Roll (8+1d8+2)</option>
+                            </select>
+                        </td>
+                    </tr>
                 </table>
                 <hr/>
             </div>
@@ -101,6 +113,8 @@
                     <label for="disadvantage">Disadvantage</label>
                     <input type="radio" id="best-of-three" name="roll-type" value="best-of-three">
                     <label for="best-of-three">Best of 3</label>
+                    <input type="radio" id="crit" name="roll-type" value="crit-dice">
+                    <label for="crit">Crit</label>
                 </div>
             </div>
             
@@ -134,6 +148,7 @@
             <button id="load-rolls-button" class="black-button">Load Rolls</button>
         </div>
 
-        <script type="text/javascript" src="vault.js"></script>
+        <script type="text/javascript" src="scripts/diceCrits.js"></script>
+        <script type="text/javascript" src="scripts/vault.js"></script>
     </body>
 </html>

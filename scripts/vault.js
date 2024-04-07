@@ -164,6 +164,7 @@ function addSavedRoll(rollName, rollType, diceCounts) {
     createRollButton('Disadvantage', rollName, 'disadvantage', diceCounts, 'roll-button row-button', rowofButtons);
     createRollButton('Advantage', rollName, 'advantage', diceCounts, 'roll-button row-button', rowofButtons);
     createRollButton('Best of 3', rollName, 'best-of-three', diceCounts, 'roll-button row-button', rowofButtons);
+    createRollButton('Crit', rollName, 'crit-dice', diceCounts, 'roll-button row-button', rowofButtons);
 
     buttonsContainer.appendChild(rowofButtons);
 
@@ -208,12 +209,37 @@ function formatRollTypeName(rollType) {
     return rollTypeMappings[rollType] || rollType;
 }
 
-async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
+function buildRollName(rollNameParam, selectedTypeParam, critBehaviorParam) {
     let rollName = rollNameParam || document.getElementById('roll-name').value || 'Unnamed Roll';
-    let selectedType = selectedTypeParam || document.querySelector('input[name="roll-type"]:checked').value;
-    if (selectedType !== 'normal'){
-        rollName += '\n' + formatRollTypeName(selectedType);
+
+    if (selectedTypeParam !== 'normal' && selectedTypeParam !== 'crit-dice'){
+        rollName += '\n' + formatRollTypeName(selectedTypeParam);
     }
+
+    if (selectedTypeParam === 'crit-dice'){
+        if (critBehaviorParam=== 'double-die-count') {
+            rollName += '\nCrit! Double the Dice';
+        }
+        if (critBehaviorParam === 'double-die-result'){
+            rollName += '\nCrit! Double the Die Results';
+        }
+        if (critBehaviorParam === 'double-total'){
+            rollName += '\nCrit! Double the Total';
+        }
+        if (critBehaviorParam === 'max-die'){
+            rollName += '\nCrit! Maximize the Die';
+        }
+        if (critBehaviorParam === 'max-plus'){
+            rollName += '\nCrit! Maximize Die plus Die Result';
+        }
+    }
+
+    return rollName;
+}
+
+async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
+    let selectedType = selectedTypeParam || document.querySelector('input[name="roll-type"]:checked').value;
+
     let diceCounts = diceCountsParam || {
         d4: document.getElementById('d4-counter-value').textContent,
         d6: document.getElementById('d6-counter-value').textContent,
@@ -223,6 +249,20 @@ async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
         d20: document.getElementById('d20-counter-value').textContent,
         mod: document.getElementById('mod-counter-value').value,
     };
+
+    let critBehavior = fetchSetting('crit-behavior');
+
+    let rollName = buildRollName(rollNameParam, selectedType, critBehavior);
+
+    if (selectedType === 'crit-dice'){
+        if (critBehavior=== 'double-die-count') {
+            diceCounts = doubleDieCounts(diceCounts);
+        }
+        selectedType = 'normal';
+    }else{
+        critBehavior = 'none';
+    }
+
     let diceRollString = constructDiceRollString(diceCounts);
 
     if (!TS.dice.isValidRollString(diceRollString)) {
@@ -250,7 +290,10 @@ async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
         let trayConfiguration = Array(rollCount).fill(rollObject);
 
         TS.dice.putDiceInTray(trayConfiguration, true).then(diceSetResponse => {
-            trackedIds[diceSetResponse] = selectedType;
+            trackedIds[diceSetResponse] = {
+                type: selectedType,
+                critBehavior: critBehavior
+            };
         });
     } catch (error) {
         console.error('Error creating roll descriptors:', error);
@@ -287,7 +330,8 @@ async function handleRollResult(rollEvent) {
 
     if (rollEvent.kind == "rollResults") {
         if (roll.resultsGroups != undefined) {
-            if (trackedIds[roll.rollId] == "advantage" || trackedIds[roll.rollId] == "best-of-three") {
+            let rollInfo = trackedIds[roll.rollId];
+            if (rollInfo.type == "advantage" || rollInfo.type == "best-of-three") {
                 //---ADVANTAGE ROLLS---//
                 let max = 0;
                 for (let group of roll.resultsGroups) {
@@ -298,7 +342,7 @@ async function handleRollResult(rollEvent) {
                     }
                 }
                 finalResult = max;
-            } else if (trackedIds[roll.rollId] == "disadvantage") {
+            } else if (rollInfo.type == "disadvantage") {
                 //---DISADVANTAGE ROLLS---//
                 let min = Number.MAX_SAFE_INTEGER;
                 for (let group of roll.resultsGroups) {
@@ -315,6 +359,20 @@ async function handleRollResult(rollEvent) {
                     finalResult = await TS.dice.evaluateDiceResultsGroup(resultGroup);
                 }
             }
+
+
+            if (rollInfo.critBehavior === 'double-total') {
+                resultGroup = doubleDiceResults(resultGroup);
+                resultGroup = doubleModifier(resultGroup);
+            } else if (rollInfo.critBehavior === 'double-die-result') {
+                resultGroup = doubleDiceResults(resultGroup);
+            } else if (rollInfo.critBehavior === 'max-die') {
+                resultGroup = maximizeDiceResults(resultGroup);
+            } else if (rollInfo.critBehavior === 'max-plus') {
+                resultGroup = addMaxDieForEachKind(resultGroup);
+            }
+
+
         }
 
         displayResult(resultGroup, roll.rollId);
@@ -338,7 +396,8 @@ function defaultSettings(settingName){
     const settings = {
         autoLoadRolls: false,
         autoSaveRolls: false,
-        autoResetEdit: false
+        autoResetEdit: false,
+        critBehavior: 'double-die-count'
     }
     return settings[settingName];
 }
@@ -347,7 +406,8 @@ function saveGlobalSettings(){
     const settings = {
         autoLoadRolls: document.getElementById('auto-load').checked,
         autoSaveRolls: document.getElementById('auto-save').checked,
-        autoResetEdit: document.getElementById('auto-reset').checked
+        autoResetEdit: document.getElementById('auto-reset').checked,
+        critBehavior: document.getElementById('crit-behavior').value
     }
     TS.localStorage.global.setBlob(JSON.stringify(settings)).then(() => {
         console.log('Settings saved successfully.');
@@ -363,6 +423,7 @@ function loadGlobalSettings(){
         document.getElementById('auto-load').checked = settings.autoLoadRolls || defaultSettings('autoLoadRolls');
         document.getElementById('auto-save').checked = settings.autoSaveRolls || defaultSettings('autoSaveRolls');
         document.getElementById('auto-reset').checked = settings.autoSaveRolls || defaultSettings('autoResetEdit');
+        document.getElementById('crit-behavior').value = settings.critBehavior || defaultSettings('critBehavior');
         performAutoLoads();
     }).catch(error => {
         console.error('Failed to load settings:', error);
