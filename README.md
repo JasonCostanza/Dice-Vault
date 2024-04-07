@@ -19,6 +19,11 @@ Check it out on [Mod.io](https://mod.io/g/talespire/m/dice-vault)
 
 # Changelog
 ```
+1.2
+- Improved sort list
+- Modifier is now a text input field
+- Cleaned up CSS to not allow drag-selection of random things
+- Added an options menu
 1.1
 - Added ability to roll "Best of Three" (@PanoramicPanda)
 1.0
