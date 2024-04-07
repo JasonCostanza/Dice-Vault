@@ -97,7 +97,7 @@ function save() {
         d10: document.getElementById('d10-counter-value').textContent,
         d12: document.getElementById('d12-counter-value').textContent,
         d20: document.getElementById('d20-counter-value').textContent,
-        mod: document.getElementById('mod-counter-value').textContent,
+        mod: document.getElementById('mod-counter-value').value,
     };
 
     addSavedRoll(rollName, selectedType, diceCounts);
@@ -194,6 +194,7 @@ function reset() {
     diceCounters.forEach(die => {
         document.getElementById(die + '-counter-value').textContent = '0';
     });
+    document.getElementById('mod-counter-value').value = '0';
 
     document.getElementById('normal').checked = true;
 }
@@ -221,7 +222,7 @@ async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
         d10: document.getElementById('d10-counter-value').textContent,
         d12: document.getElementById('d12-counter-value').textContent,
         d20: document.getElementById('d20-counter-value').textContent,
-        mod: document.getElementById('mod-counter-value').textContent,
+        mod: document.getElementById('mod-counter-value').value,
     };
     let critBehavior = fetchSetting('crit-behavior');
     if (selectedType === 'crit-dice'){

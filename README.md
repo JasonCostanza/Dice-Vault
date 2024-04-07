@@ -58,3 +58,4 @@ See our github issues tab for bugs and enhancements on the roadmap
 
 # Special Thanks
 [DeeForce](https://github.com/D33Force)
+[PanoramicPanda](https://github.com/PanoramicPanda)
