@@ -10,6 +10,10 @@ html, body {
     user-select: none;
 }
 
+.unselectable{
+    user-select: none;
+}
+
 #menu-bar{
     padding: 5px;
 }
@@ -325,12 +329,11 @@ h1 {
     align-items: center;
     cursor: pointer;
     margin: 5px;
-    user-select: none;
 }
 
 .counter-overlay {
     position: absolute;
-    top: 50%;
+    top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
     pointer-events: none;
@@ -344,6 +347,34 @@ h1 {
          1px 1px 0 #ffffff;
 }
 
+.mod-counter-overlay{
+    height: 1.6em;
+    text-align: center;
+    border: none;
+    left: 50%;
+    pointer-events: auto;
+    background: transparent;
+    font-size: 1.5em;
+    padding: 0;
+    outline: none;
+    appearance: none;
+    -moz-appearance: textfield;
+}
+
+.mod-counter-overlay::-webkit-inner-spin-button,
+.mod-counter-overlay::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.mod-counter-overlay:focus-visible {
+    background-color: rgba(150, 150, 150, 0.3);
+}
+
+.mod-counter-overlay:hover{
+    background-color: rgba(150, 150, 150, 0.3);
+}
+
 .dice-label {
     margin-top: 5px;
     font-size: 0.8em;
@@ -355,7 +386,6 @@ h1 {
     align-items: center;
     gap: 2%;
     margin-bottom: 0.4em;
-    user-select: none;
 }
 
 .content-col {
@@ -373,7 +403,6 @@ h1 {
     gap: 10px;
     align-items: center;
     padding-top: 2%;
-    user-select: none;
 }
 
 .label-desc {
@@ -386,7 +415,6 @@ h1 {
     flex-shrink: 0;
     font-size: 1.2em;
     color: var(--ts-color-secondary);
-    user-select: none;
 }
 
 .spacer {
