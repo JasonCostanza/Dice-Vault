@@ -16,6 +16,14 @@ Check it out on [Mod.io](https://mod.io/g/talespire/m/dice-vault)
   - Save your saved roll collection to local storage so you never lose your carefully crafted dice vault
   - Saved presets are specific to the campaign, have a preset collection for each campaign you're in and never get confused!
 
+# Changelog
+```
+1.1
+- Added ability to roll "Best of Three" (@PanoramicPanda)
+1.0
+- Public Release!
+```
+
 # Install Instructions
   ## Subscribe
   1. Enable Symbiotes in Talespire settings
