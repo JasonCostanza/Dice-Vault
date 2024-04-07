@@ -10,6 +10,36 @@ html, body {
     user-select: none;
 }
 
+#menu-bar{
+    padding: 5px;
+}
+
+#settings-button{
+    width: 38px;
+    height: 38px;
+    padding-bottom: 15px;
+    background-color: black;
+    color: rgb(0, 0, 0);
+    border-radius: 50%;
+}
+
+#settings-menu{
+    display: block;
+    background-color: var(--ts-background-primary);
+    border: 1px solid var(--ts-accessibility-border);
+    border-radius: 4px;
+    margin: 20px;
+    z-index: 1;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.active-menu{
+    background-color: grey !important;
+}
+
 .content {
     overflow: hidden;
     display: flex;
@@ -30,7 +60,7 @@ html, body {
     gap: 10px;
 }
 
-#save-rolls-button, #load-rolls-button {
+.black-button {
     padding: 5px 15px;
     margin: 5px;
     border: 1px solid #ccc;
@@ -40,9 +70,25 @@ html, body {
     cursor: pointer;
 }
 
-#save-rolls-button:hover, #load-rolls-button:hover {
-    background-color: var(--ts-button-hover); 
+.black-button:hover {
+    background-color: var(--ts-button-hover);
     color: #000000;
+}
+
+.black-button:active {
+    background-color: var(--ts-button-background);
+    color: #000000;
+}
+
+.black-button:disabled, .black-button:disabled:hover{
+    background-color: var(--ts-background-primary);
+    color: var(--ts-color-secondary);
+    cursor: not-allowed;
+}
+
+.unsaved-changes{
+    background-color: var(--ts-background-tertiary) !important;
+    color: var(--ts-accent-hover) !important;
 }
 
 marquee {
@@ -231,7 +277,7 @@ h1 {
 }
 
 
-#sort-options {
+.select-list {
     padding: 8px 16px; 
     margin-left: 10px; 
     border: 2px solid var(--ts-color-primary); 
@@ -250,13 +296,13 @@ h1 {
     position: relative;
 }
 
-#sort-options:hover {
+.select-list:hover {
     background-color: var(--ts-button-hover); 
     border-color: var(--ts-color-secondary); 
 }
 
 
-#sort-options::-ms-expand {
+.select-list::-ms-expand {
     display: none; 
 }
 

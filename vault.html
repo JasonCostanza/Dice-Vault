@@ -7,6 +7,27 @@
 
     <body>
         <div class="content">
+            <div id="menu-bar">
+                <i class="ts-icon-gear" id="settings-button" onclick="toggleSettingsDisplay()"></i>
+            </div>
+            <div id="settings-menu" class="hidden">
+                <hr/>
+                <table>
+                    <tr>
+                        <td><label class="field-title">Auto-Load Saved Rolls</label></td>
+                        <td><input type="checkbox" id="auto-load" class="settings-input" onchange="saveGlobalSettings()" unchecked></td>
+                    </tr>
+                    <tr>
+                        <td><label class="field-title">Auto-Save Saved Rolls</label></td>
+                        <td><input type="checkbox" id="auto-save" class="settings-input" onchange="saveGlobalSettings()" unchecked></td>
+                    </tr>
+                    <tr>
+                        <td><label class="field-title">Auto-Reset Dice on Save</label></td>
+                        <td><input type="checkbox" id="auto-reset" class="settings-input"onchange="saveGlobalSettings()" unchecked></td>
+                    </tr>
+                </table>
+                <hr/>
+            </div>
             <div style="text-align: center; margin-top: 0;">
                 <img src="images/DiceVault.png" alt="Dice Vault - Secure your fate with a roll" style="max-width: 20%">
                 <h1 style="position: absolute; overflow: hidden; clip: rect(0 0 0 0); height: 1px; width: 1px; margin: -1px; padding: 0; border: 0;">
@@ -92,7 +113,7 @@
             <div class="saved-rolls-header">
                 <label class="field-title">Saved Rolls</label>
                 <div id="sort-options-container">
-                    <select id="sort-options" onchange="sortSavedRolls()">
+                    <select id="sort-options" class='select-list' onchange="sortSavedRolls()">
                         <option value="newest">Newest</option>
                         <option value="oldest">Oldest</option>
                         <option value="nameAsc">Sort A-Z</option>
@@ -106,11 +127,11 @@
         </div>
 
         <div class="footer">
-            <button id="save-rolls-button">Save Rolls</button>
+            <button id="save-rolls-button" class="black-button">Save Rolls</button>
             
             <i class="ts-icon-character-gamemaster"></i><div style="font-family: 'Enchanted Land', cursive; color: #dddddd; font-size: 0.7em;"> "May the rolls be in your favor"</div>
 
-            <button id="load-rolls-button">Load Rolls</button>
+            <button id="load-rolls-button" class="black-button">Load Rolls</button>
         </div>
 
         <script type="text/javascript" src="vault.js"></script>
