@@ -10,8 +10,7 @@ function defaultSettings(settingName){
         autoLoadRolls: false,
         autoSaveRolls: false,
         autoResetEdit: false,
-        critBehavior: 'double-die-count',
-        explodeBehavior: 'keep-exploding'
+        critBehavior: 'double-die-count'
     }
     return settings[settingName];
 }
@@ -21,8 +20,7 @@ function saveGlobalSettings(){
         autoLoadRolls: document.getElementById('auto-load').checked,
         autoSaveRolls: document.getElementById('auto-save').checked,
         autoResetEdit: document.getElementById('auto-reset').checked,
-        critBehavior: document.getElementById('crit-behavior').value,
-        explodeBehavior: document.getElementById('explode-behavior').value
+        critBehavior: document.getElementById('crit-behavior').value
     }
     TS.localStorage.global.setBlob(JSON.stringify(settings)).then(() => {
         console.log('Settings saved successfully.');
@@ -39,7 +37,6 @@ function loadGlobalSettings(){
         document.getElementById('auto-save').checked = settings.autoSaveRolls || defaultSettings('autoSaveRolls');
         document.getElementById('auto-reset').checked = settings.autoSaveRolls || defaultSettings('autoResetEdit');
         document.getElementById('crit-behavior').value = settings.critBehavior || defaultSettings('critBehavior');
-        document.getElementById('explode-behavior').value = settings.explodeBehavior || defaultSettings('explodeBehavior');
         performAutoLoads();
     }).catch(error => {
         console.error('Failed to load settings:', error);
