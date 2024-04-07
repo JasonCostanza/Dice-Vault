@@ -11,113 +11,148 @@ function doubleDieCounts(diceCounts) {
 }
 
 function doubleDiceResults(resultGroup) {
+    // Handle scenario without nested operands
+    if (resultGroup.result.kind && Array.isArray(resultGroup.result.results)) {
+        return {
+            ...resultGroup,
+            result: {
+                ...resultGroup.result,
+                results: resultGroup.result.results.map(result => result * 2)
+            }
+        };
+    }
+
     function doubleResults(operands) {
         return operands.map(operand => {
             if (operand.operator && operand.operands) {
-                // Recursively double results for nested operands
-                return {...operand, operands: doubleResults(operand.operands)};
+                return { ...operand, operands: doubleResults(operand.operands) };
             } else if (operand.results && Array.isArray(operand.results)) {
-                // Double the results of the dice
-                return {...operand, results: operand.results.map(result => result * 2)};
+                return { ...operand, results: operand.results.map(result => result * 2) };
             } else {
-                // Return the operand unchanged if it's not a dice result
                 return operand;
             }
         });
     }
 
-    // Create a new resultGroup with doubled dice results
-    return {
-        ...resultGroup,
-        result: {
-            ...resultGroup.result,
-            operands: doubleResults(resultGroup.result.operands)
-        }
-    };
+    // Assuming the nested structure if direct handling wasn't applicable
+    if (resultGroup.result.operands) {
+        return {
+            ...resultGroup,
+            result: {
+                ...resultGroup.result,
+                operands: doubleResults(resultGroup.result.operands)
+            }
+        };
+    }
+
+    return resultGroup;
 }
 
+
 function doubleModifier(resultGroup) {
+    // Directly handle scenario without nested operands (no direct handling needed for modifiers)
     function doubleMod(operands) {
         return operands.map(operand => {
             if (operand.operator && operand.operands) {
-                // Recursively search for modifiers to double
-                return {...operand, operands: doubleMod(operand.operands)};
+                return { ...operand, operands: doubleMod(operand.operands) };
             } else if (operand.value) {
-                // Double the modifier value, ensuring it stays positive if initially negative
-                return {...operand, value: Math.abs(operand.value) * 2};
+                let newValue = Math.abs(operand.value) * 2;
+                return { ...operand, value: newValue };
             } else {
-                // Return the operand unchanged if it's not a modifier
                 return operand;
             }
         });
     }
 
-    // Create a new resultGroup with doubled modifier
-    return {
-        ...resultGroup,
-        result: {
-            ...resultGroup.result,
-            operands: doubleMod(resultGroup.result.operands)
-        }
-    };
+    if (resultGroup.result.operands) {
+        return {
+            ...resultGroup,
+            result: {
+                ...resultGroup.result,
+                operands: doubleMod(resultGroup.result.operands)
+            }
+        };
+    }
+
+    return resultGroup;
 }
 
+
 function maximizeDiceResults(resultGroup) {
+    if (resultGroup.result.kind && Array.isArray(resultGroup.result.results)) {
+        const maxResult = parseInt(resultGroup.result.kind.substring(1), 10);
+        return {
+            ...resultGroup,
+            result: {
+                ...resultGroup.result,
+                results: resultGroup.result.results.map(() => maxResult)
+            }
+        };
+    }
+
     function maximizeResults(operands) {
         return operands.map(operand => {
             if (operand.operator && operand.operands) {
-                // Recursively process for nested operands
-                return {...operand, operands: maximizeResults(operand.operands)};
+                return { ...operand, operands: maximizeResults(operand.operands) };
             } else if (operand.kind && operand.results && Array.isArray(operand.results)) {
-                // Extract the maximum die value from the kind (e.g., "d8" => 8)
                 const maxResult = parseInt(operand.kind.substring(1), 10);
-                // Set all results to the maximum value for the die kind
-                return {...operand, results: operand.results.map(() => maxResult)};
+                return { ...operand, results: operand.results.map(() => maxResult) };
             } else {
-                // Return the operand unchanged if it's not a die result
                 return operand;
             }
         });
     }
 
-    // Apply the maximizing logic to the operands
-    return {
-        ...resultGroup,
-        result: {
-            ...resultGroup.result,
-            operands: maximizeResults(resultGroup.result.operands)
-        }
-    };
+    if (resultGroup.result.operands) {
+        return {
+            ...resultGroup,
+            result: {
+                ...resultGroup.result,
+                operands: maximizeResults(resultGroup.result.operands)
+            }
+        };
+    }
+
+    return resultGroup;
 }
 
+
 function addMaxDieForEachKind(resultGroup) {
+    if (resultGroup.result.kind && Array.isArray(resultGroup.result.results)) {
+        const maxResult = parseInt(resultGroup.result.kind.substring(1), 10);
+        const maxResultsToAdd = new Array(resultGroup.result.results.length).fill(maxResult);
+        return {
+            ...resultGroup,
+            result: {
+                ...resultGroup.result,
+                results: [...resultGroup.result.results, ...maxResultsToAdd]
+            }
+        };
+    }
+
     function addMaxResults(operands) {
         return operands.map(operand => {
             if (operand.operator && operand.operands) {
-                // Recursively process for nested operands
                 return { ...operand, operands: addMaxResults(operand.operands) };
             } else if (operand.kind && operand.results && Array.isArray(operand.results)) {
-                // Extract the maximum die value from the kind (e.g., "d8" => 8)
                 const maxResult = parseInt(operand.kind.substring(1), 10);
-                // Calculate the number of dice rolled of this kind
-                const diceCount = operand.results.length;
-                // Create an array with the max result repeated diceCount times
-                const maxResultsToAdd = new Array(diceCount).fill(maxResult);
-                // Add the array of maximum value for the die kind to the results array
+                const maxResultsToAdd = new Array(operand.results.length).fill(maxResult);
                 return { ...operand, results: [...operand.results, ...maxResultsToAdd] };
             } else {
-                // Return the operand unchanged if it's not a die result
                 return operand;
             }
         });
     }
 
-    // Apply the logic to add maximum die results according to the count of each kind
-    return {
-        ...resultGroup,
-        result: {
-            ...resultGroup.result,
-            operands: addMaxResults(resultGroup.result.operands)
-        }
-    };
+    if (resultGroup.result.operands) {
+        return {
+            ...resultGroup,
+            result: {
+                ...resultGroup.result,
+                operands: addMaxResults(resultGroup.result.operands)
+            }
+        };
+    }
+
+    return resultGroup;
 }
