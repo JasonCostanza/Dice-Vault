@@ -396,6 +396,7 @@ function saveGlobalSettings(){
     }).catch(error => {
         console.error('Failed to save settings:', error);
     });
+    updateAutoButtons();
 }
 
 function loadGlobalSettings(){
@@ -475,11 +476,31 @@ function performAutoLoads(){
     if (fetchSetting('auto-load')) {
         console.log('Auto-loading rolls from local storage.');
         loadRollsFromLocalStorage();
-        disableButtonById('load-rolls-button');
+
     }
 
     if (fetchSetting('auto-save')) {
+
+    }
+
+    updateAutoButtons();
+}
+
+function updateAutoButtons(){
+    if (fetchSetting('auto-load')) {
+        document.getElementById('load-rolls-button').innerText = 'Auto-Loading';
+        disableButtonById('load-rolls-button');
+    }else{
+        document.getElementById('load-rolls-button').innerText = 'Load Rolls';
+        disableButtonById('load-rolls-button', false);
+    }
+
+    if (fetchSetting('auto-save')) {
+        document.getElementById('save-rolls-button').innerText = 'Auto-Saving';
         disableButtonById('save-rolls-button');
+    } else {
+        document.getElementById('save-rolls-button').innerText = 'Save Rolls';
+        disableButtonById('save-rolls-button', false);
     }
 }
 
