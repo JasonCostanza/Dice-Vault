@@ -209,12 +209,37 @@ function formatRollTypeName(rollType) {
     return rollTypeMappings[rollType] || rollType;
 }
 
-async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
+function buildRollName(rollNameParam, selectedTypeParam, critBehaviorParam) {
     let rollName = rollNameParam || document.getElementById('roll-name').value || 'Unnamed Roll';
-    let selectedType = selectedTypeParam || document.querySelector('input[name="roll-type"]:checked').value;
-    if (selectedType !== 'normal' && selectedType !== 'crit-dice'){
-        rollName += '\n' + formatRollTypeName(selectedType);
+
+    if (selectedTypeParam !== 'normal' && selectedTypeParam !== 'crit-dice'){
+        rollName += '\n' + formatRollTypeName(selectedTypeParam);
     }
+
+    if (selectedTypeParam === 'crit-dice'){
+        if (critBehaviorParam=== 'double-die-count') {
+            rollName += '\nCrit! Double the Dice';
+        }
+        if (critBehaviorParam === 'double-die-result'){
+            rollName += '\nCrit! Double the Die Results';
+        }
+        if (critBehaviorParam === 'double-total'){
+            rollName += '\nCrit! Double the Total';
+        }
+        if (critBehaviorParam === 'max-die'){
+            rollName += '\nCrit! Maximize the Die';
+        }
+        if (critBehaviorParam === 'max-plus'){
+            rollName += '\nCrit! Maximize Die plus Die Result';
+        }
+    }
+
+    return rollName;
+}
+
+async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
+    let selectedType = selectedTypeParam || document.querySelector('input[name="roll-type"]:checked').value;
+
     let diceCounts = diceCountsParam || {
         d4: document.getElementById('d4-counter-value').textContent,
         d6: document.getElementById('d6-counter-value').textContent,
@@ -224,28 +249,20 @@ async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
         d20: document.getElementById('d20-counter-value').textContent,
         mod: document.getElementById('mod-counter-value').value,
     };
+
     let critBehavior = fetchSetting('crit-behavior');
+
+    let rollName = buildRollName(rollNameParam, selectedType, critBehavior);
+
     if (selectedType === 'crit-dice'){
         if (critBehavior=== 'double-die-count') {
             diceCounts = doubleDieCounts(diceCounts);
-            rollName += '\nCrit! Double the Dice';
-        }
-        if (critBehavior === 'double-die-result'){
-            rollName += '\nCrit! Double the Die Results';
-        }
-        if (critBehavior === 'double-total'){
-            rollName += '\nCrit! Double the Total';
-        }
-        if (critBehavior === 'max-die'){
-            rollName += '\nCrit! Maximize the Die';
-        }
-        if (critBehavior === 'max-plus'){
-            rollName += '\nCrit! Maximize Die plus Die Result';
         }
         selectedType = 'normal';
     }else{
         critBehavior = 'none';
     }
+
     let diceRollString = constructDiceRollString(diceCounts);
 
     if (!TS.dice.isValidRollString(diceRollString)) {
