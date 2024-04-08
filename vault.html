@@ -40,7 +40,7 @@
                 </table>
                 <hr/>
             </div>
-            <div style="text-align: center; margin-top: 0;">
+            <div class="logo-header">
                 <img src="images/DiceVault.png" alt="Dice Vault - Secure your fate with a roll" style="max-width: 20%">
                 <h1 style="position: absolute; overflow: hidden; clip: rect(0 0 0 0); height: 1px; width: 1px; margin: -1px; padding: 0; border: 0;">
                     <i class="ts-icon-lock"></i> Dice Vault <i class="ts-icon-lock"></i>
@@ -102,24 +102,16 @@
                 </div>
             </div>
             <br>
-        
-            <div class="content-row unselectable">
-                <div class="roll-type">
-                    <input type="radio" id="normal" name="roll-type" value="normal" checked>
-                    <label for="normal">Normal</label>
-                    <input type="radio" id="advantage" name="roll-type" value="advantage">
-                    <label for="advantage">Advantage</label>
-                    <input type="radio" id="disadvantage" name="roll-type" value="disadvantage">
-                    <label for="disadvantage">Disadvantage</label>
-                    <input type="radio" id="best-of-three" name="roll-type" value="best-of-three">
-                    <label for="best-of-three">Best of 3</label>
-                    <input type="radio" id="crit" name="roll-type" value="crit-dice">
-                    <label for="crit">Crit</label>
-                </div>
+
+            <div class="button-container unselectable">
+                <button class="rolling-button" onclick="roll(null, 'normal')"><img class="roll-type-image" src="./images/icons/rolling.png" alt="roll dice"/><br/>Roll</button>
+                <button class="rolling-button" onclick="roll(null, 'disadvantage')"><img class="roll-type-image" src="./images/icons/disadvantage.png" alt="disadvantage"/><br/>Disadvantage</button>
+                <button class="rolling-button" onclick="roll(null, 'advantage')"><img class="roll-type-image" src="./images/icons/advantage.png" alt="advantage"/><br/>Advantage</button>
+                <button class="rolling-button" onclick="roll(null, 'best-of-three')"><img class="roll-type-image" src="./images/icons/best-of-three.png" alt="best of three"/><br/>Best of 3</button>
+                <button class="rolling-button" onclick="roll(null, 'crit-dice')"><img class="roll-type-image" src="./images/icons/crit.png" alt="critical hit"/><br/>Critical</button>
             </div>
             
             <div class="button-container unselectable">
-                <button id="roll-btn" onclick="roll()">Roll</button>
                 <button id="reset-btn" onclick="reset()">Reset</button>
                 <button id="save-btn" onclick="save()">Save</button>
             </div><br>
@@ -148,6 +140,8 @@
             <button id="load-rolls-button" class="black-button">Load Rolls</button>
         </div>
 
+        <script type="text/javascript" src="scripts/settings.js"></script>
+        <script type="text/javascript" src="scripts/saveLoad.js"></script>
         <script type="text/javascript" src="scripts/diceCrits.js"></script>
         <script type="text/javascript" src="scripts/vault.js"></script>
     </body>
