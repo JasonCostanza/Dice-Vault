@@ -141,6 +141,11 @@ h1 {
 .row-button{
     flex: 1;
     margin: 0 5px;
+    height: 30px;
+}
+
+.row-button img{
+    height: 30px;
 }
 
 .saved-roll-entry {

@@ -131,21 +131,17 @@ function addSavedRoll(rollName, rollType, diceCounts) {
         </div>
     `;
 
-    const buttonsContainer = document.createElement('div');
-    buttonsContainer.className = 'roll-buttons-container';
-
     const rowofButtons = document.createElement('div');
     rowofButtons.className = 'row-buttons-container';
 
-    createRollButton('Quick Roll', rollName, 'normal', diceCounts, 'roll-button', buttonsContainer);
-    createRollButton('Disadvantage', rollName, 'disadvantage', diceCounts, 'roll-button row-button', rowofButtons);
-    createRollButton('Advantage', rollName, 'advantage', diceCounts, 'roll-button row-button', rowofButtons);
-    createRollButton('Best of 3', rollName, 'best-of-three', diceCounts, 'roll-button row-button', rowofButtons);
-    createRollButton('Crit', rollName, 'crit-dice', diceCounts, 'roll-button row-button', rowofButtons);
+    createRollButton('rolling', rollName, 'normal', diceCounts, 'roll-button row-button', rowofButtons);
+    createRollButton('disadvantage', rollName, 'disadvantage', diceCounts, 'roll-button row-button', rowofButtons);
+    createRollButton('advantage', rollName, 'advantage', diceCounts, 'roll-button row-button', rowofButtons);
+    createRollButton('best-of-three', rollName, 'best-of-three', diceCounts, 'roll-button row-button', rowofButtons);
+    createRollButton('crit', rollName, 'crit-dice', diceCounts, 'roll-button row-button', rowofButtons);
 
-    buttonsContainer.appendChild(rowofButtons);
 
-    rollEntry.appendChild(buttonsContainer);
+    rollEntry.appendChild(rowofButtons);
 
     if (savedRollsContainer.firstChild) {
         savedRollsContainer.insertBefore(rollEntry, savedRollsContainer.firstChild);
@@ -154,13 +150,16 @@ function addSavedRoll(rollName, rollType, diceCounts) {
     }
 }
 
-function createRollButton(text, rollName, rollType, diceCounts, classes, parent){
+function createRollButton(imageName, rollName, rollType, diceCounts, classes, parent){
     const rollButton = document.createElement('div');
-    rollButton.textContent = text;
     rollButton.className = classes;
     rollButton.onclick = function() {
         roll(rollName, rollType, diceCounts);
     };
+    const imageIcon = document.createElement('img');
+    imageIcon.src = `./images/icons/${imageName}.png`;
+    imageIcon.className = 'roll-type-image';
+    rollButton.appendChild(imageIcon);
     parent.appendChild(rollButton);
 }
 
