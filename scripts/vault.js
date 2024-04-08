@@ -66,7 +66,6 @@ document.addEventListener('DOMContentLoaded', sortSavedRolls);
 
 function save() {
     const rollName = document.getElementById('roll-name').value || 'Unnamed Roll';
-    const selectedType = document.querySelector('input[name="roll-type"]:checked').value;
     const diceCounts = {
         d4: document.getElementById('d4-counter-value').textContent,
         d6: document.getElementById('d6-counter-value').textContent,
@@ -77,7 +76,7 @@ function save() {
         mod: document.getElementById('mod-counter-value').value,
     };
 
-    addSavedRoll(rollName, selectedType, diceCounts);
+    addSavedRoll(rollName, diceCounts);
     saveCurrentRolls();
 
     if (fetchSetting('auto-reset')){
@@ -91,11 +90,10 @@ function save() {
     }
 }
 
-function addSavedRoll(rollName, rollType, diceCounts) {
+function addSavedRoll(rollName, diceCounts) {
     const savedRollsContainer = document.querySelector('.saved-rolls-container');
     const rollEntry = document.createElement('div');
     rollEntry.className = 'saved-roll-entry';
-    rollEntry.dataset.rollType = rollType;
     rollEntry.dataset.diceCounts = JSON.stringify(diceCounts);
     allSavedRolls.push(rollEntry);
 
@@ -171,8 +169,6 @@ function reset() {
         document.getElementById(die + '-counter-value').textContent = '0';
     });
     document.getElementById('mod-counter-value').value = '0';
-
-    document.getElementById('normal').checked = true;
 }
 
 function formatRollTypeName(rollType) {
