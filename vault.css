@@ -100,6 +100,15 @@ marquee {
     padding: 10px;
 }
 
+.logo-header{
+    text-align: center;
+    margin-top: 0;
+}
+
+.logo-header img{
+    height: 100px;
+}
+
 h1 {
     margin-bottom: 0.2em;
 }
