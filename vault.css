@@ -467,6 +467,15 @@ button:focus-visible {
     background-color: var(--ts-button-hover);
 }
 
+.rolling-button{
+    height: 75px;
+    font-size: 0.9em;
+}
+
+.rolling-button img{
+    height: 50px;
+}
+
 /* Scrollbar Styling */
 ::-webkit-scrollbar {
     width: 6px;

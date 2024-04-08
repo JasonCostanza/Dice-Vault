@@ -102,24 +102,16 @@
                 </div>
             </div>
             <br>
-        
-            <div class="content-row unselectable">
-                <div class="roll-type">
-                    <input type="radio" id="normal" name="roll-type" value="normal" checked>
-                    <label for="normal">Normal</label>
-                    <input type="radio" id="advantage" name="roll-type" value="advantage">
-                    <label for="advantage">Advantage</label>
-                    <input type="radio" id="disadvantage" name="roll-type" value="disadvantage">
-                    <label for="disadvantage">Disadvantage</label>
-                    <input type="radio" id="best-of-three" name="roll-type" value="best-of-three">
-                    <label for="best-of-three">Best of 3</label>
-                    <input type="radio" id="crit" name="roll-type" value="crit-dice">
-                    <label for="crit">Crit</label>
-                </div>
+
+            <div class="button-container unselectable">
+                <button class="rolling-button" onclick="roll(null, 'normal')"><img class="roll-type-image" src="./images/icons/rolling.png" alt="rolling dice"/><br/>Roll</button>
+                <button class="rolling-button" onclick="roll(null, 'disadvantage')"><img class="roll-type-image" src="./images/icons/disadvantage.png" alt="rolling dice"/><br/>Disadvantage</button>
+                <button class="rolling-button" onclick="roll(null, 'advantage')"><img class="roll-type-image" src="./images/icons/advantage.png" alt="rolling dice"/><br/>Advantage</button>
+                <button class="rolling-button" onclick="roll(null, 'best-of-three')"><img class="roll-type-image" src="./images/icons/best-of-three.png" alt="rolling dice"/><br/>Best of 3</button>
+                <button class="rolling-button" onclick="roll(null, 'crit-dice')"><img class="roll-type-image" src="./images/icons/crit.png" alt="rolling dice"/><br/>Critical</button>
             </div>
             
             <div class="button-container unselectable">
-                <button id="roll-btn" onclick="roll()">Roll</button>
                 <button id="reset-btn" onclick="reset()">Reset</button>
                 <button id="save-btn" onclick="save()">Save</button>
             </div><br>
