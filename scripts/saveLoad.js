@@ -57,7 +57,7 @@ function loadRollsFromLocalStorage() {
         console.log('Loading rolls data:', rollsJson);
         let rollsData = JSON.parse(rollsJson || '[]');
         rollsData.forEach(rollData => {
-            addSavedRoll(rollData.name, rollData.type, rollData.counts);
+            addSavedRoll(rollData.name, rollData.counts);
         });
         disableButtonById('load-rolls-button');
         if (!fetchSetting('auto-save')){
