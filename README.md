@@ -52,10 +52,9 @@ Check it out on [Mod.io](https://mod.io/g/talespire/m/dice-vault)
 # How to Use
 1. Type the name of the roll you want to throw, example "Dagger Strike"
 2. Left click to increment and right click to decrement the dice
-3. Enter a modifier into the text box if you need one
+3. Enter a modifier into the text box if you need one including negative numbers
 4. Roll right away by selecting `Roll` or create a preset with the `Save` button
 
-To use a saved preset, use the `Roll` button on the preset card.
 To delete a preset, use the trash bin icon.
 
 # Report Issues
