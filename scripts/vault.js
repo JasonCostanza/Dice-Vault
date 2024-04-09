@@ -26,29 +26,6 @@ function negativeMod(die) {
     counter.textContent = currentValue - 1;
 }
 
-async function loadSavedRolls() {
-    try {
-        const savedData = await TS.localStorage.campaign.getBlob();
-        const savedRolls = JSON.parse(savedData || '[]');
-        savedRolls.forEach(roll => {
-            addSavedRoll(roll.name, roll.type, roll.counts);
-        });
-    } catch (e) {
-        console.error('Failed to load saved rolls:', e);
-    }
-}
-
-function saveCurrentRolls() {
-    const savedRollsElements = document.querySelectorAll('.saved-roll-entry');
-    const savedRolls = Array.from(savedRollsElements).map(roll => {
-        return {
-            name: roll.querySelector('.roll-entry-label').textContent,
-            type: roll.dataset.rollType,
-            counts: JSON.parse(roll.dataset.diceCounts)
-        };
-    });
-}
-
 function sortSavedRolls() {
     const sortOption = document.getElementById('sort-options').value;
     const savedRollsContainer = document.querySelector('.saved-rolls-container');
@@ -89,7 +66,6 @@ document.addEventListener('DOMContentLoaded', sortSavedRolls);
 
 function save() {
     const rollName = document.getElementById('roll-name').value || 'Unnamed Roll';
-    const selectedType = document.querySelector('input[name="roll-type"]:checked').value;
     const diceCounts = {
         d4: document.getElementById('d4-counter-value').textContent,
         d6: document.getElementById('d6-counter-value').textContent,
@@ -100,7 +76,7 @@ function save() {
         mod: document.getElementById('mod-counter-value').value,
     };
 
-    addSavedRoll(rollName, selectedType, diceCounts);
+    addSavedRoll(rollName, diceCounts);
     saveCurrentRolls();
 
     if (fetchSetting('auto-reset')){
@@ -114,11 +90,10 @@ function save() {
     }
 }
 
-function addSavedRoll(rollName, rollType, diceCounts) {
+function addSavedRoll(rollName, diceCounts) {
     const savedRollsContainer = document.querySelector('.saved-rolls-container');
     const rollEntry = document.createElement('div');
     rollEntry.className = 'saved-roll-entry';
-    rollEntry.dataset.rollType = rollType;
     rollEntry.dataset.diceCounts = JSON.stringify(diceCounts);
     allSavedRolls.push(rollEntry);
 
@@ -154,20 +129,17 @@ function addSavedRoll(rollName, rollType, diceCounts) {
         </div>
     `;
 
-    const buttonsContainer = document.createElement('div');
-    buttonsContainer.className = 'roll-buttons-container';
-
     const rowofButtons = document.createElement('div');
     rowofButtons.className = 'row-buttons-container';
 
-    createRollButton('Quick Roll', rollName, 'normal', diceCounts, 'roll-button', buttonsContainer);
-    createRollButton('Disadvantage', rollName, 'disadvantage', diceCounts, 'roll-button row-button', rowofButtons);
-    createRollButton('Advantage', rollName, 'advantage', diceCounts, 'roll-button row-button', rowofButtons);
-    createRollButton('Best of 3', rollName, 'best-of-three', diceCounts, 'roll-button row-button', rowofButtons);
+    createRollButton('rolling', rollName, 'normal', diceCounts, 'roll-button row-button', rowofButtons);
+    createRollButton('disadvantage', rollName, 'disadvantage', diceCounts, 'roll-button row-button', rowofButtons);
+    createRollButton('advantage', rollName, 'advantage', diceCounts, 'roll-button row-button', rowofButtons);
+    createRollButton('best-of-three', rollName, 'best-of-three', diceCounts, 'roll-button row-button', rowofButtons);
+    createRollButton('crit', rollName, 'crit-dice', diceCounts, 'roll-button row-button', rowofButtons);
 
-    buttonsContainer.appendChild(rowofButtons);
 
-    rollEntry.appendChild(buttonsContainer);
+    rollEntry.appendChild(rowofButtons);
 
     if (savedRollsContainer.firstChild) {
         savedRollsContainer.insertBefore(rollEntry, savedRollsContainer.firstChild);
@@ -176,13 +148,16 @@ function addSavedRoll(rollName, rollType, diceCounts) {
     }
 }
 
-function createRollButton(text, rollName, rollType, diceCounts, classes, parent){
+function createRollButton(imageName, rollName, rollType, diceCounts, classes, parent){
     const rollButton = document.createElement('div');
-    rollButton.textContent = text;
     rollButton.className = classes;
     rollButton.onclick = function() {
         roll(rollName, rollType, diceCounts);
     };
+    const imageIcon = document.createElement('img');
+    imageIcon.src = `./images/icons/${imageName}.png`;
+    imageIcon.className = 'roll-type-image';
+    rollButton.appendChild(imageIcon);
     parent.appendChild(rollButton);
 }
 
@@ -194,8 +169,6 @@ function reset() {
         document.getElementById(die + '-counter-value').textContent = '0';
     });
     document.getElementById('mod-counter-value').value = '0';
-
-    document.getElementById('normal').checked = true;
 }
 
 function formatRollTypeName(rollType) {
@@ -208,12 +181,37 @@ function formatRollTypeName(rollType) {
     return rollTypeMappings[rollType] || rollType;
 }
 
-async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
+function buildRollName(rollNameParam, selectedTypeParam, critBehaviorParam) {
     let rollName = rollNameParam || document.getElementById('roll-name').value || 'Unnamed Roll';
-    let selectedType = selectedTypeParam || document.querySelector('input[name="roll-type"]:checked').value;
-    if (selectedType !== 'normal'){
-        rollName += '\n' + formatRollTypeName(selectedType);
+
+    if (selectedTypeParam !== 'normal' && selectedTypeParam !== 'crit-dice'){
+        rollName += '\n' + formatRollTypeName(selectedTypeParam);
     }
+
+    if (selectedTypeParam === 'crit-dice'){
+        if (critBehaviorParam=== 'double-die-count') {
+            rollName += '\nCrit! Double the Dice';
+        }
+        if (critBehaviorParam === 'double-die-result'){
+            rollName += '\nCrit! Double the Die Results';
+        }
+        if (critBehaviorParam === 'double-total'){
+            rollName += '\nCrit! Double the Total';
+        }
+        if (critBehaviorParam === 'max-die'){
+            rollName += '\nCrit! Maximize the Die';
+        }
+        if (critBehaviorParam === 'max-plus'){
+            rollName += '\nCrit! Maximize Die plus Die Result';
+        }
+    }
+
+    return rollName;
+}
+
+async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
+    let selectedType = selectedTypeParam || document.querySelector('input[name="roll-type"]:checked').value;
+
     let diceCounts = diceCountsParam || {
         d4: document.getElementById('d4-counter-value').textContent,
         d6: document.getElementById('d6-counter-value').textContent,
@@ -223,6 +221,20 @@ async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
         d20: document.getElementById('d20-counter-value').textContent,
         mod: document.getElementById('mod-counter-value').value,
     };
+
+    let critBehavior = fetchSetting('crit-behavior');
+
+    let rollName = buildRollName(rollNameParam, selectedType, critBehavior);
+
+    if (selectedType === 'crit-dice'){
+        if (critBehavior=== 'double-die-count') {
+            diceCounts = doubleDieCounts(diceCounts);
+        }
+        selectedType = 'normal';
+    }else{
+        critBehavior = 'none';
+    }
+
     let diceRollString = constructDiceRollString(diceCounts);
 
     if (!TS.dice.isValidRollString(diceRollString)) {
@@ -250,7 +262,10 @@ async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
         let trayConfiguration = Array(rollCount).fill(rollObject);
 
         TS.dice.putDiceInTray(trayConfiguration, true).then(diceSetResponse => {
-            trackedIds[diceSetResponse] = selectedType;
+            trackedIds[diceSetResponse] = {
+                type: selectedType,
+                critBehavior: critBehavior
+            };
         });
     } catch (error) {
         console.error('Error creating roll descriptors:', error);
@@ -287,7 +302,8 @@ async function handleRollResult(rollEvent) {
 
     if (rollEvent.kind == "rollResults") {
         if (roll.resultsGroups != undefined) {
-            if (trackedIds[roll.rollId] == "advantage" || trackedIds[roll.rollId] == "best-of-three") {
+            let rollInfo = trackedIds[roll.rollId];
+            if (rollInfo.type == "advantage" || rollInfo.type == "best-of-three") {
                 //---ADVANTAGE ROLLS---//
                 let max = 0;
                 for (let group of roll.resultsGroups) {
@@ -298,7 +314,7 @@ async function handleRollResult(rollEvent) {
                     }
                 }
                 finalResult = max;
-            } else if (trackedIds[roll.rollId] == "disadvantage") {
+            } else if (rollInfo.type == "disadvantage") {
                 //---DISADVANTAGE ROLLS---//
                 let min = Number.MAX_SAFE_INTEGER;
                 for (let group of roll.resultsGroups) {
@@ -315,6 +331,20 @@ async function handleRollResult(rollEvent) {
                     finalResult = await TS.dice.evaluateDiceResultsGroup(resultGroup);
                 }
             }
+
+
+            if (rollInfo.critBehavior === 'double-total') {
+                resultGroup = doubleDiceResults(resultGroup);
+                resultGroup = doubleModifier(resultGroup);
+            } else if (rollInfo.critBehavior === 'double-die-result') {
+                resultGroup = doubleDiceResults(resultGroup);
+            } else if (rollInfo.critBehavior === 'max-die') {
+                resultGroup = maximizeDiceResults(resultGroup);
+            } else if (rollInfo.critBehavior === 'max-plus') {
+                resultGroup = addMaxDieForEachKind(resultGroup);
+            }
+
+
         }
 
         displayResult(resultGroup, roll.rollId);
@@ -327,139 +357,12 @@ async function displayResult(resultGroup, rollId) {
     TS.dice.sendDiceResult([resultGroup], rollId).catch((response) => console.error("error in sending dice result", response));
 }
 
-function toggleSettingsDisplay() {
-    const settingsContainer = document.getElementById('settings-menu');
-    const settingsButton = document.getElementById('settings-button');
-    settingsContainer.classList.toggle('hidden');
-    settingsButton.classList.toggle('active-menu');
-}
-
-function defaultSettings(settingName){
-    const settings = {
-        autoLoadRolls: false,
-        autoSaveRolls: false,
-        autoResetEdit: false
-    }
-    return settings[settingName];
-}
-
-function saveGlobalSettings(){
-    const settings = {
-        autoLoadRolls: document.getElementById('auto-load').checked,
-        autoSaveRolls: document.getElementById('auto-save').checked,
-        autoResetEdit: document.getElementById('auto-reset').checked
-    }
-    TS.localStorage.global.setBlob(JSON.stringify(settings)).then(() => {
-        console.log('Settings saved successfully.');
-    }).catch(error => {
-        console.error('Failed to save settings:', error);
-    });
-    updateAutoButtons();
-}
-
-function loadGlobalSettings(){
-    TS.localStorage.global.getBlob().then(settingsJson => {
-        const settings = JSON.parse(settingsJson || '{}');
-        document.getElementById('auto-load').checked = settings.autoLoadRolls || defaultSettings('autoLoadRolls');
-        document.getElementById('auto-save').checked = settings.autoSaveRolls || defaultSettings('autoSaveRolls');
-        document.getElementById('auto-reset').checked = settings.autoSaveRolls || defaultSettings('autoResetEdit');
-        performAutoLoads();
-    }).catch(error => {
-        console.error('Failed to load settings:', error);
-    });
-}
-
-function fetchSetting(settingName){
-    const setting = document.getElementById(settingName)
-    if (setting === null){
-        console.error('Setting not found:', settingName);
-        return;
-    }
-
-    if (setting.type === 'checkbox'){
-        return setting.checked;
-    }
-
-    if (setting.type === 'select-one'){
-        return setting.value;
-    }
-}
-
-function saveRollsToLocalStorage() {
-    let rollsData = [];
-    document.querySelectorAll('.saved-roll-entry').forEach(entry => {
-        let rollData = {
-            name: entry.querySelector('.roll-entry-label').textContent.trim(),
-            type: entry.dataset.rollType,
-            counts: JSON.parse(entry.dataset.diceCounts)
-        };
-        rollsData.push(rollData);
-    });
-
-    let rollsJson = JSON.stringify(rollsData);
-    console.log('Saving rolls data:', rollsJson); 
-    TS.localStorage.campaign.setBlob(rollsJson).then(() => {
-        console.log('Rolls data saved successfully.');
-        disableButtonById('save-rolls-button');
-        disableButtonById('load-rolls-button')
-    }).catch(error => {
-        console.error('Failed to save rolls data:', error);
-    });
-}
-
-function loadRollsFromLocalStorage() {
-    TS.localStorage.campaign.getBlob().then(rollsJson => {
-        console.log('Loading rolls data:', rollsJson);
-        let rollsData = JSON.parse(rollsJson || '[]');
-        rollsData.forEach(rollData => {
-            addSavedRoll(rollData.name, rollData.type, rollData.counts);
-        });
-        disableButtonById('load-rolls-button');
-        if (!fetchSetting('auto-save')){
-            disableButtonById('save-rolls-button', false);
-        }
-    }).catch(error => {
-        console.error('Failed to load rolls data:', error);
-    });
-}
-
 async function onStateChangeEvent(msg){
     if (msg.kind === 'hasInitialized'){
         loadGlobalSettings();
     }
 }
 
-function performAutoLoads(){
-    if (fetchSetting('auto-load')) {
-        console.log('Auto-loading rolls from local storage.');
-        loadRollsFromLocalStorage();
-
-    }
-
-    if (fetchSetting('auto-save')) {
-
-    }
-
-    updateAutoButtons();
-}
-
-function updateAutoButtons(){
-    if (fetchSetting('auto-load')) {
-        document.getElementById('load-rolls-button').innerText = 'Auto-Loading';
-        disableButtonById('load-rolls-button');
-    }else{
-        document.getElementById('load-rolls-button').innerText = 'Load Rolls';
-        disableButtonById('load-rolls-button', false);
-    }
-
-    if (fetchSetting('auto-save')) {
-        document.getElementById('save-rolls-button').innerText = 'Auto-Saving';
-        disableButtonById('save-rolls-button');
-    } else {
-        document.getElementById('save-rolls-button').innerText = 'Save Rolls';
-        disableButtonById('save-rolls-button', false);
-    }
-}
 
 function disableButtonById(id, disable = true){
     document.getElementById(id).disabled = disable;

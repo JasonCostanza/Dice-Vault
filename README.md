@@ -16,9 +16,13 @@ Check it out on [Mod.io](https://mod.io/g/talespire/m/dice-vault)
   - Save your saved roll collection to local storage so you never lose your carefully crafted dice vault.
   - Saved presets are specific to the campaign, have a preset collection for each campaign you're in and never get confused!
   - Best-of-Three Rolls! Roll a dice three times at once keeping the highest.
+  - Critical Hit support with 5 different styles! Choose from Roll Double the Die, Double Sum of Die, Double the Total Sum, Max the Die Roll, or Max the Die + Raw Roll.
 
 # Changelog
 ```
+1.3
+- Added Critical Hit support with 5 different styles
+- Updated the UI to flow better with iconography
 1.2
 - Improved sort list
 - Modifier is now a text input field
@@ -47,11 +51,12 @@ Check it out on [Mod.io](https://mod.io/g/talespire/m/dice-vault)
 
 # How to Use
 1. Type the name of the roll you want to throw, example "Dagger Strike"
-2. Left click to increment and right click to decrement the dice and modifier you need
-3. Roll right away by selecting `Roll` or create a preset with the `Save` button
+2. Left click to increment and right click to decrement the dice
+3. Enter a modifier into the text box if you need one
+4. Roll right away by selecting `Roll` or create a preset with the `Save` button
 
-To use a saved preset, use the `Quick Roll` button
-To delete a preset, use the trahs bin icon
+To use a saved preset, use the `Roll` button on the preset card.
+To delete a preset, use the trash bin icon.
 
 # Report Issues
 Create an issue in the github reposity on the [Issues Tab](https://github.com/JasonCostanza/Dice-Vault/issues)

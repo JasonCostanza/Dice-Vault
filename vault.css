@@ -100,6 +100,15 @@ marquee {
     padding: 10px;
 }
 
+.logo-header{
+    text-align: center;
+    margin-top: 0;
+}
+
+.logo-header img{
+    height: 100px;
+}
+
 h1 {
     margin-bottom: 0.2em;
 }
@@ -141,6 +150,11 @@ h1 {
 .row-button{
     flex: 1;
     margin: 0 5px;
+    height: 30px;
+}
+
+.row-button img{
+    height: 30px;
 }
 
 .saved-roll-entry {
@@ -465,6 +479,15 @@ button:hover {
 
 button:focus-visible {
     background-color: var(--ts-button-hover);
+}
+
+.rolling-button{
+    height: 75px;
+    font-size: 0.9em;
+}
+
+.rolling-button img{
+    height: 50px;
 }
 
 /* Scrollbar Styling */
