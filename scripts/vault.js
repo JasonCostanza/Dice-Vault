@@ -272,7 +272,6 @@ async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
     }
 }
 
-
 function constructDiceRollString(diceCounts) {
     let diceRollParts = [];
     for (const [die, count] of Object.entries(diceCounts)) {
@@ -332,7 +331,6 @@ async function handleRollResult(rollEvent) {
                 }
             }
 
-
             if (rollInfo.critBehavior === 'double-total') {
                 resultGroup = doubleDiceResults(resultGroup);
                 resultGroup = doubleModifier(resultGroup);
@@ -362,7 +360,6 @@ async function onStateChangeEvent(msg){
         loadGlobalSettings();
     }
 }
-
 
 function disableButtonById(id, disable = true){
     document.getElementById(id).disabled = disable;
