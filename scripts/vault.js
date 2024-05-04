@@ -4,27 +4,65 @@ let me;
 let allSavedRolls = [];
 let gmRolls = {};
 
-function increment(die) {
-    const counter = document.getElementById(die + '-counter-value');
-    let currentValue = parseInt(counter.textContent, 10);
-    if (currentValue < 50) {
-        counter.textContent = currentValue + 1;
+
+///MODIFIED INCREMENT, DECREMENT, NEGATIVE MOD ATTEMPTING TO REFLECT CHANGE INTO SECOND ROW//
+function increment(dieId) {
+    const counterId = dieId + '-counter-value';
+    const counter = document.getElementById(counterId);
+
+    if (counter) {
+        let currentValue = parseInt(counter.textContent, 10);
+        if (currentValue < 50) {
+            counter.textContent = currentValue + 1;
+        }
+    } else {
+        console.error('Counter element not found:', counterId);
     }
 }
 
-function decrement(die) {
-    const counter = document.getElementById(die + '-counter-value');
-    let currentValue = parseInt(counter.textContent, 10);
-    if (currentValue > 0) {
-        counter.textContent = currentValue - 1;
+function decrement(dieId) {
+    const counterId = dieId + '-counter-value';
+    const counter = document.getElementById(counterId);
+
+    if (counter) {
+        let currentValue = parseInt(counter.textContent, 10);
+        if (currentValue > 0) {
+            counter.textContent = currentValue - 1;
+        }
+    } else {
+        console.error('Counter element not found:', counterId);
     }
 }
 
-function negativeMod(die) {
-    const counter = document.getElementById(die + '-counter-value');
-    let currentValue = parseInt(counter.textContent, 10);
-    counter.textContent = currentValue - 1;
+
+function negativeMod(modId) {
+    const counterId = modId + '-counter-value';
+    const counter = document.getElementById(counterId);
+
+    if (counter) {
+        let currentValue = parseInt(counter.value, 10); 
+        counter.value = currentValue - 1;
+    } else {
+        console.error('Modifier counter element not found:', counterId);
+    }
 }
+///////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function sortSavedRolls() {
     const sortOption = document.getElementById('sort-options').value;
@@ -64,19 +102,46 @@ function deleteSavedRoll(element) {
 
 document.addEventListener('DOMContentLoaded', sortSavedRolls);
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//TRIED INCORPORATING ROWS INTO THE SAVE - BUT INCREMENTATION ISNT WORKING @_@
+
 function save() {
     const rollName = document.getElementById('roll-name').value || 'Unnamed Roll';
-    const diceCounts = {
-        d4: document.getElementById('d4-counter-value').textContent,
-        d6: document.getElementById('d6-counter-value').textContent,
-        d8: document.getElementById('d8-counter-value').textContent,
-        d10: document.getElementById('d10-counter-value').textContent,
-        d12: document.getElementById('d12-counter-value').textContent,
-        d20: document.getElementById('d20-counter-value').textContent,
-        mod: document.getElementById('mod-counter-value').value,
-    };
+    const rows = document.querySelectorAll('.dice-selection');
+    let allDiceCounts = [];
 
-    addSavedRoll(rollName, diceCounts);
+    rows.forEach((row, index) => {
+        const diceCounts = {
+            d4: row.querySelector('#d4-counter-value').textContent,
+            d6: row.querySelector('#d6-counter-value').textContent,
+            d8: row.querySelector('#d8-counter-value').textContent,
+            d10: row.querySelector('#d10-counter-value').textContent,
+            d12: row.querySelector('#d12-counter-value').textContent,
+            d20: row.querySelector('#d20-counter-value').textContent,
+            mod: row.querySelector('#mod-counter-value').value
+        };
+        allDiceCounts.push(diceCounts);
+    });
+
+    addSavedRoll(rollName, allDiceCounts);
     saveCurrentRolls();
 
     if (fetchSetting('auto-reset')){
@@ -90,56 +155,68 @@ function save() {
     }
 }
 
-function addSavedRoll(rollName, diceCounts) {
+
+//////////
+
+
+
+
+
+
+
+
+
+function addSavedRoll(rollName, allDiceCounts) {
     const savedRollsContainer = document.querySelector('.saved-rolls-container');
     const rollEntry = document.createElement('div');
     rollEntry.className = 'saved-roll-entry';
-    rollEntry.dataset.diceCounts = JSON.stringify(diceCounts);
+    rollEntry.dataset.diceCounts = JSON.stringify(allDiceCounts);
     allSavedRolls.push(rollEntry);
 
     let diceDisplay = '';
-    const diceOrder = ['d4', 'd6', 'd8', 'd10', 'd12', 'd20', 'mod'];
-    diceOrder.forEach(die => {
-        const count = diceCounts[die];
-        if (count !== '0') {
-            let iconClass = die === 'mod' ? 'ts-icon-circle-dotted' : `ts-icon-${die}`;
-            diceDisplay += `
-                <div class="dice-icon-container">
-                    <i class="${iconClass} ts-icon-large"></i>
-                    <span class="dice-count">${count}</span>
-                </div>
-            `;
-        }
-        if (die === 'd20' && diceCounts['mod'] !== '0') {
+    allDiceCounts.forEach(diceCounts => {
+        diceDisplay += '<div class="dice-row">';
+        const diceOrder = ['d4', 'd6', 'd8', 'd10', 'd12', 'd20', 'mod'];
+        diceOrder.forEach(die => {
+            const count = diceCounts[die];
+            if (count !== '0') {
+                let iconClass = die === 'mod' ? 'ts-icon-circle-dotted' : `ts-icon-${die}`;
+                diceDisplay += `
+                    <div class="dice-icon-container">
+                        <i class="${iconClass} ts-icon-large"></i>
+                        <span class="dice-count">${count}</span>
+                    </div>
+                `;
+            }
+        });
+        if (diceCounts['d20'] !== '0' && diceCounts['mod'] !== '0') {
             diceDisplay += '<div class="plus-sign">+</div>';
         }
+        diceDisplay += '</div>'; 
     });
 
     rollEntry.innerHTML = `
         <div class="roll-entry-content">
             <div class="roll-entry-header">
-                <div class="padding-div"></div> <!-- Make this Div the edit-roll eventually -->
+                <div class="padding-div"></div> <!-- Placeholder for future edit-roll -->
                 <div class="roll-entry-label">${rollName}</div>
                 <div class="delete-roll" onclick="deleteSavedRoll(this)">
                     <i class="ts-icon-trash ts-icon-medium"></i>
                 </div>
             </div>
             <div class="roll-entry-dice">${diceDisplay}</div>
-            
         </div>
     `;
 
-    const rowofButtons = document.createElement('div');
-    rowofButtons.className = 'row-buttons-container';
+    const rowOfButtons = document.createElement('div');
+    rowOfButtons.className = 'row-buttons-container';
+    createRollButton('rolling', rollName, 'normal', allDiceCounts, 'roll-button row-button', rowOfButtons);
+    createRollButton('disadvantage', rollName, 'disadvantage', allDiceCounts, 'roll-button row-button', rowOfButtons);
+    createRollButton('advantage', rollName, 'advantage', allDiceCounts, 'roll-button row-button', rowOfButtons);
+    createRollButton('best-of-three', rollName, 'best-of-three', allDiceCounts, 'roll-button row-button', rowOfButtons);
+    createRollButton('crit', rollName, 'crit-dice', allDiceCounts, 'roll-button row-button', rowOfButtons);
 
-    createRollButton('rolling', rollName, 'normal', diceCounts, 'roll-button row-button', rowofButtons);
-    createRollButton('disadvantage', rollName, 'disadvantage', diceCounts, 'roll-button row-button', rowofButtons);
-    createRollButton('advantage', rollName, 'advantage', diceCounts, 'roll-button row-button', rowofButtons);
-    createRollButton('best-of-three', rollName, 'best-of-three', diceCounts, 'roll-button row-button', rowofButtons);
-    createRollButton('crit', rollName, 'crit-dice', diceCounts, 'roll-button row-button', rowofButtons);
-
-
-    rollEntry.appendChild(rowofButtons);
+    rollEntry.appendChild(rowOfButtons);
 
     if (savedRollsContainer.firstChild) {
         savedRollsContainer.insertBefore(rollEntry, savedRollsContainer.firstChild);
@@ -147,6 +224,29 @@ function addSavedRoll(rollName, diceCounts) {
         savedRollsContainer.appendChild(rollEntry);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function createRollButton(imageName, rollName, rollType, diceCounts, classes, parent){
     const rollButton = document.createElement('div');
@@ -370,3 +470,48 @@ function disableButtonById(id, disable = true){
 
 document.getElementById('save-rolls-button').addEventListener('click', saveRollsToLocalStorage);
 document.getElementById('load-rolls-button').addEventListener('click', loadRollsFromLocalStorage);
+
+
+
+
+
+
+
+
+
+//THIS ADDS A NEW DICE ROW BUT IT LOSES ALL OF ITS FUNCTIONALITY
+
+
+function addDiceRow() {
+    const diceRow = document.createElement('div');
+    diceRow.className = 'dice-selection';
+    const rowId = document.querySelectorAll('.dice-selection').length;
+    const diceTypes = ['d4', 'd6', 'd8', 'd10', 'd12', 'd20'];
+    let diceHTML = '';
+
+    diceTypes.forEach(type => {
+        diceHTML += `
+        <div class="dice-counter unselectable" id="${type}-counter-${rowId}">
+        <i class="ts-icon-${type} ts-icon-large" onclick="increment('${type}-${rowId}')" oncontextmenu="decrement('${type}-${rowId}'); return false;"></i>
+        <div class="counter-overlay" id="${type}-counter-value-${rowId}">0</div>
+        <div class="dice-label">${type.toUpperCase()}</div>
+    </div>
+        `;
+    });
+
+    diceHTML += `
+        <div class="plus-sign"><span>+</span></div>
+        <div class="dice-counter unselectable" id="mod-counter-${rowId}">
+        <i class="ts-icon-circle-dotted ts-icon-large mod-holder"></i>
+        <input type="number" class="counter-overlay mod-counter-overlay" id="mod-counter-value-${rowId}" value="0" min="-999" max="999" onfocus="this.select()" 
+            onclick="negativeMod('mod-${rowId}')" oncontextmenu="positiveMod('mod-${rowId}'); return false;" />
+        <div class="dice-label">MOD</div>
+    </div>
+    `;
+
+    diceRow.innerHTML = diceHTML;
+    document.querySelector('.content-col').appendChild(diceRow);
+}
+
+
+
