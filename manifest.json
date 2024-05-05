@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
-  "name": "Dice Vault",
+  "name": "Dice Vault DEV",
   "summary": "A Symbiote to roll dice in many ways",
-  "version": "1.3",
+  "version": "1.4.0",
   "about": {
     "website": "https://github.com/JasonCostanza/Dice-Vault",
     "authors": [
