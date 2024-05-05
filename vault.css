@@ -10,6 +10,23 @@ html, body {
     user-select: none;
 }
 
+/* NEW CSS PLAYING WITH */
+
+.dice-selection-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.dice-selection {
+    margin-bottom: 20px; 
+}
+.content-col {
+    overflow: auto;  
+    max-height: 90vh; 
+}
+
+/* NEW CSS END */
+
 .unselectable{
     user-select: none;
 }
