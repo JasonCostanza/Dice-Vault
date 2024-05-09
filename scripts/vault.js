@@ -3,13 +3,13 @@ let isGM = false;
 let me;
 let allSavedRolls = [];
 let gmRolls = {};
+const diceTypes = ['d4', 'd6', 'd8', 'd10', 'd12', 'd20'];
+const rowIds = [0];
 
-
-///MODIFIED INCREMENT, DECREMENT, NEGATIVE MOD ATTEMPTING TO REFLECT CHANGE INTO SECOND ROW//
 function increment(dieId) {
     const counterId = dieId + '-counter-value';
     const counter = document.getElementById(counterId);
-
+    
     if (counter) {
         let currentValue = parseInt(counter.textContent, 10);
         if (currentValue < 50) {
@@ -34,7 +34,6 @@ function decrement(dieId) {
     }
 }
 
-
 function negativeMod(modId) {
     const counterId = modId + '-counter-value';
     const counter = document.getElementById(counterId);
@@ -46,24 +45,6 @@ function negativeMod(modId) {
         console.error('Modifier counter element not found:', counterId);
     }
 }
-///////////
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function sortSavedRolls() {
     const sortOption = document.getElementById('sort-options').value;
     const savedRollsContainer = document.querySelector('.saved-rolls-container');
@@ -102,27 +83,6 @@ function deleteSavedRoll(element) {
 
 document.addEventListener('DOMContentLoaded', sortSavedRolls);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//TRIED INCORPORATING ROWS INTO THE SAVE - BUT INCREMENTATION ISNT WORKING @_@
-
 function save() {
     const rollName = document.getElementById('roll-name').value || 'Unnamed Roll';
     const rows = document.querySelectorAll('.dice-selection');
@@ -155,17 +115,6 @@ function save() {
     }
 }
 
-
-//////////
-
-
-
-
-
-
-
-
-
 function addSavedRoll(rollName, allDiceCounts) {
     const savedRollsContainer = document.querySelector('.saved-rolls-container');
     const rollEntry = document.createElement('div');
@@ -176,8 +125,7 @@ function addSavedRoll(rollName, allDiceCounts) {
     let diceDisplay = '';
     allDiceCounts.forEach(diceCounts => {
         diceDisplay += '<div class="dice-row">';
-        const diceOrder = ['d4', 'd6', 'd8', 'd10', 'd12', 'd20', 'mod'];
-        diceOrder.forEach(die => {
+        diceTypes.forEach(die => {
             const count = diceCounts[die];
             if (count !== '0') {
                 let iconClass = die === 'mod' ? 'ts-icon-circle-dotted' : `ts-icon-${die}`;
@@ -189,7 +137,7 @@ function addSavedRoll(rollName, allDiceCounts) {
                 `;
             }
         });
-        if (diceCounts['d20'] !== '0' && diceCounts['mod'] !== '0') {
+        if (diceTypes['d20'] !== '0' && diceTypes['mod'] !== '0') {
             diceDisplay += '<div class="plus-sign">+</div>';
         }
         diceDisplay += '</div>'; 
@@ -225,29 +173,6 @@ function addSavedRoll(rollName, allDiceCounts) {
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function createRollButton(imageName, rollName, rollType, diceCounts, classes, parent){
     const rollButton = document.createElement('div');
     rollButton.className = classes;
@@ -264,11 +189,19 @@ function createRollButton(imageName, rollName, rollType, diceCounts, classes, pa
 function reset() {
     document.getElementById('roll-name').value = '';
 
-    const diceCounters = ['d4', 'd6', 'd8', 'd10', 'd12', 'd20', 'mod'];
-    diceCounters.forEach(die => {
-        document.getElementById(die + '-counter-value').textContent = '0';
+    rowIds.forEach(rowId => {
+        diceTypes.forEach(die => {
+            document.getElementById(die + '-' + rowId + '-counter-value').textContent = '0';
+        });
+        document.getElementById('mod-' + rowId + '-counter-value').value = '0';
     });
-    document.getElementById('mod-counter-value').value = '0';
+
+    rowIds.forEach(rowId => {
+        if (rowId !== 0){
+            document.querySelector('.dice-selection').remove();
+            //TODO: Remove rowId from the rowIds array
+        }
+    });
 }
 
 function formatRollTypeName(rollType) {
@@ -312,6 +245,7 @@ function buildRollName(rollNameParam, selectedTypeParam, critBehaviorParam) {
 async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
     let selectedType = selectedTypeParam || document.querySelector('input[name="roll-type"]:checked').value;
 
+    // TODO: Capture RowID here because it doesn't work
     let diceCounts = diceCountsParam || {
         d4: document.getElementById('d4-counter-value').textContent,
         d6: document.getElementById('d6-counter-value').textContent,
@@ -371,7 +305,6 @@ async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
         console.error('Error creating roll descriptors:', error);
     }
 }
-
 
 function constructDiceRollString(diceCounts) {
     let diceRollParts = [];
@@ -463,7 +396,6 @@ async function onStateChangeEvent(msg){
     }
 }
 
-
 function disableButtonById(id, disable = true){
     document.getElementById(id).disabled = disable;
 }
@@ -471,29 +403,19 @@ function disableButtonById(id, disable = true){
 document.getElementById('save-rolls-button').addEventListener('click', saveRollsToLocalStorage);
 document.getElementById('load-rolls-button').addEventListener('click', loadRollsFromLocalStorage);
 
-
-
-
-
-
-
-
-
-//THIS ADDS A NEW DICE ROW BUT IT LOSES ALL OF ITS FUNCTIONALITY
-
-
 function addDiceRow() {
+    // Need to understand why this is adding row 1 above row 0, then adding row 2 below 1.
+    // Sort the rowId's after we create each element
     const diceRow = document.createElement('div');
     diceRow.className = 'dice-selection';
     const rowId = document.querySelectorAll('.dice-selection').length;
-    const diceTypes = ['d4', 'd6', 'd8', 'd10', 'd12', 'd20'];
     let diceHTML = '';
 
     diceTypes.forEach(type => {
         diceHTML += `
-        <div class="dice-counter unselectable" id="${type}-counter-${rowId}">
+        <div class="dice-counter unselectable" id="${type}-${rowId}-counter">
         <i class="ts-icon-${type} ts-icon-large" onclick="increment('${type}-${rowId}')" oncontextmenu="decrement('${type}-${rowId}'); return false;"></i>
-        <div class="counter-overlay" id="${type}-counter-value-${rowId}">0</div>
+        <div class="counter-overlay" id="${type}-${rowId}-counter-value">0</div>
         <div class="dice-label">${type.toUpperCase()}</div>
     </div>
         `;
@@ -501,17 +423,15 @@ function addDiceRow() {
 
     diceHTML += `
         <div class="plus-sign"><span>+</span></div>
-        <div class="dice-counter unselectable" id="mod-counter-${rowId}">
+        <div class="dice-counter unselectable" id="mod-${rowId}-counter">
         <i class="ts-icon-circle-dotted ts-icon-large mod-holder"></i>
-        <input type="number" class="counter-overlay mod-counter-overlay" id="mod-counter-value-${rowId}" value="0" min="-999" max="999" onfocus="this.select()" 
+        <input type="number" class="counter-overlay mod-counter-overlay" id="mod-${rowId}-counter-value" value="0" min="-999" max="999" onfocus="this.select()" 
             onclick="negativeMod('mod-${rowId}')" oncontextmenu="positiveMod('mod-${rowId}'); return false;" />
         <div class="dice-label">MOD</div>
     </div>
     `;
 
     diceRow.innerHTML = diceHTML;
-    document.querySelector('.content-col').appendChild(diceRow);
+    rowIds.push(rowId);
+    document.querySelector('.content-col-dice').appendChild(diceRow);
 }
-
-
-

@@ -425,7 +425,7 @@ h1 {
     margin-bottom: 0.4em;
 }
 
-.content-col {
+.content-col, .content-col-dice {
     display: contents;
     flex-direction: column;
     align-items: center;

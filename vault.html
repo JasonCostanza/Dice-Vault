@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html>
     <head>
         <title>Dice Vault</title>
@@ -40,53 +40,51 @@
                 </table>
                 <hr/>
             </div>
-            <div class="logo-header">
-                <img src="images/DiceVault.png" alt="Dice Vault - Secure your fate with a roll" style="max-width: 20%">
-                <h1 style="position: absolute; overflow: hidden; clip: rect(0 0 0 0); height: 1px; width: 1px; margin: -1px; padding: 0; border: 0;">
-                    <i class="ts-icon-lock"></i> Dice Vault <i class="ts-icon-lock"></i>
-                </h1>
-            </div>
+            
+            <br> 
+
             <div class="content-col">
                 <label class="field-title" for="roll-name">Roll Label</label>
                 <input id="roll-name" type="text" class="roll-input" placeholder="Enter roll label"></input>
-            </div><br>
+            </div>
             
-            <div class="content-col">
-                <label class="field-title">Dice</label>
+            <br>
+
+            <div class="content-col-dice">
                 <div class="dice-selection">      
-                    <div class="dice-counter unselectable" id="d4-counter">
-                        <i class="ts-icon-d4 ts-icon-large" onclick="increment('d4')" oncontextmenu="decrement('d4'); return false;"></i>
-                        <div class="counter-overlay" id="d4-counter-value">0</div>
+                    <div class="dice-counter unselectable" id="d4-0-counter">
+                        <i class="ts-icon-d4 ts-icon-large" onclick="increment('d4-0')" oncontextmenu="decrement('d4-0'); return false;"></i>
+                        <div class="counter-overlay" id="d4-0-counter-value">0</div>
                         <div class="dice-label">D4</div>
                     </div>
 
-                    <div class="dice-counter unselectable" id="d6-counter">
-                        <i class="ts-icon-d6 ts-icon-large" onclick="increment('d6')" oncontextmenu="decrement('d6'); return false;"></i>
-                        <div class="counter-overlay" id="d6-counter-value">0</div>
+                    <div class="dice-counter unselectable" id="d6-0-counter">
+                        <i class="ts-icon-d6 ts-icon-large" onclick="increment('d6-0')" oncontextmenu="decrement('d6-0'); return false;"></i>
+                        <div class="counter-overlay" id="d6-0-counter-value">0</div>
                         <div class="dice-label">D6</div>
                     </div>
 
-                    <div class="dice-counter unselectable" id="d8-counter">
-                        <i class="ts-icon-d8 ts-icon-large" onclick="increment('d8')" oncontextmenu="decrement('d8'); return false;"></i>
-                        <div class="counter-overlay" id="d8-counter-value">0</div>
+                    <div class="dice-counter unselectable" id="d8-0-counter">
+                        <i class="ts-icon-d8 ts-icon-large" onclick="increment('d8-0')" oncontextmenu="decrement('d8-0'); return false;"></i>
+                        <div class="counter-overlay" id="d8-0-counter-value">0</div>
                         <div class="dice-label">D8</div>
                     </div>
 
-                    <div class="dice-counter unselectable" id="d10-counter">
-                        <i class="ts-icon-d10 ts-icon-large" onclick="increment('d10')" oncontextmenu="decrement('d10'); return false;"></i>
-                        <div class="counter-overlay" id="d10-counter-value">0</div>
+                    <div class="dice-counter unselectable" id="d10-0-counter">
+                        <i class="ts-icon-d10 ts-icon-large" onclick="increment('d10-0')" oncontextmenu="decrement('d10-0'); return false;"></i>
+                        <div class="counter-overlay" id="d10-0-counter-value">0</div>
                         <div class="dice-label">D10</div>
                     </div>
 
-                    <div class="dice-counter unselectable" id="d12-counter">
-                        <i class="ts-icon-d12 ts-icon-large" onclick="increment('d12')" oncontextmenu="decrement('d12'); return false;"></i>
-                        <div class="counter-overlay" id="d12-counter-value">0</div>
+                    <div class="dice-counter unselectable" id="d12-0-counter">
+                        <i class="ts-icon-d12 ts-icon-large" onclick="increment('d12-0')" oncontextmenu="decrement('d12-0'); return false;"></i>
+                        <div class="counter-overlay" id="d12-0-counter-value">0</div>
                         <div class="dice-label">D12</div>
                     </div>
 
-                    <div class="dice-counter unselectable" id="d20-counter">
-                        <i class="ts-icon-d20 ts-icon-large" onclick="increment('d20')" oncontextmenu="decrement('d20'); return false;"></i>
-                        <div class="counter-overlay" id="d20-counter-value">0</div>
+                    <div class="dice-counter unselectable" id="d20-0-counter">
+                        <i class="ts-icon-d20 ts-icon-large" onclick="increment('d20-0')" oncontextmenu="decrement('d20-0'); return false;"></i>
+                        <div class="counter-overlay" id="d20-0-counter-value">0</div>
                         <div class="dice-label">D20</div>
                     </div>
 
@@ -96,15 +94,15 @@
                     
                     <div class="dice-counter unselectable" id="mod-counter">
                         <i class="ts-icon-circle-dotted ts-icon-large mod-holder"></i>
-                        <input type="number" class="counter-overlay mod-counter-overlay" id="mod-counter-value" value="0" min="-999" max="999" onfocus="this.select()" />
+                        <input type="number" class="counter-overlay mod-counter-overlay" id="mod-0-counter-value" value="0" min="-999" max="999" onfocus="this.select()" />
                         <div class="dice-label">MOD</div>
                     </div>
-
-                    <button id="add-row-btn" onclick="addDiceRow()">Add Row</button>
                 </div>
             </div>
-            <br>
-
+            <div class="button-container unselectable">
+                <button id="add-row-btn" onclick="addDiceRow()">Add Row</button>
+            </div>
+            
             <div class="button-container unselectable">
                 <button class="rolling-button" onclick="roll(null, 'normal')"><img class="roll-type-image" src="./images/icons/rolling.png" alt="roll dice"/><br/>Roll</button>
                 <button class="rolling-button" onclick="roll(null, 'disadvantage')"><img class="roll-type-image" src="./images/icons/disadvantage.png" alt="disadvantage"/><br/>Disadvantage</button>
