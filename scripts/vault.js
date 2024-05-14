@@ -6,6 +6,8 @@ let gmRolls = {};
 const diceTypes = ['d4', 'd6', 'd8', 'd10', 'd12', 'd20'];
 const rowIds = [0];
 
+document.addEventListener('DOMContentLoaded', sortSavedRolls);
+
 function increment(dieId) {
     const counterId = dieId + '-counter-value';
     const counter = document.getElementById(counterId);
@@ -82,10 +84,10 @@ function deleteSavedRoll(element) {
     }
 }
 
-//TODO: Why is this here?
-document.addEventListener('DOMContentLoaded', sortSavedRolls);
-
 function save() {
+    //TODOL Not yet implemented
+    console.error( 'Save not yet implemented with roll groups');
+
     const rollName = document.getElementById('roll-name').value || 'Unnamed Roll';
     const rows = document.querySelectorAll('.dice-selection');
     let allDiceCounts = [];
@@ -112,7 +114,7 @@ function save() {
 
     if (fetchSetting('auto-save')){
         saveRollsToLocalStorage();
-    }else{
+    } else {
         disableButtonById('save-rolls-button', false);
     }
 }
@@ -246,9 +248,11 @@ function buildRollName(rollNameParam, selectedTypeParam, critBehaviorParam) {
 }
 
 async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
+    // TODO: Capture RowID here because it doesn't work
+    console.error( 'Save not yet implemented with roll groups');
+
     let selectedType = selectedTypeParam || document.querySelector('input[name="roll-type"]:checked').value;
 
-    // TODO: Capture RowID here because it doesn't work
     let diceCounts = diceCountsParam || {
         d4: document.getElementById('d4-counter-value').textContent,
         d6: document.getElementById('d6-counter-value').textContent,
