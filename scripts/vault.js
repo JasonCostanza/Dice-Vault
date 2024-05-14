@@ -45,6 +45,7 @@ function negativeMod(modId) {
         console.error('Modifier counter element not found:', counterId);
     }
 }
+
 function sortSavedRolls() {
     const sortOption = document.getElementById('sort-options').value;
     const savedRollsContainer = document.querySelector('.saved-rolls-container');
@@ -81,6 +82,7 @@ function deleteSavedRoll(element) {
     }
 }
 
+//TODO: Why is this here?
 document.addEventListener('DOMContentLoaded', sortSavedRolls);
 
 function save() {
@@ -199,7 +201,8 @@ function reset() {
     rowIds.forEach(rowId => {
         if (rowId !== 0){
             document.querySelector('.dice-selection').remove();
-            //TODO: Remove rowId from the rowIds array
+            rowIds.length = 0;
+            console.log( 'rowIds after reset: ' + rowIds);
         }
     });
 }
@@ -400,9 +403,6 @@ function disableButtonById(id, disable = true){
     document.getElementById(id).disabled = disable;
 }
 
-document.getElementById('save-rolls-button').addEventListener('click', saveRollsToLocalStorage);
-document.getElementById('load-rolls-button').addEventListener('click', loadRollsFromLocalStorage);
-
 function addDiceRow() {
     // Need to understand why this is adding row 1 above row 0, then adding row 2 below 1.
     // Sort the rowId's after we create each element
@@ -435,3 +435,6 @@ function addDiceRow() {
     rowIds.push(rowId);
     document.querySelector('.content-col-dice').appendChild(diceRow);
 }
+
+document.getElementById('save-rolls-button').addEventListener('click', saveRollsToLocalStorage);
+document.getElementById('load-rolls-button').addEventListener('click', loadRollsFromLocalStorage);
