@@ -48,6 +48,39 @@ function negativeMod(modId) {
     }
 }
 
+function addDiceRow() {
+    // Need to understand why this is adding row 1 above row 0, then adding row 2 below 1.
+    // Sort the rowId's after we create each element
+    const diceRow = document.createElement('div');
+    diceRow.className = 'dice-selection';
+    const rowId = document.querySelectorAll('.dice-selection').length;
+    let diceHTML = '';
+
+    diceTypes.forEach(type => {
+        diceHTML += `
+        <div class="dice-counter unselectable" id="${type}-${rowId}-counter">
+        <i class="ts-icon-${type} ts-icon-large" onclick="increment('${type}-${rowId}')" oncontextmenu="decrement('${type}-${rowId}'); return false;"></i>
+        <div class="counter-overlay" id="${type}-${rowId}-counter-value">0</div>
+        <div class="dice-label">${type.toUpperCase()}</div>
+    </div>
+        `;
+    });
+
+    diceHTML += `
+        <div class="plus-sign"><span>+</span></div>
+        <div class="dice-counter unselectable" id="mod-${rowId}-counter">
+        <i class="ts-icon-circle-dotted ts-icon-large mod-holder"></i>
+        <input type="number" class="counter-overlay mod-counter-overlay" id="mod-${rowId}-counter-value" value="0" min="-999" max="999" onfocus="this.select()" 
+            onclick="negativeMod('mod-${rowId}')" oncontextmenu="positiveMod('mod-${rowId}'); return false;" />
+        <div class="dice-label">MOD</div>
+    </div>
+    `;
+
+    diceRow.innerHTML = diceHTML;
+    rowIds.push(rowId);
+    document.querySelector('.content-col-dice').appendChild(diceRow);
+}
+
 function sortSavedRolls() {
     const sortOption = document.getElementById('sort-options').value;
     const savedRollsContainer = document.querySelector('.saved-rolls-container');
@@ -405,39 +438,6 @@ async function onStateChangeEvent(msg){
 
 function disableButtonById(id, disable = true){
     document.getElementById(id).disabled = disable;
-}
-
-function addDiceRow() {
-    // Need to understand why this is adding row 1 above row 0, then adding row 2 below 1.
-    // Sort the rowId's after we create each element
-    const diceRow = document.createElement('div');
-    diceRow.className = 'dice-selection';
-    const rowId = document.querySelectorAll('.dice-selection').length;
-    let diceHTML = '';
-
-    diceTypes.forEach(type => {
-        diceHTML += `
-        <div class="dice-counter unselectable" id="${type}-${rowId}-counter">
-        <i class="ts-icon-${type} ts-icon-large" onclick="increment('${type}-${rowId}')" oncontextmenu="decrement('${type}-${rowId}'); return false;"></i>
-        <div class="counter-overlay" id="${type}-${rowId}-counter-value">0</div>
-        <div class="dice-label">${type.toUpperCase()}</div>
-    </div>
-        `;
-    });
-
-    diceHTML += `
-        <div class="plus-sign"><span>+</span></div>
-        <div class="dice-counter unselectable" id="mod-${rowId}-counter">
-        <i class="ts-icon-circle-dotted ts-icon-large mod-holder"></i>
-        <input type="number" class="counter-overlay mod-counter-overlay" id="mod-${rowId}-counter-value" value="0" min="-999" max="999" onfocus="this.select()" 
-            onclick="negativeMod('mod-${rowId}')" oncontextmenu="positiveMod('mod-${rowId}'); return false;" />
-        <div class="dice-label">MOD</div>
-    </div>
-    `;
-
-    diceRow.innerHTML = diceHTML;
-    rowIds.push(rowId);
-    document.querySelector('.content-col-dice').appendChild(diceRow);
 }
 
 document.getElementById('save-rolls-button').addEventListener('click', saveRollsToLocalStorage);
