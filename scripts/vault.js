@@ -58,9 +58,9 @@ function addDiceRow() {
 
     diceTypes.forEach(type => {
         diceHTML += `
-        <div class="dice-counter unselectable" id="${type}-${rowId}-counter">
-        <i class="ts-icon-${type} ts-icon-large" onclick="increment('${type}-${rowId}')" oncontextmenu="decrement('${type}-${rowId}'); return false;"></i>
-        <div class="counter-overlay" id="${type}-${rowId}-counter-value">0</div>
+        <div class="dice-counter unselectable" id="${rowId}-${type}-counter">
+        <i class="ts-icon-${type} ts-icon-large" onclick="increment('${rowId}-${type}')" oncontextmenu="decrement('${rowId}-${type}'); return false;"></i>
+        <div class="counter-overlay" id="${rowId}-${type}-counter-value">0</div>
         <div class="dice-label">${type.toUpperCase()}</div>
     </div>
         `;
@@ -68,10 +68,10 @@ function addDiceRow() {
 
     diceHTML += `
         <div class="plus-sign"><span>+</span></div>
-        <div class="dice-counter unselectable" id="mod-${rowId}-counter">
+        <div class="dice-counter unselectable" id="${rowId}-mod-counter">
         <i class="ts-icon-circle-dotted ts-icon-large mod-holder"></i>
-        <input type="number" class="counter-overlay mod-counter-overlay" id="mod-${rowId}-counter-value" value="0" min="-999" max="999" onfocus="this.select()" 
-            onclick="negativeMod('mod-${rowId}')" oncontextmenu="positiveMod('mod-${rowId}'); return false;" />
+        <input type="number" class="counter-overlay mod-counter-overlay" id="${rowId}-mod-counter-value" value="0" min="-999" max="999" onfocus="this.select()" 
+            onclick="negativeMod('${rowId}-mod')" oncontextmenu="positiveMod('${rowId}-mod'); return false;" />
         <div class="dice-label">MOD</div>
     </div>
     `;
@@ -228,16 +228,15 @@ function reset() {
 
     rowIds.forEach(rowId => {
         diceTypes.forEach(die => {
-            document.getElementById(die + '-' + rowId + '-counter-value').textContent = '0';
+            document.getElementById(rowId + die + '-' + '-counter-value').textContent = '0';
         });
-        document.getElementById('mod-' + rowId + '-counter-value').value = '0';
+        document.getElementById(rowId + 'mod-' + '-counter-value').value = '0';
     });
 
     rowIds.forEach(rowId => {
         if (rowId !== 0){
             document.querySelector('.dice-selection').remove();
             rowIds.length = 0;
-            console.log( 'rowIds after reset: ' + rowIds);
         }
     });
 }
