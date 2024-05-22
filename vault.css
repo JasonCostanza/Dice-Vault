@@ -162,6 +162,9 @@ h1 {
     margin-bottom: 5px;
     display: flex;
     flex-direction: column;
+    /* COMMENT: @json, this is what i added to align the title left */
+    justify-content: flex-start;
+    /**/
     align-items: left;
     background-color: var(--ts-button-background);
     font-family: 'OptimusPrinceps', sans-serif;
@@ -249,6 +252,9 @@ h1 {
     font-size: 18px;
     font-weight: bold;
     margin: 0 5px;
+    /* COMMENT: this is what forces delete button to stay right*/
+    margin-left: auto;
+    /**/
     transition: background-color 0.2s;
 }
 
