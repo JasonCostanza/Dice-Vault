@@ -198,6 +198,12 @@ function buildRollName(rollNameParam, selectedTypeParam, critBehaviorParam) {
         if (critBehaviorParam === 'double-total'){
             rollName += '\nCrit! Double the Total';
         }
+        if (critBehaviorParam === 'triple-total'){
+            rollName += '\nCrit! Triple the Total';
+        }
+        if (critBehaviorParam === 'quadruple-total'){
+            rollName += '\nCrit! Quadruple the Total';
+        }
         if (critBehaviorParam === 'max-die'){
             rollName += '\nCrit! Maximize the Die';
         }
