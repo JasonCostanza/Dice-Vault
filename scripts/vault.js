@@ -346,7 +346,7 @@ async function handleRollResult(rollEvent) {
             } else if (rollInfo.critBehavior === 'quadruple-total') {
                 resultGroup = multiplyDiceResults(resultGroup, 4);
                 resultGroup = multiplyModifier(resultGroup, 4);
-            } else if (rollInfo.critBehavior === 'double-dice-result') {
+            } else if (rollInfo.critBehavior === 'double-die-result') {
                 resultGroup = multiplyDiceResults(resultGroup, 2);
             } else if (rollInfo.critBehavior === 'max-die') {
                 resultGroup = maximizeDiceResults(resultGroup);

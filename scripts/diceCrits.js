@@ -1,8 +1,8 @@
-function multiplyDieCounts(diceCounts, multiplier) {
+function multiplyDieCounts(diceCounts) {
     let newDiceCounts = {};
     for (const [die, count] of Object.entries(diceCounts)) {
         if (die !== 'mod') {
-            newDiceCounts[die] = String(parseInt(count, 10) * multiplier);
+            newDiceCounts[die] = String(parseInt(count, 10) * 2);
         } else {
             newDiceCounts[die] = count;
         }
@@ -47,7 +47,6 @@ function multiplyDiceResults(resultGroup, multiplier) {
 
     return resultGroup;
 }
-
 
 function multiplyModifier(resultGroup, multiplier) {
     // Directly handle scenario without nested operands (no direct handling needed for modifiers)
