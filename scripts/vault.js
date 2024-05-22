@@ -228,7 +228,7 @@ async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
 
     if (selectedType === 'crit-dice'){
         if (critBehavior=== 'double-die-count') {
-            diceCounts = doubleDieCounts(diceCounts);
+            diceCounts = multiplyDieCounts(diceCounts);
         }
         selectedType = 'normal';
     }else{
@@ -271,7 +271,6 @@ async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
         console.error('Error creating roll descriptors:', error);
     }
 }
-
 
 function constructDiceRollString(diceCounts) {
     let diceRollParts = [];
@@ -332,19 +331,22 @@ async function handleRollResult(rollEvent) {
                 }
             }
 
-
             if (rollInfo.critBehavior === 'double-total') {
-                resultGroup = doubleDiceResults(resultGroup);
-                resultGroup = doubleModifier(resultGroup);
-            } else if (rollInfo.critBehavior === 'double-die-result') {
-                resultGroup = doubleDiceResults(resultGroup);
+                resultGroup = multiplyDiceResults(resultGroup, 2);
+                resultsGroup = multiplyModifier(resultGroup, 2);
+            } else if (rollInfo.critBehavior === 'triple-total') {
+                resultGroup = multiplyDiceResults(resultGroup, 3);
+                resultGroup = multiplyModifier(resultGroup, 3);
+            } else if (rollInfo.critBehavior === 'quadruple-total') {
+                resultGroup = multiplyDiceResults(resultGroup, 4);
+                resultGroup = multiplyModifier(resultGroup, 4);
+            } else if (rollInfo.critBehavior === 'double-dice-result') {
+                resultGroup = multiplyDiceResults(resultGroup, 2);
             } else if (rollInfo.critBehavior === 'max-die') {
                 resultGroup = maximizeDiceResults(resultGroup);
             } else if (rollInfo.critBehavior === 'max-plus') {
                 resultGroup = addMaxDieForEachKind(resultGroup);
             }
-
-
         }
 
         displayResult(resultGroup, roll.rollId);

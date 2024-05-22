@@ -1,8 +1,8 @@
-function doubleDieCounts(diceCounts) {
+function multiplyDieCounts(diceCounts, multiplier) {
     let newDiceCounts = {};
     for (const [die, count] of Object.entries(diceCounts)) {
         if (die !== 'mod') {
-            newDiceCounts[die] = String(parseInt(count, 10) * 2);
+            newDiceCounts[die] = String(parseInt(count, 10) * multiplier);
         } else {
             newDiceCounts[die] = count;
         }
@@ -10,24 +10,24 @@ function doubleDieCounts(diceCounts) {
     return newDiceCounts;
 }
 
-function doubleDiceResults(resultGroup) {
+function multiplyDiceResults(resultGroup, multiplier) {
     // Handle scenario without nested operands
     if (resultGroup.result.kind && Array.isArray(resultGroup.result.results)) {
         return {
             ...resultGroup,
             result: {
                 ...resultGroup.result,
-                results: resultGroup.result.results.map(result => result * 2)
+                results: resultGroup.result.results.map(result => result * multiplier)
             }
         };
     }
 
-    function doubleResults(operands) {
+    function multiplyResults(operands) {
         return operands.map(operand => {
             if (operand.operator && operand.operands) {
-                return { ...operand, operands: doubleResults(operand.operands) };
+                return { ...operand, operands: multiplyResults(operand.operands, multiplier) };
             } else if (operand.results && Array.isArray(operand.results)) {
-                return { ...operand, results: operand.results.map(result => result * 2) };
+                return { ...operand, results: operand.results.map(result => result * multiplier) };
             } else {
                 return operand;
             }
@@ -40,7 +40,7 @@ function doubleDiceResults(resultGroup) {
             ...resultGroup,
             result: {
                 ...resultGroup.result,
-                operands: doubleResults(resultGroup.result.operands)
+                operands: multiplyResults(resultGroup.result.operands, multiplier)
             }
         };
     }
@@ -49,14 +49,14 @@ function doubleDiceResults(resultGroup) {
 }
 
 
-function doubleModifier(resultGroup) {
+function multiplyModifier(resultGroup, multiplier) {
     // Directly handle scenario without nested operands (no direct handling needed for modifiers)
-    function doubleMod(operands) {
+    function multiplyMod(operands) {
         return operands.map(operand => {
             if (operand.operator && operand.operands) {
-                return { ...operand, operands: doubleMod(operand.operands) };
+                return { ...operand, operands: multiplpyMod(operand.operands) };
             } else if (operand.value) {
-                let newValue = Math.abs(operand.value) * 2;
+                let newValue = Math.abs(operand.value) * multiplier;
                 return { ...operand, value: newValue };
             } else {
                 return operand;
@@ -69,14 +69,13 @@ function doubleModifier(resultGroup) {
             ...resultGroup,
             result: {
                 ...resultGroup.result,
-                operands: doubleMod(resultGroup.result.operands)
+                operands: multiplyMod(resultGroup.result.operands)
             }
         };
     }
 
     return resultGroup;
 }
-
 
 function maximizeDiceResults(resultGroup) {
     if (resultGroup.result.kind && Array.isArray(resultGroup.result.results)) {
@@ -115,7 +114,6 @@ function maximizeDiceResults(resultGroup) {
 
     return resultGroup;
 }
-
 
 function addMaxDieForEachKind(resultGroup) {
     if (resultGroup.result.kind && Array.isArray(resultGroup.result.results)) {
