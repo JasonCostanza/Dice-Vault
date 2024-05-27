@@ -17,7 +17,7 @@ html, body {
     flex-direction: column;
     align-items: center;
 }
-.dice-selection {
+.dice-selection{
     margin-bottom: 20px; 
 }
 .content-col {

@@ -8,8 +8,8 @@ const rowIds = [0];
 
 document.addEventListener('DOMContentLoaded', sortSavedRolls);
 
-function increment(dieId) {
-    const counterId = dieId + '-counter-value';
+function increment(type) {
+    const counterId = type + '-counter-value';
     const counter = document.getElementById(counterId);
     
     if (counter) {
@@ -22,8 +22,8 @@ function increment(dieId) {
     }
 }
 
-function decrement(dieId) {
-    const counterId = dieId + '-counter-value';
+function decrement(type) {
+    const counterId = type + '-counter-value';
     const counter = document.getElementById(counterId);
 
     if (counter) {
@@ -49,8 +49,6 @@ function negativeMod(modId) {
 }
 
 function addDiceRow() {
-    // Need to understand why this is adding row 1 above row 0, then adding row 2 below 1.
-    // Sort the rowId's after we create each element
     const diceRow = document.createElement('div');
     diceRow.className = 'dice-selection';
     const rowId = document.querySelectorAll('.dice-selection').length;
@@ -226,18 +224,20 @@ function createRollButton(imageName, rollName, rollType, diceCounts, classes, pa
 function reset() {
     document.getElementById('roll-name').value = '';
 
-    rowIds.forEach(rowId => {
-        diceTypes.forEach(die => {
-            document.getElementById(rowId + die + '-' + '-counter-value').textContent = '0';
-        });
-        document.getElementById(rowId + 'mod-' + '-counter-value').value = '0';
-    });
+    rowIds.forEach(row => {
+        if (row == 0){
+            diceTypes.forEach(type => {
+                console.log(`reset: ${row}-${type}-counter-value`);
+                document.getElementById(`${row}-${type}-counter-value`).textContent = '0';
+            })} else {
+                // Remove the div element entirely
+                console.log('row class: ', row.className);
+                document.querySelector('.content-col-dice').appendChild(row);
+            }
 
-    rowIds.forEach(rowId => {
-        if (rowId !== 0){
-            document.querySelector('.dice-selection').remove();
-            rowIds.length = 0;
-        }
+        console.log(`reset: ${row}-mod-counter-value`);
+        document.getElementById(`${row}-mod-counter-value`).value = '0';
+        rowIds.length = 1;
     });
 }
 
