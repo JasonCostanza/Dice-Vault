@@ -48,10 +48,28 @@ function negativeMod(modId) {
     }
 }
 
+
+
+function removeDiceRow() {
+    if (rowIds.length > 1) {
+        const rowId = rowIds.pop(); // Remove the last rowId
+        const diceRow = document.getElementById(`row-${rowId}`);
+        if (diceRow) {
+            diceRow.remove();
+        } else {
+            console.error('Row element not found:', rowId);
+        }
+        console.log('Row removed:', rowId);
+    } else {
+        console.warn('No rows left to remove.');
+    }
+}
+
 function addDiceRow() {
     const diceRow = document.createElement('div');
     diceRow.className = 'dice-selection';
-    const rowId = document.querySelectorAll('.dice-selection').length;
+    const rowId = rowIds.length;
+    diceRow.id = `row-${rowId}`;
     let diceHTML = '';
 
     diceTypes.forEach(type => {
@@ -68,8 +86,7 @@ function addDiceRow() {
         <div class="plus-sign"><span>+</span></div>
         <div class="dice-counter unselectable" id="${rowId}-mod-counter">
         <i class="ts-icon-circle-dotted ts-icon-large mod-holder"></i>
-        <input type="number" class="counter-overlay mod-counter-overlay" id="${rowId}-mod-counter-value" value="0" min="-999" max="999" onfocus="this.select()" 
-            onclick="negativeMod('${rowId}-mod')" oncontextmenu="positiveMod('${rowId}-mod'); return false;" />
+        <input type="number" class="counter-overlay mod-counter-overlay" id="${rowId}-mod-counter-value" value="0" min="-999" max="999" onfocus="this.select()" />
         <div class="dice-label">MOD</div>
     </div>
     `;
@@ -79,6 +96,7 @@ function addDiceRow() {
     console.log('rowIds after push: ', rowIds, ' - Length: ', rowIds.length);
     document.querySelector('.content-col-dice').appendChild(diceRow);
 }
+
 
 function sortSavedRolls() {
     const sortOption = document.getElementById('sort-options').value;
@@ -222,27 +240,30 @@ function createRollButton(imageName, rollName, rollType, diceCounts, classes, pa
     parent.appendChild(rollButton);
 }
 
+
 function reset() {
     document.getElementById('roll-name').value = '';
 
     rowIds.forEach(row => {
         diceTypes.forEach(type => {
-            document.getElementById(`${row}-${type}-counter-value`).textContent = '0';
-            document.getElementById(`${row}-mod-counter-value`).value = '0'; // Reset modifier
+            const counter = document.getElementById(`${row}-${type}-counter-value`);
+            const modCounter = document.getElementById(`${row}-mod-counter-value`);
+            if (counter) counter.textContent = '0';
+            if (modCounter) modCounter.value = '0';
         });
 
         if (row !== 0) {
-            const diceRow = document.querySelector(`.dice-selection:nth-child(${row + 1})`);
+            const diceRow = document.getElementById(`row-${row}`);
             if (diceRow) {
                 diceRow.remove();
             }
         }
     });
 
-    rowIds.splice(1); // Clear out all the rows except the first one
+    rowIds.splice(1); 
 
     console.log('rowIds after reset: ', rowIds, ' - Length: ', rowIds.length);
-    console.log('RESET COMPLETE')
+    console.log('RESET COMPLETE');
 }
 
 function formatRollTypeName(rollType) {
@@ -282,33 +303,131 @@ function buildRollName(rollNameParam, selectedTypeParam, critBehaviorParam) {
 
     return rollName;
 }
+//COMMENTING OUT BECAUSE I DONT WANNA LOSE THIS
+// async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
+//     console.error( 'Save not yet implemented with roll groups');
 
-async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
-    // TODO: Capture RowID here because it doesn't work
-    console.error( 'Save not yet implemented with roll groups');
+//     let selectedType = selectedTypeParam || document.querySelector('input[name="roll-type"]:checked').value;
 
-    let selectedType = selectedTypeParam || document.querySelector('input[name="roll-type"]:checked').value;
+//     let diceCounts = diceCountsParam || {
+//         d4: document.getElementById('d4-counter-value').textContent,
+//         d6: document.getElementById('d6-counter-value').textContent,
+//         d8: document.getElementById('d8-counter-value').textContent,
+//         d10: document.getElementById('d10-counter-value').textContent,
+//         d12: document.getElementById('d12-counter-value').textContent,
+//         d20: document.getElementById('d20-counter-value').textContent,
+//         mod: document.getElementById('mod-counter-value').value,
+//     };
+
+//     let critBehavior = fetchSetting('crit-behavior');
+
+//     let rollName = buildRollName(rollNameParam, selectedType, critBehavior);
+
+//     if (selectedType === 'crit-dice'){
+//         if (critBehavior=== 'double-die-count') {
+//             diceCounts = doubleDieCounts(diceCounts);
+//         }
+//         selectedType = 'normal';
+//     }else{
+//         critBehavior = 'none';
+//     }
+
+//     let diceRollString = constructDiceRollString(diceCounts);
+
+//     if (!TS.dice.isValidRollString(diceRollString)) {
+//         console.error('Invalid dice roll string:', diceRollString);
+//         return;
+//     }
+
+//     try {
+
+//         let rollObject = { name: rollName, roll: diceRollString };
+//         let rollCount;
+
+//         switch (selectedType) {
+//             case 'advantage':
+//             case 'disadvantage':
+//                 rollCount = 2;
+//                 break;
+//             case 'best-of-three':
+//                 rollCount = 3;
+//                 break;
+//             default:
+//                 rollCount = 1;
+//         }
+
+//         let trayConfiguration = Array(rollCount).fill(rollObject);
+
+//         TS.dice.putDiceInTray(trayConfiguration, true).then(diceSetResponse => {
+//             trackedIds[diceSetResponse] = {
+//                 type: selectedType,
+//                 critBehavior: critBehavior
+//             };
+//         });
+//     } catch (error) {
+//         console.error('Error creating roll descriptors:', error);
+//     }
+// }
+// function constructDiceRollString(diceCounts) {
+//     let diceRollParts = [];
+//     for (const [die, count] of Object.entries(diceCounts)) {
+//         if (die !== 'mod' && count !== '0') {
+//             diceRollParts.push(`${count}${die}`);
+//         }
+//     }
+    
+//     if (diceCounts.mod !== '0') {
+//         let modValue = parseInt(diceCounts.mod, 10);
+//         let modPart = modValue >= 0 ? `${modValue}` : `${modValue}`;
+//         diceRollParts.push(modPart);
+//     }
+
+//     let diceRollString = diceRollParts.join('+').replace(/\+\-/, '-');
+//     return diceRollString;
+// }
+
+
+
+
+
+
+
+function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
+    let selectedType = selectedTypeParam || 'normal'; // Default to 'normal' if not provided
 
     let diceCounts = diceCountsParam || {
-        d4: document.getElementById('d4-counter-value').textContent,
-        d6: document.getElementById('d6-counter-value').textContent,
-        d8: document.getElementById('d8-counter-value').textContent,
-        d10: document.getElementById('d10-counter-value').textContent,
-        d12: document.getElementById('d12-counter-value').textContent,
-        d20: document.getElementById('d20-counter-value').textContent,
-        mod: document.getElementById('mod-counter-value').value,
+        d4: '0',
+        d6: '0',
+        d8: '0',
+        d10: '0',
+        d12: '0',
+        d20: '0',
+        mod: '0'
     };
+
+    rowIds.forEach(rowId => {
+        diceTypes.forEach(type => {
+            const counter = document.getElementById(`${rowId}-${type}-counter-value`);
+            if (counter) {
+                diceCounts[type] = counter.textContent;
+            }
+        });
+        const modCounter = document.getElementById(`${rowId}-mod-counter-value`);
+        if (modCounter) {
+            diceCounts['mod'] = modCounter.value;
+        }
+    });
 
     let critBehavior = fetchSetting('crit-behavior');
 
     let rollName = buildRollName(rollNameParam, selectedType, critBehavior);
 
-    if (selectedType === 'crit-dice'){
-        if (critBehavior=== 'double-die-count') {
+    if (selectedType === 'crit-dice') {
+        if (critBehavior === 'double-die-count') {
             diceCounts = doubleDieCounts(diceCounts);
         }
         selectedType = 'normal';
-    }else{
+    } else {
         critBehavior = 'none';
     }
 
@@ -320,7 +439,6 @@ async function roll(rollNameParam, selectedTypeParam, diceCountsParam) {
     }
 
     try {
-
         let rollObject = { name: rollName, roll: diceRollString };
         let rollCount;
 
@@ -366,6 +484,43 @@ function constructDiceRollString(diceCounts) {
     let diceRollString = diceRollParts.join('+').replace(/\+\-/, '-');
     return diceRollString;
 }
+
+function buildRollName(rollNameParam, selectedTypeParam, critBehaviorParam) {
+    let rollName = rollNameParam || document.getElementById('roll-name').value || 'Unnamed Roll';
+
+    if (selectedTypeParam !== 'normal' && selectedTypeParam !== 'crit-dice'){
+        rollName += '\n' + formatRollTypeName(selectedTypeParam);
+    }
+
+    if (selectedTypeParam === 'crit-dice'){
+        if (critBehaviorParam === 'double-die-count') {
+            rollName += '\nCrit! Double the Dice';
+        }
+        if (critBehaviorParam === 'double-die-result'){
+            rollName += '\nCrit! Double the Die Results';
+        }
+        if (critBehaviorParam === 'double-total'){
+            rollName += '\nCrit! Double the Total';
+        }
+        if (critBehaviorParam === 'max-die'){
+            rollName += '\nCrit! Maximize the Die';
+        }
+        if (critBehaviorParam === 'max-plus'){
+            rollName += '\nCrit! Maximize Die plus Die Result';
+        }
+    }
+
+    return rollName;
+}
+
+
+
+
+
+
+
+
+
 
 async function handleRollResult(rollEvent) {
     if (trackedIds[rollEvent.payload.rollId] == undefined) {
