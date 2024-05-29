@@ -76,6 +76,7 @@ function addDiceRow() {
 
     diceRow.innerHTML = diceHTML;
     rowIds.push(rowId);
+    console.log('rowIds after push: ', rowIds, ' - Length: ', rowIds.length);
     document.querySelector('.content-col-dice').appendChild(diceRow);
 }
 
@@ -225,20 +226,23 @@ function reset() {
     document.getElementById('roll-name').value = '';
 
     rowIds.forEach(row => {
-        if (row == 0){
-            diceTypes.forEach(type => {
-                console.log(`reset: ${row}-${type}-counter-value`);
-                document.getElementById(`${row}-${type}-counter-value`).textContent = '0';
-            })} else {
-                // Remove the div element entirely
-                console.log('row class: ', row.className);
-                document.querySelector('.content-col-dice').appendChild(row);
-            }
+        diceTypes.forEach(type => {
+            document.getElementById(`${row}-${type}-counter-value`).textContent = '0';
+            document.getElementById(`${row}-mod-counter-value`).value = '0'; // Reset modifier
+        });
 
-        console.log(`reset: ${row}-mod-counter-value`);
-        document.getElementById(`${row}-mod-counter-value`).value = '0';
-        rowIds.length = 1;
+        if (row !== 0) {
+            const diceRow = document.querySelector(`.dice-selection:nth-child(${row + 1})`);
+            if (diceRow) {
+                diceRow.remove();
+            }
+        }
     });
+
+    rowIds.splice(1); // Clear out all the rows except the first one
+
+    console.log('rowIds after reset: ', rowIds, ' - Length: ', rowIds.length);
+    console.log('RESET COMPLETE')
 }
 
 function formatRollTypeName(rollType) {
