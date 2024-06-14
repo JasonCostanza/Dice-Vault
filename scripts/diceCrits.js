@@ -1,13 +1,27 @@
-function doubleDieCounts(diceCounts) {
-    let newDiceCounts = {};
-    for (const [die, count] of Object.entries(diceCounts)) {
-        if (die !== 'mod') {
-            newDiceCounts[die] = String(parseInt(count, 10) * 2);
-        } else {
-            newDiceCounts[die] = count;
+// function doubleDieCounts(diceCounts) {
+//     let newDiceCounts = {};
+//     for (const [die, count] of Object.entries(diceCounts)) {
+//         if (die !== 'mod') {
+//             newDiceCounts[die] = String(parseInt(count, 10) * 2);
+//         } else {
+//             newDiceCounts[die] = count;
+//         }
+//     }
+//     return newDiceCounts;
+// }
+
+function doubleDieCountsForGroups(stagedRollGroups) {
+    return stagedRollGroups.map(diceCounts => {
+        let newDiceCounts = {};
+        for (const [die, count] of Object.entries(diceCounts)) {
+            if (die !== 'mod') {
+                newDiceCounts[die] = String(parseInt(count, 10) * 2);
+            } else {
+                newDiceCounts[die] = count;
+            }
         }
-    }
-    return newDiceCounts;
+        return newDiceCounts;
+    });
 }
 
 function doubleDiceResults(resultGroup) {
@@ -48,7 +62,6 @@ function doubleDiceResults(resultGroup) {
     return resultGroup;
 }
 
-
 function doubleModifier(resultGroup) {
     // Directly handle scenario without nested operands (no direct handling needed for modifiers)
     function doubleMod(operands) {
@@ -76,7 +89,6 @@ function doubleModifier(resultGroup) {
 
     return resultGroup;
 }
-
 
 function maximizeDiceResults(resultGroup) {
     if (resultGroup.result.kind && Array.isArray(resultGroup.result.results)) {
@@ -115,7 +127,6 @@ function maximizeDiceResults(resultGroup) {
 
     return resultGroup;
 }
-
 
 function addMaxDieForEachKind(resultGroup) {
     if (resultGroup.result.kind && Array.isArray(resultGroup.result.results)) {

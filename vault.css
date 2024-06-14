@@ -196,13 +196,11 @@ h1 {
 }
 
 .roll-entry-dice {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
+    display: block;
+    text-align: left;
     margin-top: 10px;
     width: 100%;
+    white-space: pre-line;
 }
 
 .dice-icon-container {

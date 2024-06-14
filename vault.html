@@ -51,7 +51,7 @@
             <br>
 
             <div class="content-col-dice">
-                <div class="dice-selection">      
+                <div class="dice-selection" id="0">      
                     <div class="dice-counter unselectable" id="0-d4-counter">
                         <i class="ts-icon-d4 ts-icon-large" onclick="increment('0-d4')" oncontextmenu="decrement('0-d4'); return false;"></i>
                         <div class="counter-overlay" id="0-d4-counter-value">0</div>
@@ -100,16 +100,16 @@
                 </div>
             </div>
             <div class="button-container unselectable">
-                <button id="add-row-btn" onclick="addDiceRow()">Add Row</button>
-                <button id="remove-row-btn" onclick="removeDiceRow()">Remove Row</button>
+                <button id="add-row-btn" onclick="addDiceGroup()">Add Group</button>
+                <button id="remove-row-btn" onclick="removeDiceGroup()">Remove Group</button>
             </div>
             
             <div class="button-container unselectable">
                 <button class="rolling-button" onclick="roll(null, 'normal')"><img class="roll-type-image" src="./images/icons/rolling.png" alt="roll dice"/><br/>Roll</button>
-                <button class="rolling-button" onclick="roll(null, 'disadvantage')"><img class="roll-type-image" src="./images/icons/disadvantage.png" alt="disadvantage"/><br/>Disadvantage</button>
-                <button class="rolling-button" onclick="roll(null, 'advantage')"><img class="roll-type-image" src="./images/icons/advantage.png" alt="advantage"/><br/>Advantage</button>
-                <button class="rolling-button" onclick="roll(null, 'best-of-three')"><img class="roll-type-image" src="./images/icons/best-of-three.png" alt="best of three"/><br/>Best of 3</button>
-                <button class="rolling-button" onclick="roll(null, 'crit-dice')"><img class="roll-type-image" src="./images/icons/crit.png" alt="critical hit"/><br/>Critical</button>
+                <button class="rolling-button" onclick="roll(null, 'disadvantage',  null)"><img class="roll-type-image" src="./images/icons/disadvantage.png" alt="disadvantage"/><br/>Disadvantage</button>
+                <button class="rolling-button" onclick="roll(null, 'advantage',     null)"><img class="roll-type-image" src="./images/icons/advantage.png" alt="advantage"/><br/>Advantage</button>
+                <button class="rolling-button" onclick="roll(null, 'best-of-three', null)"><img class="roll-type-image" src="./images/icons/best-of-three.png" alt="best of three"/><br/>Best of 3</button>
+                <button class="rolling-button" onclick="roll(null, 'crit-dice',     null)"><img class="roll-type-image" src="./images/icons/crit.png" alt="critical hit"/><br/>Critical</button>
             </div>
             
             <div class="button-container unselectable">
@@ -145,5 +145,6 @@
         <script type="text/javascript" src="scripts/saveLoad.js"></script>
         <script type="text/javascript" src="scripts/diceCrits.js"></script>
         <script type="text/javascript" src="scripts/vault.js"></script>
+        <script type="text/javascript" src="scripts/rolls.js"></script>
     </body>
 </html>
