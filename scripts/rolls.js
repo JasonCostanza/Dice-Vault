@@ -1,22 +1,23 @@
 function roll(rollNameParam, rollTypeParam) {
     let selectedType = rollTypeParam || 'normal'; // Set to normal if no type is provided
 
-    diceGroupsData.forEach(group => {
-        const groupDiceCounts = {};
+    diceGroupsData.forEach((group, index) => {
+        let groupId = index;
+        let groupDiceCounts = {};
         diceTypes.forEach(type => {
-            const counter = document.getElementById(`${group}-${type}-counter-value`);
+            const counter = document.getElementById(`${groupId}-${type}-counter-value`);
             if (counter) {
                 groupDiceCounts[type] = counter.textContent;
             } else {
-                console.error(`Could not find counter for ${group}-${type}`);
+                console.error(`Could not find counter for ${groupId}-${type}`);
             }
         });
 
-        const modCounter = document.getElementById(`${group}-mod-counter-value`);
+        const modCounter = document.getElementById(`${groupId}-mod-counter-value`);
         if (modCounter) {
             groupDiceCounts['mod'] = modCounter.value;
         } else {
-            console.error(`Could not find mod counter for ${group}`);
+            console.error(`Could not find mod counter for ${groupId}`);
         }
 
         diceGroupsData.push(groupDiceCounts);
@@ -29,8 +30,6 @@ function roll(rollNameParam, rollTypeParam) {
     // Adjust for critical hit dice types
     if (selectedType === 'crit-dice') {
         if (critBehavior === 'double-die-count') {
-            // Double the die counts if the critical behavior is set to double die count
-            //diceCounts = doubleDieCounts(diceCounts);
             diceCounts = doubleDieCountsForGroups(group)
         }
         selectedType = 'normal';  // Reset to normal type after handling critical dice
@@ -120,7 +119,8 @@ function formatRollTypeName(rollType) {
     return rollTypeMappings[rollType] || rollType;
 }
 
-function constructDiceRollString(rollName, diceGroupsData) {
+function constructDiceRollString(rollName) {
+
     // Create an empty array to store the formatted dice group strings
     let formattedDiceGroups = [];
 

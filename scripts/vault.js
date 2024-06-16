@@ -1,14 +1,43 @@
 document.addEventListener('DOMContentLoaded', sortSavedRolls);
 
+// function updateDiceGroupsData(groupId, diceType, count) {
+//     const groupIndex = parseInt(groupId, 10);
+//     if (!diceGroupsData[groupIndex]) {
+//         diceGroupsData[groupIndex] = {};
+//     }
+//     diceGroupsData[groupIndex][diceType] = count;
+// }
+
+function updateDiceGroupsData() {
+    diceGroupsData = [];
+
+    const diceGroupElements = document.querySelectorAll('.dice-selection');
+    diceGroupElements.forEach(groupElement => {
+        const groupId = groupElement.id;
+        const groupDiceCounts = {};
+
+        diceTypes.forEach(diceType => {
+            const countElement = groupElement.querySelector(`.counter-overlay[id$="${groupId}-${diceType}-counter-value"]`);
+            groupDiceCounts[diceType] = countElement ? parseInt(countElement.textContent, 10) : 0;
+        });
+
+        const modElement = groupElement.querySelector(`.mod-counter-overlay[id$="${groupId}-mod-counter-value"]`);
+        groupDiceCounts.mod = modElement ? parseInt(modElement.value, 10) : 0;
+
+        diceGroupsData.push(groupDiceCounts);
+    });
+}
 
 function increment(type) {
-    const counterId = type + '-counter-value';
+    const [groupId, diceType] = type.split('-');
+    const counterId = `${groupId}-${diceType}-counter-value`;
     const counter = document.getElementById(counterId);
     
     if (counter) {
         let currentValue = parseInt(counter.textContent, 10);
         if (currentValue < 50) {
             counter.textContent = currentValue + 1;
+            updateDiceGroupsData();
         }
     } else {
         console.error('Counter element not found:', counterId);
@@ -16,20 +45,22 @@ function increment(type) {
 }
 
 function decrement(type) {
-    const counterId = type + '-counter-value';
+    const [groupId, diceType] = type.split('-');
+    const counterId = `${groupId}-${diceType}-counter-value`;
     const counter = document.getElementById(counterId);
 
     if (counter) {
         let currentValue = parseInt(counter.textContent, 10);
         if (currentValue > 0) {
             counter.textContent = currentValue - 1;
+            updateDiceGroupsData();
         }
     } else {
         console.error('Counter element not found:', counterId);
     }
 }
 
-function negativeMod(modId) {
+function negativeMod(modId) { // DONE
     const counterId = modId + '-counter-value';
     const counter = document.getElementById(counterId);
 
@@ -41,22 +72,7 @@ function negativeMod(modId) {
     }
 }
 
-function removeDiceGroup() {
-    if (diceGroupsData.length > 1) {
-        const LastRollGroup = diceGroupsData.pop(); // Remove the last RollGroup in diceGroupsData[]
-        const diceGroup = document.getElementById(`${LastRollGroup}`); // Always finds the last (bottom) diceGroup
-        if (diceGroup) {
-            diceGroup.remove();
-        } else {
-            console.error('Row element not found:', LastRollGroup);
-        }
-        console.log('Row removed:', LastRollGroup);
-    } else {
-        console.warn('No rows left to remove.');
-    }
-}
-
-function addDiceGroup() {
+function addDiceGroup() { // DONE
     const diceGroup = document.createElement('div');
     diceGroup.className = 'dice-selection';
     const RollGroup = diceGroupsData.length;
@@ -83,11 +99,27 @@ function addDiceGroup() {
     `;
 
     diceGroup.innerHTML = diceHTML;
-    diceGroupsData.push(RollGroup);
+    // diceGroupsData.push(RollGroup);
     document.querySelector('.content-col-dice').appendChild(diceGroup);
 }
 
-function sortSavedRolls() {
+function removeDiceGroup() {
+    if (diceGroupsData.length > 1) {
+        const lastGroupId = diceGroupsData.length - 1;
+        const diceGroup = document.getElementById(`${lastGroupId}`);
+        if (diceGroup) {
+            diceGroup.remove();
+            diceGroupsData.splice(lastGroupId, 1);
+            console.log('Row removed:', diceGroup);
+        } else {
+            console.error('Row element not found:', lastGroupId);
+        }
+    } else {
+        console.warn('No rows left to remove.');
+    }
+}
+
+function sortSavedRolls() { // DONE
     const sortOption = document.getElementById('sort-options').value;
     const savedRollsContainer = document.querySelector('.saved-rolls-container');
     let savedRollsToDisplay = savedInVault.slice();
@@ -110,7 +142,7 @@ function sortSavedRolls() {
     savedRollsToDisplay.forEach(roll => savedRollsContainer.appendChild(roll));
 }
 
-function deleteSavedRoll(element) {
+function deleteSavedRoll(element) { // DONE
     const rollEntry = element.closest('.saved-roll-entry');
     rollEntry.remove();
     savedInVault = savedInVault.filter(roll => roll !== rollEntry);
@@ -123,7 +155,7 @@ function deleteSavedRoll(element) {
     }
 }
 
-function save() {
+function save() { // DONE
     const rollName = document.getElementById('roll-name').value;
     const diceGroupElements = document.querySelectorAll('.dice-selection');
 
@@ -138,17 +170,17 @@ function save() {
         const modElement = groupElement.querySelector(`.mod-counter-overlay[id$="${groupElement.id}-mod-counter-value"]`);
         diceGroup.mod = modElement ? parseInt(modElement.value, 10) : 0;
 
-        diceGroups.push(diceGroup);
+        savedDiceGroups.push(diceGroup);
     });
 
     const stagedRoll = {
         name: rollName,
-        groups: diceGroups
+        groups: savedDiceGroups
     };
 
     console.log('Saved roll JSON: ' + JSON.stringify(stagedRoll));
 
-    addSavedRoll(rollName, diceGroups);
+    addSavedRoll(rollName, savedDiceGroups);
     saveCurrentRolls();
 
     if (fetchSetting('auto-reset')) {
@@ -162,17 +194,17 @@ function save() {
     }
 }
 
-function addSavedRoll(rollName, diceGroups) {
+function addSavedRoll(rollName, savedDiceGroups) { // DONE
     const savedRollsContainer = document.querySelector('.saved-rolls-container');
     const rollEntry = document.createElement('div');
     rollEntry.className = 'saved-roll-entry';
-    rollEntry.dataset.diceCounts = JSON.stringify(diceGroups);
+    rollEntry.dataset.diceCounts = JSON.stringify(savedDiceGroups);
     savedInVault.push(rollEntry);
 
     const diceDisplay = document.createElement('div');
     diceDisplay.className = 'roll-entry-dice';
     
-    diceGroups.forEach(diceCounts => {
+    savedDiceGroups.forEach(diceCounts => {
         const diceGroupText = Object.entries(diceCounts)
             .filter(([diceType, count]) => count > 0 && diceType !== 'mod')
             .map(([diceType, count]) => `${count}${diceType}`)
@@ -207,11 +239,11 @@ function addSavedRoll(rollName, diceGroups) {
 
     const rowOfButtons = document.createElement('div');
     rowOfButtons.className = 'row-buttons-container';
-    createRollButton('rolling',         rollNameText, 'normal',         diceGroups, 'roll-button row-button', rowOfButtons);
-    createRollButton('disadvantage',    rollNameText, 'disadvantage',   diceGroups, 'roll-button row-button', rowOfButtons);
-    createRollButton('advantage',       rollNameText, 'advantage',      diceGroups, 'roll-button row-button', rowOfButtons);
-    createRollButton('best-of-three',   rollNameText, 'best-of-three',  diceGroups, 'roll-button row-button', rowOfButtons);
-    createRollButton('crit',            rollNameText, 'crit-dice',      diceGroups, 'roll-button row-button', rowOfButtons);
+    createRollButton('rolling',         rollNameText, 'normal',         savedDiceGroups, 'roll-button row-button', rowOfButtons);
+    createRollButton('disadvantage',    rollNameText, 'disadvantage',   savedDiceGroups, 'roll-button row-button', rowOfButtons);
+    createRollButton('advantage',       rollNameText, 'advantage',      savedDiceGroups, 'roll-button row-button', rowOfButtons);
+    createRollButton('best-of-three',   rollNameText, 'best-of-three',  savedDiceGroups, 'roll-button row-button', rowOfButtons);
+    createRollButton('crit',            rollNameText, 'crit-dice',      savedDiceGroups, 'roll-button row-button', rowOfButtons);
 
     rollEntry.appendChild(rowOfButtons);
 
@@ -222,7 +254,7 @@ function addSavedRoll(rollName, diceGroups) {
     }
 }
 
-function createRollButton(imageName, rollName, rollType, rollGroups, classes, parent){
+function createRollButton(imageName, rollName, rollType, rollGroups, classes, parent){  // DONE
     const rollButton = document.createElement('div');
     rollButton.className = classes;
     rollButton.onclick = function() {
@@ -235,7 +267,7 @@ function createRollButton(imageName, rollName, rollType, rollGroups, classes, pa
     parent.appendChild(rollButton);
 }
 
-function reset() {
+function reset() { // DONE
     document.getElementById('roll-name').value = '';
 
     diceGroupsData.forEach(group => {
@@ -260,13 +292,13 @@ function reset() {
     console.log('RESET COMPLETE');
 }
 
-async function onStateChangeEvent(msg){
+async function onStateChangeEvent(msg){ // DONE
     if (msg.kind === 'hasInitialized'){
         loadGlobalSettings();
     }
 }
 
-function disableButtonById(id, disable = true){
+function disableButtonById(id, disable = true){ // DONE
     document.getElementById(id).disabled = disable;
 }
 
