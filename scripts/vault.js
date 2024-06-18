@@ -75,6 +75,7 @@ function negativeMod(modId) { // DONE
 function addDiceGroup() { // DONE
     const diceGroup = document.createElement('div');
     diceGroup.className = 'dice-selection';
+    updateDiceGroupsData();
     const RollGroup = diceGroupsData.length;
     diceGroup.id = `${RollGroup}`;
     let diceHTML = '';
@@ -100,6 +101,7 @@ function addDiceGroup() { // DONE
 
     diceGroup.innerHTML = diceHTML;
     // diceGroupsData.push(RollGroup);
+    updateDiceGroupsData();
     document.querySelector('.content-col-dice').appendChild(diceGroup);
 }
 

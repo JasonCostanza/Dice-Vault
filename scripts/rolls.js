@@ -1,6 +1,8 @@
 function roll(rollNameParam, rollTypeParam) {
     let selectedType = rollTypeParam || 'normal'; // Set to normal if no type is provided
 
+    let updatedDiceGroupsData = [];
+
     diceGroupsData.forEach((group, index) => {
         let groupId = index;
         let groupDiceCounts = {};
@@ -20,8 +22,10 @@ function roll(rollNameParam, rollTypeParam) {
             console.error(`Could not find mod counter for ${groupId}`);
         }
 
-        diceGroupsData.push(groupDiceCounts);
+        updatedDiceGroupsData.push(groupDiceCounts);
     });
+
+    diceGroupsData = updatedDiceGroupsData;
 
     let critBehavior = fetchSetting('crit-behavior');
 
@@ -120,7 +124,6 @@ function formatRollTypeName(rollType) {
 }
 
 function constructDiceRollString(rollName) {
-
     // Create an empty array to store the formatted dice group strings
     let formattedDiceGroups = [];
 
