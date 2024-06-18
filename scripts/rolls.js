@@ -156,7 +156,7 @@ function constructDiceRollString(rollName) {
     }
 
     // Construct the final Talespire dice roll string by encoding the roll name and joining the formatted dice groups with '/'
-    let TSDiceRollString = `${encodeURIComponent(rollName)}:${formattedDiceGroups.join('/')}`;
+    let TSDiceRollString = formattedDiceGroups.join('/');
     // Return the constructed Talespire dice roll string
     return TSDiceRollString;
 }
