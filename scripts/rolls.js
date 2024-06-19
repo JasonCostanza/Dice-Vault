@@ -287,6 +287,63 @@ function constructDiceRollString(rollName) {
 //     return TSDiceRollString;
 // }
 
+// async function handleRollResult(rollEvent) {
+//     if (trackedIds[rollEvent.payload.rollId] == undefined) {
+//         return;
+//     }
+
+//     let roll = rollEvent.payload;
+//     let finalResults = [];
+//     let resultGroups = [];
+
+//     if (rollEvent.kind == "rollResults") {
+//         if (roll.resultsGroups != undefined) {
+//             let rollInfo = trackedIds[roll.rollId];
+//             if (rollInfo.type == "advantage" || rollInfo.type == "best-of-three") {
+//                 //---ADVANTAGE ROLLS---//
+//                 for (let group of roll.resultsGroups) {
+//                     let groupSum = await TS.dice.evaluateDiceResultsGroup(group);
+//                     finalResults.push(groupSum);
+//                     resultGroups.push(group);
+//                 }
+//                 let max = Math.max(...finalResults);
+//                 let maxIndex = finalResults.indexOf(max);
+//                 finalResult = max;
+//                 resultGroup = resultGroups[maxIndex];
+//             } else if (rollInfo.type == "disadvantage") {
+//                 //---DISADVANTAGE ROLLS---//
+//                 for (let group of roll.resultsGroups) {
+//                     let groupSum = await TS.dice.evaluateDiceResultsGroup(group);
+//                     finalResults.push(groupSum);
+//                     resultGroups.push(group);
+//                 }
+//                 let min = Math.min(...finalResults);
+//                 let minIndex = finalResults.indexOf(min);
+//                 finalResult = min;
+//                 resultGroup = resultGroups[minIndex];
+//             } else {//---NORMAL ROLLS---//
+//                 resultGroup = roll.resultsGroups[0];
+//                 finalResult = await TS.dice.evaluateDiceResultsGroup(resultGroup);
+//             }
+
+//             if (rollInfo.critBehavior === 'double-total') {
+//                 resultGroup = doubleDiceResults(resultGroup);
+//                 resultGroup = doubleModifier(resultGroup);
+//             } else if (rollInfo.critBehavior === 'double-die-result') {
+//                 resultGroup = doubleDiceResults(resultGroup);
+//             } else if (rollInfo.critBehavior === 'max-die') {
+//                 resultGroup = maximizeDiceResults(resultGroup);
+//             } else if (rollInfo.critBehavior === 'max-plus') {
+//                 resultGroup = addMaxDieForEachKind(resultGroup);
+//             }
+//         }
+
+//         displayResult(resultGroup, roll.rollId);
+//     } else if (rollEvent.kind == "rollRemoved") {
+//         delete trackedIds[rollEvent.payload.rollId];
+//     }
+// }
+
 async function handleRollResult(rollEvent) {
     if (trackedIds[rollEvent.payload.rollId] == undefined) {
         return;
@@ -321,9 +378,15 @@ async function handleRollResult(rollEvent) {
                 let minIndex = finalResults.indexOf(min);
                 finalResult = min;
                 resultGroup = resultGroups[minIndex];
-            } else {//---NORMAL ROLLS---//
-                resultGroup = roll.resultsGroups[0];
-                finalResult = await TS.dice.evaluateDiceResultsGroup(resultGroup);
+            } else {
+                //---NORMAL ROLLS---//
+                for (let group of roll.resultsGroups) {
+                    let groupSum = await TS.dice.evaluateDiceResultsGroup(group);
+                    finalResults.push(groupSum);
+                    resultGroups.push(group);
+                }
+                finalResult = finalResults.reduce((sum, value) => sum + value, 0);
+                resultGroup = [].concat(...resultGroups);
             }
 
             if (rollInfo.critBehavior === 'double-total') {
@@ -345,5 +408,9 @@ async function handleRollResult(rollEvent) {
 }
 
 async function displayResult(resultGroup, rollId) {
-    TS.dice.sendDiceResult([resultGroup], rollId).catch((response) => console.error("error in sending dice result", response));
+    TS.dice.sendDiceResult(resultGroup, rollId).catch((response) => console.error("error in sending dice result", response));
 }
+
+// async function displayResult(resultGroup, rollId) {
+//     TS.dice.sendDiceResult([resultGroup], rollId).catch((response) => console.error("error in sending dice result", response));
+// }
