@@ -1,3 +1,10 @@
+// function TESTROLL() {
+//     let test1 = { name: "Test", roll: "1d6+0" };
+//     let test2 = { name: "Fire", roll: "1d4+0" };
+//     tray = [test1, test2];
+//     TS.dice.putDiceInTray(tray, true)
+// }
+
 function roll(rollNameParam, rollTypeParam) {
     let selectedType = rollTypeParam || 'normal'; // Set to normal if no type is provided
 
@@ -225,13 +232,13 @@ function constructDiceRollString(rollName) {
         // If the modifier for the current group is not 0
         if (groupDiceCounts.mod !== 0) {
             // Determine the modifier string based on whether it's positive or negative
-            let modPart = groupDiceCounts.mod >= 0 ? `+${groupDiceCounts.mod}` : `${groupDiceCounts.mod}`;
+            let modPart = groupDiceCounts.mod > 0 ? `${groupDiceCounts.mod}` : `${groupDiceCounts.mod}`;
             // Push the modifier string to the formattedDiceGroup array
             formattedDiceGroup.push(modPart);
         }
 
         // Join the formatted dice and modifier strings for the current group into a single string
-        let groupRollString = formattedDiceGroup.join('');
+        let groupRollString = formattedDiceGroup.join('+');
         // Create a roll object with the roll name and group roll string
         let rollObject = { name: rollName, roll: groupRollString };
         // Push the roll object to the diceRollObjects array
