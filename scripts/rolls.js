@@ -232,13 +232,13 @@ function constructDiceRollString(rollName) {
         // If the modifier for the current group is not 0
         if (groupDiceCounts.mod !== 0) {
             // Determine the modifier string based on whether it's positive or negative
-            let modPart = groupDiceCounts.mod > 0 ? `${groupDiceCounts.mod}` : `${groupDiceCounts.mod}`;
+            let modPart = groupDiceCounts.mod > 0 ? `+${groupDiceCounts.mod}` : `${groupDiceCounts.mod}`;
             // Push the modifier string to the formattedDiceGroup array
             formattedDiceGroup.push(modPart);
         }
 
         // Join the formatted dice and modifier strings for the current group into a single string
-        let groupRollString = formattedDiceGroup.join('+');
+        let groupRollString = formattedDiceGroup.join('');
         // Create a roll object with the roll name and group roll string
         let rollObject = { name: rollName, roll: groupRollString };
         // Push the roll object to the diceRollObjects array
@@ -410,7 +410,6 @@ async function handleRollResult(rollEvent) {
 async function displayResult(resultGroup, rollId) {
     TS.dice.sendDiceResult(resultGroup, rollId).catch((response) => console.error("error in sending dice result", response));
 }
-
 // async function displayResult(resultGroup, rollId) {
 //     TS.dice.sendDiceResult([resultGroup], rollId).catch((response) => console.error("error in sending dice result", response));
 // }
