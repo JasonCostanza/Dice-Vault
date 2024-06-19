@@ -60,7 +60,7 @@ function decrement(type) {
     }
 }
 
-function negativeMod(modId) { // DONE
+function negativeMod(modId) { 
     const counterId = modId + '-counter-value';
     const counter = document.getElementById(counterId);
 
@@ -72,7 +72,7 @@ function negativeMod(modId) { // DONE
     }
 }
 
-function addDiceGroup() { // DONE
+function addDiceGroup() { 
     const diceGroup = document.createElement('div');
     diceGroup.className = 'dice-selection';
     updateDiceGroupsData();
@@ -121,7 +121,7 @@ function removeDiceGroup() {
     }
 }
 
-function sortSavedRolls() { // DONE
+function sortSavedRolls() { 
     const sortOption = document.getElementById('sort-options').value;
     const savedRollsContainer = document.querySelector('.saved-rolls-container');
     let savedRollsToDisplay = savedInVault.slice();
@@ -144,7 +144,7 @@ function sortSavedRolls() { // DONE
     savedRollsToDisplay.forEach(roll => savedRollsContainer.appendChild(roll));
 }
 
-function deleteSavedRoll(element) { // DONE
+function deleteSavedRoll(element) { 
     const rollEntry = element.closest('.saved-roll-entry');
     rollEntry.remove();
     savedInVault = savedInVault.filter(roll => roll !== rollEntry);
@@ -157,7 +157,7 @@ function deleteSavedRoll(element) { // DONE
     }
 }
 
-function save() { // DONE
+function save() { 
     const rollName = document.getElementById('roll-name').value;
     const diceGroupElements = document.querySelectorAll('.dice-selection');
 
@@ -196,7 +196,7 @@ function save() { // DONE
     }
 }
 
-function addSavedRoll(rollName, savedDiceGroups) { // DONE
+function addSavedRoll(rollName, savedDiceGroups) { 
     const savedRollsContainer = document.querySelector('.saved-rolls-container');
     const rollEntry = document.createElement('div');
     rollEntry.className = 'saved-roll-entry';
@@ -256,7 +256,7 @@ function addSavedRoll(rollName, savedDiceGroups) { // DONE
     }
 }
 
-function createRollButton(imageName, rollName, rollType, rollGroups, classes, parent){  // DONE
+function createRollButton(imageName, rollName, rollType, rollGroups, classes, parent){  
     const rollButton = document.createElement('div');
     rollButton.className = classes;
     rollButton.onclick = function() {
@@ -269,7 +269,7 @@ function createRollButton(imageName, rollName, rollType, rollGroups, classes, pa
     parent.appendChild(rollButton);
 }
 
-function reset() { // DONE
+function reset() {
     document.getElementById('roll-name').value = '';
 
     diceGroupsData.forEach(group => {
@@ -294,13 +294,13 @@ function reset() { // DONE
     console.log('RESET COMPLETE');
 }
 
-async function onStateChangeEvent(msg){ // DONE
+async function onStateChangeEvent(msg){ 
     if (msg.kind === 'hasInitialized'){
         loadGlobalSettings();
     }
 }
 
-function disableButtonById(id, disable = true){ // DONE
+function disableButtonById(id, disable = true){ 
     document.getElementById(id).disabled = disable;
 }
 
