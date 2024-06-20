@@ -153,6 +153,8 @@ function save() {
     const rollName = document.getElementById('roll-name').value;
     const diceGroupElements = document.querySelectorAll('.dice-selection');
 
+    savedDiceGroups = []; // Clear the array before saving new data to remove stale data
+
     diceGroupElements.forEach(groupElement => {
         const diceGroup = {};
 
