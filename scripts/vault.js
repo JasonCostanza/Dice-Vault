@@ -272,16 +272,16 @@ function createRollButton(imageName, rollName, rollType, rollGroups, classes, pa
 function reset() {
     document.getElementById('roll-name').value = '';
 
-    diceGroupsData.forEach(group => {
+    diceGroupsData.forEach((group, index) => {
         diceTypes.forEach(type => {
-            const counter = document.getElementById(`${group}-${type}-counter-value`);
-            const modCounter = document.getElementById(`${group}-mod-counter-value`);
+            const counter = document.getElementById(`${index}-${type}-counter-value`);
+            const modCounter = document.getElementById(`${index}-mod-counter-value`);
             if (counter) counter.textContent = '0';
             if (modCounter) modCounter.value = '0';
         });
 
-        if (group > 0) {
-            const diceRow = document.getElementById(`${group}`);
+        if (index > 0) {
+            const diceRow = document.getElementById(`${index}`);
             if (diceRow) {
                 diceRow.remove();
             }
