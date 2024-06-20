@@ -122,34 +122,24 @@ function constructDiceRollString(rollName) {
 
     // Iterate over each dice group in the diceGroupsData array
     for (const groupDiceCounts of diceGroupsData) {
-        // Create an empty array to store the formatted dice and modifier for the current group
+        let groupRollString = '';
         let formattedDiceGroup = [];
 
-        // Iterate over each die type and its count in the current group
         for (const [die, count] of Object.entries(groupDiceCounts)) {
-            // If the die type is not 'mod' and the count is greater than 0
             if (die !== 'mod' && count > 0) {
-                // Push the formatted die string (e.g., "1d4") to the formattedDiceGroup array
                 formattedDiceGroup.push(`${count}${die}`);
+                groupRollString = groupRollString + `+${count}${die}`;
             }
         }
 
-        // Convert the modifier to a number
         let modValue = parseInt(groupDiceCounts.mod, 10);
 
-        // If the modifier for the current group is not 0
         if (modValue !== 0) {
-            // Determine the modifier string based on whether it's positive or negative
             let modPart = modValue > 0 ? `+${modValue}` : `${modValue}`;
-            // Push the modifier string to the formattedDiceGroup array
-            formattedDiceGroup.push(modPart);
+            groupRollString = groupRollString + modPart;
         }
 
-        // Join the formatted dice and modifier strings for the current group into a single string
-        let groupRollString = formattedDiceGroup.join('');
-        // Create a roll object with the roll name and group roll string
         let rollObject = { name: rollName, roll: groupRollString };
-        // Push the roll object to the diceRollObjects array
         diceRollObjects.push(rollObject);
     }
 
