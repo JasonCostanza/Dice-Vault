@@ -1,13 +1,5 @@
 document.addEventListener('DOMContentLoaded', sortSavedRolls);
 
-// function updateDiceGroupsData(groupId, diceType, count) {
-//     const groupIndex = parseInt(groupId, 10);
-//     if (!diceGroupsData[groupIndex]) {
-//         diceGroupsData[groupIndex] = {};
-//     }
-//     diceGroupsData[groupIndex][diceType] = count;
-// }
-
 function updateDiceGroupsData() {
     diceGroupsData = [];
 
