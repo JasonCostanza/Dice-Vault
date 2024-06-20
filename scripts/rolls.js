@@ -46,7 +46,6 @@ function roll(rollNameParam, rollTypeParam) {
 
     try {
         // Create the roll object with name and roll string
-        // let rollObject = { name: rollName, roll: diceRollObjects};
         let rollCount;
 
         // Determine the roll count based on the selected type

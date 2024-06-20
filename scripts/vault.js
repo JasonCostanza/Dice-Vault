@@ -281,9 +281,6 @@ function reset() {
     });
 
     diceGroupsData.splice(1); 
-
-    console.log('diceGroupsDataafter reset: ', diceGroupsData, ' - Length: ', diceGroupsData.length);
-    console.log('RESET COMPLETE');
 }
 
 async function onStateChangeEvent(msg){ 
