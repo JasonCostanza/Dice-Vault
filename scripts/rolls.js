@@ -135,10 +135,13 @@ function constructDiceRollString(rollName) {
             }
         }
 
+        // Convert the modifier to a number
+        let modValue = parseInt(groupDiceCounts.mod, 10);
+
         // If the modifier for the current group is not 0
-        if (groupDiceCounts.mod !== 0) {
+        if (modValue !== 0) {
             // Determine the modifier string based on whether it's positive or negative
-            let modPart = groupDiceCounts.mod > 0 ? `+${groupDiceCounts.mod}` : `${groupDiceCounts.mod}`;
+            let modPart = modValue > 0 ? `+${modValue}` : `${modValue}`;
             // Push the modifier string to the formattedDiceGroup array
             formattedDiceGroup.push(modPart);
         }
