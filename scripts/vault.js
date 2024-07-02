@@ -1,3 +1,5 @@
+let savedDiceGroups = [];
+
 document.addEventListener('DOMContentLoaded', sortSavedRolls);
 
 function updateDiceGroupsData() {

@@ -1,8 +1,13 @@
+let trackedIds = {};
+
 function roll(rollNameParam, rollTypeParam) {
+    
     let selectedType = rollTypeParam || 'normal'; // Set to normal if no type is provided
+    let updatedDiceGroupsData = []; // Empty the array to purge old data. We call this "updated" temporarily, but it will become the new diceGroupsData
 
-    let updatedDiceGroupsData = [];
-
+    // TODO: CONSIDER MOVING THIS TO A SEPARATE FUNCTION
+    // buildDiceGroupsData(diceGroupsData);
+    // return updatedDiceGroupsData;
     diceGroupsData.forEach((group, index) => {
         let groupId = index;
         let groupDiceCounts = {};
@@ -25,44 +30,48 @@ function roll(rollNameParam, rollTypeParam) {
         updatedDiceGroupsData.push(groupDiceCounts);
     });
 
-    diceGroupsData = updatedDiceGroupsData;
+    diceGroupsData = updatedDiceGroupsData; // Update the diceGroupsData with the new data
 
-    let critBehavior = fetchSetting('crit-behavior');
+    // TODO: CONSIDER MOVING THIS TO A SEPARATE FUNCTION
+    // buildCritBehavior();
+    // return critBehavior;
+    let critBehavior = fetchSetting('crit-behavior'); // Fetch the critical behavior setting
+    
+        // Adjust for critical hit dice types
+        if (selectedType === 'crit-dice') {
+            if (critBehavior === 'double-die-count') {
+                diceCounts = doubleDieCountsForGroups(group) // TODO: This doesn't work. Hasn't been implemented yet.
+            }
+            selectedType = 'normal';  // Reset to normal type after handling critical dice
+        } else {
+            critBehavior = 'none';
+        }
 
     let rollName = buildRollName(rollNameParam, selectedType, critBehavior);
 
-    // Adjust for critical hit dice types
-    if (selectedType === 'crit-dice') {
-        if (critBehavior === 'double-die-count') {
-            diceCounts = doubleDieCountsForGroups(group)
-        }
-        selectedType = 'normal';  // Reset to normal type after handling critical dice
-    } else {
-        critBehavior = 'none';
-    }
-
+    // TODO: CONSIDER MOVING THIS TO A SEPARATE FUNCTION
+    // buildDiceRollObject();
+    // return diceRollObjects;
     // Construct the dice roll string from the dice groups
     let diceRollObjects = constructDiceRollString(rollName);
 
-    try {
-        // Create the roll object with name and roll string
-        let rollCount;
+    try { // Create the roll object and descriptors then put the dice in the tray
+        let rollCount; // Declaring the number of times the dice need to be rolled
 
         // Determine the roll count based on the selected type
         switch (selectedType) {
             case 'advantage':
-            case 'disadvantage': // if selectedType is 'advantage' or 'disadvantage, fall through to rollCount = 2
+            case 'disadvantage': // Fall-through case. Roll 2 times, keep the highest or lowest result
                 rollCount = 2;
                 break;
             case 'best-of-three':
-                rollCount = 3;
+                rollCount = 3; // Roll 3 times, keep the highest result
                 break;
             default:
-                rollCount = 1;
+                rollCount = 1; // Roll one time, keep the result
         }
 
-        // Create the tray configuration for the specified number of rolls
-        let trayConfiguration = diceRollObjects;
+        let trayConfiguration = diceRollObjects; // Set the tray configuration to the dice roll objects
 
         // Put dice in tray and handle the response
         TS.dice.putDiceInTray(trayConfiguration, true).then(diceSetResponse => {
@@ -72,11 +81,18 @@ function roll(rollNameParam, rollTypeParam) {
                 critBehavior: critBehavior
             };
         });
-    } catch (error) {
-        // Log any errors encountered during roll descriptor creation
+    } catch (error) { // Log any errors encountered during roll descriptor creation
         console.error('Error creating roll descriptors:', error);
     }
 }
+
+// SORTED IN THEIR ORDER OF EXECUTION ABOVE
+// ----------------------------
+// function buildDiceGroupsData() {
+// }
+
+// function buildCritBehavior() {
+// }
 
 function buildRollName(rollNameParam, rollTypeParam, critBehaviorParam) {
     let rollName = rollNameParam || document.getElementById('roll-name').value || 'Unnamed Roll';
@@ -116,6 +132,9 @@ function formatRollTypeName(rollType) {
     return rollTypeMappings[rollType] || rollType;
 }
 
+// function buildDiceRollObject() {
+// }
+
 function constructDiceRollString(rollName) {
     // Create an empty array to store the dice roll objects
     let diceRollObjects = [];
@@ -147,6 +166,7 @@ function constructDiceRollString(rollName) {
     return diceRollObjects;
 }
 
+// Doesn't handle any non-normal roll types
 async function handleRollResult(rollEvent) {
     if (trackedIds[rollEvent.payload.rollId] == undefined) {
         return;
@@ -210,6 +230,7 @@ async function handleRollResult(rollEvent) {
     }
 }
 
+// Doesn't handle any non-normal roll types
 async function displayResult(resultGroup, rollId) {
     TS.dice.sendDiceResult(resultGroup, rollId).catch((response) => console.error("error in sending dice result", response));
 }
