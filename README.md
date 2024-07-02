@@ -68,3 +68,15 @@ See our github issues tab for bugs and enhancements on the roadmap
 # Special Thanks
 [DeeForce](https://github.com/D33Force)
 [PanoramicPanda](https://github.com/PanoramicPanda)
+
+# Contribor Environment Configuration
+If you wish to contribute to the project you are more than welcome to create a feature branch, add your contributions, and open a PR against `main`. To get your local environment set up, it's a pretty easy process:
+  1. Clone the repository directly to the game's local directory: `C:\Users\%username%\AppData\LocalLow\BouncyRock Entertainment\TaleSpire\Symbiotes`. Note the username needs to be your username. I develop on Windows so I do not have access to the Mac directory which coincides with this. I recommend doing this to avoid having to copy/paste every time you want to test your changes.
+  2. Using your IDE of choice, open the folder. For me, that is `...\TaleSpire\Symbiotes\Dice Vault Dev`
+  3. Launch Talespire and enable Symbiotes in the game settings
+  4. Open the Symbiote sidebar and open the Symbiote. To make this easier, you can rename the symbiote in the `manifest.json` to something like "Symbiote DEV" or something to make it stand out from production version(s) of the same symbiote. Example, "Dice Vault" is the production version and "Dice Vault DEV" will be the one in active development. **DO NOT** include this name change in your PRs.
+  5. Make the changes you wish to the code files and make sure you save all changes and to all files
+  6. In Talespire, the Symbiote will automatically do a domain reload and display your updated changes. There is no need to build, deploy, or otherwise. If you do not see the Symbiote update, verify you have the right one opened in the side panel if there are multiple versions with identical names in your Symbiote list, ensure all files did actually save, and verify that there's not extra folder levels after `...\Symbiotes`, example `...\Symbiotes\DEV\Dice Vault` as that may interfere with the game registering the Symbiote's codebase.
+  7. To live debug the code and your changes, you can use Talespire's web developer portal which you open in your web browser of choice at the following: `localhost:8080`
+  8. After navigating to this address, ensure the Symbiote is active and visible in the Symbiote panel. If it appears blank or doesn't load, the symbiote must be actively loaded to access this panel. Try opening your Symbiote in the game and then refresh this portal.
+  9. Select the Symbiote from the list, in this case, "Dice Vault" or whatever custom name you gave it in the manifest.json in step 4. This allows you to debug the source code, HTML elements, and debug console log among other tools. Any error returned by Unity or `console.log` for example will be recorded here. You can also set breakpoints and add values to watches if you wish.
