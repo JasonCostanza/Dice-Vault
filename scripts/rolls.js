@@ -1,5 +1,3 @@
-let trackedRollIds = {};
-
 function roll(rollNameParam, rollTypeParam) {
     let selectedType = rollTypeParam || rollTypes.normal; // Set to normal if no type is provided
     let updatedDiceGroupsData = []; // Empty the array to purge old data. We call this "updated" temporarily, but it will become the new diceGroupsData
