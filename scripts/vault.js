@@ -1,5 +1,5 @@
-let savedDiceGroups = [];
 
+document.addEventListener('DOMContentLoaded', updateDiceGroupsData);
 document.addEventListener('DOMContentLoaded', sortSavedRolls);
 
 function updateDiceGroupsData() {
@@ -66,10 +66,9 @@ function negativeMod(modId) {
     }
 }
 
-function addDiceGroup() { 
+function addDiceGroup() {
     const diceGroup = document.createElement('div');
     diceGroup.className = 'dice-selection';
-    updateDiceGroupsData();
     const RollGroup = diceGroupsData.length;
     diceGroup.id = `${RollGroup}`;
     let diceHTML = '';
@@ -94,12 +93,13 @@ function addDiceGroup() {
     `;
 
     diceGroup.innerHTML = diceHTML;
-    // diceGroupsData.push(RollGroup);
+    diceGroupsData.push(RollGroup);
     updateDiceGroupsData();
     document.querySelector('.content-col-dice').appendChild(diceGroup);
 }
 
 function removeDiceGroup() {
+    updateDiceGroupsData();
     if (diceGroupsData.length > 1) {
         const lastGroupId = diceGroupsData.length - 1;
         const diceGroup = document.getElementById(`${lastGroupId}`);
@@ -266,6 +266,7 @@ function createRollButton(imageName, rollName, rollType, rollGroups, classes, pa
 }
 
 function reset() {
+    updateDiceGroupsData();
     document.getElementById('roll-name').value = '';
 
     diceGroupsData.forEach((group, index) => {
@@ -297,5 +298,6 @@ function disableButtonById(id, disable = true){
     document.getElementById(id).disabled = disable;
 }
 
+// TODO: MOve these to the top of the file
 document.getElementById('save-rolls-button').addEventListener('click', saveRollsToLocalStorage);
 document.getElementById('load-rolls-button').addEventListener('click', loadRollsFromLocalStorage);
