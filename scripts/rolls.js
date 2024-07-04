@@ -55,8 +55,8 @@ function roll(rollNameParam, rollTypeParam) {
     // return diceRollObjects;
     // Construct the dice roll string from the dice groups
     //let diceDescriptors = constructDiceRollString(rollName);
-    // Base roll object
-    let diceDescriptors = [
+
+    let baseDiceDescriptors = [
         {
             name: "test-4-groups",
             roll: "+1d4+1d6",
@@ -68,16 +68,29 @@ function roll(rollNameParam, rollTypeParam) {
     ];
 
     // Simulate adding copies of the same groups for advantage/disadvantage
-    diceDescriptors.concat([
-        {
-            name: "test-4-groups",
-            roll: "+1d4+1d6",
-        },
-        {
-            name: "test-4-groups",
-            roll: "+1d4+1d6+100",
-        },
-    ]);
+    additionalDiceDescriptorCopies = [
+        // {
+        //     name: "test-4-groups",
+        //     roll: "+1d4+1d6",
+        // },
+        // {
+        //     name: "test-4-groups",
+        //     roll: "+1d4+1d6+100",
+        // },
+        // {
+        //     name: "test-4-groups",
+        //     roll: "+1d4+1d6",
+        // },
+        // {
+        //     name: "test-4-groups",
+        //     roll: "+1d4+1d6+100",
+        // },
+    ];
+
+    let diceDescriptors = [
+        ...baseDiceDescriptors,
+        ...additionalDiceDescriptorCopies,
+    ];
 
     try {
         // Create the roll object and descriptors then put the dice in the tray
@@ -91,7 +104,7 @@ function roll(rollNameParam, rollTypeParam) {
         TS.dice.putDiceInTray(trayConfiguration, true).then((rollId) => {
             // Track the rolled dice IDs with their type and critical behavior
             trackedRollIds[rollId] = {
-                type: selectedType, //rollTypes.advantage, //selectedType,
+                type: selectedType,
                 critBehavior: critBehavior,
                 numberOfGroups: 2, //diceGroupsData.length,
             };
@@ -212,8 +225,177 @@ async function handleRollResult(rollEvent) {
     // https://symbiote-docs.talespire.com/api_doc_v0_1.md.html#subscriptions/dice/onrollresults
     // https://symbiote-docs.talespire.com/api_doc_v0_1.md.html#types/rollresults
 
-    // Roll Descriptor Array
-    /*
+    if (trackedRollIds[rollEvent.payload.rollId] == undefined) {
+        return;
+    }
+
+    if (!isValidRollEvent(rollEvent.kind)) {
+        // TODO: Should we render and/or log an error message here?
+        return;
+    }
+
+    if (rollEvent.kind == rollEvents.rollRemoved) {
+        handleRollRemovedEvent(rollEvent);
+    } else if (rollEvent.kind == rollEvents.rollResults) {
+        await handleRollResultsEvent(rollEvent);
+    }
+}
+
+function isValidRollEvent(eventName) {
+    if (
+        eventName == rollEvents.rollResults ||
+        eventName == rollEvents.rollRemoved
+    ) {
+        return true;
+    }
+
+    return false;
+}
+
+function handleRollRemovedEvent(rollEvent) {
+    delete trackedRollIds[rollEvent.payload.rollId];
+}
+
+async function handleRollResultsEvent(rollEvent) {
+    let roll = rollEvent.payload;
+    let resultGroup = {};
+
+    if (roll.resultsGroups != undefined) {
+        let rollInfo = trackedRollIds[roll.rollId];
+
+        if (rollInfo.type == rollTypes.advantage) {
+            resultGroup = await handleAdvantageRoll(roll);
+        } else if (rollInfo.type == rollTypes.disadvantage) {
+            resultGroup = await handleDisadvantageRoll(roll);
+        } else if (rollInfo.type == rollTypes.bestofThree) {
+            resultGroup = await handleBestOfThreeRoll(roll);
+        } else {
+            resultGroup = roll.resultsGroups;
+        }
+
+        if (rollInfo.critBehavior === "double-total") {
+            resultGroup = doubleDiceResults(resultGroup);
+            resultGroup = doubleModifier(resultGroup);
+        } else if (rollInfo.critBehavior === "double-die-result") {
+            resultGroup = doubleDiceResults(resultGroup);
+        } else if (rollInfo.critBehavior === "max-die") {
+            resultGroup = maximizeDiceResults(resultGroup);
+        } else if (rollInfo.critBehavior === "max-plus") {
+            resultGroup = addMaxDieForEachKind(resultGroup);
+        }
+    }
+
+    displayResult(resultGroup, roll.rollId);
+}
+
+async function handleAdvantageRoll(roll) {
+    return await handleAdvantageDisadvantageRoll(roll, true);
+}
+
+async function handleDisadvantageRoll(roll) {
+    return await handleAdvantageDisadvantageRoll(roll, false);
+}
+
+async function handleAdvantageDisadvantageRoll(roll, isAdvantage) {
+    let startingIndexOfSecondSetOfGroups = roll.resultsGroups.length / 2;
+
+    let firstSetOfGroups = roll.resultsGroups.slice(
+        0,
+        startingIndexOfSecondSetOfGroups
+    );
+
+    let secondSetOfGroups = roll.resultsGroups.slice(
+        startingIndexOfSecondSetOfGroups
+    );
+
+    let sumOfFirstSet = await getSumOfRollResultsGroups(firstSetOfGroups);
+    let sumOfSecondSet = await getSumOfRollResultsGroups(secondSetOfGroups);
+
+    let setWithHighestSum = [];
+    let setWithLowestSum = [];
+
+    if (sumOfFirstSet >= sumOfSecondSet) {
+        setWithHighestSum = firstSetOfGroups;
+        setWithLowestSum = secondSetOfGroups;
+    } else {
+        setWithHighestSum = secondSetOfGroups;
+        setWithLowestSum = firstSetOfGroups;
+    }
+
+    if (isAdvantage == true) {
+        return setWithHighestSum;
+    }
+
+    return setWithLowestSum;
+}
+
+async function handleBestOfThreeRoll(roll) {
+    let startingIndexOfSecondSetOfGroups = roll.resultsGroups.length / 3;
+    let startingIndexOfThirdSetOfGroups = startingIndexOfSecondSetOfGroups * 2;
+
+    let firstSetOfGroups = roll.resultsGroups.slice(
+        0,
+        startingIndexOfSecondSetOfGroups
+    );
+
+    let secondSetOfGroups = roll.resultsGroups.slice(
+        startingIndexOfSecondSetOfGroups,
+        startingIndexOfThirdSetOfGroups
+    );
+
+    let thirdSetOfGroups = roll.resultsGroups.slice(
+        startingIndexOfThirdSetOfGroups
+    );
+
+    let sumOfFirstSet = await getSumOfRollResultsGroups(firstSetOfGroups);
+    let sumOfSecondSet = await getSumOfRollResultsGroups(secondSetOfGroups);
+    let sumOfThirdSet = await getSumOfRollResultsGroups(thirdSetOfGroups);
+
+    if (sumOfFirstSet >= sumOfSecondSet && sumOfFirstSet >= sumOfThirdSet) {
+        return firstSetOfGroups;
+    } else if (
+        sumOfSecondSet >= sumOfFirstSet &&
+        sumOfSecondSet >= sumOfThirdSet
+    ) {
+        return secondSetOfGroups;
+    } else {
+        return thirdSetOfGroups;
+    }
+}
+
+/**
+ * Calculates the total sum of multiple groups of dice roll results.
+ *
+ * This function takes an array of roll results groups, where each group represents a collection of dice roll results.
+ * It asynchronously evaluates the sum of each group using a provided evaluation function (`TS.dice.evaluateDiceResultsGroup`),
+ * then calculates and returns the total sum of these group sums.
+ *
+ * @param {Array} rollResultsGroups - An array of roll results groups, where each group is a collection that can be evaluated into a sum.
+ * @returns {Promise<number>} A promise that resolves to the total sum of the evaluated sums of each group in `rollResultsGroups`.
+ */
+async function getSumOfRollResultsGroups(rollResultsGroups) {
+    let sums = [];
+
+    for (let resultsGroup of rollResultsGroups) {
+        let sum = await TS.dice.evaluateDiceResultsGroup(resultsGroup);
+
+        sums.push(sum);
+    }
+
+    return sums.reduce((partialSum, value) => partialSum + value, 0);
+}
+
+// Doesn't handle any non-normal roll types
+async function displayResult(resultGroup, rollId) {
+    TS.dice
+        .sendDiceResult(resultGroup, rollId)
+        .catch((response) =>
+            console.error("error in sending dice result", response)
+        );
+}
+
+// Roll Descriptor Array
+/*
     [
         {
             "name": "test-4-groups",
@@ -234,8 +416,8 @@ async function handleRollResult(rollEvent) {
     ]
     */
 
-    // Roll Event
-    /*
+// Roll Event
+/*
     {
         "kind": "rollResults",
         "payload": {
@@ -352,130 +534,4 @@ async function handleRollResult(rollEvent) {
         }
     }
     */
-    // https://symbiote-docs.talespire.com/api_doc_v0_1.md.html#calls/dice/evaluatediceresultsgroup
-
-    if (trackedRollIds[rollEvent.payload.rollId] == undefined) {
-        return;
-    }
-
-    if (!isValidRollEvent(rollEvent.kind)) {
-        // TODO: Should we render and/or log an error message here?
-        return;
-    }
-
-    if (rollEvent.kind == rollEvents.rollRemoved) {
-        handleRollRemovedEvent(rollEvent);
-    } else if (rollEvent.kind == rollEvents.rollResults) {
-        await handleRollResultsEvent(rollEvent);
-    }
-}
-
-function isValidRollEvent(eventName) {
-    if (
-        eventName == rollEvents.rollResults ||
-        eventName == rollEvents.rollRemoved
-    ) {
-        return true;
-    }
-
-    return false;
-}
-
-function handleRollRemovedEvent(rollEvent) {
-    delete trackedRollIds[rollEvent.payload.rollId];
-}
-
-async function handleRollResultsEvent(rollEvent) {
-    let roll = rollEvent.payload;
-    let resultGroup = {};
-
-    if (roll.resultsGroups != undefined) {
-        let rollInfo = trackedRollIds[roll.rollId];
-
-        if (
-            rollInfo.type == rollTypes.advantage ||
-            rollInfo.type == rollTypes.bestofThree
-        ) {
-            resultGroup = handleAdvantageRoll(roll);
-        } else if (rollInfo.type == rollTypes.disadvantage) {
-            resultGroup = await handleDisadvantageRoll(roll);
-        } else {
-            resultGroup = await handleNormalRoll(roll);
-        }
-
-        if (rollInfo.critBehavior === "double-total") {
-            resultGroup = doubleDiceResults(resultGroup);
-            resultGroup = doubleModifier(resultGroup);
-        } else if (rollInfo.critBehavior === "double-die-result") {
-            resultGroup = doubleDiceResults(resultGroup);
-        } else if (rollInfo.critBehavior === "max-die") {
-            resultGroup = maximizeDiceResults(resultGroup);
-        } else if (rollInfo.critBehavior === "max-plus") {
-            resultGroup = addMaxDieForEachKind(resultGroup);
-        }
-    }
-
-    displayResult(resultGroup, roll.rollId);
-}
-
-async function handleAdvantageRoll(roll) {
-    let finalResults = [];
-    let resultGroups = [];
-
-    for (let group of roll.resultsGroups) {
-        let groupSum = await TS.dice.evaluateDiceResultsGroup(group);
-        finalResults.push(groupSum);
-        resultGroups.push(group);
-    }
-
-    let max = Math.max(...finalResults);
-    let maxIndex = finalResults.indexOf(max);
-
-    finalResult = max;
-
-    return resultGroups[maxIndex];
-}
-
-async function handleDisadvantageRoll(roll) {
-    let finalResults = [];
-    let resultGroups = [];
-
-    for (let group of roll.resultsGroups) {
-        let groupSum = await TS.dice.evaluateDiceResultsGroup(group);
-        finalResults.push(groupSum);
-        resultGroups.push(group);
-    }
-
-    let min = Math.min(...finalResults);
-    let minIndex = finalResults.indexOf(min);
-
-    finalResult = min;
-
-    return resultGroups[minIndex];
-}
-
-async function handleNormalRoll(roll) {
-    let finalResults = [];
-    let resultGroups = [];
-
-    for (let group of roll.resultsGroups) {
-        let groupSum = await TS.dice.evaluateDiceResultsGroup(group);
-        finalResults.push(groupSum);
-        resultGroups.push(group);
-    }
-
-    finalResult = finalResults.reduce((sum, value) => sum + value, 0);
-
-    let resultGroup = [].concat(...resultGroups);
-
-    return resultGroup;
-}
-
-// Doesn't handle any non-normal roll types
-async function displayResult(resultGroup, rollId) {
-    TS.dice
-        .sendDiceResult(resultGroup, rollId)
-        .catch((response) =>
-            console.error("error in sending dice result", response)
-        );
-}
+// https://symbiote-docs.talespire.com/api_doc_v0_1.md.html#calls/dice/evaluatediceresultsgroup
