@@ -159,14 +159,6 @@ const rollsModule = (function () {
         }
     }
 
-    // SORTED IN THEIR ORDER OF EXECUTION ABOVE
-    // ----------------------------
-    // function buildDiceGroupsData() {
-    // }
-
-    // function buildCritBehavior() {
-    // }
-
     /**
      * Constructs a descriptive name for a roll based on provided parameters and
      * optional document elements.
@@ -231,9 +223,6 @@ const rollsModule = (function () {
 
         return rollTypeMappings[rollType] || rollType;
     }
-
-    // function buildDiceRollObject() {
-    // }
 
     /**
      * Constructs an array of dice roll descriptors based on the provided roll name
