@@ -11,3 +11,8 @@ const rollTypes = Object.freeze({
     bestofThree: "best-of-three",
     critical: "crit-dice",
 });
+
+const rollEvents = Object.freeze({
+    rollResults: "rollResults",
+    rollRemoved: "rollRemoved",
+});

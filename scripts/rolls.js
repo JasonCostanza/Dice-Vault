@@ -54,23 +54,46 @@ function roll(rollNameParam, rollTypeParam) {
     // buildDiceRollObject();
     // return diceRollObjects;
     // Construct the dice roll string from the dice groups
-    let diceRollString = constructDiceRollString(rollName);
+    //let diceDescriptors = constructDiceRollString(rollName);
+    // Base roll object
+    let diceDescriptors = [
+        {
+            name: "test-4-groups",
+            roll: "+1d4+1d6",
+        },
+        {
+            name: "test-4-groups",
+            roll: "+1d4+1d6+100",
+        },
+    ];
+
+    // Simulate adding copies of the same groups for advantage/disadvantage
+    diceDescriptors.concat([
+        {
+            name: "test-4-groups",
+            roll: "+1d4+1d6",
+        },
+        {
+            name: "test-4-groups",
+            roll: "+1d4+1d6+100",
+        },
+    ]);
 
     try {
         // Create the roll object and descriptors then put the dice in the tray
         let rollCount = getRollCount(selectedType);
 
         // ORIG: let trayConfiguration = Array(rollCount).fill(rollObject);
-        let trayConfiguration = diceRollString; // Set the tray configuration to the dice roll objects
+        let trayConfiguration = diceDescriptors; // Set the tray configuration to the dice roll objects
 
         // Put dice in tray and handle the response
         // https://symbiote-docs.talespire.com/api_doc_v0_1.md.html#calls/dice/putdiceintray
         TS.dice.putDiceInTray(trayConfiguration, true).then((rollId) => {
             // Track the rolled dice IDs with their type and critical behavior
             trackedRollIds[rollId] = {
-                type: selectedType,
+                type: selectedType, //rollTypes.advantage, //selectedType,
                 critBehavior: critBehavior,
-                numberOfGroups: diceGroupsData.length,
+                numberOfGroups: 2, //diceGroupsData.length,
             };
         });
     } catch (error) {
@@ -175,6 +198,12 @@ function constructDiceRollString(rollName) {
     }
 
     // Return the array of dice roll objects
+    // [
+    //     {name: 'TEST-2-Groups', roll: '+1d4'},
+    //     {name: 'TEST-2-Groups', roll: '+1d6+100'},
+    //     ...
+    // ]
+
     return diceRollObjects;
 }
 
@@ -183,78 +212,263 @@ async function handleRollResult(rollEvent) {
     // https://symbiote-docs.talespire.com/api_doc_v0_1.md.html#subscriptions/dice/onrollresults
     // https://symbiote-docs.talespire.com/api_doc_v0_1.md.html#types/rollresults
 
+    // Roll Descriptor Array
+    /*
+    [
+        {
+            "name": "test-4-groups",
+            "roll": "+1d4+1d6"
+        },
+        {
+            "name": "test-4-groups",
+            "roll": "+1d4+1d6+50"
+        },
+        {
+            "name": "test-4-groups",
+            "roll": "+1d6+1d8+100"
+        },
+        {
+            "name": "test-4-groups",
+            "roll": "+1d8+1d10+200"
+        }
+    ]
+    */
+
+    // Roll Event
+    /*
+    {
+        "kind": "rollResults",
+        "payload": {
+            "rollId": "17179869185",
+            "clientId": "e0a85890-68af-4cc2-b55b-e11d12b89889",
+            "resultsGroups": [
+                {
+                    "name": "test-4-groups",
+                    "result": {
+                        "operator": "+",
+                        "operands": [
+                            {
+                                "kind": "d4",
+                                "results": [
+                                    3
+                                ]
+                            },
+                            {
+                                "kind": "d6",
+                                "results": [
+                                    4
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "test-4-groups",
+                    "result": {
+                        "operator": "+",
+                        "operands": [
+                            {
+                                "kind": "d4",
+                                "results": [
+                                    1
+                                ]
+                            },
+                            {
+                                "operator": "+",
+                                "operands": [
+                                    {
+                                        "kind": "d6",
+                                        "results": [
+                                            4
+                                        ]
+                                    },
+                                    {
+                                        "value": 50
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "test-4-groups",
+                    "result": {
+                        "operator": "+",
+                        "operands": [
+                            {
+                                "kind": "d6",
+                                "results": [
+                                    1
+                                ]
+                            },
+                            {
+                                "operator": "+",
+                                "operands": [
+                                    {
+                                        "kind": "d8",
+                                        "results": [
+                                            1
+                                        ]
+                                    },
+                                    {
+                                        "value": 100
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "test-4-groups",
+                    "result": {
+                        "operator": "+",
+                        "operands": [
+                            {
+                                "kind": "d8",
+                                "results": [
+                                    4
+                                ]
+                            },
+                            {
+                                "operator": "+",
+                                "operands": [
+                                    {
+                                        "kind": "d10",
+                                        "results": [
+                                            5
+                                        ]
+                                    },
+                                    {
+                                        "value": 200
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ],
+            "gmOnly": false,
+            "quiet": true
+        }
+    }
+    */
+    // https://symbiote-docs.talespire.com/api_doc_v0_1.md.html#calls/dice/evaluatediceresultsgroup
+
     if (trackedRollIds[rollEvent.payload.rollId] == undefined) {
         return;
     }
 
+    if (!isValidRollEvent(rollEvent.kind)) {
+        // TODO: Should we render and/or log an error message here?
+        return;
+    }
+
+    if (rollEvent.kind == rollEvents.rollRemoved) {
+        handleRollRemovedEvent(rollEvent);
+    } else if (rollEvent.kind == rollEvents.rollResults) {
+        await handleRollResultsEvent(rollEvent);
+    }
+}
+
+function isValidRollEvent(eventName) {
+    if (
+        eventName == rollEvents.rollResults ||
+        eventName == rollEvents.rollRemoved
+    ) {
+        return true;
+    }
+
+    return false;
+}
+
+function handleRollRemovedEvent(rollEvent) {
+    delete trackedRollIds[rollEvent.payload.rollId];
+}
+
+async function handleRollResultsEvent(rollEvent) {
     let roll = rollEvent.payload;
+    let resultGroup = {};
+
+    if (roll.resultsGroups != undefined) {
+        let rollInfo = trackedRollIds[roll.rollId];
+
+        if (
+            rollInfo.type == rollTypes.advantage ||
+            rollInfo.type == rollTypes.bestofThree
+        ) {
+            resultGroup = handleAdvantageRoll(roll);
+        } else if (rollInfo.type == rollTypes.disadvantage) {
+            resultGroup = await handleDisadvantageRoll(roll);
+        } else {
+            resultGroup = await handleNormalRoll(roll);
+        }
+
+        if (rollInfo.critBehavior === "double-total") {
+            resultGroup = doubleDiceResults(resultGroup);
+            resultGroup = doubleModifier(resultGroup);
+        } else if (rollInfo.critBehavior === "double-die-result") {
+            resultGroup = doubleDiceResults(resultGroup);
+        } else if (rollInfo.critBehavior === "max-die") {
+            resultGroup = maximizeDiceResults(resultGroup);
+        } else if (rollInfo.critBehavior === "max-plus") {
+            resultGroup = addMaxDieForEachKind(resultGroup);
+        }
+    }
+
+    displayResult(resultGroup, roll.rollId);
+}
+
+async function handleAdvantageRoll(roll) {
     let finalResults = [];
     let resultGroups = [];
 
-    if (rollEvent.kind == "rollResults") {
-        if (roll.resultsGroups != undefined) {
-            let rollInfo = trackedRollIds[roll.rollId];
-            if (
-                rollInfo.type == rollTypes.advantage ||
-                rollInfo.type == rollTypes.bestofThree
-            ) {
-                //---ADVANTAGE ROLLS---//
-                for (let group of roll.resultsGroups) {
-                    let groupSum = await TS.dice.evaluateDiceResultsGroup(
-                        group
-                    );
-                    finalResults.push(groupSum);
-                    resultGroups.push(group);
-                }
-                let max = Math.max(...finalResults);
-                let maxIndex = finalResults.indexOf(max);
-                finalResult = max;
-                resultGroup = resultGroups[maxIndex];
-            } else if (rollInfo.type == rollTypes.disadvantage) {
-                //---DISADVANTAGE ROLLS---//
-                for (let group of roll.resultsGroups) {
-                    let groupSum = await TS.dice.evaluateDiceResultsGroup(
-                        group
-                    );
-                    finalResults.push(groupSum);
-                    resultGroups.push(group);
-                }
-                let min = Math.min(...finalResults);
-                let minIndex = finalResults.indexOf(min);
-                finalResult = min;
-                resultGroup = resultGroups[minIndex];
-            } else {
-                //---NORMAL ROLLS---//
-                for (let group of roll.resultsGroups) {
-                    let groupSum = await TS.dice.evaluateDiceResultsGroup(
-                        group
-                    );
-                    finalResults.push(groupSum);
-                    resultGroups.push(group);
-                }
-                finalResult = finalResults.reduce(
-                    (sum, value) => sum + value,
-                    0
-                );
-                resultGroup = [].concat(...resultGroups);
-            }
-
-            if (rollInfo.critBehavior === "double-total") {
-                resultGroup = doubleDiceResults(resultGroup);
-                resultGroup = doubleModifier(resultGroup);
-            } else if (rollInfo.critBehavior === "double-die-result") {
-                resultGroup = doubleDiceResults(resultGroup);
-            } else if (rollInfo.critBehavior === "max-die") {
-                resultGroup = maximizeDiceResults(resultGroup);
-            } else if (rollInfo.critBehavior === "max-plus") {
-                resultGroup = addMaxDieForEachKind(resultGroup);
-            }
-        }
-
-        displayResult(resultGroup, roll.rollId);
-    } else if (rollEvent.kind == "rollRemoved") {
-        delete trackedRollIds[rollEvent.payload.rollId];
+    for (let group of roll.resultsGroups) {
+        let groupSum = await TS.dice.evaluateDiceResultsGroup(group);
+        finalResults.push(groupSum);
+        resultGroups.push(group);
     }
+
+    let max = Math.max(...finalResults);
+    let maxIndex = finalResults.indexOf(max);
+
+    finalResult = max;
+
+    return resultGroups[maxIndex];
+}
+
+async function handleDisadvantageRoll(roll) {
+    let finalResults = [];
+    let resultGroups = [];
+
+    for (let group of roll.resultsGroups) {
+        let groupSum = await TS.dice.evaluateDiceResultsGroup(group);
+        finalResults.push(groupSum);
+        resultGroups.push(group);
+    }
+
+    let min = Math.min(...finalResults);
+    let minIndex = finalResults.indexOf(min);
+
+    finalResult = min;
+
+    return resultGroups[minIndex];
+}
+
+async function handleNormalRoll(roll) {
+    let finalResults = [];
+    let resultGroups = [];
+
+    for (let group of roll.resultsGroups) {
+        let groupSum = await TS.dice.evaluateDiceResultsGroup(group);
+        finalResults.push(groupSum);
+        resultGroups.push(group);
+    }
+
+    finalResult = finalResults.reduce((sum, value) => sum + value, 0);
+
+    let resultGroup = [].concat(...resultGroups);
+
+    return resultGroup;
 }
 
 // Doesn't handle any non-normal roll types
