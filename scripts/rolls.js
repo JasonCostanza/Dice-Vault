@@ -54,19 +54,13 @@ function roll(rollNameParam, rollTypeParam) {
     // buildDiceRollObject();
     // return diceRollObjects;
     // Construct the dice roll string from the dice groups
-    let baseDiceDescriptors = constructDiceRollString(rollName);
+    let baseDiceDescriptors = constructDiceRollDescriptors(rollName);
 
     try {
-        // Create the roll object and descriptors then put the dice in the tray
-        let rollCount = getRollCount(selectedType);
-        let diceDescriptors = [];
-
-        for (let i = 0; i < rollCount; i++) {
-            diceDescriptors.push(...baseDiceDescriptors);
-        }
-
-        // ORIG: let trayConfiguration = Array(rollCount).fill(rollObject);
-        let trayConfiguration = diceDescriptors; // Set the tray configuration to the dice roll objects
+        let trayConfiguration = buildDiceTrayConfiguration(
+            baseDiceDescriptors,
+            selectedType
+        );
 
         // Put dice in tray and handle the response
         // https://symbiote-docs.talespire.com/api_doc_v0_1.md.html#calls/dice/putdiceintray
@@ -81,6 +75,17 @@ function roll(rollNameParam, rollTypeParam) {
         // Log any errors encountered during roll descriptor creation
         console.error("Error creating roll descriptors:", error);
     }
+}
+
+function buildDiceTrayConfiguration(baseSetOfDiceDescriptors, rollType) {
+    let rollCount = getRollCount(rollType);
+    let diceDescriptors = [];
+
+    for (let i = 0; i < rollCount; i++) {
+        diceDescriptors.push(...baseSetOfDiceDescriptors);
+    }
+
+    return diceDescriptors;
 }
 
 /** Determine the number of times the dice need to be rolled based on the selected type. */
@@ -150,7 +155,7 @@ function formatRollTypeName(rollType) {
 // function buildDiceRollObject() {
 // }
 
-function constructDiceRollString(rollName) {
+function constructDiceRollDescriptors(rollName) {
     // https://feedback.talespire.com/kb/article/talespire-url-scheme
     // Create an empty array to store the dice roll objects
     let diceRollObjects = [];
@@ -361,145 +366,3 @@ async function displayResult(resultGroup, rollId) {
             console.error("error in sending dice result", response)
         );
 }
-
-// Roll Descriptor Array
-/*
-    [
-        {
-            "name": "test-4-groups",
-            "roll": "+1d4+1d6"
-        },
-        {
-            "name": "test-4-groups",
-            "roll": "+1d4+1d6+50"
-        },
-        {
-            "name": "test-4-groups",
-            "roll": "+1d6+1d8+100"
-        },
-        {
-            "name": "test-4-groups",
-            "roll": "+1d8+1d10+200"
-        }
-    ]
-    */
-
-// Roll Event
-/*
-    {
-        "kind": "rollResults",
-        "payload": {
-            "rollId": "17179869185",
-            "clientId": "e0a85890-68af-4cc2-b55b-e11d12b89889",
-            "resultsGroups": [
-                {
-                    "name": "test-4-groups",
-                    "result": {
-                        "operator": "+",
-                        "operands": [
-                            {
-                                "kind": "d4",
-                                "results": [
-                                    3
-                                ]
-                            },
-                            {
-                                "kind": "d6",
-                                "results": [
-                                    4
-                                ]
-                            }
-                        ]
-                    }
-                },
-                {
-                    "name": "test-4-groups",
-                    "result": {
-                        "operator": "+",
-                        "operands": [
-                            {
-                                "kind": "d4",
-                                "results": [
-                                    1
-                                ]
-                            },
-                            {
-                                "operator": "+",
-                                "operands": [
-                                    {
-                                        "kind": "d6",
-                                        "results": [
-                                            4
-                                        ]
-                                    },
-                                    {
-                                        "value": 50
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                },
-                {
-                    "name": "test-4-groups",
-                    "result": {
-                        "operator": "+",
-                        "operands": [
-                            {
-                                "kind": "d6",
-                                "results": [
-                                    1
-                                ]
-                            },
-                            {
-                                "operator": "+",
-                                "operands": [
-                                    {
-                                        "kind": "d8",
-                                        "results": [
-                                            1
-                                        ]
-                                    },
-                                    {
-                                        "value": 100
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                },
-                {
-                    "name": "test-4-groups",
-                    "result": {
-                        "operator": "+",
-                        "operands": [
-                            {
-                                "kind": "d8",
-                                "results": [
-                                    4
-                                ]
-                            },
-                            {
-                                "operator": "+",
-                                "operands": [
-                                    {
-                                        "kind": "d10",
-                                        "results": [
-                                            5
-                                        ]
-                                    },
-                                    {
-                                        "value": 200
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                }
-            ],
-            "gmOnly": false,
-            "quiet": true
-        }
-    }
-    */
-// https://symbiote-docs.talespire.com/api_doc_v0_1.md.html#calls/dice/evaluatediceresultsgroup
