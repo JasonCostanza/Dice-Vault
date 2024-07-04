@@ -1,5 +1,7 @@
 /**
  * Executes a dice roll operation based on specified roll name and type.
+ * Places the dice to roll into TaleSpire's dice tray for displaying and
+ * rolling in the game.
  *
  * @param {string} rollNameParam - The name of the roll, which may be used for
  *                                 display or logging purposes.
@@ -56,31 +58,25 @@ function roll(rollNameParam, rollTypeParam) {
         critBehavior = "none";
     }
 
-    let rollName = buildRollName(rollNameParam, selectedType, critBehavior);
+    putDiceToRollIntoDiceTray(rollNameParam, selectedType, critBehavior);
+}
 
-    // TODO: CONSIDER MOVING THIS TO A SEPARATE FUNCTION
-    // buildDiceRollObject();
-    // return diceRollObjects;
-    // Construct the dice roll string from the dice groups
-    let baseDiceDescriptors = constructDiceRollDescriptors(rollName);
-
+function putDiceToRollIntoDiceTray(rollNameParam, selectedType, critBehavior) {
     try {
+        let rollName = buildRollName(rollNameParam, selectedType, critBehavior);
+        let baseDiceDescriptors = constructDiceRollDescriptors(rollName);
         let trayConfiguration = buildDiceTrayConfiguration(
             baseDiceDescriptors,
             selectedType
         );
 
-        // Put dice in tray and handle the response
-        // https://symbiote-docs.talespire.com/api_doc_v0_1.md.html#calls/dice/putdiceintray
         TS.dice.putDiceInTray(trayConfiguration, true).then((rollId) => {
-            // Track the rolled dice IDs with their type and critical behavior
             trackedRollIds[rollId] = {
                 type: selectedType,
                 critBehavior: critBehavior,
             };
         });
     } catch (error) {
-        // Log any errors encountered during roll descriptor creation
         console.error("Error creating roll descriptors:", error);
     }
 }
@@ -141,14 +137,14 @@ function buildDiceTrayConfiguration(baseSetOfDiceDescriptors, rollType) {
 function getRollCount(rollType) {
     switch (rollType) {
         case rollTypes.advantage:
-        case rollTypes.disadvantage: // Fall-through case. Roll 2 times, keep the highest or lowest result
+        case rollTypes.disadvantage:
             return 2;
 
         case rollTypes.bestofThree:
-            return 3; // Roll 3 times, keep the highest result
+            return 3;
 
         default:
-            return 1; // Roll one time, keep the result
+            return 1;
     }
 }
 
@@ -298,11 +294,14 @@ function constructDiceRollDescriptors(rollName) {
  */
 async function handleRollResult(rollEvent) {
     if (trackedRollIds[rollEvent.payload.rollId] == undefined) {
+        console.error(
+            `Tracked Roll for ID \"${rollEvent.payload.rollId}\" not found.`
+        );
         return;
     }
 
     if (!isValidRollEvent(rollEvent.kind)) {
-        // TODO: Should we render and/or log an error message here?
+        console.error(`Invalid roll event: ${rollEvent.kind}`);
         return;
     }
 
@@ -365,29 +364,45 @@ async function handleRollResultsEvent(rollEvent) {
     if (roll.resultsGroups != undefined) {
         let rollInfo = trackedRollIds[roll.rollId];
 
-        if (rollInfo.type == rollTypes.advantage) {
-            resultGroup = await handleAdvantageRoll(roll);
-        } else if (rollInfo.type == rollTypes.disadvantage) {
-            resultGroup = await handleDisadvantageRoll(roll);
-        } else if (rollInfo.type == rollTypes.bestofThree) {
-            resultGroup = await handleBestOfThreeRoll(roll);
-        } else {
-            resultGroup = roll.resultsGroups;
-        }
+        resultGroup = getReportableRollResultsGroup(roll, rollInfo.type);
 
-        if (rollInfo.critBehavior === "double-total") {
-            resultGroup = doubleDiceResults(resultGroup);
-            resultGroup = doubleModifier(resultGroup);
-        } else if (rollInfo.critBehavior === "double-die-result") {
-            resultGroup = doubleDiceResults(resultGroup);
-        } else if (rollInfo.critBehavior === "max-die") {
-            resultGroup = maximizeDiceResults(resultGroup);
-        } else if (rollInfo.critBehavior === "max-plus") {
-            resultGroup = addMaxDieForEachKind(resultGroup);
-        }
+        resultGroup = applyCritBehaviorToRollResultsGroup(
+            resultGroup,
+            rollInfo.critBehavior
+        );
     }
 
     displayResult(resultGroup, roll.rollId);
+}
+
+/**
+ * Retrieves the reportable roll results group based on the roll and roll type.
+ *
+ * This function is designed to handle the complexity of different roll types in games,
+ * ensuring that the correct results are reported based on the Symbiotes's rules for
+ * advantage, disadvantage, and other roll types.
+ *
+ * @param {Object} roll - The roll object containing the dice roll information.
+ * @param {string} rollType - A string representing the type of roll (e.g., 'advantage',
+ *                            'disadvantage', 'bestofThree').
+ *
+ * @returns {Promise<Object>} A promise that resolves with the reportable roll
+ *                            results group.
+ */
+async function getReportableRollResultsGroup(roll, rollType) {
+    switch (rollType) {
+        case rollTypes.advantage:
+            return await handleAdvantageRoll(roll);
+
+        case rollTypes.disadvantage:
+            return await handleDisadvantageRoll(roll);
+
+        case rollTypes.bestofThree:
+            return await handleBestOfThreeRoll(roll);
+
+        default:
+            return roll.resultsGroups;
+    }
 }
 
 /**
@@ -546,18 +561,67 @@ async function handleBestOfThreeRoll(roll) {
  *                            evaluated sums of each group in `rollResultsGroups`.
  */
 async function getSumOfRollResultsGroups(rollResultsGroups) {
-    let sums = [];
+    let sum = 0;
 
     for (let resultsGroup of rollResultsGroups) {
-        let sum = await TS.dice.evaluateDiceResultsGroup(resultsGroup);
-
-        sums.push(sum);
+        sum += await TS.dice.evaluateDiceResultsGroup(resultsGroup);
     }
 
-    return sums.reduce((partialSum, value) => partialSum + value, 0);
+    return sum;
 }
 
-// Doesn't handle any non-normal roll types
+/**
+ * Applies critical hit behavior to a group of roll results.
+ *
+ * This function modifies the given roll results group based on the specified
+ * critical hit behavior. The critical hit behaviors include:
+ * - "double-total": Doubles both the dice results and any modifiers in the results group.
+ * - "double-die-result": Doubles the dice results in the results group.
+ * - "max-die": Maximizes the dice results in the results group, setting each die to its maximum possible value.
+ * - "max-plus": Adds the maximum possible value of each die type to the results group.
+ *
+ * The function returns a new results group object with the applied modifications
+ *
+ * @param {Object} resultGroup - The original group of roll results to be modified.
+ * @param {string} critBehavior - A string indicating the type of critical hit behavior
+ *                                to apply to the roll results.
+ *
+ * @returns {Object} The modified group of roll results with the critical hit behavior
+ *                   applied.
+ */
+function applyCritBehaviorToRollResultsGroup(resultGroup, critBehavior) {
+    let updatedResultsGroup = resultGroup;
+
+    if (critBehavior === "double-total") {
+        updatedResultsGroup = doubleDiceResults(updatedResultsGroup);
+        updatedResultsGroup = doubleModifier(updatedResultsGroup);
+    } else if (critBehavior === "double-die-result") {
+        updatedResultsGroup = doubleDiceResults(updatedResultsGroup);
+    } else if (critBehavior === "max-die") {
+        updatedResultsGroup = maximizeDiceResults(updatedResultsGroup);
+    } else if (critBehavior === "max-plus") {
+        updatedResultsGroup = addMaxDieForEachKind(updatedResultsGroup);
+    }
+
+    return updatedResultsGroup;
+}
+
+/**
+ * Asynchronously sends a dice roll result to the TaleSpire game interface.
+ *
+ * This function is responsible for communicating the result of a dice roll,
+ * encapsulated within `resultGroup`, to the Talespire game via the `TS.dice.sendDiceResult`
+ * method. It uses the `rollId` to associate the result with a specific roll.
+ * If the operation fails, an error message is logged to the console detailing
+ * the failure.
+ *
+ * @param {Object} resultGroup - An object containing the dice roll results to be sent.
+ * @param {string} rollId - A unique identifier for the roll, used to track the result
+ *                          within the Talespire game.
+ *
+ * @returns {Promise<void>} A promise that resolves when the dice result has been
+ *                          successfully sent or logs an error upon failure.
+ */
 async function displayResult(resultGroup, rollId) {
     TS.dice
         .sendDiceResult(resultGroup, rollId)
