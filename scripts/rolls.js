@@ -54,47 +54,16 @@ function roll(rollNameParam, rollTypeParam) {
     // buildDiceRollObject();
     // return diceRollObjects;
     // Construct the dice roll string from the dice groups
-    //let diceDescriptors = constructDiceRollString(rollName);
-
-    let baseDiceDescriptors = [
-        {
-            name: "test-4-groups",
-            roll: "+1d4+1d6",
-        },
-        {
-            name: "test-4-groups",
-            roll: "+1d4+1d6+100",
-        },
-    ];
-
-    // Simulate adding copies of the same groups for advantage/disadvantage
-    additionalDiceDescriptorCopies = [
-        // {
-        //     name: "test-4-groups",
-        //     roll: "+1d4+1d6",
-        // },
-        // {
-        //     name: "test-4-groups",
-        //     roll: "+1d4+1d6+100",
-        // },
-        // {
-        //     name: "test-4-groups",
-        //     roll: "+1d4+1d6",
-        // },
-        // {
-        //     name: "test-4-groups",
-        //     roll: "+1d4+1d6+100",
-        // },
-    ];
-
-    let diceDescriptors = [
-        ...baseDiceDescriptors,
-        ...additionalDiceDescriptorCopies,
-    ];
+    let baseDiceDescriptors = constructDiceRollString(rollName);
 
     try {
         // Create the roll object and descriptors then put the dice in the tray
         let rollCount = getRollCount(selectedType);
+        let diceDescriptors = [];
+
+        for (let i = 0; i < rollCount; i++) {
+            diceDescriptors.push(...baseDiceDescriptors);
+        }
 
         // ORIG: let trayConfiguration = Array(rollCount).fill(rollObject);
         let trayConfiguration = diceDescriptors; // Set the tray configuration to the dice roll objects
@@ -106,7 +75,6 @@ function roll(rollNameParam, rollTypeParam) {
             trackedRollIds[rollId] = {
                 type: selectedType,
                 critBehavior: critBehavior,
-                numberOfGroups: 2, //diceGroupsData.length,
             };
         });
     } catch (error) {
