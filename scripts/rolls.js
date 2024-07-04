@@ -364,7 +364,7 @@ async function handleRollResultsEvent(rollEvent) {
     if (roll.resultsGroups != undefined) {
         let rollInfo = trackedRollIds[roll.rollId];
 
-        resultGroup = getReportableRollResultsGroup(roll, rollInfo.type);
+        resultGroup = await getReportableRollResultsGroup(roll, rollInfo.type);
 
         resultGroup = applyCritBehaviorToRollResultsGroup(
             resultGroup,
@@ -622,7 +622,7 @@ function applyCritBehaviorToRollResultsGroup(resultGroup, critBehavior) {
  * @returns {Promise<void>} A promise that resolves when the dice result has been
  *                          successfully sent or logs an error upon failure.
  */
-async function displayResult(resultGroup, rollId) {
+function displayResult(resultGroup, rollId) {
     TS.dice
         .sendDiceResult(resultGroup, rollId)
         .catch((response) =>
