@@ -54,9 +54,8 @@ const rollsModule = (function () {
         // Adjust for critical hit dice types
         if (selectedType === rollTypes.critical) {
             if (critBehavior === "double-die-count") {
-                diceCounts = doubleDieCountsForGroups(group); // TODO: This doesn't work. Hasn't been implemented yet.
+                diceGroupsData = doubleDiceCounts(diceGroupsData);
             }
-            selectedType = rollTypes.normal; // Reset to normal type after handling critical dice
         } else {
             critBehavior = "none";
         }
@@ -175,6 +174,7 @@ const rollsModule = (function () {
      * @returns {string} The constructed roll name, combining the base name, roll type,
      *                   and critical hit behavior.
      */
+
     function buildRollName(rollNameParam, rollTypeParam, critBehaviorParam) {
         let rollName =
             rollNameParam ||
@@ -293,7 +293,7 @@ const rollsModule = (function () {
      * @returns {Promise<void>} A promise that resolves once the roll event has been processed.
      */
     async function handleRollResult(rollEvent) {
-        if (trackedRollIds[rollEvent.payload.rollId] == undefined) {
+        if (trackedRollIds[rollEvent.payload.rollId] == undefined) { // BUG: for some reason we are losing the rollId. We have it when we enter but when we evaluate this we flip to undefined then enter the failure condition
             console.error(
                 `Tracked Roll for ID \"${rollEvent.payload.rollId}\" not found.`
             );

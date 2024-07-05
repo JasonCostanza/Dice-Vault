@@ -1,26 +1,14 @@
-// function doubleDieCounts(diceCounts) {
-//     let newDiceCounts = {};
-//     for (const [die, count] of Object.entries(diceCounts)) {
-//         if (die !== 'mod') {
-//             newDiceCounts[die] = String(parseInt(count, 10) * 2);
-//         } else {
-//             newDiceCounts[die] = count;
-//         }
-//     }
-//     return newDiceCounts;
-// }
-
-function doubleDieCountsForGroups(stagedRollGroups) {
-    return stagedRollGroups.map(diceCounts => {
-        let newDiceCounts = {};
+function doubleDiceCounts(rollGroups) {
+    return rollGroups.map(diceCounts => {
+        let doubledDiceCounts = {};
         for (const [die, count] of Object.entries(diceCounts)) {
             if (die !== 'mod') {
-                newDiceCounts[die] = String(parseInt(count, 10) * 2);
+                doubledDiceCounts[die] = String(parseInt(count, 10) * 2);
             } else {
-                newDiceCounts[die] = count;
+                doubledDiceCounts[die] = count;
             }
         }
-        return newDiceCounts;
+        return doubledDiceCounts;
     });
 }
 
