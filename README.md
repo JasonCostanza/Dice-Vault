@@ -68,6 +68,7 @@ See our github issues tab for bugs and enhancements on the roadmap
 # Special Thanks
 [DeeForce](https://github.com/D33Force)
 [PanoramicPanda](https://github.com/PanoramicPanda)
+[kbarnett7](https://github.com/kbarnett7)
 
 # Contribor Environment Configuration
 If you wish to contribute to the project you are more than welcome to create a feature branch, add your contributions, and open a PR against `main`. To get your local environment set up, it's a pretty easy process:
