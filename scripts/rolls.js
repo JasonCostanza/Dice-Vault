@@ -293,7 +293,7 @@ const rollsModule = (function () {
      * @returns {Promise<void>} A promise that resolves once the roll event has been processed.
      */
     async function handleRollResult(rollEvent) {
-        if (trackedRollIds[rollEvent.payload.rollId] == undefined) { // BUG: for some reason we are losing the rollId. We have it when we enter but when we evaluate this we flip to undefined then enter the failure condition
+        if (trackedRollIds[rollEvent.payload.rollId] == undefined) {
             console.error(
                 `Tracked Roll for ID \"${rollEvent.payload.rollId}\" not found.`
             );
@@ -359,23 +359,46 @@ const rollsModule = (function () {
      */
     async function handleRollResultsEvent(rollEvent) {
         let roll = rollEvent.payload;
-        let resultGroup = {};
-
+        let resultGroups = [];
+    
         if (roll.resultsGroups != undefined) {
             let rollInfo = trackedRollIds[roll.rollId];
-
-            resultGroup = await getReportableRollResultsGroup(
-                roll,
-                rollInfo.type
-            );
-
-            resultGroup = applyCritBehaviorToRollResultsGroup(
-                resultGroup,
-                rollInfo.critBehavior
-            );
+    
+            try {
+                resultGroups = await getReportableRollResultsGroup(
+                    roll,
+                    rollInfo.type
+                );
+    
+                console.log('Before applying crit behavior:', JSON.stringify(resultGroups, null, 2));
+    
+                resultGroups = applyCritBehaviorToRollResultsGroup(
+                    resultGroups,
+                    rollInfo.critBehavior
+                );
+    
+                console.log('After applying crit behavior:', JSON.stringify(resultGroups, null, 2));
+    
+                await displayResults(resultGroups, roll.rollId);
+                console.log('Results displayed successfully');
+            } catch (error) {
+                console.error('Error processing or displaying results:', error);
+            }
+        } else {
+            console.warn('No result groups found in the roll payload');
         }
-
-        displayResult(resultGroup, roll.rollId);
+    }
+    
+    async function displayResults(resultGroups, rollId) {
+        for (let resultGroup of resultGroups) {
+            try {
+                await TS.dice.sendDiceResult(resultGroups, rollId);
+                console.log(`Result group sent successfully for roll ${rollId}`);
+            } catch (error) {
+                console.error(`Error sending result group for roll ${rollId}:`, error);
+                throw error; // Re-throw to be caught by the calling function
+            }
+        }
     }
 
     /**
@@ -393,19 +416,27 @@ const rollsModule = (function () {
      *                            results group.
      */
     async function getReportableRollResultsGroup(roll, rollType) {
+        let resultGroups;
+    
         switch (rollType) {
             case rollTypes.advantage:
-                return await handleAdvantageRoll(roll);
-
+                resultGroups = await handleAdvantageRoll(roll);
+                break;
+    
             case rollTypes.disadvantage:
-                return await handleDisadvantageRoll(roll);
-
+                resultGroups = await handleDisadvantageRoll(roll);
+                break;
+    
             case rollTypes.bestofThree:
-                return await handleBestOfThreeRoll(roll);
-
+                resultGroups = await handleBestOfThreeRoll(roll);
+                break;
+    
             default:
-                return roll.resultsGroups;
+                resultGroups = roll.resultsGroups;
         }
+    
+        // Ensure we always return an array, even if it's a single group
+        return Array.isArray(resultGroups) ? resultGroups : [resultGroups];
     }
 
     /**
@@ -599,21 +630,60 @@ const rollsModule = (function () {
      * @returns {Object} The modified group of roll results with the critical hit behavior
      *                   applied.
      */
-    function applyCritBehaviorToRollResultsGroup(resultGroup, critBehavior) {
-        let updatedResultsGroup = resultGroup;
-
-        if (critBehavior === "double-total") {
-            updatedResultsGroup = doubleDiceResults(updatedResultsGroup);
-            updatedResultsGroup = doubleModifier(updatedResultsGroup);
-        } else if (critBehavior === "double-die-result") {
-            updatedResultsGroup = doubleDiceResults(updatedResultsGroup);
-        } else if (critBehavior === "max-die") {
-            updatedResultsGroup = maximizeDiceResults(updatedResultsGroup);
-        } else if (critBehavior === "max-plus") {
-            updatedResultsGroup = addMaxDieForEachKind(updatedResultsGroup);
-        }
-
-        return updatedResultsGroup;
+    function applyCritBehaviorToRollResultsGroup(resultGroups, critBehavior) {
+        return resultGroups.map(group => {
+            console.log('Processing group with crit behavior:', critBehavior);
+            console.log('Initial group:', JSON.stringify(group, null, 2));
+    
+            if (critBehavior === "double-total") {
+                let diceSum = 0;
+                let modifier = 0;
+    
+                // Sum all dice results and separate the modifier
+                if (group.result.operands) {
+                    group.result.operands.forEach(operand => {
+                        console.log('Processing operand:', operand);
+                        if (operand.results) {
+                            diceSum += operand.results.reduce((sum, val) => sum + val, 0);
+                        } else if (operand.value !== undefined) {
+                            modifier += operand.value;
+                        }
+                    });
+                } else if (group.result.results) {
+                    diceSum = group.result.results.reduce((sum, val) => sum + val, 0);
+                    modifier = group.result.modifier || 0;
+                }
+    
+                console.log('Dice sum:', diceSum);
+                console.log('Modifier:', modifier);
+    
+                // Double the dice sum and add the modifier
+                const totalResult = diceSum * 2 + modifier;
+    
+                console.log('Total result:', totalResult);
+    
+                // Create a new result structure
+                return {
+                    ...group,
+                    result: {
+                        ...group.result,
+                        total: totalResult,
+                        description: `(${diceSum} * 2) + ${modifier} = ${totalResult}`
+                    }
+                };
+            }
+            // Handle other crit behaviors...
+            else if (critBehavior === "double-die-result") {
+                return doubleDiceResults([group])[0];
+            } else if (critBehavior === "max-die") {
+                return maximizeDiceResults([group])[0];
+            } else if (critBehavior === "max-plus") {
+                return addMaxDieForEachKind([group])[0];
+            }
+            
+            console.log('No crit behavior applied, returning original group');
+            return group;
+        });
     }
 
     /**
