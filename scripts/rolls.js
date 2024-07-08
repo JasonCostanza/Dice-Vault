@@ -1,21 +1,25 @@
 const rollsModule = (function () {
     /**
      * Executes a dice roll operation based on specified roll name and type.
-     * Places the dice to roll into TaleSpire's dice tray for displaying and
-     * rolling in the game.
+     * 
+     * This function performs the following steps:
+     * 1. Collects dice data from the UI.
+     * 2. Determines the roll type and critical hit behavior.
+     * 3. Applies the "double-die-count" critical behavior if applicable.
+     * 4. Prepares the dice roll for TaleSpire's dice tray.
+     * 5. Initiates the roll in TaleSpire.
+     * 
+     * It handles normal rolls as well as various types of critical hits,
+     * applying the appropriate behavior based on user settings.
      *
-     * @param {string} rollNameParam - The name of the roll, which may be used for
-     *                                 display or logging purposes.
+     * @param {string} rollNameParam - The name of the roll, used for display and logging purposes.
      * @param {string} rollTypeParam - The type of the roll (e.g., 'normal', 'critical'),
-     *                                 which influences how the dice are rolled.
+     *                                 which influences how the dice are rolled and processed.
      */
     function roll(rollNameParam, rollTypeParam) {
         let selectedType = rollTypeParam || rollTypes.normal; // Set to normal if no type is provided
         let updatedDiceGroupsData = []; // Empty the array to purge old data. We call this "updated" temporarily, but it will become the new diceGroupsData
 
-        // TODO: CONSIDER MOVING THIS TO A SEPARATE FUNCTION
-        // buildDiceGroupsData(diceGroupsData);
-        // return updatedDiceGroupsData;
         diceGroupsData.forEach((group, index) => {
             let groupId = index;
             let groupDiceCounts = {};
@@ -46,9 +50,6 @@ const rollsModule = (function () {
 
         diceGroupsData = updatedDiceGroupsData; // Update the diceGroupsData with the new data
 
-        // TODO: CONSIDER MOVING THIS TO A SEPARATE FUNCTION
-        // buildCritBehavior();
-        // return critBehavior;
         let critBehavior = fetchSetting("crit-behavior"); // Fetch the critical behavior setting
 
         // Adjust for critical hit dice types
@@ -63,6 +64,22 @@ const rollsModule = (function () {
         putDiceToRollIntoDiceTray(rollNameParam, selectedType, critBehavior);
     }
 
+        /**
+     * Prepares and sends a dice roll configuration to TaleSpire's dice tray.
+     * 
+     * This function performs the following steps:
+     * 1. Builds a roll name based on the provided parameters.
+     * 2. Constructs dice roll descriptors.
+     * 3. Builds a dice tray configuration.
+     * 4. Sends the configuration to TaleSpire's dice tray.
+     * 5. Tracks the roll ID for future reference.
+     * 
+     * @param {string} rollNameParam - The base name for the roll.
+     * @param {string} selectedType - The type of roll (e.g., 'normal', 'critical').
+     * @param {string} critBehavior - The critical hit behavior to apply, if applicable.
+     * 
+     * @throws {Error} If there's an error creating roll descriptors.
+     */
     function putDiceToRollIntoDiceTray(
         rollNameParam,
         selectedType,
@@ -159,11 +176,18 @@ const rollsModule = (function () {
     }
 
     /**
-     * Constructs a descriptive name for a roll based on provided parameters and
-     * optional document elements.
+     * Constructs a descriptive name for a roll based on provided parameters.
+     * 
+     * This function builds a roll name that includes:
+     * 1. The base roll name (provided or from the UI)
+     * 2. The roll type (e.g., "Advantage", "Disadvantage")
+     * 3. Critical hit behavior, if applicable
+     * 
+     * It handles various critical hit behaviors, adding appropriate descriptions
+     * to the roll name for each type of critical hit.
      *
      * @param {string} rollNameParam - The base name for the roll. If not provided,
-     *                                 attempts to use the value from the document's
+     *                                 it attempts to use the value from the document's
      *                                 "roll-name" element.
      * @param {string} rollTypeParam - The type of the roll (e.g., "normal", "advantage",
      *                                 "disadvantage", "crit-dice").
@@ -172,9 +196,8 @@ const rollsModule = (function () {
      *                                     "double-total", "max-die", "max-plus").
      *
      * @returns {string} The constructed roll name, combining the base name, roll type,
-     *                   and critical hit behavior.
+     *                   and critical hit behavior (if applicable).
      */
-
     function buildRollName(rollNameParam, rollTypeParam, critBehaviorParam) {
         let rollName =
             rollNameParam ||
@@ -285,7 +308,14 @@ const rollsModule = (function () {
     /**
      * Handles the processing of roll events, including roll results and roll removals.
      *
-     * [onRollResults handler](https://symbiote-docs.talespire.com/api_doc_v0_1.md.html#subscriptions/dice/onrollresults)
+     * This function serves as the main entry point for processing roll events from TaleSpire.
+     * It performs the following steps:
+     * 1. Validates that the roll is being tracked by our system.
+     * 2. Checks if the event type is valid (either 'rollResults' or 'rollRemoved').
+     * 3. Delegates to appropriate handlers based on the event type:
+     *    - For 'rollRemoved', it removes the roll from tracking.
+     *    - For 'rollResults', it processes the results, applying any necessary
+     *      modifications (like critical hit behaviors) before displaying.
      *
      * @param {Object} rollEvent - An object representing a roll event, containing a
      *                             payload with the roll ID and other relevant information.
@@ -349,7 +379,14 @@ const rollsModule = (function () {
      * Processes a roll results event and applies specific roll handling based on
      * the roll type and critical hit behavior.
      *
-     * [rollResults event](https://symbiote-docs.talespire.com/api_doc_v0_1.md.html#types/rollresults)
+     * This function performs the following steps:
+     * 1. Retrieves roll information and critical behavior.
+     * 2. Gets the reportable roll results group based on roll type.
+     * 3. Applies the appropriate critical hit behavior to the results.
+     * 4. Displays the modified results in TaleSpire.
+     *
+     * It handles various roll types and critical hit behaviors, ensuring that
+     * the final displayed results accurately reflect any special conditions.
      *
      * @param {Object} rollEvent - An object representing a roll event, containing the
      *                             payload with roll details.
@@ -360,27 +397,27 @@ const rollsModule = (function () {
     async function handleRollResultsEvent(rollEvent) {
         let roll = rollEvent.payload;
         let resultGroups = [];
-    
+
         if (roll.resultsGroups != undefined) {
             let rollInfo = trackedRollIds[roll.rollId];
             if (rollInfo) {
                 console.log('Critical Behavior:', rollInfo.critBehavior);
-    
+
                 try {
                     resultGroups = await getReportableRollResultsGroup(
                         roll,
                         rollInfo.type
                     );
-    
+
                     console.log('Before applying crit behavior:', JSON.stringify(resultGroups, null, 2));
-    
+
                     resultGroups = applyCritBehaviorToRollResultsGroup(
                         resultGroups,
                         rollInfo.critBehavior
                     );
-    
+
                     console.log('After applying crit behavior:', JSON.stringify(resultGroups, null, 2));
-    
+
                     await displayResults(resultGroups, roll.rollId);
                     console.log('Results displayed successfully');
                 } catch (error) {
@@ -393,7 +430,7 @@ const rollsModule = (function () {
             console.warn('No result groups found in the roll payload');
         }
     }
-    
+
     async function displayResults(resultGroups, rollId) {
         for (let resultGroup of resultGroups) {
             try {
@@ -407,39 +444,44 @@ const rollsModule = (function () {
     }
 
     /**
-     * Retrieves the reportable roll results group based on the roll and roll type.
+     * Retrieves and processes the reportable roll results group based on the roll type.
      *
-     * This function is designed to handle the complexity of different roll types in games,
-     * ensuring that the correct results are reported based on the Symbiotes's rules for
-     * advantage, disadvantage, and other roll types.
+     * This function handles the complexity of different roll types, ensuring that
+     * the correct results are reported based on the game's rules for advantage,
+     * disadvantage, and other special roll types. It performs the following:
+     * 1. Determines the appropriate handling based on the roll type.
+     * 2. For advantage, disadvantage, or best-of-three rolls, it calls specific
+     *    handler functions to process the results accordingly.
+     * 3. For normal rolls, it returns the original results.
+     * 4. Ensures the return value is always an array of result groups.
      *
      * @param {Object} roll - The roll object containing the dice roll information.
      * @param {string} rollType - A string representing the type of roll (e.g., 'advantage',
-     *                            'disadvantage', 'bestofThree').
+     *                            'disadvantage', 'bestofThree', 'normal').
      *
-     * @returns {Promise<Object>} A promise that resolves with the reportable roll
-     *                            results group.
+     * @returns {Promise<Array<Object>>} A promise that resolves with an array of reportable
+     *                                   roll results groups, processed according to the roll type.
      */
     async function getReportableRollResultsGroup(roll, rollType) {
         let resultGroups;
-    
+
         switch (rollType) {
             case rollTypes.advantage:
                 resultGroups = await handleAdvantageRoll(roll);
                 break;
-    
+
             case rollTypes.disadvantage:
                 resultGroups = await handleDisadvantageRoll(roll);
                 break;
-    
+
             case rollTypes.bestofThree:
                 resultGroups = await handleBestOfThreeRoll(roll);
                 break;
-    
+
             default:
                 resultGroups = roll.resultsGroups;
         }
-    
+
         // Ensure we always return an array, even if it's a single group
         return Array.isArray(resultGroups) ? resultGroups : [resultGroups];
     }
@@ -617,50 +659,51 @@ const rollsModule = (function () {
     }
 
     /**
-     * Applies critical hit behavior to a group of roll results.
-     *
-     * This function modifies the given roll results group based on the specified
-     * critical hit behavior. The critical hit behaviors include:
-     * - "double-total": Doubles both the dice results and any modifiers in the results group.
-     * - "double-die-result": Doubles the dice results in the results group.
-     * - "max-die": Maximizes the dice results in the results group, setting each die to its maximum possible value.
-     * - "max-plus": Adds the maximum possible value of each die type to the results group.
-     *
-     * The function returns a new results group object with the applied modifications
-     *
-     * @param {Object} resultGroup - The original group of roll results to be modified.
-     * @param {string} critBehavior - A string indicating the type of critical hit behavior
-     *                                to apply to the roll results.
-     *
-     * @returns {Object} The modified group of roll results with the critical hit behavior
-     *                   applied.
+     * Applies critical hit behavior to groups of roll results.
+     * 
+     * This function modifies the given roll results groups based on the specified
+     * critical hit behavior. It handles nested dice structures and supports multiple
+     * critical hit behaviors:
+     * - "double-total": Doubles all values, including dice results and modifiers.
+     * - "double-die-result": Doubles only the dice results, leaving modifiers unchanged.
+     * - "max-die": Sets each die to its maximum possible value.
+     * - "max-plus": Adds the maximum possible value of each die to the original roll.
+     * 
+     * Note: The "double-die-count" behavior is not handled in this function as it's
+     * applied earlier in the roll process, before the dice are actually rolled.
+     * 
+     * @param {Array<Object>} resultGroups - An array of roll result group objects to be modified.
+     * @param {string} critBehavior - The type of critical hit behavior to apply.
+     * 
+     * @returns {Array<Object>} An array of modified roll result group objects with the
+     *                          critical hit behavior applied.
      */
     function applyCritBehaviorToRollResultsGroup(resultGroups, critBehavior) {
         console.log('Applying crit behavior:', critBehavior);
         console.log('Initial result groups:', JSON.stringify(resultGroups, null, 2));
-    
+
         return resultGroups.map(group => {
             if (critBehavior === "double-total") {
                 let total = 0;
                 let doubledOperands = [];
-    
+
                 if (group.result.operands) {
                     doubledOperands = group.result.operands.map(operand => {
                         if (operand.results) {
                             let doubledResults = operand.results.map(val => val * 2);
                             total += doubledResults.reduce((sum, val) => sum + val, 0);
-                            return {...operand, results: doubledResults};
+                            return { ...operand, results: doubledResults };
                         } else if (operand.value !== undefined) {
                             let doubledValue = operand.value * 2;
                             total += doubledValue;
-                            return {...operand, value: doubledValue};
+                            return { ...operand, value: doubledValue };
                         }
                         return operand;
                     });
                 }
-    
+
                 console.log('Doubled total:', total);
-    
+
                 return {
                     ...group,
                     result: {
@@ -673,13 +716,13 @@ const rollsModule = (function () {
             } else if (critBehavior === "double-die-result") {
                 let total = 0;
                 let doubledOperands = [];
-    
+
                 if (group.result.operands) {
                     doubledOperands = group.result.operands.map(operand => {
                         if (operand.results) {
                             let doubledResults = operand.results.map(val => val * 2);
                             total += doubledResults.reduce((sum, val) => sum + val, 0);
-                            return {...operand, results: doubledResults};
+                            return { ...operand, results: doubledResults };
                         } else if (operand.value !== undefined) {
                             // Don't double the modifier
                             total += operand.value;
@@ -716,12 +759,12 @@ const rollsModule = (function () {
                     }
                     return operand;
                 }
-            
+
                 let maximizedResult = maximizeDice(group.result);
                 let total = calculateTotal(maximizedResult);
-            
+
                 console.log('Maximized die total:', total);
-            
+
                 return {
                     ...group,
                     result: {
@@ -767,6 +810,18 @@ const rollsModule = (function () {
         });
     }
 
+    /**
+     * Recursively calculates the total value of a dice roll result, including nested structures.
+     * 
+     * This function handles complex dice roll structures with multiple operators and operands.
+     * It recursively processes nested operands, summing up all dice results and static values.
+     * 
+     * @param {Object} result - The dice roll result object to calculate.
+     *                          This can be a nested structure with operators and operands,
+     *                          or a simple object with dice results or a static value.
+     * 
+     * @returns {number} The total calculated value of the dice roll result.
+     */
     function calculateTotal(result) {
         if (result.operator && result.operands) {
             return result.operands.reduce((sum, operand) => sum + calculateTotal(operand), 0);
@@ -779,20 +834,18 @@ const rollsModule = (function () {
     }
 
     /**
-     * Asynchronously sends a dice roll result to the TaleSpire game interface.
-     *
-     * This function is responsible for communicating the result of a dice roll,
-     * encapsulated within `resultGroup`, to the Talespire game via the `TS.dice.sendDiceResult`
-     * method. It uses the `rollId` to associate the result with a specific roll.
-     * If the operation fails, an error message is logged to the console detailing
-     * the failure.
-     *
-     * @param {Object} resultGroup - An object containing the dice roll results to be sent.
-     * @param {string} rollId - A unique identifier for the roll, used to track the result
-     *                          within the Talespire game.
-     *
-     * @returns {Promise<void>} A promise that resolves when the dice result has been
-     *                          successfully sent or logs an error upon failure.
+     * Asynchronously sends dice roll results to the TaleSpire game interface.
+     * 
+     * This function is responsible for communicating the results of dice rolls to Talespire.
+     * It can handle multiple result groups, sending each group individually to TaleSpire.
+     * If any send operation fails, an error is logged and thrown.
+     * 
+     * @param {Array<Object>} resultGroups - An array of objects, each containing dice roll results to be sent.
+     * @param {string} rollId - A unique identifier for the roll, used to track the results within TaleSpire.
+     * 
+     * @returns {Promise<void>} A promise that resolves when all dice results have been successfully sent,
+     *                          or rejects if an error occurs during the process.
+     * @throws {Error} If there's an error sending any of the result groups.
      */
     async function displayResults(resultGroups, rollId) {
         try {

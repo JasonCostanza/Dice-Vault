@@ -2,7 +2,6 @@ function performAutoLoads(){
     if (fetchSetting('auto-load')) {
         console.log('Auto-loading rolls from local storage.');
         loadRollsFromLocalStorage();
-
     }
 
     if (fetchSetting('auto-save')) {
