@@ -363,26 +363,31 @@ const rollsModule = (function () {
     
         if (roll.resultsGroups != undefined) {
             let rollInfo = trackedRollIds[roll.rollId];
+            if (rollInfo) {
+                console.log('Critical Behavior:', rollInfo.critBehavior);
     
-            try {
-                resultGroups = await getReportableRollResultsGroup(
-                    roll,
-                    rollInfo.type
-                );
+                try {
+                    resultGroups = await getReportableRollResultsGroup(
+                        roll,
+                        rollInfo.type
+                    );
     
-                console.log('Before applying crit behavior:', JSON.stringify(resultGroups, null, 2));
+                    console.log('Before applying crit behavior:', JSON.stringify(resultGroups, null, 2));
     
-                resultGroups = applyCritBehaviorToRollResultsGroup(
-                    resultGroups,
-                    rollInfo.critBehavior
-                );
+                    resultGroups = applyCritBehaviorToRollResultsGroup(
+                        resultGroups,
+                        rollInfo.critBehavior
+                    );
     
-                console.log('After applying crit behavior:', JSON.stringify(resultGroups, null, 2));
+                    console.log('After applying crit behavior:', JSON.stringify(resultGroups, null, 2));
     
-                await displayResults(resultGroups, roll.rollId);
-                console.log('Results displayed successfully');
-            } catch (error) {
-                console.error('Error processing or displaying results:', error);
+                    await displayResults(resultGroups, roll.rollId);
+                    console.log('Results displayed successfully');
+                } catch (error) {
+                    console.error('Error processing or displaying results:', error);
+                }
+            } else {
+                console.warn(`No roll info found for roll ID: ${roll.rollId}`);
             }
         } else {
             console.warn('No result groups found in the roll payload');
@@ -392,11 +397,11 @@ const rollsModule = (function () {
     async function displayResults(resultGroups, rollId) {
         for (let resultGroup of resultGroups) {
             try {
-                await TS.dice.sendDiceResult(resultGroups, rollId);
+                await TS.dice.sendDiceResult(resultGroup, rollId);  // Changed from resultGroups to resultGroup
                 console.log(`Result group sent successfully for roll ${rollId}`);
             } catch (error) {
                 console.error(`Error sending result group for roll ${rollId}:`, error);
-                throw error; // Re-throw to be caught by the calling function
+                throw error;
             }
         }
     }
@@ -631,59 +636,146 @@ const rollsModule = (function () {
      *                   applied.
      */
     function applyCritBehaviorToRollResultsGroup(resultGroups, critBehavior) {
+        console.log('Applying crit behavior:', critBehavior);
+        console.log('Initial result groups:', JSON.stringify(resultGroups, null, 2));
+    
         return resultGroups.map(group => {
-            console.log('Processing group with crit behavior:', critBehavior);
-            console.log('Initial group:', JSON.stringify(group, null, 2));
-    
             if (critBehavior === "double-total") {
-                let diceSum = 0;
-                let modifier = 0;
+                let total = 0;
+                let doubledOperands = [];
     
-                // Sum all dice results and separate the modifier
                 if (group.result.operands) {
-                    group.result.operands.forEach(operand => {
-                        console.log('Processing operand:', operand);
+                    doubledOperands = group.result.operands.map(operand => {
                         if (operand.results) {
-                            diceSum += operand.results.reduce((sum, val) => sum + val, 0);
+                            let doubledResults = operand.results.map(val => val * 2);
+                            total += doubledResults.reduce((sum, val) => sum + val, 0);
+                            return {...operand, results: doubledResults};
                         } else if (operand.value !== undefined) {
-                            modifier += operand.value;
+                            let doubledValue = operand.value * 2;
+                            total += doubledValue;
+                            return {...operand, value: doubledValue};
                         }
+                        return operand;
                     });
-                } else if (group.result.results) {
-                    diceSum = group.result.results.reduce((sum, val) => sum + val, 0);
-                    modifier = group.result.modifier || 0;
                 }
     
-                console.log('Dice sum:', diceSum);
-                console.log('Modifier:', modifier);
+                console.log('Doubled total:', total);
     
-                // Double the dice sum and add the modifier
-                const totalResult = diceSum * 2 + modifier;
-    
-                console.log('Total result:', totalResult);
-    
-                // Create a new result structure
                 return {
                     ...group,
                     result: {
                         ...group.result,
-                        total: totalResult,
-                        description: `(${diceSum} * 2) + ${modifier} = ${totalResult}`
+                        operands: doubledOperands,
+                        total: total,
+                        description: `Critical Hit! All values doubled`
+                    }
+                };
+            } else if (critBehavior === "double-die-result") {
+                let total = 0;
+                let doubledOperands = [];
+    
+                if (group.result.operands) {
+                    doubledOperands = group.result.operands.map(operand => {
+                        if (operand.results) {
+                            let doubledResults = operand.results.map(val => val * 2);
+                            total += doubledResults.reduce((sum, val) => sum + val, 0);
+                            return {...operand, results: doubledResults};
+                        } else if (operand.value !== undefined) {
+                            // Don't double the modifier
+                            total += operand.value;
+                            return operand;
+                        }
+                        return operand;
+                    });
+                }
+                console.log('Double die result total:', total);
+
+                return {
+                    ...group,
+                    result: {
+                        ...group.result,
+                        operands: doubledOperands,
+                        total: total,
+                        description: `Critical Hit! Dice results doubled`
+                    }
+                };
+
+            } else if (critBehavior === "max-die") {
+                function maximizeDice(operand) {
+                    if (operand.operator && operand.operands) {
+                        return {
+                            ...operand,
+                            operands: operand.operands.map(maximizeDice)
+                        };
+                    } else if (operand.kind && operand.results) {
+                        let maxValue = parseInt(operand.kind.substring(1), 10);
+                        return {
+                            ...operand,
+                            results: operand.results.map(() => maxValue)
+                        };
+                    }
+                    return operand;
+                }
+            
+                let maximizedResult = maximizeDice(group.result);
+                let total = calculateTotal(maximizedResult);
+            
+                console.log('Maximized die total:', total);
+            
+                return {
+                    ...group,
+                    result: {
+                        ...maximizedResult,
+                        total: total,
+                        description: `Critical Hit! Dice results maximized`
+                    }
+                };
+            } else if (critBehavior === "max-plus") {
+                function maxPlusDice(operand) {
+                    if (operand.operator && operand.operands) {
+                        return {
+                            ...operand,
+                            operands: operand.operands.map(maxPlusDice)
+                        };
+                    } else if (operand.kind && operand.results) {
+                        let maxValue = parseInt(operand.kind.substring(1), 10);
+                        let newResults = [...operand.results, ...new Array(operand.results.length).fill(maxValue)];
+                        return {
+                            ...operand,
+                            results: newResults
+                        };
+                    }
+                    return operand;
+                }
+
+                let maxPlusResult = maxPlusDice(group.result);
+                let total = calculateTotal(maxPlusResult);
+
+                console.log('Max plus total:', total);
+
+                return {
+                    ...group,
+                    result: {
+                        ...maxPlusResult,
+                        total: total,
+                        description: `Critical Hit! Max die value added for each die`
                     }
                 };
             }
-            // Handle other crit behaviors...
-            else if (critBehavior === "double-die-result") {
-                return doubleDiceResults([group])[0];
-            } else if (critBehavior === "max-die") {
-                return maximizeDiceResults([group])[0];
-            } else if (critBehavior === "max-plus") {
-                return addMaxDieForEachKind([group])[0];
-            }
-            
-            console.log('No crit behavior applied, returning original group');
+
             return group;
         });
+    }
+
+    function calculateTotal(result) {
+        if (result.operator && result.operands) {
+            return result.operands.reduce((sum, operand) => sum + calculateTotal(operand), 0);
+        } else if (result.results) {
+            return result.results.reduce((sum, val) => sum + val, 0);
+        } else if (result.value !== undefined) {
+            return result.value;
+        }
+        return 0;
     }
 
     /**
@@ -702,12 +794,14 @@ const rollsModule = (function () {
      * @returns {Promise<void>} A promise that resolves when the dice result has been
      *                          successfully sent or logs an error upon failure.
      */
-    function displayResult(resultGroup, rollId) {
-        TS.dice
-            .sendDiceResult(resultGroup, rollId)
-            .catch((response) =>
-                console.error("error in sending dice result", response)
-            );
+    async function displayResults(resultGroups, rollId) {
+        try {
+            await TS.dice.sendDiceResult(resultGroups, rollId);
+            console.log(`Results sent successfully for roll ${rollId}`);
+        } catch (error) {
+            console.error(`Error sending results for roll ${rollId}:`, error);
+            throw error;
+        }
     }
 
     // PUBLIC API //
