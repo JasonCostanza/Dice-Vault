@@ -117,7 +117,6 @@ function removeDiceGroup() {
         if (diceGroup) {
             diceGroup.remove();
             diceGroupsData.splice(lastGroupId, 1);
-            console.log("Row removed:", diceGroup);
         } else {
             console.error("Row element not found:", lastGroupId);
         }
@@ -182,7 +181,7 @@ function save() {
     const rollName = document.getElementById("roll-name").value;
     const diceGroupElements = document.querySelectorAll(".dice-selection");
 
-    savedDiceGroups = []; // Clear the array before saving new data
+    savedDiceGroups = []; // Clear the array before saving new data to remove stale data
 
     diceGroupElements.forEach((groupElement) => {
         const diceGroup = {};
@@ -204,18 +203,12 @@ function save() {
         savedDiceGroups.push(diceGroup);
     });
 
-    addSavedRoll(rollName, savedDiceGroups);
-    saveCurrentRolls();
-
     const stagedRoll = {
         name: rollName,
         groups: savedDiceGroups,
     };
 
-    console.log("Saved roll JSON: " + JSON.stringify(stagedRoll));
-
     addSavedRoll(rollName, savedDiceGroups);
-    saveCurrentRolls();
 
     if (fetchSetting("auto-reset")) {
         reset();

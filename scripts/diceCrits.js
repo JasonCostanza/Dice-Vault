@@ -31,8 +31,6 @@ function doubleDiceCounts(rollGroups) {
  * @returns {Array<Object>} An array of result groups with doubled dice results.
  */
 function doubleDiceResults(resultGroups) {
-    console.log('Entering doubleDiceResults with:', JSON.stringify(resultGroups, null, 2));
-    
     if (!Array.isArray(resultGroups)) {
         console.warn('doubleDiceResults received non-array input, converting to array');
         resultGroups = [resultGroups];
@@ -40,7 +38,6 @@ function doubleDiceResults(resultGroups) {
 
     return resultGroups.map(group => {
         if (group && group.result) {
-            console.log('Processing group:', JSON.stringify(group, null, 2));
             return {
                 ...group,
                 result: doubleResultsRecursive(group.result)
@@ -61,16 +58,12 @@ function doubleDiceResults(resultGroups) {
  * @returns {Object} A new result object with doubled dice results.
  */
 function doubleResultsRecursive(result) {
-    console.log('Processing result in doubleResultsRecursive:', JSON.stringify(result, null, 2));
-    
     if (result.kind && Array.isArray(result.results)) {
-        console.log('Doubling dice results for:', result.kind);
         return {
             ...result,
             results: result.results.map(r => r * 2)
         };
     } else if (result.operator && Array.isArray(result.operands)) {
-        console.log('Processing nested operands');
         return {
             ...result,
             operands: result.operands.map(doubleResultsRecursive)

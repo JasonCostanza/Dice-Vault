@@ -30,9 +30,7 @@ const rollsModule = (function () {
                 if (counter) {
                     groupDiceCounts[type] = counter.textContent;
                 } else {
-                    console.error(
-                        `Could not find counter for ${groupId}-${type}`
-                    );
+                    console.error(`Could not find counter for ${groupId}-${type}`);
                 }
             });
 
@@ -324,9 +322,7 @@ const rollsModule = (function () {
      */
     async function handleRollResult(rollEvent) {
         if (trackedRollIds[rollEvent.payload.rollId] == undefined) {
-            console.error(
-                `Tracked Roll for ID \"${rollEvent.payload.rollId}\" not found.`
-            );
+            console.error(`Tracked Roll for ID \"${rollEvent.payload.rollId}\" not found.`);
             return;
         }
 
@@ -401,22 +397,16 @@ const rollsModule = (function () {
         if (roll.resultsGroups != undefined) {
             let rollInfo = trackedRollIds[roll.rollId];
             if (rollInfo) {
-                console.log('Critical Behavior:', rollInfo.critBehavior);
-
                 try {
                     resultGroups = await getReportableRollResultsGroup(
                         roll,
                         rollInfo.type
                     );
 
-                    console.log('Before applying crit behavior:', JSON.stringify(resultGroups, null, 2));
-
                     resultGroups = applyCritBehaviorToRollResultsGroup(
                         resultGroups,
                         rollInfo.critBehavior
                     );
-
-                    console.log('After applying crit behavior:', JSON.stringify(resultGroups, null, 2));
 
                     await displayResults(resultGroups, roll.rollId);
                     console.log('Results displayed successfully');
@@ -679,9 +669,6 @@ const rollsModule = (function () {
      *                          critical hit behavior applied.
      */
     function applyCritBehaviorToRollResultsGroup(resultGroups, critBehavior) {
-        console.log('Applying crit behavior:', critBehavior);
-        console.log('Initial result groups:', JSON.stringify(resultGroups, null, 2));
-
         return resultGroups.map(group => {
             if (critBehavior === "double-total") {
                 let total = 0;
@@ -701,8 +688,6 @@ const rollsModule = (function () {
                         return operand;
                     });
                 }
-
-                console.log('Doubled total:', total);
 
                 return {
                     ...group,
@@ -731,7 +716,6 @@ const rollsModule = (function () {
                         return operand;
                     });
                 }
-                console.log('Double die result total:', total);
 
                 return {
                     ...group,
@@ -763,8 +747,6 @@ const rollsModule = (function () {
                 let maximizedResult = maximizeDice(group.result);
                 let total = calculateTotal(maximizedResult);
 
-                console.log('Maximized die total:', total);
-
                 return {
                     ...group,
                     result: {
@@ -793,8 +775,6 @@ const rollsModule = (function () {
 
                 let maxPlusResult = maxPlusDice(group.result);
                 let total = calculateTotal(maxPlusResult);
-
-                console.log('Max plus total:', total);
 
                 return {
                     ...group,
