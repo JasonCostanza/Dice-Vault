@@ -62,7 +62,7 @@ const rollsModule = (function () {
         putDiceToRollIntoDiceTray(rollNameParam, selectedType, critBehavior);
     }
 
-        /**
+    /**
      * Prepares and sends a dice roll configuration to TaleSpire's dice tray.
      * 
      * This function performs the following steps:
@@ -99,6 +99,7 @@ const rollsModule = (function () {
                 trackedRollIds[rollId] = {
                     type: selectedType,
                     critBehavior: critBehavior,
+                    createdByDiceVault: true
                 };
             });
         } catch (error) {
@@ -321,6 +322,24 @@ const rollsModule = (function () {
      * @returns {Promise<void>} A promise that resolves once the roll event has been processed.
      */
     async function handleRollResult(rollEvent) {
+        const rollId = rollEvent.payload.rollId;
+
+        if (trackedRollIds[rollId] === undefined) {
+            // Handle TaleSpire-initiated roll
+            console.log(`Received result for a TaleSpire-created roll: ${rollId}`);
+            // Optionally process or log TaleSpire roll data
+            return;
+        }
+    
+        if (trackedRollIds[rollId].createdByDiceVault === true) {
+            // Process createdByDiceVault roll
+            console.log(`Processing Dice Vault roll: ${rollId}`);
+            // Your existing roll processing logic
+        } else {
+            // This shouldn't happen if the flag is set correctly, but just in case
+            console.warn(`Unexpected roll state for ID: ${rollId}`);
+        }
+
         if (trackedRollIds[rollEvent.payload.rollId] == undefined) {
             console.error(`Tracked Roll for ID \"${rollEvent.payload.rollId}\" not found.`);
             return;
