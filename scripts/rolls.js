@@ -690,123 +690,119 @@ const rollsModule = (function () {
     function applyCritBehaviorToRollResultsGroup(resultGroups, critBehavior) {
         return resultGroups.map(group => {
             if (critBehavior === "double-total") {
-                let total = 0;
-                let doubledOperands = [];
-
-                if (group.result.operands) {
-                    doubledOperands = group.result.operands.map(operand => {
-                        if (operand.results) {
-                            let doubledResults = operand.results.map(val => val * 2);
-                            total += doubledResults.reduce((sum, val) => sum + val, 0);
-                            return { ...operand, results: doubledResults };
-                        } else if (operand.value !== undefined) {
-                            let doubledValue = operand.value * 2;
-                            total += doubledValue;
-                            return { ...operand, value: doubledValue };
-                        }
-                        return operand;
-                    });
-                }
-
                 return {
                     ...group,
-                    result: {
-                        ...group.result,
-                        operands: doubledOperands,
-                        total: total,
-                        description: `Critical Hit! All values doubled`
-                    }
+                    result: doubleTotal(group.result)
                 };
             } else if (critBehavior === "double-die-result") {
-                let total = 0;
-                let doubledOperands = [];
-
-                if (group.result.operands) {
-                    doubledOperands = group.result.operands.map(operand => {
-                        if (operand.results) {
-                            let doubledResults = operand.results.map(val => val * 2);
-                            total += doubledResults.reduce((sum, val) => sum + val, 0);
-                            return { ...operand, results: doubledResults };
-                        } else if (operand.value !== undefined) {
-                            // Don't double the modifier
-                            total += operand.value;
-                            return operand;
-                        }
-                        return operand;
-                    });
-                }
-
                 return {
                     ...group,
-                    result: {
-                        ...group.result,
-                        operands: doubledOperands,
-                        total: total,
-                        description: `Critical Hit! Dice results doubled`
-                    }
+                    result: doubleDiceResults(group.result)
                 };
-
             } else if (critBehavior === "max-die") {
-                function maximizeDice(operand) {
-                    if (operand.operator && operand.operands) {
-                        return {
-                            ...operand,
-                            operands: operand.operands.map(maximizeDice)
-                        };
-                    } else if (operand.kind && operand.results) {
-                        let maxValue = parseInt(operand.kind.substring(1), 10);
-                        return {
-                            ...operand,
-                            results: operand.results.map(() => maxValue)
-                        };
-                    }
-                    return operand;
-                }
-
-                let maximizedResult = maximizeDice(group.result);
-                let total = calculateTotal(maximizedResult);
-
                 return {
                     ...group,
-                    result: {
-                        ...maximizedResult,
-                        total: total,
-                        description: `Critical Hit! Dice results maximized`
-                    }
+                    result: maximizeDice(group.result)
                 };
             } else if (critBehavior === "max-plus") {
-                function maxPlusDice(operand) {
-                    if (operand.operator && operand.operands) {
-                        return {
-                            ...operand,
-                            operands: operand.operands.map(maxPlusDice)
-                        };
-                    } else if (operand.kind && operand.results) {
-                        let maxValue = parseInt(operand.kind.substring(1), 10);
-                        let newResults = [...operand.results, ...new Array(operand.results.length).fill(maxValue)];
-                        return {
-                            ...operand,
-                            results: newResults
-                        };
-                    }
-                    return operand;
-                }
-
-                let maxPlusResult = maxPlusDice(group.result);
-                let total = calculateTotal(maxPlusResult);
-
                 return {
                     ...group,
-                    result: {
-                        ...maxPlusResult,
-                        total: total,
-                        description: `Critical Hit! Max die value added for each die`
-                    }
+                    result: maxPlusDice(group.result)
                 };
             }
-
             return group;
         });
+    }
+    
+    function doubleTotal(result) {
+        if (result.operator && result.operands) {
+            return {
+                ...result,
+                operands: result.operands.map(doubleTotal),
+                total: (result.total || 0) * 2,
+                description: `Critical Hit! All values doubled`
+            };
+        } else if (result.results) {
+            return {
+                ...result,
+                results: result.results.map(val => val * 2),
+                total: (result.total || 0) * 2
+            };
+        } else if (result.value !== undefined) {
+            return {
+                ...result,
+                value: result.value * 2
+            };
+        }
+        return result;
+    }
+    
+    function doubleDiceResults(result) {
+        if (result.operator && result.operands) {
+            return {
+                ...result,
+                operands: result.operands.map(doubleDiceResults),
+                total: calculateTotal(result),
+                description: `Critical Hit! Dice results doubled`
+            };
+        } else if (result.results) {
+            return {
+                ...result,
+                results: result.results.map(val => val * 2),
+                total: result.results.reduce((sum, val) => sum + val * 2, 0)
+            };
+        }
+        return result;
+    }
+    
+    function maximizeDice(result) {
+        if (result.operator && result.operands) {
+            return {
+                ...result,
+                operands: result.operands.map(maximizeDice),
+                total: calculateTotal(result),
+                description: `Critical Hit! Dice results maximized`
+            };
+        } else if (result.kind && result.results) {
+            const maxValue = parseInt(result.kind.substring(1), 10);
+            return {
+                ...result,
+                results: result.results.map(() => maxValue),
+                total: maxValue * result.results.length
+            };
+        }
+        return result;
+    }
+    
+    function maxPlusDice(result) {
+        if (result.operator && result.operands) {
+            return {
+                ...result,
+                operands: result.operands.map(maxPlusDice),
+                total: calculateTotal(result),
+                description: `Critical Hit! Max die value added for each die`
+            };
+        } else if (result.kind && result.results) {
+            const maxValue = parseInt(result.kind.substring(1), 10);
+            const newResults = [...result.results, ...result.results.map(() => maxValue)];
+            return {
+                ...result,
+                results: newResults,
+                total: newResults.reduce((sum, val) => sum + val, 0)
+            };
+        }
+        return result;
+    }
+    
+    function calculateTotal(result) {
+        if (result.operator && result.operands) {
+            return result.operands.reduce((sum, operand) => sum + calculateTotal(operand), 0);
+        } else if (result.results) {
+            return result.results.reduce((sum, val) => sum + val, 0);
+        } else if (result.value !== undefined) {
+            return result.value;
+        }
+        return 0;
     }
 
     /**
