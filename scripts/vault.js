@@ -221,7 +221,7 @@ function save() {
     }
 }
 
-function addSavedRoll(rollName, savedDiceGroups) {
+function addSavedRoll(rollName, savedDiceGroups, rollType) {
     const savedRollsContainer = document.querySelector(".saved-rolls-container");
     if (!savedRollsContainer) {
         console.error("Saved rolls container not found");
@@ -232,6 +232,7 @@ function addSavedRoll(rollName, savedDiceGroups) {
     rollEntry.className = "saved-roll-entry";
     rollEntry.dataset.rollName = rollName;
     rollEntry.dataset.groupCount = savedDiceGroups.length;
+    rollEntry.dataset.rollType = rollType || 'normal';
 
     const diceDisplay = document.createElement("div");
     diceDisplay.className = "roll-entry-dice";
@@ -331,14 +332,7 @@ function addSavedRoll(rollName, savedDiceGroups) {
     }
 }
 
-function createRollButton(
-    imageName,
-    rollName,
-    rollType,
-    rollGroups,
-    classes,
-    parent
-) {
+function createRollButton(imageName, rollName, rollType, rollGroups, classes, parent) {
     const rollButton = document.createElement("div");
     rollButton.className = classes;
     rollButton.onclick = function () {

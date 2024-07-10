@@ -41,7 +41,6 @@ function saveRollsToLocalStorage() {
                     counts.push(JSON.parse(groupData));
                 } catch (e) {
                     console.error(`Error parsing dice counts for group ${i}:`, e);
-                    // Skip this group if it can't be parsed
                     continue;
                 }
             }
