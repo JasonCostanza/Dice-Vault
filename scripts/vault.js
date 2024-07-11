@@ -7,6 +7,10 @@ document
     .getElementById("load-rolls-button")
     .addEventListener("click", loadRollsFromLocalStorage);
 
+function isDiceGroupEmpty(diceGroup) {
+    return Object.entries(diceGroup).every(([key, value]) => key === 'mod' || value === 0);
+}
+
 function updateDiceGroupsData() {
     diceGroupsData = [];
 
@@ -357,8 +361,8 @@ function createRollButton(imageName, rollName, rollType, rollGroups, classes, pa
                 groups.push(fullDiceCountsData);
             }
         }
-        if (groups.length === 0) {
-            console.error('No valid dice groups found for this saved roll');
+        if (groups.length === 0 || groups.every(isDiceGroupEmpty)) {
+            console.error('Attempted to roll an empty saved roll');
             return;
         }
         // Use the groups data from the saved roll, not the global diceGroupsData

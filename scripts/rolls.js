@@ -47,6 +47,12 @@ const rollsModule = (function () {
     
         diceGroupsData = updatedDiceGroupsData;
 
+        if (diceGroupsData.every(isDiceGroupEmpty)) {
+            // Display an error message to the user
+            console.warn("Attempted to roll with empty dice groups");
+            return; // Exit the function early
+        }
+
         let critBehavior = fetchSetting("crit-behavior"); // Fetch the critical behavior setting
 
         // Adjust for critical hit dice types
