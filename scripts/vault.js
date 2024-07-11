@@ -206,9 +206,10 @@ function save() {
     const stagedRoll = {
         name: rollName,
         groups: savedDiceGroups,
+        type: 'normal'
     };
 
-    addSavedRoll(rollName, savedDiceGroups);
+    addSavedRoll(stagedRoll.name, stagedRoll.groups, stagedRoll.type);
 
     if (fetchSetting("auto-reset")) {
         reset();
@@ -341,11 +342,27 @@ function createRollButton(imageName, rollName, rollType, rollGroups, classes, pa
         const groups = [];
         for (let i = 0; i < groupCount; i++) {
             const groupDiv = savedRollEntry.querySelector(`.dice-group[data-group-index="${i}"]`);
-            groups.push(JSON.parse(groupDiv.dataset.diceCounts));
+            if (groupDiv && groupDiv.dataset.diceCounts) {
+                const diceCountsData = JSON.parse(groupDiv.dataset.diceCounts);
+                // Ensure all dice types have a value, even if it's 0
+                const fullDiceCountsData = {...diceCountsData};
+                diceTypes.forEach(type => {
+                    if (!(type in fullDiceCountsData)) {
+                        fullDiceCountsData[type] = 0;
+                    }
+                });
+                if (!('mod' in fullDiceCountsData)) {
+                    fullDiceCountsData.mod = 0;
+                }
+                groups.push(fullDiceCountsData);
+            }
         }
-        // Ensure the data is in the format expected by roll()
-        diceGroupsData = groups; // Assuming diceGroupsData is the global variable used by roll()
-        rollsModule.roll(rollName, rollType);
+        if (groups.length === 0) {
+            console.error('No valid dice groups found for this saved roll');
+            return;
+        }
+        // Use the groups data from the saved roll, not the global diceGroupsData
+        rollsModule.roll(rollName, rollType, groups);
     };
     const imageIcon = document.createElement("img");
     imageIcon.src = `./images/icons/${imageName}.png`;

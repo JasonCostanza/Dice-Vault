@@ -16,37 +16,36 @@ const rollsModule = (function () {
      * @param {string} rollTypeParam - The type of the roll (e.g., 'normal', 'critical'),
      *                                 which influences how the dice are rolled and processed.
      */
-    function roll(rollNameParam, rollTypeParam) {
-        let selectedType = rollTypeParam || rollTypes.normal; // Set to normal if no type is provided
-        let updatedDiceGroupsData = []; // Empty the array to purge old data. We call this "updated" temporarily, but it will become the new diceGroupsData
-
-        diceGroupsData.forEach((group, index) => {
-            let groupId = index;
-            let groupDiceCounts = {};
-            diceTypes.forEach((type) => {
-                const counter = document.getElementById(
-                    `${groupId}-${type}-counter-value`
+    function roll(rollNameParam, rollTypeParam, groupsData) {
+        let selectedType = rollTypeParam || rollTypes.normal;
+        let updatedDiceGroupsData = groupsData || [];
+    
+        if (!groupsData) {
+            // If no groupsData provided, use the current UI state
+            const diceGroupElements = document.querySelectorAll(".dice-selection");
+            diceGroupElements.forEach((groupElement) => {
+                const groupId = groupElement.id;
+                const groupDiceCounts = {};
+    
+                diceTypes.forEach((diceType) => {
+                    const countElement = groupElement.querySelector(
+                        `.counter-overlay[id$="${groupId}-${diceType}-counter-value"]`
+                    );
+                    groupDiceCounts[diceType] = countElement
+                        ? parseInt(countElement.textContent, 10)
+                        : 0;
+                });
+    
+                const modElement = groupElement.querySelector(
+                    `.mod-counter-overlay[id$="${groupId}-mod-counter-value"]`
                 );
-                if (counter) {
-                    groupDiceCounts[type] = counter.textContent;
-                } else {
-                    console.error(`Could not find counter for ${groupId}-${type}`);
-                }
+                groupDiceCounts.mod = modElement ? parseInt(modElement.value, 10) : 0;
+    
+                updatedDiceGroupsData.push(groupDiceCounts);
             });
-
-            const modCounter = document.getElementById(
-                `${groupId}-mod-counter-value`
-            );
-            if (modCounter) {
-                groupDiceCounts["mod"] = modCounter.value;
-            } else {
-                console.error(`Could not find mod counter for ${groupId}`);
-            }
-
-            updatedDiceGroupsData.push(groupDiceCounts);
-        });
-
-        diceGroupsData = updatedDiceGroupsData; // Update the diceGroupsData with the new data
+        }
+    
+        diceGroupsData = updatedDiceGroupsData;
 
         let critBehavior = fetchSetting("crit-behavior"); // Fetch the critical behavior setting
 
