@@ -6,6 +6,7 @@ document
 document
     .getElementById("load-rolls-button")
     .addEventListener("click", loadRollsFromLocalStorage);
+document.addEventListener("DOMContentLoaded", initializeSortingFunctionality);
 
 function isDiceGroupEmpty(diceGroup) {
     return Object.entries(diceGroup).every(([key, value]) => key === 'mod' || value === 0);
@@ -130,42 +131,61 @@ function removeDiceGroup() {
 }
 
 function sortSavedRolls() {
+    console.log("Sorting saved rolls..."); // Debug log
     const sortOption = document.getElementById("sort-options").value;
-    const savedRollsContainer = document.querySelector(
-        ".saved-rolls-container"
-    );
-    let savedRollsToDisplay = savedInVault.slice();
+    const savedRollsContainer = document.querySelector(".saved-rolls-container");
+    
+    if (!savedRollsContainer) {
+        console.error("Saved rolls container not found");
+        return;
+    }
+
+    let savedRollsToDisplay = Array.from(savedRollsContainer.children);
+    console.log("Number of saved rolls:", savedRollsToDisplay.length); // Debug log
 
     switch (sortOption) {
         case "newest":
-            savedRollsToDisplay.reverse();
+            savedRollsToDisplay.sort((a, b) => {
+                return parseInt(b.dataset.timestamp) - parseInt(a.dataset.timestamp);
+            });
+            break;
+        case "oldest":
+            savedRollsToDisplay.sort((a, b) => {
+                return parseInt(a.dataset.timestamp) - parseInt(b.dataset.timestamp);
+            });
             break;
         case "nameAsc":
-            savedRollsToDisplay.sort((a, b) =>
-                a
-                    .querySelector(".roll-entry-label")
-                    .textContent.localeCompare(
-                        b.querySelector(".roll-entry-label").textContent
-                    )
-            );
+            savedRollsToDisplay.sort((a, b) => {
+                const aName = a.querySelector(".roll-entry-label")?.textContent || "";
+                const bName = b.querySelector(".roll-entry-label")?.textContent || "";
+                return aName.localeCompare(bName);
+            });
             break;
         case "nameDesc":
-            savedRollsToDisplay.sort((a, b) =>
-                b
-                    .querySelector(".roll-entry-label")
-                    .textContent.localeCompare(
-                        a.querySelector(".roll-entry-label").textContent
-                    )
-            );
+            savedRollsToDisplay.sort((a, b) => {
+                const aName = a.querySelector(".roll-entry-label")?.textContent || "";
+                const bName = b.querySelector(".roll-entry-label")?.textContent || "";
+                return bName.localeCompare(aName);
+            });
             break;
         case "all":
+            // Do nothing, keep original order
             break;
     }
 
     savedRollsContainer.innerHTML = "";
-    savedRollsToDisplay.forEach((roll) =>
-        savedRollsContainer.appendChild(roll)
-    );
+    savedRollsToDisplay.forEach((roll) => savedRollsContainer.appendChild(roll));
+    console.log("Sorting complete"); // Debug log
+}
+
+function initializeSortingFunctionality() {
+    const sortOptions = document.getElementById("sort-options");
+    if (sortOptions) {
+        sortOptions.addEventListener("change", sortSavedRolls);
+        console.log("Sort options event listener added"); // Debug log
+    } else {
+        console.error("Sort options element not found");
+    }
 }
 
 function deleteSavedRoll(element) {
@@ -238,6 +258,7 @@ function addSavedRoll(rollName, savedDiceGroups, rollType) {
     rollEntry.dataset.rollName = rollName;
     rollEntry.dataset.groupCount = savedDiceGroups.length;
     rollEntry.dataset.rollType = rollType || 'normal';
+    rollEntry.dataset.timestamp = Date.now();
 
     const diceDisplay = document.createElement("div");
     diceDisplay.className = "roll-entry-dice";
@@ -335,6 +356,8 @@ function addSavedRoll(rollName, savedDiceGroups, rollType) {
     } else {
         savedRollsContainer.appendChild(rollEntry);
     }
+
+    sortSavedRolls();
 }
 
 function createRollButton(imageName, rollName, rollType, rollGroups, classes, parent) {
