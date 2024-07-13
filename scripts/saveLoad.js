@@ -63,8 +63,13 @@ function saveRollsToLocalStorage() {
     });
 }
 
-function loadRollsFromLocalStorage() {
-    TS.localStorage.campaign.getBlob().then(rollsJson => {
+async function loadRollsFromLocalStorage() {
+    try {
+        // First, check and upgrade the data if necessary
+        await checkAndUpgradeRollsData();
+
+        // Now load the (potentially upgraded) data
+        const rollsJson = await TS.localStorage.campaign.getBlob();
         let rollsData = JSON.parse(rollsJson || '[]');
         rollsData.forEach(rollData => {
             addSavedRoll(rollData.name, rollData.counts, rollData.type);
@@ -73,9 +78,9 @@ function loadRollsFromLocalStorage() {
         if (!fetchSetting('auto-save')){
             disableButtonById('save-rolls-button', false);
         }
-    }).catch(error => {
-        console.error('Failed to load rolls data:', error);
-    });
+    } catch (error) {
+        console.error('Failed to load or upgrade rolls data:', error);
+    }
 }
 
 async function loadSavedRolls() {
