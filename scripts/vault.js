@@ -314,17 +314,17 @@ function addSavedRoll(rollName, savedDiceGroups, rollType) {
         rowOfButtons
     );
     createRollButton(
-        "disadvantage",
+        "advantage",
         rollNameText,
-        "disadvantage",
+        "advantage",
         savedDiceGroups,
         "roll-button row-button",
         rowOfButtons
     );
     createRollButton(
-        "advantage",
+        "disadvantage",
         rollNameText,
-        "advantage",
+        "disadvantage",
         savedDiceGroups,
         "roll-button row-button",
         rowOfButtons
