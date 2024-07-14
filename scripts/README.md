@@ -26,13 +26,21 @@ The `settings.js` file is dedicated to managing the configuration settings of th
 
 The `vault.js` file acts as the central repository and interface for the Dice Vault symbiote, managing the collection of dice, roll types, and user-defined roll configurations. It provides a structured way to access and manipulate the dice and roll settings, facilitating the creation, storage, and retrieval of custom dice combinations and roll logic. This file ensures that all dice-related operations are efficiently handled and easily accessible, supporting the dynamic needs of users for customizing their dice rolling experience.
 
+## taleSpireSubscriptionHandlers.js
+
+The `taleSpireSubscriptionHandlers.js` file contains event handlers for TaleSpire-specific events. It manages the integration between the Dice Vault symbiote and TaleSpire, handling roll results and state change events from the TaleSpire application.
+
+## dataUpgrade.js
+
+The `dataUpgrade.js` file is responsible for upgrading the data structure of saved rolls from older versions to the current version. It ensures backward compatibility and smooth transitions when updating the symbiote.
+
 # Design Patterns & Coding Conventions
 
 This symbiote uses the following design patterns and coding conventions.
 
 ## Revealing Module Pattern
 
-The Revealing Module Pattern for JavaScript is variant of the Module Pattern, in which we create a regular JavaScript module, but then we "reveal" public pointers to functions inside the module's scope. This creates a nice code management system in which you can clearly see which functions are meant to be used outside the module and which functions are only meant for the module's internal scope. This is one of the primary attractions of the Module and Revealing Module patterns, as they both make scoping a breeze without overcomplicating code and application design.
+The Revealing Module Pattern for JavaScript is a variant of the Module Pattern, in which we create a regular JavaScript module, but then we "reveal" public pointers to functions inside the module's scope. This creates a nice code management system in which you can clearly see which functions are meant to be used outside the module and which functions are only meant for the module's internal scope. This is one of the primary attractions of the Module and Revealing Module patterns, as they both make scoping a breeze without overcomplicating code and application design.
 
 **References**
 
@@ -44,7 +52,7 @@ The Revealing Module Pattern for JavaScript is variant of the Module Pattern, in
 
 [rollDescriptor](https://symbiote-docs.talespire.com/api_doc_v0_1.md.html#types/rolldescriptor)
 
-```
+```json
 [
     {
         "name": "test-4-groups",
