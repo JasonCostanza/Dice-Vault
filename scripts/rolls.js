@@ -207,11 +207,11 @@ const rollsModule = (function () {
             rollNameParam ||
             document.getElementById("roll-name").value ||
             "Unnamed Roll";
-
+    
         if (rollTypeParam !== "normal" && rollTypeParam !== "crit-dice") {
             rollName += "\n" + formatRollTypeName(rollTypeParam);
         }
-
+    
         if (rollTypeParam === "crit-dice") {
             if (critBehaviorParam === "double-die-count") {
                 rollName += "\nCrit! Double the Dice";
@@ -228,8 +228,17 @@ const rollsModule = (function () {
             if (critBehaviorParam === "max-plus") {
                 rollName += "\nCrit! Maximize Die plus Die Result";
             }
+            if (critBehaviorParam === "triple-total") {
+                rollName += "\nCrit! Triple the Total";
+            }
+            if (critBehaviorParam === "quadruple-total") {
+                rollName += "\nCrit! Quadruple the Total";
+            }
+            if (critBehaviorParam === "one-point-five-total") {
+                rollName += "\nCrit! 1.5x the Total (rounded down)";
+            }
         }
-
+    
         return rollName;
     }
 
@@ -693,6 +702,13 @@ const rollsModule = (function () {
      *                          critical hit behavior applied.
      */
     function applyCritBehaviorToRollResultsGroup(resultGroups, critBehavior) {
+        console.log('Applying crit behavior:', critBehavior);
+    
+        if (!Array.isArray(resultGroups)) {
+            console.warn('applyCritBehaviorToRollResultsGroup received non-array input, converting to array');
+            resultGroups = [resultGroups];
+        }
+    
         return resultGroups.map(group => {
             if (critBehavior === "double-total") {
                 return {
@@ -712,127 +728,28 @@ const rollsModule = (function () {
             } else if (critBehavior === "max-plus") {
                 return {
                     ...group,
-                    result: maxPlusDice(group.result)
+                    result: addMaxDieForEachKind(group.result)
+                };
+            } else if (critBehavior === "triple-total") {
+                return {
+                    ...group,
+                    result: tripleTotal(group.result)
+                };
+            } else if (critBehavior === "quadruple-total") {
+                return {
+                    ...group,
+                    result: quadrupleTotal(group.result)
+                };
+            } else if (critBehavior === "one-point-five-total") {
+                return {
+                    ...group,
+                    result: onePointFiveTotal(group.result)
                 };
             }
             return group;
         });
     }
     
-    function doubleTotal(result) {
-        if (result.operator && result.operands) {
-            return {
-                ...result,
-                operands: result.operands.map(doubleTotal),
-                total: (result.total || 0) * 2,
-                description: `Critical Hit! All values doubled`
-            };
-        } else if (result.results) {
-            return {
-                ...result,
-                results: result.results.map(val => val * 2),
-                total: (result.total || 0) * 2
-            };
-        } else if (result.value !== undefined) {
-            return {
-                ...result,
-                value: result.value * 2
-            };
-        }
-        return result;
-    }
-    
-    function doubleDiceResults(result) {
-        if (result.operator && result.operands) {
-            return {
-                ...result,
-                operands: result.operands.map(doubleDiceResults),
-                total: calculateTotal(result),
-                description: `Critical Hit! Dice results doubled`
-            };
-        } else if (result.results) {
-            return {
-                ...result,
-                results: result.results.map(val => val * 2),
-                total: result.results.reduce((sum, val) => sum + val * 2, 0)
-            };
-        }
-        return result;
-    }
-    
-    function maximizeDice(result) {
-        if (result.operator && result.operands) {
-            return {
-                ...result,
-                operands: result.operands.map(maximizeDice),
-                total: calculateTotal(result),
-                description: `Critical Hit! Dice results maximized`
-            };
-        } else if (result.kind && result.results) {
-            const maxValue = parseInt(result.kind.substring(1), 10);
-            return {
-                ...result,
-                results: result.results.map(() => maxValue),
-                total: maxValue * result.results.length
-            };
-        }
-        return result;
-    }
-    
-    function maxPlusDice(result) {
-        if (result.operator && result.operands) {
-            return {
-                ...result,
-                operands: result.operands.map(maxPlusDice),
-                total: calculateTotal(result),
-                description: `Critical Hit! Max die value added for each die`
-            };
-        } else if (result.kind && result.results) {
-            const maxValue = parseInt(result.kind.substring(1), 10);
-            const newResults = [...result.results, ...result.results.map(() => maxValue)];
-            return {
-                ...result,
-                results: newResults,
-                total: newResults.reduce((sum, val) => sum + val, 0)
-            };
-        }
-        return result;
-    }
-    
-    function calculateTotal(result) {
-        if (result.operator && result.operands) {
-            return result.operands.reduce((sum, operand) => sum + calculateTotal(operand), 0);
-        } else if (result.results) {
-            return result.results.reduce((sum, val) => sum + val, 0);
-        } else if (result.value !== undefined) {
-            return result.value;
-        }
-        return 0;
-    }
-
-    /**
-     * Recursively calculates the total value of a dice roll result, including nested structures.
-     * 
-     * This function handles complex dice roll structures with multiple operators and operands.
-     * It recursively processes nested operands, summing up all dice results and static values.
-     * 
-     * @param {Object} result - The dice roll result object to calculate.
-     *                          This can be a nested structure with operators and operands,
-     *                          or a simple object with dice results or a static value.
-     * 
-     * @returns {number} The total calculated value of the dice roll result.
-     */
-    function calculateTotal(result) {
-        if (result.operator && result.operands) {
-            return result.operands.reduce((sum, operand) => sum + calculateTotal(operand), 0);
-        } else if (result.results) {
-            return result.results.reduce((sum, val) => sum + val, 0);
-        } else if (result.value !== undefined) {
-            return result.value;
-        }
-        return 0;
-    }
-
     /**
      * Asynchronously sends dice roll results to the TaleSpire game interface.
      * 

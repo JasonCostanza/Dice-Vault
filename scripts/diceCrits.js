@@ -1,4 +1,44 @@
 /**
+ * Multiplies the total of all values in the result groups by 1.5, rounding down.
+ * 
+ * @param {Array<Object>} resultGroups - An array of result group objects.
+ * @returns {Array<Object>} A new array of result groups with totals multiplied by 1.5 and rounded down.
+ */
+function onePointFiveTotal(result) {
+    if (Array.isArray(result)) {
+        return result.map(group => ({
+            ...group,
+            result: onePointFiveResultsRecursive(group.result)
+        }));
+    }
+    return onePointFiveResultsRecursive(result);
+}
+
+function onePointFiveResultsRecursive(result) {
+    if (result.kind && Array.isArray(result.results)) {
+        return {
+            ...result,
+            results: result.results.map(r => Math.floor(r * 1.5)), // Round down with Math.floor
+            total: Math.floor((result.total || 0) * 1.5), // Round down with Math.floor
+            description: `Critical Hit! Total multiplied by 1.5 (rounded down)`
+        };
+    } else if (result.operator && Array.isArray(result.operands)) {
+        return {
+            ...result,
+            operands: result.operands.map(onePointFiveResultsRecursive),
+            total: Math.floor((result.total || 0) * 1.5), // Round down with Math.floor
+            description: `Critical Hit! Total multiplied by 1.5 (rounded down)`
+        };
+    } else if (result.value !== undefined) {
+        return {
+            ...result,
+            value: Math.floor(result.value * 1.5) // Round down with Math.floor
+        };
+    }
+    return result;
+}
+
+/**
  * Doubles the count of dice in roll groups, leaving modifiers unchanged.
  * 
  * This function is typically used for the "double-die-count" critical hit behavior.
@@ -47,6 +87,22 @@ function doubleDiceResults(resultGroups) {
             return group;
         }
     });
+}
+
+/**
+ * Doubles the total of all values in the result group.
+ * 
+ * @param {Object|Array<Object>} result - A single result object or an array of result group objects.
+ * @returns {Object|Array<Object>} A new result object or array of result group objects with doubled totals.
+ */
+function doubleTotal(result) {
+    if (Array.isArray(result)) {
+        return result.map(group => ({
+            ...group,
+            result: doubleResultsRecursive(group.result)
+        }));
+    }
+    return doubleResultsRecursive(result);
 }
 
 /**
@@ -111,52 +167,116 @@ function doubleModifier(resultGroups) {
     });
 }
 
+function tripleTotal(result) {
+    if (Array.isArray(result)) {
+        return result.map(group => ({
+            ...group,
+            result: tripleResultsRecursive(group.result)
+        }));
+    }
+    return tripleResultsRecursive(result);
+}
+
+function tripleResultsRecursive(result) {
+    if (result.kind && Array.isArray(result.results)) {
+        return {
+            ...result,
+            results: result.results.map(r => r * 3),
+            total: (result.total || 0) * 3,
+            description: `Critical Hit! Total tripled`
+        };
+    } else if (result.operator && Array.isArray(result.operands)) {
+        return {
+            ...result,
+            operands: result.operands.map(tripleResultsRecursive),
+            total: (result.total || 0) * 3,
+            description: `Critical Hit! Total tripled`
+        };
+    } else if (result.value !== undefined) {
+        return {
+            ...result,
+            value: result.value * 3
+        };
+    }
+    return result;
+}
+
+/**
+ * Quadruples the total of all values in the result groups.
+ * 
+ * @param {Array<Object>} resultGroups - An array of result group objects.
+ * @returns {Array<Object>} A new array of result groups with quadrupled totals.
+ */
+function quadrupleTotal(result) {
+    if (Array.isArray(result)) {
+        return result.map(group => ({
+            ...group,
+            result: quadrupleResultsRecursive(group.result)
+        }));
+    }
+    return quadrupleResultsRecursive(result);
+}
+
+function quadrupleResultsRecursive(result) {
+    if (result.kind && Array.isArray(result.results)) {
+        return {
+            ...result,
+            results: result.results.map(r => r * 4),
+            total: (result.total || 0) * 4,
+            description: `Critical Hit! Total quadrupled`
+        };
+    } else if (result.operator && Array.isArray(result.operands)) {
+        return {
+            ...result,
+            operands: result.operands.map(quadrupleResultsRecursive),
+            total: (result.total || 0) * 4,
+            description: `Critical Hit! Total quadrupled`
+        };
+    } else if (result.value !== undefined) {
+        return {
+            ...result,
+            value: result.value * 4
+        };
+    }
+    return result;
+}
+
 /**
  * Maximizes all dice results in the given result groups.
  * 
  * This function sets each die result to its maximum possible value based on the die type.
  * It handles nested structures and preserves modifiers.
  *
- * @param {Array<Object>} resultGroups - An array of result group objects.
- * @returns {Array<Object>} A new array of result groups with maximized dice results.
+ * @param {Object|Array<Object>} result - A single result object or an array of result group objects.
+ * @returns {Object|Array<Object>} A new result object or array of result group objects with maximized dice results.
  */
-function maximizeDiceResults(resultGroups) {
-    function maximizeResults(operands) {
-        return operands.map(operand => {
-            if (operand.operator && operand.operands) {
-                return { ...operand, operands: maximizeResults(operand.operands) };
-            } else if (operand.kind && operand.results && Array.isArray(operand.results)) {
-                const maxResult = parseInt(operand.kind.substring(1), 10);
-                return { ...operand, results: operand.results.map(() => maxResult) };
-            } else {
-                return operand;
-            }
-        });
+function maximizeDice(result) {
+    if (Array.isArray(result)) {
+        return result.map(group => ({
+            ...group,
+            result: maximizeResultsRecursive(group.result)
+        }));
     }
+    return maximizeResultsRecursive(result);
+}
 
-    return resultGroups.map(resultGroup => {
-        if (resultGroup && resultGroup.result) {
-            if (resultGroup.result.kind && Array.isArray(resultGroup.result.results)) {
-                const maxResult = parseInt(resultGroup.result.kind.substring(1), 10);
-                return {
-                    ...resultGroup,
-                    result: {
-                        ...resultGroup.result,
-                        results: resultGroup.result.results.map(() => maxResult)
-                    }
-                };
-            } else if (resultGroup.result.operands) {
-                return {
-                    ...resultGroup,
-                    result: {
-                        ...resultGroup.result,
-                        operands: maximizeResults(resultGroup.result.operands)
-                    }
-                };
-            }
-        }
-        return resultGroup;
-    });
+function maximizeResultsRecursive(result) {
+    if (result.kind && Array.isArray(result.results)) {
+        const maxResult = parseInt(result.kind.substring(1), 10);
+        return {
+            ...result,
+            results: result.results.map(() => maxResult),
+            total: maxResult * result.results.length,
+            description: `Critical Hit! Dice maximized to ${maxResult}`
+        };
+    } else if (result.operator && Array.isArray(result.operands)) {
+        return {
+            ...result,
+            operands: result.operands.map(maximizeResultsRecursive),
+            description: `Critical Hit! Dice maximized`
+        };
+    }
+    return result;
 }
 
 /**
@@ -169,43 +289,43 @@ function maximizeDiceResults(resultGroups) {
  * @param {Array<Object>} resultGroups - An array of result group objects.
  * @returns {Array<Object>} A new array of result groups with added maximum die values.
  */
-function addMaxDieForEachKind(resultGroups) {
-    function addMaxResults(operands) {
-        return operands.map(operand => {
-            if (operand.operator && operand.operands) {
-                return { ...operand, operands: addMaxResults(operand.operands) };
-            } else if (operand.kind && operand.results && Array.isArray(operand.results)) {
-                const maxResult = parseInt(operand.kind.substring(1), 10);
-                const maxResultsToAdd = new Array(operand.results.length).fill(maxResult);
-                return { ...operand, results: [...operand.results, ...maxResultsToAdd] };
-            } else {
-                return operand;
-            }
-        });
+function addMaxDieForEachKind(result) {
+    if (Array.isArray(result)) {
+        return result.map(group => ({
+            ...group,
+            result: addMaxResultsRecursive(group.result)
+        }));
     }
+    return addMaxResultsRecursive(result);
+}
 
-    return resultGroups.map(resultGroup => {
-        if (resultGroup && resultGroup.result) {
-            if (resultGroup.result.kind && Array.isArray(resultGroup.result.results)) {
-                const maxResult = parseInt(resultGroup.result.kind.substring(1), 10);
-                const maxResultsToAdd = new Array(resultGroup.result.results.length).fill(maxResult);
-                return {
-                    ...resultGroup,
-                    result: {
-                        ...resultGroup.result,
-                        results: [...resultGroup.result.results, ...maxResultsToAdd]
-                    }
-                };
-            } else if (resultGroup.result.operands) {
-                return {
-                    ...resultGroup,
-                    result: {
-                        ...resultGroup.result,
-                        operands: addMaxResults(resultGroup.result.operands)
-                    }
-                };
-            }
-        }
-        return resultGroup;
-    });
+function addMaxResultsRecursive(result) {
+    if (result.kind && Array.isArray(result.results)) {
+        const maxResult = parseInt(result.kind.substring(1), 10);
+        const maxResultsToAdd = new Array(result.results.length).fill(maxResult);
+        return {
+            ...result,
+            results: [...result.results, ...maxResultsToAdd],
+            total: (result.total || 0) + maxResultsToAdd.reduce((a, b) => a + b, 0),
+            description: `Critical Hit! Added max value for each die`
+        };
+    } else if (result.operator && Array.isArray(result.operands)) {
+        return {
+            ...result,
+            operands: result.operands.map(addMaxResultsRecursive),
+            description: `Critical Hit! Added max value for each die`
+        };
+    }
+    return result;
+}
+
+function calculateTotal(result) {
+    if (result.operator && result.operands) {
+        return result.operands.reduce((sum, operand) => sum + calculateTotal(operand), 0);
+    } else if (result.results) {
+        return result.results.reduce((sum, val) => sum + val, 0);
+    } else if (result.value !== undefined) {
+        return result.value;
+    }
+    return 0;
 }

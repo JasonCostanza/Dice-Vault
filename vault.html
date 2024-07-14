@@ -26,14 +26,17 @@
                         <td><input type="checkbox" id="auto-reset" class="settings-input"onchange="saveGlobalSettings()" unchecked></td>
                     </tr>
                     <tr>
-                        <td><label class="field-title">Crit Behavior (1d8+2)</label></td>
+                        <td><label class="field-title">Crit Behavior</label></td>
                         <td>
-                            <select id="crit-behavior" class="select-list" onchange="saveGlobalSettings()">
-                                <option value="double-die-count">Roll Double the Die (2d8+2)</option>
-                                <option value="double-die-result">Double Sum of Die (1d8[2]*2+2=6)</option>
-                                <option value="double-total">Double the Total Sum ((1d8[2]+2)*2=8)</option>
-                                <option value="max-die">Max the Die Roll (8+2=10)</option>
-                                <option value="max-plus">Max the Die + Raw Roll (8+1d8+2)</option>
+                            <select id="crit-behavior">
+                                <option value="one-point-five-total">1.5x Total</option>
+                                <option value="double-total">2x Total</option>
+                                <option value="triple-total">3x Total</option>
+                                <option value="quadruple-total">4x Total</option>
+                                <option value="double-die-count">2x Die Quantity</option>
+                                <option value="double-die-result">2x the Die Results</option>
+                                <option value="max-die">Max Die Result</option>
+                                <option value="max-plus">Max + Raw Die Result</option>
                             </select>
                         </td>
                     </tr>
