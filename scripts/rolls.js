@@ -445,18 +445,6 @@ const rollsModule = (function () {
         }
     }
 
-    async function displayResults(resultGroups, rollId) {
-        for (let resultGroup of resultGroups) {
-            try {
-                await TS.dice.sendDiceResult(resultGroup, rollId);  // Changed from resultGroups to resultGroup
-                console.log(`Result group sent successfully for roll ${rollId}`);
-            } catch (error) {
-                console.error(`Error sending result group for roll ${rollId}:`, error);
-                throw error;
-            }
-        }
-    }
-
     /**
      * Retrieves and processes the reportable roll results group based on the roll type.
      *
