@@ -74,6 +74,7 @@ See our github issues tab for bugs and enhancements on the roadmap.
 [PanoramicPanda](https://github.com/PanoramicPanda)
 [kbarnett](https://github.com/kbarnett)
 
+
 # Contribor Environment Configuration
 If you wish to contribute to the project you are more than welcome to create a feature branch, add your contributions, and open a PR against `main`. To get your local environment set up, it's a pretty easy process:
   1. Clone the repository directly to the game's local directory: `C:\Users\%username%\AppData\LocalLow\BouncyRock Entertainment\TaleSpire\Symbiotes`. Note the username needs to be your username. I develop on Windows so I do not have access to the Mac directory which coincides with this. I recommend doing this to avoid having to copy/paste every time you want to test your changes.
