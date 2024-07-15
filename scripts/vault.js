@@ -85,15 +85,16 @@ function negativeMod(modId) {
 function addDiceGroup() {
     const diceGroup = document.createElement("div");
     diceGroup.className = "dice-selection";
-    const RollGroup = diceGroupsData.length;
-    diceGroup.id = `${RollGroup}`;
+    const existingGroups = document.querySelectorAll('.dice-selection');
+    const newGroupIndex = existingGroups.length;
+    diceGroup.id = `${newGroupIndex}`;
     let diceHTML = "";
 
     diceTypes.forEach((type) => {
         diceHTML += `
-            <div class="dice-counter unselectable" id="${RollGroup}-${type}-counter">
-            <i class="ts-icon-${type} ts-icon-large" onclick="increment('${RollGroup}-${type}')" oncontextmenu="decrement('${RollGroup}-${type}'); return false;"></i>
-            <div class="counter-overlay" id="${RollGroup}-${type}-counter-value">0</div>
+            <div class="dice-counter unselectable" id="${newGroupIndex}-${type}-counter">
+            <i class="ts-icon-${type} ts-icon-large" onclick="increment('${newGroupIndex}-${type}')" oncontextmenu="decrement('${newGroupIndex}-${type}'); return false;"></i>
+            <div class="counter-overlay" id="${newGroupIndex}-${type}-counter-value">0</div>
             <div class="dice-label">${type.toUpperCase()}</div>
             </div>
         `;
@@ -101,17 +102,22 @@ function addDiceGroup() {
 
     diceHTML += `
         <div class="plus-sign"><span>+</span></div>
-        <div class="dice-counter unselectable" id="${RollGroup}-mod-counter">
+        <div class="dice-counter unselectable" id="${newGroupIndex}-mod-counter">
         <i class="ts-icon-circle-dotted ts-icon-large mod-holder"></i>
-        <input type="number" class="counter-overlay mod-counter-overlay" id="${RollGroup}-mod-counter-value" value="0" min="-999" max="999" onfocus="this.select()" />
+        <input type="number" class="counter-overlay mod-counter-overlay" id="${newGroupIndex}-mod-counter-value" value="0" min="-999" max="999" onfocus="this.select()" />
         <div class="dice-label">MOD</div>
     </div>
     `;
 
     diceGroup.innerHTML = diceHTML;
-    diceGroupsData.push(RollGroup);
-    updateDiceGroupsData();
     document.querySelector(".content-col-dice").appendChild(diceGroup);
+
+    const groupDiceCounts = {};
+    diceTypes.forEach(type => groupDiceCounts[type] = 0);
+    groupDiceCounts.mod = 0;
+
+    diceGroupsData.push(groupDiceCounts);
+    updateDiceGroupsData();
 }
 
 function removeDiceGroup() {
