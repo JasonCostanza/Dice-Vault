@@ -61,6 +61,14 @@ Check it out on [Mod.io](https://mod.io/g/talespire/m/dice-vault).
 
 To delete a preset, use the trash bin icon.
 
+# Before Upgrading 1.3 > 2.0+
+1. Navigate to your Symbiote directory and open the folder for Dice Vault
+2. navigate to the ./localstorage folder
+3. Copy the .json file and place it somewhere you will remember, like your desktop for example
+4. Install Dice Vault 2.0
+5. Paste the .json file into the same directory that you copied it from, though the ID of the symbiote has likely changed
+6. Once you open the Symbiote, the first time you load your data it will automatically upgrade the data to the new data format
+
 # Report Issues
 Create an issue in the github reposity on the [Issues Tab](https://github.com/JasonCostanza/Dice-Vault/issues).
 
