@@ -58,3 +58,59 @@ function fetchSetting(settingName){
         return setting.value;
     }
 }
+
+async function handleRetrieveBackup() {
+    try {
+        const backupData = await getDataBackup();
+        if (backupData) {
+            // Convert the backup data to a string for easy copying
+            const backupString = JSON.stringify(backupData, null, 2);
+            
+            // Create a textarea element to hold the backup data
+            const textArea = document.createElement('textarea');
+            textArea.value = backupString;
+            textArea.style.width = '100%';
+            textArea.style.height = '200px';
+            textArea.readOnly = true;
+
+            // Create a modal or dialog to display the backup data
+            const modal = document.createElement('div');
+            modal.style.position = 'fixed';
+            modal.style.left = '10%';
+            modal.style.top = '10%';
+            modal.style.width = '80%';
+            modal.style.height = '80%';
+            modal.style.backgroundColor = 'white';
+            modal.style.padding = '20px';
+            modal.style.border = '1px solid black';
+            modal.style.zIndex = '1000';
+
+            const heading = document.createElement('h2');
+            heading.textContent = 'Backup Data';
+            
+            const closeButton = document.createElement('button');
+            closeButton.textContent = 'Close';
+            closeButton.onclick = () => document.body.removeChild(modal);
+
+            const copyButton = document.createElement('button');
+            copyButton.textContent = 'Copy to Clipboard';
+            copyButton.onclick = () => {
+                textArea.select();
+                document.execCommand('copy');
+                alert('Backup data copied to clipboard!');
+            };
+
+            modal.appendChild(heading);
+            modal.appendChild(textArea);
+            modal.appendChild(copyButton);
+            modal.appendChild(closeButton);
+
+            document.body.appendChild(modal);
+        } else {
+            alert('No backup data found.');
+        }
+    } catch (error) {
+        console.error('Error retrieving backup:', error);
+        alert('An error occurred while retrieving the backup. Please check the console for details.');
+    }
+}
