@@ -19,6 +19,8 @@ Check it out on [Mod.io](https://mod.io/g/talespire/m/dice-vault).
 
 # Changelog
 ```
+2.1
+- 3 critical hit modes: 1.5x, 3x, and 4x
 2.0
 - New feature: Roll groups! Create multiple groups of dice which do not add together. Useful for situations where dice needs to be rolled together but not all combined. "I cast Magic Missile at 3rd level dealing, three 1d4's of damage." In this situation we report three independent results with 1 throw, instead of 3d4 we do not add them together so it's three seperate results of 1d4. Useful for all kinds of situations like crossbows where the bolt deals damage and then the magical properties of an explosive bolt for example.
 - New UI to saved rolls. Instead of displaying images for dice, we know parse it down to simple and familiar roll strings, "1d4+1d6+5", or "1d20+14". You will notice saved roll cards are now much smaller allowing you to see more at one time. We will expand on this UI in future releases to further improve the UI.
