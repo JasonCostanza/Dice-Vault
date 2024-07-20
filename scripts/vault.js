@@ -188,7 +188,6 @@ function initializeSortingFunctionality() {
     const sortOptions = document.getElementById("sort-options");
     if (sortOptions) {
         sortOptions.addEventListener("change", sortSavedRolls);
-        console.log("Sort options event listener added"); // Debug log
     } else {
         console.error("Sort options element not found");
     }
