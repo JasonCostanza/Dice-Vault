@@ -10,22 +10,20 @@ html, body {
     user-select: none;
 }
 
-/* NEW CSS PLAYING WITH */
-
 .dice-selection-container {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
+
 .dice-selection{
     margin-bottom: 20px; 
 }
+
 .content-col {
     overflow: auto;  
     max-height: 90vh; 
 }
-
-/* NEW CSS END */
 
 .unselectable{
     user-select: none;
@@ -226,7 +224,6 @@ h1 {
          1px 1px 0 #ffffff;
 }
 
-
 .dice-selection {
     display: flex;
     justify-content: center; 
@@ -238,11 +235,9 @@ h1 {
     z-index: 0;
 }
 
-
 .ts-icon-custom-size {
     font-size: 30%;
 }
-
 
 .plus-sign {
     display: flex;
@@ -275,6 +270,43 @@ h1 {
 
 .delete-roll:hover {
     background-color: #ff0000;
+}
+
+.edit-roll {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    width: 38px;
+    height: 38px;
+    background-color: #868686;
+    color: rgb(0, 0, 0);
+    border-radius: 50%;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0 5px;
+    margin-left: auto;
+    transition: background-color 0.2s;
+}
+
+.edit-roll:hover {
+    background-color: #4e4e4e;
+}
+
+.saved-roll-entry.editing {
+    background-color: #2c662e; /* Light blue background for the edited roll */
+}
+
+.edit-roll.editing {
+    background-color: #4CAF50; /* Green background for the edit button when editing */
+}
+
+#roll-name.editing {
+    border: 1px solid #ff0000;
+}
+
+label[for="roll-name"].editing {
+    color: #ff0000;
 }
 
 .padding-div{
@@ -315,7 +347,6 @@ h1 {
     margin: 5px 0;
 }
 
-
 .select-list {
     padding: 8px 16px; 
     margin-left: 10px; 
@@ -340,7 +371,6 @@ h1 {
     border-color: var(--ts-color-secondary); 
 }
 
-
 .select-list::-ms-expand {
     display: none; 
 }
@@ -355,7 +385,6 @@ h1 {
     transform: translateY(-50%);
     pointer-events: none;
 }
-
 
 .dice-counter {
     position: relative;
@@ -430,6 +459,12 @@ h1 {
     margin-bottom: 0.8em;
     gap: 2%;
     width: 100%;
+}
+
+.saved-rolls-button-container {
+    display: flex;
+    margin-left: auto;
+
 }
 
 .button-container {

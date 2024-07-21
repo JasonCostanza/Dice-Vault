@@ -19,6 +19,8 @@ Check it out on [Mod.io](https://mod.io/g/talespire/m/dice-vault).
 
 # Changelog
 ```
+2.2
+- Edit buttons on saved rolls allows for modifying a saved roll without deleting it
 2.1
 - 3 critical hit modes: 1.5x total, 3x total, and 4x total
 2.0

@@ -82,19 +82,19 @@ function negativeMod(modId) {
     }
 }
 
-function addDiceGroup() {
+function addDiceGroup(index = null) {
     const diceGroup = document.createElement("div");
     diceGroup.className = "dice-selection";
     const existingGroups = document.querySelectorAll('.dice-selection');
-    const newGroupIndex = existingGroups.length;
-    diceGroup.id = `${newGroupIndex}`;
+    const groupIndex = index !== null ? index : existingGroups.length;
+    diceGroup.id = `${groupIndex}`;
     let diceHTML = "";
 
     diceTypes.forEach((type) => {
         diceHTML += `
-            <div class="dice-counter unselectable" id="${newGroupIndex}-${type}-counter">
-            <i class="ts-icon-${type} ts-icon-large" onclick="increment('${newGroupIndex}-${type}')" oncontextmenu="decrement('${newGroupIndex}-${type}'); return false;"></i>
-            <div class="counter-overlay" id="${newGroupIndex}-${type}-counter-value">0</div>
+            <div class="dice-counter unselectable" id="${groupIndex}-${type}-counter">
+            <i class="ts-icon-${type} ts-icon-large" onclick="increment('${groupIndex}-${type}')" oncontextmenu="decrement('${groupIndex}-${type}'); return false;"></i>
+            <div class="counter-overlay" id="${groupIndex}-${type}-counter-value">0</div>
             <div class="dice-label">${type.toUpperCase()}</div>
             </div>
         `;
@@ -102,9 +102,9 @@ function addDiceGroup() {
 
     diceHTML += `
         <div class="plus-sign"><span>+</span></div>
-        <div class="dice-counter unselectable" id="${newGroupIndex}-mod-counter">
+        <div class="dice-counter unselectable" id="${groupIndex}-mod-counter">
         <i class="ts-icon-circle-dotted ts-icon-large mod-holder"></i>
-        <input type="number" class="counter-overlay mod-counter-overlay" id="${newGroupIndex}-mod-counter-value" value="0" min="-999" max="999" onfocus="this.select()" />
+        <input type="number" class="counter-overlay mod-counter-overlay" id="${groupIndex}-mod-counter-value" value="0" min="-999" max="999" onfocus="this.select()" />
         <div class="dice-label">MOD</div>
     </div>
     `;
@@ -122,18 +122,49 @@ function addDiceGroup() {
 
 function removeDiceGroup() {
     updateDiceGroupsData();
-    if (diceGroupsData.length > 1) {
-        const lastGroupId = diceGroupsData.length - 1;
-        const diceGroup = document.getElementById(`${lastGroupId}`);
-        if (diceGroup) {
-            diceGroup.remove();
-            diceGroupsData.splice(lastGroupId, 1);
-        } else {
-            console.error("Row element not found:", lastGroupId);
-        }
+    const diceGroups = document.querySelectorAll('.dice-selection');
+    if (diceGroups.length > 1) {
+        const lastGroup = diceGroups[diceGroups.length - 1];
+        lastGroup.remove();
+        diceGroupsData.pop();
+
+        // Renumber the remaining groups
+        diceGroups.forEach((group, index) => {
+            group.id = index.toString();
+            updateGroupElementIds(group, index);
+        });
     } else {
-        console.warn("No rows left to remove.");
+        console.warn("Cannot remove the last remaining group.");
     }
+}
+
+function updateGroupElementIds(group, newIndex) {
+    diceTypes.forEach(diceType => {
+        const counter = group.querySelector(`#${group.id}-${diceType}-counter`);
+        if (counter) {
+            counter.id = `${newIndex}-${diceType}-counter`;
+            const counterValue = counter.querySelector('.counter-overlay');
+            if (counterValue) {
+                counterValue.id = `${newIndex}-${diceType}-counter-value`;
+            }
+        }
+    });
+
+    const modCounter = group.querySelector(`#${group.id}-mod-counter`);
+    if (modCounter) {
+        modCounter.id = `${newIndex}-mod-counter`;
+        const modCounterValue = modCounter.querySelector('.mod-counter-overlay');
+        if (modCounterValue) {
+            modCounterValue.id = `${newIndex}-mod-counter-value`;
+        }
+    }
+
+    // Update onclick attributes
+    group.querySelectorAll('.dice-counter').forEach(counter => {
+        const diceType = counter.id.split('-')[1];
+        counter.querySelector('.ts-icon-large').setAttribute('onclick', `increment('${newIndex}-${diceType}')`);
+        counter.querySelector('.ts-icon-large').setAttribute('oncontextmenu', `decrement('${newIndex}-${diceType}'); return false;`);
+    });
 }
 
 function sortSavedRolls() {
@@ -209,36 +240,55 @@ function deleteSavedRoll(element) {
 function save() {
     const rollName = document.getElementById("roll-name").value;
     const diceGroupElements = document.querySelectorAll(".dice-selection");
+    const editingRollId = document.body.dataset.editingRollId;
 
-    savedDiceGroups = []; // Clear the array before saving new data to remove stale data
+    savedDiceGroups = [];
 
     diceGroupElements.forEach((groupElement) => {
-        const diceGroup = {};
+        const groupId = groupElement.id;
+        const groupDiceCounts = {};
 
         diceTypes.forEach((diceType) => {
             const countElement = groupElement.querySelector(
-                `.counter-overlay[id$="${groupElement.id}-${diceType}-counter-value"]`
+                `.counter-overlay[id$="${groupId}-${diceType}-counter-value"]`
             );
-            diceGroup[diceType] = countElement
+            groupDiceCounts[diceType] = countElement
                 ? parseInt(countElement.textContent, 10)
                 : 0;
         });
 
         const modElement = groupElement.querySelector(
-            `.mod-counter-overlay[id$="${groupElement.id}-mod-counter-value"]`
+            `.mod-counter-overlay[id$="${groupId}-mod-counter-value"]`
         );
-        diceGroup.mod = modElement ? parseInt(modElement.value, 10) : 0;
+        groupDiceCounts.mod = modElement ? parseInt(modElement.value, 10) : 0;
 
-        savedDiceGroups.push(diceGroup);
+        savedDiceGroups.push(groupDiceCounts);
     });
 
-    const stagedRoll = {
+    const rollData = {
         name: rollName,
         groups: savedDiceGroups,
         type: 'normal'
     };
 
-    addSavedRoll(stagedRoll.name, stagedRoll.groups, stagedRoll.type);
+    if (editingRollId) {
+        // Update existing roll
+        updateSavedRoll(editingRollId, rollData);
+    } else {
+        // Add new roll
+        addSavedRoll(rollData.name, rollData.groups, rollData.type);
+    }
+
+    // Call abortEditing() here, after saving or updating the roll
+    abortEditing();
+    
+    // If you want to explicitly reset the label here as well:
+    const rollLabelElement = document.querySelector('label[for="roll-name"]');
+    if (rollLabelElement) {
+        rollLabelElement.textContent = 'Roll Label';
+        rollLabelElement.classList.remove('editing');
+    }
+
 
     if (fetchSetting("auto-reset")) {
         reset();
@@ -260,6 +310,8 @@ function addSavedRoll(rollName, savedDiceGroups, rollType) {
 
     const rollEntry = document.createElement("div");
     rollEntry.className = "saved-roll-entry";
+    const rollId = `roll_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    rollEntry.dataset.rollId = rollId;
     rollEntry.dataset.rollName = rollName;
     rollEntry.dataset.groupCount = savedDiceGroups.length;
     rollEntry.dataset.rollType = rollType || 'normal';
@@ -295,13 +347,18 @@ function addSavedRoll(rollName, savedDiceGroups, rollType) {
         rollNameText = "Unnamed Roll";
     }
 
-    rollEntry.innerHTML = `
+        rollEntry.innerHTML = `
         <div class="roll-entry-content">
             <div class="roll-entry-header">
-                <div class="padding-div"></div> <!-- Placeholder for future edit-roll -->
+                <div class="padding-div"></div>
                 <div class="roll-entry-label">${rollNameText}</div>
-                <div class="delete-roll" onclick="deleteSavedRoll(this)">
-                    <i class="ts-icon-trash ts-icon-medium"></i>
+                <div class="saved-rolls-button-container">
+                    <div class="edit-roll" onclick="editSavedRoll(this)">
+                        <i class="ts-icon-pencil ts-icon-medium"></i>
+                    </div>
+                    <div class="delete-roll" onclick="deleteSavedRoll(this)">
+                        <i class="ts-icon-trash ts-icon-medium"></i>
+                    </div>
                 </div>
             </div>
         </div>
@@ -363,6 +420,156 @@ function addSavedRoll(rollName, savedDiceGroups, rollType) {
     }
 
     sortSavedRolls();
+}
+
+function editSavedRoll(element) {
+    const rollEntry = element.closest('.saved-roll-entry');
+    const rollId = rollEntry.dataset.rollId;
+
+    // Check if we're already editing this roll
+    if (document.body.dataset.editingRollId === rollId) {
+        // If so, abort editing
+        abortEditing();
+        return;
+    }
+
+    // If we were editing a different roll, abort that edit first
+    if (document.body.dataset.editingRollId) {
+        abortEditing();
+    }
+
+    const rollName = rollEntry.querySelector('.roll-entry-label').textContent;
+    const groupCount = parseInt(rollEntry.dataset.groupCount, 10);
+
+    // Set the roll name and change the label
+    const rollNameInput = document.getElementById('roll-name');
+    rollNameInput.value = rollName;
+    rollNameInput.classList.add('editing');
+
+    // Change the label text
+    const rollLabelElement = document.querySelector('label[for="roll-name"]');
+    if (rollLabelElement) {
+        rollLabelElement.textContent = `Editing . . .`;
+        rollLabelElement.classList.add('editing');
+    }
+
+    const addGroupButton = document.getElementById('add-group-button');
+    const removeGroupButton = document.getElementById('remove-group-button');
+    if (addGroupButton) addGroupButton.classList.add('editing');
+    if (removeGroupButton) removeGroupButton.classList.add('editing');
+
+    // Set the roll name
+    document.getElementById('roll-name').value = rollName;
+    
+    // Clear existing dice groups
+    const diceSelectionContainer = document.querySelector('.content-col-dice');
+    diceSelectionContainer.innerHTML = '';
+    
+    // Recreate dice groups based on saved data
+    for (let i = 0; i < groupCount; i++) {
+        addDiceGroup(i);
+        const groupData = JSON.parse(rollEntry.querySelector(`.dice-group[data-group-index="${i}"]`).dataset.diceCounts);
+        
+        diceTypes.forEach(diceType => {
+            const countElement = document.getElementById(`${i}-${diceType}-counter-value`);
+            if (countElement) {
+                countElement.textContent = groupData[diceType] || '0';
+            }
+        });
+        
+        const modElement = document.getElementById(`${i}-mod-counter-value`);
+        if (modElement) {
+            modElement.value = groupData.mod || '0';
+        }
+    }
+    
+    // Scroll to the top of the page
+    window.scrollTo(0, 0);
+    
+    // Store the ID of the roll being edited
+    document.body.dataset.editingRollId = rollId;
+
+    // Change background color of the edited roll
+    rollEntry.classList.add('editing');
+
+    // Change edit button appearance
+    element.classList.add('editing');
+}
+
+function updateSavedRoll(rollId, rollData) {
+    const rollEntry = document.querySelector(`.saved-roll-entry[data-roll-id="${rollId}"]`);
+    if (rollEntry) {
+        rollEntry.querySelector('.roll-entry-label').textContent = rollData.name;
+        rollEntry.dataset.groupCount = rollData.groups.length;
+
+        const diceDisplay = rollEntry.querySelector('.roll-entry-dice');
+        diceDisplay.innerHTML = '';
+
+        rollData.groups.forEach((diceCounts, index) => {
+            const groupDiv = document.createElement("div");
+            groupDiv.className = "dice-group";
+            groupDiv.dataset.groupIndex = index;
+            groupDiv.dataset.diceCounts = JSON.stringify(diceCounts);
+
+            const diceGroupText = Object.entries(diceCounts)
+                .filter(([diceType, count]) => count > 0 && diceType !== "mod")
+                .map(([diceType, count]) => `${count}${diceType}`)
+                .join(" + ");
+
+            const modifier = diceCounts.mod;
+            const modifierText = modifier !== 0 ? `${modifier >= 0 ? "+" : ""}${modifier}` : "";
+
+            groupDiv.textContent = `Group ${index + 1}: ${diceGroupText}${modifierText ? ` ${modifierText}` : ""}`;
+            diceDisplay.appendChild(groupDiv);
+        });
+
+        // Update roll buttons if necessary
+        updateRollButtons(rollEntry, rollData);
+    } else {
+        console.error(`Roll with ID ${rollId} not found`);
+    }
+}
+
+function abortEditing() {
+    const editingRollId = document.body.dataset.editingRollId;
+    if (editingRollId) {
+        const editingRollEntry = document.querySelector(`.saved-roll-entry[data-roll-id="${editingRollId}"]`);
+        if (editingRollEntry) {
+            editingRollEntry.classList.remove('editing');
+            editingRollEntry.querySelector('.edit-roll').classList.remove('editing');
+        }
+        delete document.body.dataset.editingRollId;
+    }
+
+    // Reset the roll name input and label
+    const rollNameInput = document.getElementById('roll-name');
+    rollNameInput.classList.remove('editing');
+
+    // Remove editing class from Add Group and Remove Group buttons
+    const addGroupButton = document.getElementById('add-group-button');
+    const removeGroupButton = document.getElementById('remove-group-button');
+    if (addGroupButton) addGroupButton.classList.remove('editing');
+    if (removeGroupButton) removeGroupButton.classList.remove('editing');
+
+    const rollLabelElement = document.querySelector('label[for="roll-name"]');
+    if (rollLabelElement) {
+        rollLabelElement.textContent = 'Roll Label';
+        rollLabelElement.classList.remove('editing');
+    }
+
+    // Reset the dice groups to their initial state (empty or with a single group)
+    reset();
+}
+
+function updateRollButtons(rollEntry, rollData) {
+    const rowOfButtons = rollEntry.querySelector('.row-buttons-container');
+    rowOfButtons.innerHTML = ''; // Clear existing buttons
+    
+    createRollButton("rolling", rollData.name, "normal", rollData.groups, "roll-button row-button", rowOfButtons);
+    createRollButton("advantage", rollData.name, "advantage", rollData.groups, "roll-button row-button", rowOfButtons);
+    createRollButton("disadvantage", rollData.name, "disadvantage", rollData.groups, "roll-button row-button", rowOfButtons);
+    createRollButton("best-of-three", rollData.name, "best-of-three", rollData.groups, "roll-button row-button", rowOfButtons);
+    createRollButton("crit", rollData.name, "crit-dice", rollData.groups, "roll-button row-button", rowOfButtons);
 }
 
 function createRollButton(imageName, rollName, rollType, rollGroups, classes, parent) {
