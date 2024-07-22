@@ -317,7 +317,10 @@ function save() {
 }
 
 function showOverwriteModal(rollName) {
+    toggleOverlay(true);
+
     const modal = document.createElement('div');
+    modal.className = 'overwrite-modal';
     modal.style.position = 'fixed';
     modal.style.left = '50%';
     modal.style.top = '50%';
@@ -341,13 +344,36 @@ function showOverwriteModal(rollName) {
 
     document.getElementById('overwrite-yes').addEventListener('click', () => {
         document.body.removeChild(modal);
+        toggleOverlay(false);
         overwriteConfirmed = true;  // Set the flag to true
         save(); // Call save() again to proceed with saving
     });
 
     document.getElementById('overwrite-no').addEventListener('click', () => {
         document.body.removeChild(modal);
+        toggleOverlay(false);
     });
+}
+
+function toggleOverlay(show) {
+    if (show) {
+        const overlay = document.createElement('div');
+        overlay.id = 'modal-overlay';
+        overlay.style.position = 'fixed';
+        overlay.style.top = '0';
+        overlay.style.left = '0';
+        overlay.style.width = '100%';
+        overlay.style.height = '100%';
+        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+        overlay.style.zIndex = '999';
+        overlay.style.pointerEvents = 'auto';  // This allows the overlay to receive mouse events
+        document.body.appendChild(overlay);
+    } else {
+        const overlay = document.getElementById('modal-overlay');
+        if (overlay) {
+            overlay.remove();
+        }
+    }
 }
 
 function rollNameExists(rollName) {

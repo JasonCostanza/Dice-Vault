@@ -309,6 +309,18 @@ label[for="roll-name"].editing {
     color: #ff0000;
 }
 
+body.modal-open {
+    pointer-events: none;
+}
+
+#modal-overlay {
+    pointer-events: auto;
+}
+
+.overwrite-modal {
+    pointer-events: auto;
+}
+
 .padding-div{
     display: flex;
     align-items: center;
