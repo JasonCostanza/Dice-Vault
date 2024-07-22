@@ -239,9 +239,14 @@ function deleteSavedRoll(element) {
 
 function save() {
     const rollName = document.getElementById("roll-name").value;
-    const diceGroupElements = document.querySelectorAll(".dice-selection");
     const editingRollId = document.body.dataset.editingRollId;
 
+    if (!editingRollId && !overwriteConfirmed && rollNameExists(rollName)) {
+        showOverwriteModal(rollName);
+        return;
+    }
+
+    const diceGroupElements = document.querySelectorAll(".dice-selection");
     savedDiceGroups = [];
 
     diceGroupElements.forEach((groupElement) => {
@@ -275,20 +280,28 @@ function save() {
         // Update existing roll
         updateSavedRoll(editingRollId, rollData);
     } else {
-        // Add new roll
-        addSavedRoll(rollData.name, rollData.groups, rollData.type);
+        // Check if we're overwriting an existing roll
+        const existingRoll = document.querySelector(`.saved-roll-entry[data-roll-name="${rollName}"]`);
+        if (existingRoll && overwriteConfirmed) {
+            // Overwrite existing roll
+            updateSavedRoll(existingRoll.dataset.rollId, rollData);
+        } else {
+            // Add new roll
+            addSavedRoll(rollData.name, rollData.groups, rollData.type);
+        }
     }
 
     // Call abortEditing() here, after saving or updating the roll
     abortEditing();
     
-    // If you want to explicitly reset the label here as well:
+    // Reset the roll name input and label
+    // const rollNameInput = document.getElementById('roll-name');
+    // rollNameInput.value = '';
     const rollLabelElement = document.querySelector('label[for="roll-name"]');
     if (rollLabelElement) {
         rollLabelElement.textContent = 'Roll Label';
         rollLabelElement.classList.remove('editing');
     }
-
 
     if (fetchSetting("auto-reset")) {
         reset();
@@ -299,6 +312,48 @@ function save() {
     } else {
         disableButtonById("save-rolls-button", false);
     }
+
+    overwriteConfirmed = false;
+}
+
+function showOverwriteModal(rollName) {
+    const modal = document.createElement('div');
+    modal.style.position = 'fixed';
+    modal.style.left = '50%';
+    modal.style.top = '50%';
+    modal.style.transform = 'translate(-50%, -50%)';
+    modal.style.backgroundColor = 'var(--ts-background-primary)';
+    modal.style.padding = '20px';
+    modal.style.border = '4px solid #ff0000';
+    modal.style.zIndex = '1000';
+    modal.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
+    modal.style.borderRadius = '4px';
+
+    modal.innerHTML = `
+        <p>Overwrite "${rollName}"?</p>
+        <div style="display: flex; justify-content: space-around; margin-top: 20px;">
+            <button id="overwrite-yes" class="black-button">Yes</button>
+            <button id="overwrite-no" class="black-button">No</button>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    document.getElementById('overwrite-yes').addEventListener('click', () => {
+        document.body.removeChild(modal);
+        overwriteConfirmed = true;  // Set the flag to true
+        save(); // Call save() again to proceed with saving
+    });
+
+    document.getElementById('overwrite-no').addEventListener('click', () => {
+        document.body.removeChild(modal);
+    });
+}
+
+function rollNameExists(rollName) {
+    const savedRolls = document.querySelectorAll('.saved-roll-entry');
+    const exists = Array.from(savedRolls).some(roll => roll.dataset.rollName === rollName);
+    return exists;
 }
 
 function addSavedRoll(rollName, savedDiceGroups, rollType) {
@@ -497,9 +552,13 @@ function editSavedRoll(element) {
 }
 
 function updateSavedRoll(rollId, rollData) {
-    const rollEntry = document.querySelector(`.saved-roll-entry[data-roll-id="${rollId}"]`);
+    let rollEntry = document.querySelector(`.saved-roll-entry[data-roll-id="${rollId}"]`);
+    if (!rollEntry) {
+        rollEntry = document.querySelector(`.saved-roll-entry[data-roll-name="${rollData.name}"]`);
+    }
     if (rollEntry) {
         rollEntry.querySelector('.roll-entry-label').textContent = rollData.name;
+        rollEntry.dataset.rollName = rollData.name;
         rollEntry.dataset.groupCount = rollData.groups.length;
 
         const diceDisplay = rollEntry.querySelector('.roll-entry-dice');
@@ -526,7 +585,7 @@ function updateSavedRoll(rollId, rollData) {
         // Update roll buttons if necessary
         updateRollButtons(rollEntry, rollData);
     } else {
-        console.error(`Roll with ID ${rollId} not found`);
+        console.error(`Roll with ID ${rollId} and name ${rollData.name} not found`);
     }
 }
 
@@ -556,9 +615,6 @@ function abortEditing() {
         rollLabelElement.textContent = 'Roll Label';
         rollLabelElement.classList.remove('editing');
     }
-
-    // Reset the dice groups to their initial state (empty or with a single group)
-    reset();
 }
 
 function updateRollButtons(rollEntry, rollData) {
