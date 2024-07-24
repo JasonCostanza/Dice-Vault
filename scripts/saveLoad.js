@@ -33,12 +33,18 @@ function saveRollsToLocalStorage() {
     let rollsData = [];
     document.querySelectorAll('.saved-roll-entry').forEach(entry => {
         let groupCount = parseInt(entry.dataset.groupCount, 10) || 1;
-        let counts = [];
+        let groups = [];
         for (let i = 0; i < groupCount; i++) {
-            let groupData = entry.querySelector(`.dice-group[data-group-index="${i}"]`)?.dataset.diceCounts;
-            if (groupData) {
+            let groupElement = entry.querySelector(`.dice-group[data-group-index="${i}"]`);
+            if (groupElement) {
+                let groupName = groupElement.textContent.split(':')[0].trim();
+                let diceCountsData = groupElement.dataset.diceCounts;
                 try {
-                    counts.push(JSON.parse(groupData));
+                    let diceCounts = JSON.parse(diceCountsData);
+                    groups.push({
+                        name: groupName,
+                        diceCounts: diceCounts
+                    });
                 } catch (e) {
                     console.error(`Error parsing dice counts for group ${i}:`, e);
                     continue;
@@ -48,7 +54,7 @@ function saveRollsToLocalStorage() {
         let rollData = {
             name: entry.querySelector('.roll-entry-label').textContent.trim(),
             type: entry.dataset.rollType,
-            counts: counts
+            groups: groups
         };
         rollsData.push(rollData);
     });
@@ -72,7 +78,7 @@ async function loadRollsFromLocalStorage() {
         const rollsJson = await TS.localStorage.campaign.getBlob();
         let rollsData = JSON.parse(rollsJson || '[]');
         rollsData.forEach(rollData => {
-            addSavedRoll(rollData.name, rollData.counts, rollData.type);
+            addSavedRoll(rollData.name, rollData.groups, rollData.type);
         });
         disableButtonById('load-rolls-button');
         if (!fetchSetting('auto-save')){

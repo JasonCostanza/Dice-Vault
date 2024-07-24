@@ -19,43 +19,43 @@ const rollsModule = (function () {
     function roll(rollNameParam, rollTypeParam, groupsData) {
         let selectedType = rollTypeParam || rollTypes.normal;
         let updatedDiceGroupsData = groupsData || [];
-    
+
         if (!groupsData) {
             // If no groupsData provided, use the current UI state
             const diceGroupElements = document.querySelectorAll(".dice-selection");
             diceGroupElements.forEach((groupElement) => {
                 const groupId = groupElement.id;
                 const groupDiceCounts = {};
-    
+                const groupNameInput = groupElement.querySelector('.dice-group-name-input');
+                const groupName = groupNameInput ? groupNameInput.value : `Group ${parseInt(groupId) + 1}`;
+
                 diceTypes.forEach((diceType) => {
-                    const countElement = groupElement.querySelector(
-                        `.counter-overlay[id$="${groupId}-${diceType}-counter-value"]`
-                    );
-                    groupDiceCounts[diceType] = countElement
-                        ? parseInt(countElement.textContent, 10)
-                        : 0;
-                });
-    
-                const modElement = groupElement.querySelector(
-                    `.mod-counter-overlay[id$="${groupId}-mod-counter-value"]`
+                    const countElement = document.getElementById(`${groupId}-${diceType}-counter-value`);
+                    // const countElement = groupElement.querySelector(`#${groupId}-${diceType}-counter-value`);
+                    groupDiceCounts[diceType] = countElement ? parseInt(countElement.textContent, 10) : 0;
+                }
                 );
+
+                const modElement = document.getElementById(`${groupId}-mod-counter-value`);
+                //const modElement = groupElement.querySelector(`#${groupId}-${diceType}-counter-value`);
                 groupDiceCounts.mod = modElement ? parseInt(modElement.value, 10) : 0;
-    
-                updatedDiceGroupsData.push(groupDiceCounts);
+
+                updatedDiceGroupsData.push({
+                    name: groupName,
+                    diceCounts: groupDiceCounts
+                });
             });
         }
-    
+
         diceGroupsData = updatedDiceGroupsData;
 
         if (diceGroupsData.every(isDiceGroupEmpty)) {
-            // Display an error message to the user
             console.warn("Attempted to roll with empty dice groups");
-            return; // Exit the function early
+            return;
         }
 
-        let critBehavior = fetchSetting("crit-behavior"); // Fetch the critical behavior setting
+        let critBehavior = fetchSetting("crit-behavior");
 
-        // Adjust for critical hit dice types
         if (selectedType === rollTypes.critical) {
             if (critBehavior === "double-die-count") {
                 diceGroupsData = doubleDiceCounts(diceGroupsData);
@@ -83,23 +83,11 @@ const rollsModule = (function () {
      * 
      * @throws {Error} If there's an error creating roll descriptors.
      */
-    function putDiceToRollIntoDiceTray(
-        rollNameParam,
-        selectedType,
-        critBehavior
-    ) {
+    function putDiceToRollIntoDiceTray(rollNameParam, selectedType, critBehavior) {
         try {
-            let rollName = buildRollName(
-                rollNameParam,
-                selectedType,
-                critBehavior
-            );
-            let baseDiceDescriptors = constructDiceRollDescriptors(rollName);
-            let trayConfiguration = buildDiceTrayConfiguration(
-                baseDiceDescriptors,
-                selectedType
-            );
-
+            let baseDiceDescriptors = constructDiceRollDescriptors(rollNameParam);
+            let trayConfiguration = buildDiceTrayConfiguration(baseDiceDescriptors, selectedType);
+    
             TS.dice.putDiceInTray(trayConfiguration, true).then((rollId) => {
                 trackedRollIds[rollId] = {
                     type: selectedType,
@@ -289,32 +277,33 @@ const rollsModule = (function () {
      *                          string that describes the dice roll.
      */
     function constructDiceRollDescriptors(rollName) {
-        // Create an empty array to store the dice roll objects
         let diceRollObjects = [];
-
-        // Iterate over each dice group in the diceGroupsData array
-        for (const groupDiceCounts of diceGroupsData) {
+    
+        diceGroupsData.forEach((group, index) => {
             let groupRollString = "";
             let formattedDiceGroup = [];
-
-            for (const [die, count] of Object.entries(groupDiceCounts)) {
+    
+            for (const [die, count] of Object.entries(group.diceCounts)) {
                 if (die !== "mod" && count > 0) {
                     formattedDiceGroup.push(`${count}${die}`);
                     groupRollString = groupRollString + `+${count}${die}`;
                 }
             }
-
-            let modValue = parseInt(groupDiceCounts.mod, 10);
-
+    
+            let modValue = parseInt(group.diceCounts.mod, 10);
+    
             if (modValue !== 0) {
                 let modPart = modValue > 0 ? `+${modValue}` : `${modValue}`;
                 groupRollString = groupRollString + modPart;
             }
-
-            let rollObject = { name: rollName, roll: groupRollString };
+    
+            let rollObject = { 
+                name: `${rollName} - ${group.name}`, 
+                roll: groupRollString 
+            };
             diceRollObjects.push(rollObject);
-        }
-
+        });
+    
         return diceRollObjects;
     }
 
@@ -754,7 +743,38 @@ const rollsModule = (function () {
      */
     async function displayResults(resultGroups, rollId) {
         try {
-            await TS.dice.sendDiceResult(resultGroups, rollId);
+            // Retrieve the original roll data
+            const rollEntry = document.querySelector(`.saved-roll-entry[data-roll-id="${rollId}"]`);
+            if (!rollEntry) {
+                rollEntry = document.querySelector(`.saved-roll-entry[data-roll-name="${rollData.name}"]`);
+            }
+            
+            const groupCount = parseInt(rollEntry?.dataset.groupCount || 1, 10);
+            const groupNames = [];
+            
+            console.log('Roll Entry:', rollEntry); // Log the roll entry
+            console.log('Group Count:', groupCount); // Log the group count
+    
+            for (let i = 0; i < groupCount; i++) {
+                const groupDiv = rollEntry?.querySelector(`.dice-group[data-group-index="${i}"]`);
+                console.log(`Group Div ${i}:`, groupDiv); // Log each group div
+                const groupName = groupDiv?.textContent.split(':')[0].trim() || `Group ${i + 1}`;
+                groupNames.push(groupName);
+            }
+    
+            console.log('Group Names:', groupNames); // Log the group names
+    
+            // Modify the resultGroups to include the group names
+            const namedResultGroups = resultGroups.map((group, index) => ({
+                ...group,
+                name: groupNames[index] || group.name || `Group ${index + 1}`
+            }));
+        
+            // Log the named result groups for debugging
+            console.log('Named Result Groups:', JSON.stringify(namedResultGroups, null, 2));
+        
+            // Send the modified results to TaleSpire
+            await TS.dice.sendDiceResult(namedResultGroups, rollId);
             console.log(`Results sent successfully for roll ${rollId}`);
         } catch (error) {
             console.error(`Error sending results for roll ${rollId}:`, error);

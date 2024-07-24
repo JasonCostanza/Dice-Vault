@@ -321,6 +321,22 @@ body.modal-open {
     pointer-events: auto;
 }
 
+.dice-group-name {
+    margin-bottom: 10px;
+}
+
+.dice-group-name-input {
+    width: 100%;
+    padding: 5px;
+    font-size: 1em;
+}
+
+.dice-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .padding-div{
     display: flex;
     align-items: center;
