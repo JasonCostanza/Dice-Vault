@@ -135,10 +135,6 @@ h1 {
     user-select: none; 
 }
 
-.saved-roll-entry, .roll-button {
-    user-select: none;
-}
-
 .roll-button {
     display: block;
     padding: 5px 10px;
@@ -165,11 +161,11 @@ h1 {
 .row-button{
     flex: 1;
     margin: 0 5px;
-    height: 30px;
+    height: 40px;
 }
 
 .row-button img{
-    height: 30px;
+    height: 40px;
 }
 
 .saved-roll-entry {
@@ -177,10 +173,8 @@ h1 {
     margin-bottom: 5px;
     display: flex;
     flex-direction: column;
-    /* COMMENT: @json, this is what i added to align the title left */
     justify-content: flex-start;
-    /**/
-    align-items: left;
+    align-items: flex-start;
     background-color: var(--ts-button-background);
     font-family: 'OptimusPrinceps', sans-serif;
     padding: 10px;
@@ -337,6 +331,22 @@ body.modal-open {
     justify-content: space-between;
 }
 
+.roll-name-container {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.roll-name-container label {
+    margin-right: 10px;
+}
+
+#roll-name {
+    flex-grow: 1;
+    padding: 5px;
+    font-size: 1em;
+}
+
 .padding-div{
     display: flex;
     align-items: center;
@@ -371,8 +381,10 @@ body.modal-open {
 
 .roll-entry-label {
     font-weight: bold;
-    text-align: center;
+    text-align: left;
     margin: 5px 0;
+    flex-grow: 1;
+    margin-right: 10px; /* Add some space between the label and buttons */
 }
 
 .select-list {
@@ -491,7 +503,7 @@ body.modal-open {
 
 .saved-rolls-button-container {
     display: flex;
-    margin-left: auto;
+    margin-left: center;
 
 }
 

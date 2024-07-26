@@ -20,7 +20,12 @@ const rollsModule = (function () {
         let selectedType = rollTypeParam || rollTypes.normal;
         let updatedDiceGroupsData = groupsData || [];
     
-        if (!groupsData) {
+        if (!Array.isArray(updatedDiceGroupsData)) {
+            console.error('Invalid dice groups data:', updatedDiceGroupsData);
+            return;
+        }
+    
+        if (updatedDiceGroupsData.length === 0) {
             // If no groupsData provided, use the current UI state
             const diceGroupElements = document.querySelectorAll(".dice-selection");
             diceGroupElements.forEach((groupElement) => {
