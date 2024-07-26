@@ -619,43 +619,42 @@ const rollsModule = (function () {
         }
     
         return resultGroups.map(group => {
-            if (critBehavior === "double-total") {
-                return {
-                    ...group,
-                    result: doubleTotal(group.result)
-                };
-            } else if (critBehavior === "double-die-result") {
-                return {
-                    ...group,
-                    result: doubleDiceResults(group.result)
-                };
-            } else if (critBehavior === "max-die") {
-                return {
-                    ...group,
-                    result: maximizeDice(group.result)
-                };
-            } else if (critBehavior === "max-plus") {
-                return {
-                    ...group,
-                    result: addMaxDieForEachKind(group.result)
-                };
-            } else if (critBehavior === "triple-total") {
-                return {
-                    ...group,
-                    result: tripleTotal(group.result)
-                };
-            } else if (critBehavior === "quadruple-total") {
-                return {
-                    ...group,
-                    result: quadrupleTotal(group.result)
-                };
-            } else if (critBehavior === "one-point-five-total") {
-                return {
-                    ...group,
-                    result: onePointFiveTotal(group.result)
-                };
+            let modifiedResult;
+            switch (critBehavior) {
+                case "double-total":
+                    modifiedResult = doubleTotal(group.result);
+                    break;
+                case "double-die-result":
+                    modifiedResult = doubleDiceResults(group.result);
+                    break;
+                case "max-die":
+                    modifiedResult = maximizeDice(group.result);
+                    break;
+                case "max-plus":
+                    modifiedResult = addMaxDieForEachKind(group.result);
+                    break;
+                case "triple-total":
+                    modifiedResult = tripleTotal(group.result);
+                    break;
+                case "quadruple-total":
+                    modifiedResult = quadrupleTotal(group.result);
+                    break;
+                case "one-point-five-total":
+                    modifiedResult = onePointFiveTotal(group.result);
+                    break;
+                default:
+                    modifiedResult = group.result;
             }
-            return group;
+    
+            // Update the group name to include "Critical" if it's a crit behavior
+            if (critBehavior !== "none") {
+                group.name = group.name ? `Critical: ${group.name}` : "Critical Roll";
+            }
+    
+            return {
+                ...group,
+                result: modifiedResult
+            };
         });
     }
     
@@ -677,10 +676,11 @@ const rollsModule = (function () {
         try {
             console.log(`Displaying results for roll ID: ${rollId}`);
     
-            // Ensure each result group has a name
+            // Ensure each result group has a name and description
             const namedResultGroups = resultGroups.map((group, index) => ({
                 ...group,
-                name: group.name || `Group ${index + 1}`
+                name: group.name || `Group ${index + 1}`,
+                description: group.description || group.result.description || ''
             }));
     
             console.log('Named Result Groups:', JSON.stringify(namedResultGroups, null, 2));
