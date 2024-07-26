@@ -396,26 +396,36 @@ const rollsModule = (function () {
      */
     async function getReportableRollResultsGroup(roll, rollType) {
         let resultGroups;
-
+    
         switch (rollType) {
             case rollTypes.advantage:
                 resultGroups = await handleAdvantageRoll(roll);
+                resultGroups = addPrefixToGroupNames(resultGroups, "With Advantage: ");
                 break;
-
+    
             case rollTypes.disadvantage:
                 resultGroups = await handleDisadvantageRoll(roll);
+                resultGroups = addPrefixToGroupNames(resultGroups, "With Disadvantage: ");
                 break;
-
+    
             case rollTypes.bestofThree:
                 resultGroups = await handleBestOfThreeRoll(roll);
+                resultGroups = addPrefixToGroupNames(resultGroups, "Best of Three: ");
                 break;
-
+    
             default:
                 resultGroups = roll.resultsGroups;
         }
-
+    
         // Ensure we always return an array, even if it's a single group
         return Array.isArray(resultGroups) ? resultGroups : [resultGroups];
+    }
+
+    function addPrefixToGroupNames(resultGroups, prefix) {
+        return resultGroups.map(group => ({
+            ...group,
+            name: group.name ? `${prefix}${group.name}` : prefix.trim()
+        }));
     }
 
     /**
@@ -470,37 +480,26 @@ const rollsModule = (function () {
         ) {
             return roll.resultsGroups;
         }
-
+    
         let startingIndexOfSecondSetOfGroups = roll.resultsGroups.length / 2;
-
+    
         let firstSetOfGroups = roll.resultsGroups.slice(
             0,
             startingIndexOfSecondSetOfGroups
         );
-
+    
         let secondSetOfGroups = roll.resultsGroups.slice(
             startingIndexOfSecondSetOfGroups
         );
-
+    
         let sumOfFirstSet = await getSumOfRollResultsGroups(firstSetOfGroups);
         let sumOfSecondSet = await getSumOfRollResultsGroups(secondSetOfGroups);
-
-        let setWithHighestSum = [];
-        let setWithLowestSum = [];
-
-        if (sumOfFirstSet >= sumOfSecondSet) {
-            setWithHighestSum = firstSetOfGroups;
-            setWithLowestSum = secondSetOfGroups;
-        } else {
-            setWithHighestSum = secondSetOfGroups;
-            setWithLowestSum = firstSetOfGroups;
-        }
-
-        if (isAdvantage == true) {
-            return setWithHighestSum;
-        }
-
-        return setWithLowestSum;
+    
+        let chosenSet = (isAdvantage ? 
+            (sumOfFirstSet >= sumOfSecondSet ? firstSetOfGroups : secondSetOfGroups) :
+            (sumOfFirstSet <= sumOfSecondSet ? firstSetOfGroups : secondSetOfGroups));
+    
+        return chosenSet;
     }
 
     /**

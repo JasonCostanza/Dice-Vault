@@ -16,7 +16,7 @@ function updateAutoButtons(){
         document.getElementById('load-rolls-button').innerText = 'Auto-Loading';
         disableButtonById('load-rolls-button');
     }else{
-        document.getElementById('load-rolls-button').innerText = 'Load Rolls';
+        document.getElementById('load-rolls-button').innerText = 'Load Save';
         disableButtonById('load-rolls-button', false);
     }
 
@@ -24,7 +24,7 @@ function updateAutoButtons(){
         document.getElementById('save-rolls-button').innerText = 'Auto-Saving';
         disableButtonById('save-rolls-button');
     } else {
-        document.getElementById('save-rolls-button').innerText = 'Save Rolls';
+        document.getElementById('save-rolls-button').innerText = 'Save Locally';
         disableButtonById('save-rolls-button', false);
     }
 }

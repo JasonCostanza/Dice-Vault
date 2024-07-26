@@ -318,7 +318,10 @@ function save() {
         saveRollsToLocalStorage();
     } else {
         disableButtonById("save-rolls-button", false);
+        disableButtonById("load-rolls-button", false);
     }
+    
+    updateAutoButtons();
 }
 
 function showOverwriteModal(rollName) {
