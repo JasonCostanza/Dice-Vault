@@ -325,6 +325,11 @@ body.modal-open {
     font-size: 1em;
 }
 
+.dice-group-name-input.editing,
+#roll-name.editing {
+    border-color: #ff0000;
+}
+
 .dice-row {
     display: flex;
     align-items: center;

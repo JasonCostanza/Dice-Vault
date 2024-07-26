@@ -521,6 +521,7 @@ function startEditingSavedRoll(elementOrId) {
         const groupNameInput = document.getElementById(`group-${i}-name`);
         if (groupNameInput) {
             groupNameInput.value = groupName;
+            groupNameInput.classList.add('editing');  // Add 'editing' class to group name input
         }
         
         diceTypes.forEach(diceType => {
@@ -543,7 +544,7 @@ function startEditingSavedRoll(elementOrId) {
     if (editButton) editButton.classList.add('editing');
 }
 
-function editSavedRoll(elementOrId ) {
+function editSavedRoll(elementOrId) {
     let rollEntry;
     let rollId;
 
@@ -657,7 +658,8 @@ function abortEditing() {
         const editingRollEntry = document.querySelector(`.saved-roll-entry[data-roll-id="${editingRollId}"]`);
         if (editingRollEntry) {
             editingRollEntry.classList.remove('editing');
-            editingRollEntry.querySelector('.edit-roll').classList.remove('editing');
+            const editButton = editingRollEntry.querySelector('.edit-roll');
+            if (editButton) editButton.classList.remove('editing');
         }
         delete document.body.dataset.editingRollId;
     }
@@ -666,17 +668,23 @@ function abortEditing() {
     const rollNameInput = document.getElementById('roll-name');
     rollNameInput.classList.remove('editing');
 
-    // Remove editing class from Add Group and Remove Group buttons
-    const addGroupButton = document.getElementById('add-group-button');
-    const removeGroupButton = document.getElementById('remove-group-button');
-    if (addGroupButton) addGroupButton.classList.remove('editing');
-    if (removeGroupButton) removeGroupButton.classList.remove('editing');
-
     const rollLabelElement = document.querySelector('label[for="roll-name"]');
     if (rollLabelElement) {
         rollLabelElement.textContent = 'Roll Label';
         rollLabelElement.classList.remove('editing');
     }
+
+    // Remove editing class from group name inputs
+    const groupNameInputs = document.querySelectorAll('.dice-group-name-input');
+    groupNameInputs.forEach(input => {
+        input.classList.remove('editing');
+    });
+
+    // Remove editing class from Add Group and Remove Group buttons
+    const addGroupButton = document.getElementById('add-group-button');
+    const removeGroupButton = document.getElementById('remove-group-button');
+    if (addGroupButton) addGroupButton.classList.remove('editing');
+    if (removeGroupButton) removeGroupButton.classList.remove('editing');
 }
 
 function updateRollButtons(rollEntry, rollData) {
@@ -721,10 +729,13 @@ function createRollButton(imageName, rollType, rollGroups, classes, parent) {
 }
 
 function reset() {
-    updateDiceGroupsData();
     document.getElementById("roll-name").value = "";
 
     diceGroupsData.forEach((group, index) => {
+        // Reset group name
+        const groupNameInput = document.getElementById(`group-${index}-name`);
+        if (groupNameInput) groupNameInput.value = "";
+
         diceTypes.forEach((type) => {
             const counter = document.getElementById(
                 `${index}-${type}-counter-value`
@@ -744,7 +755,14 @@ function reset() {
         }
     });
 
-    diceGroupsData.splice(1);
+    // Reset diceGroupsData to contain only one empty group
+    diceGroupsData = [{
+        name: "",
+        diceCounts: Object.fromEntries(diceTypes.map(type => [type, 0]).concat([['mod', 0]]))
+    }];
+
+    // Update the data to ensure consistency between UI and data
+    updateDiceGroupsData();
 }
 
 function disableButtonById(id, disable = true) {
