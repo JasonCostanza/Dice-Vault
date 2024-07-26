@@ -42,16 +42,15 @@ function onePointFiveResultsRecursive(result) {
  * @returns {Array<Object>} A new array of objects with doubled dice counts.
  */
 function doubleDiceCounts(rollGroups) {
-    return rollGroups.map(diceCounts => {
-        let doubledDiceCounts = {};
-        for (const [die, count] of Object.entries(diceCounts)) {
+    return rollGroups.map(group => {
+        let doubledGroup = { ...group };
+        doubledGroup.diceCounts = { ...group.diceCounts };
+        for (const [die, count] of Object.entries(group.diceCounts)) {
             if (die !== 'mod') {
-                doubledDiceCounts[die] = String(parseInt(count, 10) * 2);
-            } else {
-                doubledDiceCounts[die] = count;
+                doubledGroup.diceCounts[die] = count * 2;
             }
         }
-        return doubledDiceCounts;
+        return doubledGroup;
     });
 }
 

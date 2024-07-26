@@ -347,7 +347,7 @@ const rollsModule = (function () {
     async function handleRollResultsEvent(rollEvent) {
         let roll = rollEvent.payload;
         let resultGroups = [];
-
+    
         if (roll.resultsGroups != undefined) {
             let rollInfo = trackedRollIds[roll.rollId];
             if (rollInfo) {
@@ -356,12 +356,12 @@ const rollsModule = (function () {
                         roll,
                         rollInfo.type
                     );
-
+    
                     resultGroups = applyCritBehaviorToRollResultsGroup(
                         resultGroups,
                         rollInfo.critBehavior
                     );
-
+    
                     await displayResults(resultGroups, roll.rollId);
                     console.log('Results displayed successfully');
                 } catch (error) {
