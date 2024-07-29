@@ -1,3 +1,5 @@
+let overwriteConfirmed = false;
+
 /**
  * Array of arrays, contains diceGroupsData[] arrays as elements which is
  * everything saved to JSON ./localstorage/ inside one array.

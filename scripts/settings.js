@@ -70,7 +70,7 @@ async function handleRetrieveBackup() {
             const textArea = document.createElement('textarea');
             textArea.value = backupString;
             textArea.style.width = '100%';
-            textArea.style.height = '200px';
+            textArea.style.height = '80%';
             textArea.readOnly = true;
 
             // Create a modal or dialog to display the backup data
@@ -79,7 +79,7 @@ async function handleRetrieveBackup() {
             modal.style.left = '10%';
             modal.style.top = '10%';
             modal.style.width = '80%';
-            modal.style.height = '80%';
+            modal.style.height = '50%';
             modal.style.backgroundColor = 'white';
             modal.style.padding = '20px';
             modal.style.border = '1px solid black';

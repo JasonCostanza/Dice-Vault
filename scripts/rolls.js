@@ -16,46 +16,48 @@ const rollsModule = (function () {
      * @param {string} rollTypeParam - The type of the roll (e.g., 'normal', 'critical'),
      *                                 which influences how the dice are rolled and processed.
      */
-    function roll(rollNameParam, rollTypeParam, groupsData) {
+    function roll(rollTypeParam, groupsData) {
         let selectedType = rollTypeParam || rollTypes.normal;
         let updatedDiceGroupsData = groupsData || [];
     
-        if (!groupsData) {
+        if (!Array.isArray(updatedDiceGroupsData)) {
+            console.error('Invalid dice groups data:', updatedDiceGroupsData);
+            return;
+        }
+    
+        if (updatedDiceGroupsData.length === 0) {
             // If no groupsData provided, use the current UI state
             const diceGroupElements = document.querySelectorAll(".dice-selection");
             diceGroupElements.forEach((groupElement) => {
                 const groupId = groupElement.id;
                 const groupDiceCounts = {};
+                const groupNameInput = groupElement.querySelector('.dice-group-name-input');
+                const groupName = groupNameInput ? groupNameInput.value : `Group ${parseInt(groupId) + 1}`;
     
                 diceTypes.forEach((diceType) => {
-                    const countElement = groupElement.querySelector(
-                        `.counter-overlay[id$="${groupId}-${diceType}-counter-value"]`
-                    );
-                    groupDiceCounts[diceType] = countElement
-                        ? parseInt(countElement.textContent, 10)
-                        : 0;
+                    const countElement = document.getElementById(`${groupId}-${diceType}-counter-value`);
+                    groupDiceCounts[diceType] = countElement ? parseInt(countElement.textContent, 10) : 0;
                 });
     
-                const modElement = groupElement.querySelector(
-                    `.mod-counter-overlay[id$="${groupId}-mod-counter-value"]`
-                );
+                const modElement = document.getElementById(`${groupId}-mod-counter-value`);
                 groupDiceCounts.mod = modElement ? parseInt(modElement.value, 10) : 0;
     
-                updatedDiceGroupsData.push(groupDiceCounts);
+                updatedDiceGroupsData.push({
+                    name: groupName,
+                    diceCounts: groupDiceCounts
+                });
             });
         }
     
         diceGroupsData = updatedDiceGroupsData;
-
+    
         if (diceGroupsData.every(isDiceGroupEmpty)) {
-            // Display an error message to the user
             console.warn("Attempted to roll with empty dice groups");
-            return; // Exit the function early
+            return;
         }
-
-        let critBehavior = fetchSetting("crit-behavior"); // Fetch the critical behavior setting
-
-        // Adjust for critical hit dice types
+    
+        let critBehavior = fetchSetting("crit-behavior");
+    
         if (selectedType === rollTypes.critical) {
             if (critBehavior === "double-die-count") {
                 diceGroupsData = doubleDiceCounts(diceGroupsData);
@@ -63,8 +65,8 @@ const rollsModule = (function () {
         } else {
             critBehavior = "none";
         }
-
-        putDiceToRollIntoDiceTray(rollNameParam, selectedType, critBehavior);
+    
+        putDiceToRollIntoDiceTray(selectedType, critBehavior);
     }
 
     /**
@@ -83,23 +85,17 @@ const rollsModule = (function () {
      * 
      * @throws {Error} If there's an error creating roll descriptors.
      */
-    function putDiceToRollIntoDiceTray(
-        rollNameParam,
-        selectedType,
-        critBehavior
-    ) {
+    function putDiceToRollIntoDiceTray(selectedType, critBehavior) {
         try {
-            let rollName = buildRollName(
-                rollNameParam,
-                selectedType,
-                critBehavior
-            );
-            let baseDiceDescriptors = constructDiceRollDescriptors(rollName);
-            let trayConfiguration = buildDiceTrayConfiguration(
-                baseDiceDescriptors,
-                selectedType
-            );
-
+            let baseDiceDescriptors = constructDiceRollDescriptors();
+            
+            if (baseDiceDescriptors.length === 0) {
+                console.warn("No dice to roll after filtering empty groups");
+                return;
+            }
+    
+            let trayConfiguration = buildDiceTrayConfiguration(baseDiceDescriptors, selectedType);
+    
             TS.dice.putDiceInTray(trayConfiguration, true).then((rollId) => {
                 trackedRollIds[rollId] = {
                     type: selectedType,
@@ -180,87 +176,6 @@ const rollsModule = (function () {
     }
 
     /**
-     * Constructs a descriptive name for a roll based on provided parameters.
-     * 
-     * This function builds a roll name that includes:
-     * 1. The base roll name (provided or from the UI)
-     * 2. The roll type (e.g., "Advantage", "Disadvantage")
-     * 3. Critical hit behavior, if applicable
-     * 
-     * It handles various critical hit behaviors, adding appropriate descriptions
-     * to the roll name for each type of critical hit.
-     *
-     * @param {string} rollNameParam - The base name for the roll. If not provided,
-     *                                 it attempts to use the value from the document's
-     *                                 "roll-name" element.
-     * @param {string} rollTypeParam - The type of the roll (e.g., "normal", "advantage",
-     *                                 "disadvantage", "crit-dice").
-     * @param {string} critBehaviorParam - The behavior of critical hits (e.g.,
-     *                                     "double-die-count", "double-die-result",
-     *                                     "double-total", "max-die", "max-plus").
-     *
-     * @returns {string} The constructed roll name, combining the base name, roll type,
-     *                   and critical hit behavior (if applicable).
-     */
-    function buildRollName(rollNameParam, rollTypeParam, critBehaviorParam) {
-        let rollName =
-            rollNameParam ||
-            document.getElementById("roll-name").value ||
-            "Unnamed Roll";
-    
-        if (rollTypeParam !== "normal" && rollTypeParam !== "crit-dice") {
-            rollName += "\n" + formatRollTypeName(rollTypeParam);
-        }
-    
-        if (rollTypeParam === "crit-dice") {
-            if (critBehaviorParam === "double-die-count") {
-                rollName += "\nCrit! Double the Dice";
-            }
-            if (critBehaviorParam === "double-die-result") {
-                rollName += "\nCrit! Double the Die Results";
-            }
-            if (critBehaviorParam === "double-total") {
-                rollName += "\nCrit! Double the Total";
-            }
-            if (critBehaviorParam === "max-die") {
-                rollName += "\nCrit! Maximize the Die";
-            }
-            if (critBehaviorParam === "max-plus") {
-                rollName += "\nCrit! Maximize Die plus Die Result";
-            }
-            if (critBehaviorParam === "triple-total") {
-                rollName += "\nCrit! Triple the Total";
-            }
-            if (critBehaviorParam === "quadruple-total") {
-                rollName += "\nCrit! Quadruple the Total";
-            }
-            if (critBehaviorParam === "one-point-five-total") {
-                rollName += "\nCrit! 1.5x the Total (rounded down)";
-            }
-        }
-    
-        return rollName;
-    }
-
-    /**
-     * Formats the internal roll type name into a human-readable string.
-     *
-     * @param {string} rollType - The internal identifier for the roll type.
-     *
-     * @returns {string} The human-readable string representation of the roll type.
-     */
-    function formatRollTypeName(rollType) {
-        const rollTypeMappings = {
-            normal: "Normal",
-            advantage: "Advantage",
-            disadvantage: "Disadvantage",
-            "best-of-three": "Best of Three",
-        };
-
-        return rollTypeMappings[rollType] || rollType;
-    }
-
-    /**
      * Constructs an array of dice roll descriptors based on the provided roll name
      * and dice groups data.
      *
@@ -288,33 +203,39 @@ const rollsModule = (function () {
      * @returns {Array<Object>} An array of objects, each containing a `name` and a `roll`
      *                          string that describes the dice roll.
      */
-    function constructDiceRollDescriptors(rollName) {
-        // Create an empty array to store the dice roll objects
+    function constructDiceRollDescriptors() {
         let diceRollObjects = [];
-
-        // Iterate over each dice group in the diceGroupsData array
-        for (const groupDiceCounts of diceGroupsData) {
-            let groupRollString = "";
-            let formattedDiceGroup = [];
-
-            for (const [die, count] of Object.entries(groupDiceCounts)) {
-                if (die !== "mod" && count > 0) {
-                    formattedDiceGroup.push(`${count}${die}`);
-                    groupRollString = groupRollString + `+${count}${die}`;
+    
+        diceGroupsData.forEach((group, index) => {
+            if (!isDiceGroupEmpty(group)) {
+                let groupRollString = "";
+    
+                for (const [die, count] of Object.entries(group.diceCounts)) {
+                    if (die !== "mod" && count > 0) {
+                        groupRollString += `+${count}${die}`;
+                    }
+                }
+    
+                let modValue = parseInt(group.diceCounts.mod, 10);
+                if (modValue !== 0) {
+                    let modPart = modValue > 0 ? `+${modValue}` : `${modValue}`;
+                    groupRollString += modPart;
+                }
+    
+                // Remove leading '+' if present
+                groupRollString = groupRollString.startsWith('+') ? groupRollString.slice(1) : groupRollString;
+    
+                if (groupRollString) {
+                    let groupName = group.name || `Group ${index + 1}`;
+                    let rollObject = { 
+                        name: groupName, 
+                        roll: groupRollString 
+                    };
+                    diceRollObjects.push(rollObject);
                 }
             }
-
-            let modValue = parseInt(groupDiceCounts.mod, 10);
-
-            if (modValue !== 0) {
-                let modPart = modValue > 0 ? `+${modValue}` : `${modValue}`;
-                groupRollString = groupRollString + modPart;
-            }
-
-            let rollObject = { name: rollName, roll: groupRollString };
-            diceRollObjects.push(rollObject);
-        }
-
+        });
+    
         return diceRollObjects;
     }
 
@@ -426,7 +347,7 @@ const rollsModule = (function () {
     async function handleRollResultsEvent(rollEvent) {
         let roll = rollEvent.payload;
         let resultGroups = [];
-
+    
         if (roll.resultsGroups != undefined) {
             let rollInfo = trackedRollIds[roll.rollId];
             if (rollInfo) {
@@ -435,12 +356,12 @@ const rollsModule = (function () {
                         roll,
                         rollInfo.type
                     );
-
+    
                     resultGroups = applyCritBehaviorToRollResultsGroup(
                         resultGroups,
                         rollInfo.critBehavior
                     );
-
+    
                     await displayResults(resultGroups, roll.rollId);
                     console.log('Results displayed successfully');
                 } catch (error) {
@@ -475,26 +396,36 @@ const rollsModule = (function () {
      */
     async function getReportableRollResultsGroup(roll, rollType) {
         let resultGroups;
-
+    
         switch (rollType) {
             case rollTypes.advantage:
                 resultGroups = await handleAdvantageRoll(roll);
+                resultGroups = addPrefixToGroupNames(resultGroups, "With Advantage: ");
                 break;
-
+    
             case rollTypes.disadvantage:
                 resultGroups = await handleDisadvantageRoll(roll);
+                resultGroups = addPrefixToGroupNames(resultGroups, "With Disadvantage: ");
                 break;
-
+    
             case rollTypes.bestofThree:
                 resultGroups = await handleBestOfThreeRoll(roll);
+                resultGroups = addPrefixToGroupNames(resultGroups, "Best of Three: ");
                 break;
-
+    
             default:
                 resultGroups = roll.resultsGroups;
         }
-
+    
         // Ensure we always return an array, even if it's a single group
         return Array.isArray(resultGroups) ? resultGroups : [resultGroups];
+    }
+
+    function addPrefixToGroupNames(resultGroups, prefix) {
+        return resultGroups.map(group => ({
+            ...group,
+            name: group.name ? `${prefix}${group.name}` : prefix.trim()
+        }));
     }
 
     /**
@@ -549,37 +480,26 @@ const rollsModule = (function () {
         ) {
             return roll.resultsGroups;
         }
-
+    
         let startingIndexOfSecondSetOfGroups = roll.resultsGroups.length / 2;
-
+    
         let firstSetOfGroups = roll.resultsGroups.slice(
             0,
             startingIndexOfSecondSetOfGroups
         );
-
+    
         let secondSetOfGroups = roll.resultsGroups.slice(
             startingIndexOfSecondSetOfGroups
         );
-
+    
         let sumOfFirstSet = await getSumOfRollResultsGroups(firstSetOfGroups);
         let sumOfSecondSet = await getSumOfRollResultsGroups(secondSetOfGroups);
-
-        let setWithHighestSum = [];
-        let setWithLowestSum = [];
-
-        if (sumOfFirstSet >= sumOfSecondSet) {
-            setWithHighestSum = firstSetOfGroups;
-            setWithLowestSum = secondSetOfGroups;
-        } else {
-            setWithHighestSum = secondSetOfGroups;
-            setWithLowestSum = firstSetOfGroups;
-        }
-
-        if (isAdvantage == true) {
-            return setWithHighestSum;
-        }
-
-        return setWithLowestSum;
+    
+        let chosenSet = (isAdvantage ? 
+            (sumOfFirstSet >= sumOfSecondSet ? firstSetOfGroups : secondSetOfGroups) :
+            (sumOfFirstSet <= sumOfSecondSet ? firstSetOfGroups : secondSetOfGroups));
+    
+        return chosenSet;
     }
 
     /**
@@ -698,43 +618,42 @@ const rollsModule = (function () {
         }
     
         return resultGroups.map(group => {
-            if (critBehavior === "double-total") {
-                return {
-                    ...group,
-                    result: doubleTotal(group.result)
-                };
-            } else if (critBehavior === "double-die-result") {
-                return {
-                    ...group,
-                    result: doubleDiceResults(group.result)
-                };
-            } else if (critBehavior === "max-die") {
-                return {
-                    ...group,
-                    result: maximizeDice(group.result)
-                };
-            } else if (critBehavior === "max-plus") {
-                return {
-                    ...group,
-                    result: addMaxDieForEachKind(group.result)
-                };
-            } else if (critBehavior === "triple-total") {
-                return {
-                    ...group,
-                    result: tripleTotal(group.result)
-                };
-            } else if (critBehavior === "quadruple-total") {
-                return {
-                    ...group,
-                    result: quadrupleTotal(group.result)
-                };
-            } else if (critBehavior === "one-point-five-total") {
-                return {
-                    ...group,
-                    result: onePointFiveTotal(group.result)
-                };
+            let modifiedResult;
+            switch (critBehavior) {
+                case "double-total":
+                    modifiedResult = doubleTotal(group.result);
+                    break;
+                case "double-die-result":
+                    modifiedResult = doubleDiceResults(group.result);
+                    break;
+                case "max-die":
+                    modifiedResult = maximizeDice(group.result);
+                    break;
+                case "max-plus":
+                    modifiedResult = addMaxDieForEachKind(group.result);
+                    break;
+                case "triple-total":
+                    modifiedResult = tripleTotal(group.result);
+                    break;
+                case "quadruple-total":
+                    modifiedResult = quadrupleTotal(group.result);
+                    break;
+                case "one-point-five-total":
+                    modifiedResult = onePointFiveTotal(group.result);
+                    break;
+                default:
+                    modifiedResult = group.result;
             }
-            return group;
+    
+            // Update the group name to include "Critical" if it's a crit behavior
+            if (critBehavior !== "none") {
+                group.name = group.name ? `Critical: ${group.name}` : "Critical Roll";
+            }
+    
+            return {
+                ...group,
+                result: modifiedResult
+            };
         });
     }
     
@@ -754,7 +673,19 @@ const rollsModule = (function () {
      */
     async function displayResults(resultGroups, rollId) {
         try {
-            await TS.dice.sendDiceResult(resultGroups, rollId);
+            console.log(`Displaying results for roll ID: ${rollId}`);
+    
+            // Ensure each result group has a name and description
+            const namedResultGroups = resultGroups.map((group, index) => ({
+                ...group,
+                name: group.name || `Group ${index + 1}`,
+                description: group.description || group.result.description || ''
+            }));
+    
+            console.log('Named Result Groups:', JSON.stringify(namedResultGroups, null, 2));
+    
+            // Send the results to TaleSpire
+            await TS.dice.sendDiceResult(namedResultGroups, rollId);
             console.log(`Results sent successfully for roll ${rollId}`);
         } catch (error) {
             console.error(`Error sending results for roll ${rollId}:`, error);

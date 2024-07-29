@@ -72,21 +72,19 @@ async function checkAndUpgradeRollsData() {
             return null;
         }
 
-        originalData = savedData; // Store the original data
+        originalData = savedData;
         const parsedData = JSON.parse(savedData);
 
-        if (Array.isArray(parsedData) && parsedData.length > 0 && !Array.isArray(parsedData[0].counts)) {
+        if (Array.isArray(parsedData) && parsedData.length > 0 && !parsedData[0].groups) {
             console.warn('Outdated rolls data format detected. Initiating upgrade process...');
             
-            // Create a backup of the original data
             await TS.localStorage.campaign.setBlob(JSON.stringify({
                 backupData: parsedData,
                 backupTimestamp: new Date().toISOString()
             }), 'dice_vault_data_backup');
 
-            const upgradedData = upgradeRollsData(parsedData);
+            const upgradedData = upgradeRollsData2_0To2_x(parsedData);
 
-            // Save the upgraded data
             await TS.localStorage.campaign.setBlob(JSON.stringify(upgradedData));
 
             console.warn('Rolls data upgrade completed successfully. ' +

@@ -1,9 +1,3 @@
-/**
- * Multiplies the total of all values in the result groups by 1.5, rounding down.
- * 
- * @param {Array<Object>} resultGroups - An array of result group objects.
- * @returns {Array<Object>} A new array of result groups with totals multiplied by 1.5 and rounded down.
- */
 function onePointFiveTotal(result) {
     if (Array.isArray(result)) {
         return result.map(group => ({
@@ -18,21 +12,21 @@ function onePointFiveResultsRecursive(result) {
     if (result.kind && Array.isArray(result.results)) {
         return {
             ...result,
-            results: result.results.map(r => Math.floor(r * 1.5)), // Round down with Math.floor
-            total: Math.floor((result.total || 0) * 1.5), // Round down with Math.floor
+            results: result.results.map(r => Math.floor(r * 1.5)),
+            total: Math.floor((result.total || 0) * 1.5),
             description: `Critical Hit! Total multiplied by 1.5 (rounded down)`
         };
     } else if (result.operator && Array.isArray(result.operands)) {
         return {
             ...result,
             operands: result.operands.map(onePointFiveResultsRecursive),
-            total: Math.floor((result.total || 0) * 1.5), // Round down with Math.floor
+            total: Math.floor((result.total || 0) * 1.5),
             description: `Critical Hit! Total multiplied by 1.5 (rounded down)`
         };
     } else if (result.value !== undefined) {
         return {
             ...result,
-            value: Math.floor(result.value * 1.5) // Round down with Math.floor
+            value: Math.floor(result.value * 1.5)
         };
     }
     return result;
@@ -48,16 +42,15 @@ function onePointFiveResultsRecursive(result) {
  * @returns {Array<Object>} A new array of objects with doubled dice counts.
  */
 function doubleDiceCounts(rollGroups) {
-    return rollGroups.map(diceCounts => {
-        let doubledDiceCounts = {};
-        for (const [die, count] of Object.entries(diceCounts)) {
+    return rollGroups.map(group => {
+        let doubledGroup = { ...group };
+        doubledGroup.diceCounts = { ...group.diceCounts };
+        for (const [die, count] of Object.entries(group.diceCounts)) {
             if (die !== 'mod') {
-                doubledDiceCounts[die] = String(parseInt(count, 10) * 2);
-            } else {
-                doubledDiceCounts[die] = count;
+                doubledGroup.diceCounts[die] = count * 2;
             }
         }
-        return doubledDiceCounts;
+        return doubledGroup;
     });
 }
 
@@ -117,17 +110,19 @@ function doubleResultsRecursive(result) {
     if (result.kind && Array.isArray(result.results)) {
         return {
             ...result,
-            results: result.results.map(r => r * 2)
+            results: result.results.map(r => r * 2),
+            total: (result.total || 0) * 2,
+            description: `Critical Hit! Dice results doubled`
         };
     } else if (result.operator && Array.isArray(result.operands)) {
         return {
             ...result,
-            operands: result.operands.map(doubleResultsRecursive)
+            operands: result.operands.map(doubleResultsRecursive),
+            total: (result.total || 0) * 2,
+            description: `Critical Hit! Dice results doubled`
         };
-    } else {
-        console.log('Encountered non-dice operand, returning unchanged:', result);
-        return result;
     }
+    return result;
 }
 
 /**
@@ -303,21 +298,13 @@ function doubleTotal(result) {
 }
 
 function doubleDiceResults(result) {
-    if (result.operator && result.operands) {
-        return {
-            ...result,
-            operands: result.operands.map(doubleDiceResults),
-            total: calculateTotal(result),
-            description: `Critical Hit! Dice results doubled`
-        };
-    } else if (result.results) {
-        return {
-            ...result,
-            results: result.results.map(val => val * 2),
-            total: result.results.reduce((sum, val) => sum + val * 2, 0)
-        };
+    if (Array.isArray(result)) {
+        return result.map(group => ({
+            ...group,
+            result: doubleResultsRecursive(group.result)
+        }));
     }
-    return result;
+    return doubleResultsRecursive(result);
 }
 
 function maximizeDice(result) {

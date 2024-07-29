@@ -45,87 +45,39 @@
                 <button id="retrieve-backup-button" onclick="handleRetrieveBackup()">Retrieve Data Backup</button>
                 <br>
                 <br>
-                <div class="version">Version: 2.1</div>
+                <div class="version">Version: 3.0</div>
             </div>
-            
+
             <br>
 
-            <div class="content-col">
-                <label class="field-title" for="roll-name">Roll Label</label>
-                <input id="roll-name" type="text" class="roll-input" placeholder="Enter roll label"></input>
+            <div class="roll-name-container">
+                <input type="text" id="roll-name" name="roll-name" placeholder="Enter roll name">
             </div>
-            
-            <br>
+
+            <br> 
 
             <div class="content-col-dice">
-                <div class="dice-selection" id="0">      
-                    <div class="dice-counter unselectable" id="0-d4-counter">
-                        <i class="ts-icon-d4 ts-icon-large" onclick="increment('0-d4')" oncontextmenu="decrement('0-d4'); return false;"></i>
-                        <div class="counter-overlay" id="0-d4-counter-value">0</div>
-                        <div class="dice-label">D4</div>
-                    </div>
-
-                    <div class="dice-counter unselectable" id="0-d6-counter">
-                        <i class="ts-icon-d6 ts-icon-large" onclick="increment('0-d6')" oncontextmenu="decrement('0-d6'); return false;"></i>
-                        <div class="counter-overlay" id="0-d6-counter-value">0</div>
-                        <div class="dice-label">D6</div>
-                    </div>
-
-                    <div class="dice-counter unselectable" id="0-d8-counter">
-                        <i class="ts-icon-d8 ts-icon-large" onclick="increment('0-d8')" oncontextmenu="decrement('0-d8'); return false;"></i>
-                        <div class="counter-overlay" id="0-d8-counter-value">0</div>
-                        <div class="dice-label">D8</div>
-                    </div>
-
-                    <div class="dice-counter unselectable" id="0-d10-counter">
-                        <i class="ts-icon-d10 ts-icon-large" onclick="increment('0-d10')" oncontextmenu="decrement('0-d10'); return false;"></i>
-                        <div class="counter-overlay" id="0-d10-counter-value">0</div>
-                        <div class="dice-label">D10</div>
-                    </div>
-
-                    <div class="dice-counter unselectable" id="0-d12-counter">
-                        <i class="ts-icon-d12 ts-icon-large" onclick="increment('0-d12')" oncontextmenu="decrement('0-d12'); return false;"></i>
-                        <div class="counter-overlay" id="0-d12-counter-value">0</div>
-                        <div class="dice-label">D12</div>
-                    </div>
-
-                    <div class="dice-counter unselectable" id="0-d20-counter">
-                        <i class="ts-icon-d20 ts-icon-large" onclick="increment('0-d20')" oncontextmenu="decrement('0-d20'); return false;"></i>
-                        <div class="counter-overlay" id="0-d20-counter-value">0</div>
-                        <div class="dice-label">D20</div>
-                    </div>
-
-                    <div class="plus-sign">
-                        <span>+</span>
-                    </div>
-                    
-                    <div class="dice-counter unselectable" id="0-mod-counter">
-                        <i class="ts-icon-circle-dotted ts-icon-large mod-holder"></i>
-                        <input type="number" class="counter-overlay mod-counter-overlay" id="0-mod-counter-value" value="0" min="-999" max="999" onfocus="this.select()" />
-                        <div class="dice-label">MOD</div>
-                    </div>
-                </div>
             </div>
             <div class="button-container unselectable">
-                <button id="add-row-btn" onclick="addDiceGroup()">Add Group</button>
-                <button id="remove-row-btn" onclick="removeDiceGroup()">Remove Group</button>
+                <button id="add-group-btn" onclick="addDiceGroup()">Add Group</button>
+                <button id="remove-group-btn" onclick="removeDiceGroup()">Remove Group</button>
             </div>
             
             <div class="button-container unselectable">
-                <button class="rolling-button" onclick="rollsModule.roll(null, 'normal')"><img class="roll-type-image" src="./images/icons/rolling.png" alt="roll dice"/><br/>Roll</button>
-                <button class="rolling-button" onclick="rollsModule.roll(null, 'advantage')"><img class="roll-type-image" src="./images/icons/advantage.png" alt="advantage"/><br/>Advantage</button>
-                <button class="rolling-button" onclick="rollsModule.roll(null, 'disadvantage')"><img class="roll-type-image" src="./images/icons/disadvantage.png" alt="disadvantage"/><br/>Disadvantage</button>
-                <button class="rolling-button" onclick="rollsModule.roll(null, 'best-of-three')"><img class="roll-type-image" src="./images/icons/best-of-three.png" alt="best of three"/><br/>Best of 3</button>
-                <button class="rolling-button" onclick="rollsModule.roll(null, 'crit-dice')"><img class="roll-type-image" src="./images/icons/crit.png" alt="critical hit"/><br/>Critical</button>
+                <button class="rolling-button" onclick="rollsModule.roll('normal')"><img class="roll-type-image" src="./images/icons/rolling.png" alt="roll dice"/><br/>Roll</button>
+                <button class="rolling-button" onclick="rollsModule.roll('advantage')"><img class="roll-type-image" src="./images/icons/advantage.png" alt="advantage"/><br/>Advantage</button>
+                <button class="rolling-button" onclick="rollsModule.roll('disadvantage')"><img class="roll-type-image" src="./images/icons/disadvantage.png" alt="disadvantage"/><br/>Disadvantage</button>
+                <button class="rolling-button" onclick="rollsModule.roll('best-of-three')"><img class="roll-type-image" src="./images/icons/best-of-three.png" alt="best of three"/><br/>Best of 3</button>
+                <button class="rolling-button" onclick="rollsModule.roll('crit-dice')"><img class="roll-type-image" src="./images/icons/crit.png" alt="critical hit"/><br/>Critical</button>
             </div>
             
             <div class="button-container unselectable">
                 <button id="reset-btn" onclick="reset()">Reset</button>
-                <button id="save-btn" onclick="save()">Save</button>
+                <button id="save-btn" onclick="save()">Pin</button>
             </div><br>
 
             <div class="saved-rolls-header">
-                <label class="field-title unselectable">Saved Rolls</label>
+                <label class="field-title unselectable">Pinned Rolls</label>
                 <div id="sort-options-container">
                     <select id="sort-options" class='select-list' onchange="sortSavedRolls()">
                         <option value="newest">Newest</option>
@@ -141,11 +93,11 @@
         </div>
 
         <div class="footer">
-            <button id="save-rolls-button" class="black-button">Save Rolls</button>
+            <button id="save-rolls-button" class="black-button">Save Locally</button>
             
             <i class="ts-icon-character-gamemaster"></i><div style="font-family: 'Enchanted Land', cursive; color: #dddddd; font-size: 0.7em;"> "May the rolls be in your favor"</div>
 
-            <button id="load-rolls-button" class="black-button">Load Rolls</button>
+            <button id="load-rolls-button" class="black-button">Load Saves</button>
         </div>
 
         <script type="text/javascript" src="scripts/globals.js"></script>
