@@ -17,18 +17,21 @@ Check it out on [Mod.io](https://mod.io/g/talespire/m/dice-vault).
   - Saved presets are specific to the campaign. Have a preset collection for each campaign you're participating in!
   - 5 different rolling styles with 5 different common critical hit methods. These modes include a standard roll, advantage, disadvantage, best-of-3, and critical hit (configured via the settings menu).
 
+# A Note about Updating and Locally Saved Rolls
+Over time, the underlying data structure of the rolls in this symbiote has changed a few times and it's a lot of effort and trouble to try and create an updater function inside the symbiote. For this reason, encourage you to write down the rolls you need so you can recreate them after you install the update.
+
 # Changelog
 ```
-2.2
-- New feature: Named roll groups! Previously we expanded functionality to let you roll independent roll groups. Unfortunately, all the groups shared the same name according to Talespire. This has been resolved and all roll groups can have their own unique name. If no name is provided, it defaults to "Group 1", "Group 2", etc.
-- Edit buttons on saved rolls allows for modifying a saved roll without deleting it
+3.0
+- New feature: Named roll groups! Previously we expanded functionality to let you roll independent roll groups. Unfortunately, all the groups shared the same name according to Talespire. This has been resolved and all roll groups can have their own unique name. If no name is provided, it defaults to "Group 1", "Group 2", etc. This caused another change in the data structure so rolls from old versions will not roll forward from prior versions of Dice Vault.
+- Edit buttons on saved rolls allows for modifying a saved roll without deleting it!
 - Buttons have been renamed to clarify their purpose. Pin a roll only stores the roll for that play session. Save Locally stores your pinned rolls into ./localstorage. These terms will be the new nomenclature going forward. "Pin" is temporary, "Save" is permanent.
 2.1
 - 3 critical hit modes: 1.5x total, 3x total, and 4x total
 2.0
 - New feature: Roll groups! Create multiple groups of dice which do not add together. Useful for situations where dice needs to be rolled together but not all combined. "I cast Magic Missile at 3rd level dealing, three 1d4's of damage." In this situation we report three independent results with 1 throw, instead of 3d4 we do not add them together so it's three seperate results of 1d4. Useful for all kinds of situations like crossbows where the bolt deals damage and then the magical properties of an explosive bolt for example.
 - New UI to saved rolls. Instead of displaying images for dice, we know parse it down to simple and familiar roll strings, "1d4+1d6+5", or "1d20+14". You will notice saved roll cards are now much smaller allowing you to see more at one time. We will expand on this UI in future releases to further improve the UI.
-- Breaking change: the data structure we used to use in 1.3 is out. This means your old saved data will not work in 2.0. **however**, we have you covered as we built an updater function to try and upgrade your data to 2.0 format. Please report any issues with updating your data via the github issues tab.
+- Breaking change: the data structure we used to use in 1.3 is out. This means your old saved data will not work in 2.0.
 1.3
 - Added Critical Hit support with 5 different styles
 - Updated the UI to flow better with iconography
@@ -67,14 +70,6 @@ Check it out on [Mod.io](https://mod.io/g/talespire/m/dice-vault).
 
 To delete a preset, use the trash bin icon.
 
-# Before Upgrading 1.3 > 2.0+
-1. Navigate to your Symbiote directory and open the folder for Dice Vault
-2. navigate to the ./localstorage folder
-3. Copy the .json file and place it somewhere you will remember, like your desktop for example
-4. Install Dice Vault 2.0
-5. Paste the .json file into the same directory that you copied it from, though the ID of the symbiote has likely changed
-6. Once you open the Symbiote, the first time you load your data it will automatically upgrade the data to the new data format
-
 # Report Issues
 Create an issue in the github reposity on the [Issues Tab](https://github.com/JasonCostanza/Dice-Vault/issues).
 
@@ -83,11 +78,12 @@ Any information you can provide to reproducing your issue is appreciated includi
 # Roadmap
 See our github issues tab for bugs and enhancements on the roadmap.
 
+With the recent announcement of the official Dice Engine feature undergoing development, future development of Dice Vault may be postponed or carefully measured against what the Talespire team is developing. This symbiote was born in the gap of what Dice Engine (official feature) will potentially cover. At the time of writing this, we don't have full clarity on what the official feature will do in full.
+
 # Special Thanks
 [DeeForce](https://github.com/D33Force)
 [PanoramicPanda](https://github.com/PanoramicPanda)
 [kbarnett](https://github.com/kbarnett)
-
 
 # Contribor Environment Configuration
 If you wish to contribute to the project you are more than welcome to create a feature branch, add your contributions, and open a PR against `main`. To get your local environment set up, it's a pretty easy process:
