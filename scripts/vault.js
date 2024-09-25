@@ -79,7 +79,7 @@ function addDiceGroup() {
     diceHTML += `
         <div class="dice-group-container">
             <div class="dice-group-name">
-                <input type="text" class="dice-group-name-input" id="group-${groupIndex}-name" placeholder="Group Name">
+                <input type="text" class="dice-group-name-input" id="${groupIndex}-name" placeholder="Group Name">
             </div>
             <div class="dice-row">
     `;
@@ -87,7 +87,7 @@ function addDiceGroup() {
     diceTypes.forEach((type) => {
         diceHTML += `
             <div class="dice-counter unselectable" id="${groupIndex}-${type}-counter">
-                <i class="ts-icon-${type} ts-icon-large" onclick="increment('${groupIndex}-${type}')" oncontextmenu="decrement('${groupIndex}-${type}'); return false;"></i>
+                <i class="ts-icon-${type} ts-icon-large" onclick="increment('${groupIndex}-${type}')" oncontextmenu="decrement('${groupIndex}-${type}')"; return false;"></i>
                 <div class="counter-overlay" id="${groupIndex}-${type}-counter-value">0</div>
                 <div class="dice-label">${type.toUpperCase()}</div>
             </div>
@@ -125,7 +125,7 @@ function updateDiceGroupsData() {
 
         diceTypes.forEach((diceType) => {
             const countElement = groupElement.querySelector(
-                `[id="${groupId}-${diceType}-counter-value"]`
+                `[id="group-${groupId}-${diceType}-counter-value"]`
             );
             groupDiceCounts[diceType] = countElement
                 ? parseInt(countElement.textContent, 10)
@@ -133,7 +133,7 @@ function updateDiceGroupsData() {
         });
 
         const modElement = groupElement.querySelector(
-            `[id="${groupId}-mod-counter-value"]`
+            `[id="group-${groupId}-mod-counter-value"]`
         );
         groupDiceCounts.mod = modElement ? parseInt(modElement.value, 10) : 0;
 
@@ -166,30 +166,30 @@ function removeDiceGroup() {
 
 function updateGroupElementIds(group, newIndex) {
     diceTypes.forEach(diceType => {
-        const counter = group.querySelector(`#${group.id}-${diceType}-counter`);
+        const counter = group.querySelector(`#group-${group.id}-${diceType}-counter`);
         if (counter) {
-            counter.id = `${newIndex}-${diceType}-counter`;
+            counter.id = `group-${newIndex}-${diceType}-counter`;
             const counterValue = counter.querySelector('.counter-overlay');
             if (counterValue) {
-                counterValue.id = `${newIndex}-${diceType}-counter-value`;
+                counterValue.id = `group-${newIndex}-${diceType}-counter-value`;
             }
         }
     });
 
-    const modCounter = group.querySelector(`#${group.id}-mod-counter`);
+    const modCounter = group.querySelector(`#group-${group.id}-mod-counter`);
     if (modCounter) {
-        modCounter.id = `${newIndex}-mod-counter`;
+        modCounter.id = `group-${newIndex}-mod-counter`;
         const modCounterValue = modCounter.querySelector('.mod-counter-overlay');
         if (modCounterValue) {
-            modCounterValue.id = `${newIndex}-mod-counter-value`;
+            modCounterValue.id = `group-${newIndex}-mod-counter-value`;
         }
     }
 
     // Update onclick attributes
     group.querySelectorAll('.dice-counter').forEach(counter => {
         const diceType = counter.id.split('-')[1];
-        counter.querySelector('.ts-icon-large').setAttribute('onclick', `increment('${newIndex}-${diceType}')`);
-        counter.querySelector('.ts-icon-large').setAttribute('oncontextmenu', `decrement('${newIndex}-${diceType}'); return false;`);
+        counter.querySelector('.ts-icon-large').setAttribute('onclick', `increment('group-${newIndex}-${diceType}')`);
+        counter.querySelector('.ts-icon-large').setAttribute('oncontextmenu', `decrement('group-${newIndex}-${diceType}'); return false;`);
     });
 }
 
@@ -278,7 +278,7 @@ function save() {
 
         diceTypes.forEach((diceType) => {
             const countElement = groupElement.querySelector(
-                `.counter-overlay[id$="${groupId}-${diceType}-counter-value"]`
+                `.counter-overlay[id$="group-${groupId}-${diceType}-counter-value"]`
             );
             groupDiceCounts[diceType] = countElement
                 ? parseInt(countElement.textContent, 10)
@@ -286,7 +286,7 @@ function save() {
         });
 
         const modElement = groupElement.querySelector(
-            `.mod-counter-overlay[id$="${groupId}-mod-counter-value"]`
+            `.mod-counter-overlay[id$="group-${groupId}-mod-counter-value"]`
         );
         groupDiceCounts.mod = modElement ? parseInt(modElement.value, 10) : 0;
 
@@ -528,13 +528,13 @@ function startEditingSavedRoll(elementOrId) {
         }
         
         diceTypes.forEach(diceType => {
-            const countElement = document.getElementById(`${i}-${diceType}-counter-value`);
+            const countElement = document.getElementById(`group-${i}-${diceType}-counter-value`);
             if (countElement) {
                 countElement.textContent = groupData[diceType] || '0';
             }
         });
         
-        const modElement = document.getElementById(`${i}-mod-counter-value`);
+        const modElement = document.getElementById(`group-${i}-mod-counter-value`);
         if (modElement) {
             modElement.value = groupData.mod || '0';
         }
@@ -592,13 +592,13 @@ function editSavedRoll(elementOrId) {
         }
         
         diceTypes.forEach(diceType => {
-            const countElement = document.getElementById(`${i}-${diceType}-counter-value`);
+            const countElement = document.getElementById(`group-${i}-${diceType}-counter-value`);
             if (countElement) {
                 countElement.textContent = groupData[diceType] || '0';
             }
         });
         
-        const modElement = document.getElementById(`${i}-mod-counter-value`);
+        const modElement = document.getElementById(`group-${i}-mod-counter-value`);
         if (modElement) {
             modElement.value = groupData.mod || '0';
         }
@@ -741,10 +741,10 @@ function reset() {
 
         diceTypes.forEach((type) => {
             const counter = document.getElementById(
-                `${index}-${type}-counter-value`
+                `group-${index}-${type}-counter-value`
             );
             const modCounter = document.getElementById(
-                `${index}-mod-counter-value`
+                `group-${index}-mod-counter-value`
             );
             if (counter) counter.textContent = "0";
             if (modCounter) modCounter.value = "0";
