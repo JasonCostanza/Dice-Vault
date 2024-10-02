@@ -85,7 +85,7 @@ function addDiceGroup() {
     diceHTML += `
         <div class="dice-group-container">
             <div class="dice-group-name">
-                <input type="text" class="dice-group-name-input" id="${groupIndex}-name" placeholder="Group Name">
+                <input type="text" class="dice-group-name-input" id="group-${groupIndex}-name" placeholder="Group Name">
             </div>
             <div class="dice-row">
     `;
