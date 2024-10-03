@@ -38,11 +38,11 @@ const rollsModule = (function () {
 
     
                 diceTypes.forEach((diceType) => {
-                    const countElement = document.getElementById(`${groupId}-${diceType}-counter-value`);
+                    const countElement = document.getElementById(`group-${groupId}-${diceType}-counter-value`);
                     groupDiceCounts[diceType] = countElement ? parseInt(countElement.textContent, 10) : 0;
                 });
     
-                const modElement = document.getElementById(`${groupId}-mod-counter-value`);
+                const modElement = document.getElementById(`group-${groupId}-mod-counter-value`);
                 groupDiceCounts.mod = modElement ? parseInt(modElement.value, 10) : 0;
     
                 updatedDiceGroupsData.push({
