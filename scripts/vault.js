@@ -102,9 +102,9 @@ function addDiceGroup() {
 
     diceHTML += `
             <div class="plus-sign"><span>+</span></div>
-            <div class="dice-counter unselectable" id="${groupIndex}-mod-counter">
+            <div class="dice-counter unselectable" id="group-${groupIndex}-mod-counter">
     <i class="ts-icon-circle-dotted ts-icon-large mod-holder"></i>
-    <input type="number" class="counter-overlay mod-counter-overlay" id="${groupIndex}-mod-counter-value" value="0" min="-999" max="999" onfocus="this.select()" />
+    <input type="number" class="counter-overlay mod-counter-overlay" id="group-${groupIndex}-mod-counter-value" value="0" min="-999" max="999" onfocus="this.select()" />
     <div class="dice-label">MOD</div>
 </div>
 
