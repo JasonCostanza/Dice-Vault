@@ -21,7 +21,8 @@
         "onRollResults": "handleRollResult"
       },
       "symbiote": {
-        "onStateChangeEvent": "onStateChangeEvent"
+        "onStateChangeEvent": "onStateChangeEvent",
+        "getDataBackup": "getDataBackup"
       }
     }
   },

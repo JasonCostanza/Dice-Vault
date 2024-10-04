@@ -23,7 +23,9 @@ function isDiceGroupEmpty(diceGroup) {
 }
 
 function increment(type) {
-    const [groupId, diceType] = type.split("-");
+    const lastDashIndex = type.lastIndexOf("-");
+    const groupId = type.substring(0, lastDashIndex);
+    const diceType = type.substring(lastDashIndex + 1);
     const counterId = `${groupId}-${diceType}-counter-value`;
     const counter = document.getElementById(counterId);
 
@@ -39,7 +41,9 @@ function increment(type) {
 }
 
 function decrement(type) {
-    const [groupId, diceType] = type.split("-");
+    const lastDashIndex = type.lastIndexOf("-");
+    const groupId = type.substring(0, lastDashIndex);
+    const diceType = type.substring(lastDashIndex + 1);
     const counterId = `${groupId}-${diceType}-counter-value`;
     const counter = document.getElementById(counterId);
 
@@ -53,6 +57,8 @@ function decrement(type) {
         console.error("Counter element not found:", counterId);
     }
 }
+
+
 
 function negativeMod(modId) {
     const counterId = modId + "-counter-value";
@@ -79,28 +85,29 @@ function addDiceGroup() {
     diceHTML += `
         <div class="dice-group-container">
             <div class="dice-group-name">
-                <input type="text" class="dice-group-name-input" id="${groupIndex}-name" placeholder="Group Name">
+                <input type="text" class="dice-group-name-input" id="group-${groupIndex}-name" placeholder="Group Name">
             </div>
             <div class="dice-row">
     `;
 
     diceTypes.forEach((type) => {
         diceHTML += `
-            <div class="dice-counter unselectable" id="${groupIndex}-${type}-counter">
-                <i class="ts-icon-${type} ts-icon-large" onclick="increment('${groupIndex}-${type}')" oncontextmenu="decrement('${groupIndex}-${type}')"; return false;"></i>
-                <div class="counter-overlay" id="${groupIndex}-${type}-counter-value">0</div>
-                <div class="dice-label">${type.toUpperCase()}</div>
-            </div>
+            <div class="dice-counter unselectable" id="group-${groupIndex}-${type}-counter">
+    <i class="ts-icon-${type} ts-icon-large" onclick="increment('group-${groupIndex}-${type}')" oncontextmenu="decrement('group-${groupIndex}-${type}'); return false;"></i>
+    <div class="counter-overlay" id="group-${groupIndex}-${type}-counter-value">0</div>
+    <div class="dice-label">${type.toUpperCase()}</div>
+</div>
         `;
     });
 
     diceHTML += `
             <div class="plus-sign"><span>+</span></div>
-            <div class="dice-counter unselectable" id="${groupIndex}-mod-counter">
-                <i class="ts-icon-circle-dotted ts-icon-large mod-holder"></i>
-                <input type="number" class="counter-overlay mod-counter-overlay" id="${groupIndex}-mod-counter-value" value="0" min="-999" max="999" onfocus="this.select()" />
-                <div class="dice-label">MOD</div>
-            </div>
+            <div class="dice-counter unselectable" id="group-${groupIndex}-mod-counter">
+    <i class="ts-icon-circle-dotted ts-icon-large mod-holder"></i>
+    <input type="number" class="counter-overlay mod-counter-overlay" id="group-${groupIndex}-mod-counter-value" value="0" min="-999" max="999" onfocus="this.select()" />
+    <div class="dice-label">MOD</div>
+</div>
+
         </div>
     </div>
     `;
@@ -118,24 +125,20 @@ function updateDiceGroupsData() {
     diceGroupElements.forEach((groupElement) => {
         const groupId = groupElement.id;
         const groupDiceCounts = {};
-
-        // Get the group name
         const groupNameInput = groupElement.querySelector('.dice-group-name-input');
-        const groupName = groupNameInput ? groupNameInput.value : `Group ${groupId + 1}`;
+        const groupName = groupNameInput && groupNameInput.value.trim() ? groupNameInput.value.trim() : `Group ${parseInt(groupId) + 1}`;
+
+        console.log("Group Name in updateDiceGroupsData:", groupName);
 
         diceTypes.forEach((diceType) => {
-            const countElement = groupElement.querySelector(
-                `[id="group-${groupId}-${diceType}-counter-value"]`
-            );
-            groupDiceCounts[diceType] = countElement
-                ? parseInt(countElement.textContent, 10)
-                : 0;
+            const countElement = groupElement.querySelector(`[id="group-${groupId}-${diceType}-counter-value"]`);
+            groupDiceCounts[diceType] = countElement ? parseInt(countElement.textContent, 10) : 0;
         });
 
-        const modElement = groupElement.querySelector(
-            `[id="group-${groupId}-mod-counter-value"]`
-        );
+        const modElement = groupElement.querySelector(`[id="${groupId}-mod-counter-value"]`);
         groupDiceCounts.mod = modElement ? parseInt(modElement.value, 10) : 0;
+
+        console.log("Group Dice Counts in updateDiceGroupsData:", groupDiceCounts);
 
         diceGroupsData.push({
             name: groupName,
@@ -143,8 +146,16 @@ function updateDiceGroupsData() {
         });
     });
 
-    console.log('Updated diceGroupsData:', diceGroupsData); // For debugging
+    // Log full updated diceGroupsData to see if the group name is properly set
+    console.log('Updated diceGroupsData:', JSON.stringify(diceGroupsData, null, 2));
 }
+
+
+
+
+
+
+
 
 function removeDiceGroup() {
     updateDiceGroupsData();
@@ -167,23 +178,25 @@ function removeDiceGroup() {
 function updateGroupElementIds(group, newIndex) {
     diceTypes.forEach(diceType => {
         const counter = group.querySelector(`#group-${group.id}-${diceType}-counter`);
-        if (counter) {
-            counter.id = `group-${newIndex}-${diceType}-counter`;
-            const counterValue = counter.querySelector('.counter-overlay');
-            if (counterValue) {
-                counterValue.id = `group-${newIndex}-${diceType}-counter-value`;
-            }
-        }
+if (counter) {
+    counter.id = `group-${newIndex}-${diceType}-counter`;
+    const counterValue = counter.querySelector('.counter-overlay');
+    if (counterValue) {
+        counterValue.id = `group-${newIndex}-${diceType}-counter-value`;
+    }
+}
+
     });
 
     const modCounter = group.querySelector(`#group-${group.id}-mod-counter`);
-    if (modCounter) {
-        modCounter.id = `group-${newIndex}-mod-counter`;
-        const modCounterValue = modCounter.querySelector('.mod-counter-overlay');
-        if (modCounterValue) {
-            modCounterValue.id = `group-${newIndex}-mod-counter-value`;
-        }
+if (modCounter) {
+    modCounter.id = `group-${newIndex}-mod-counter`;
+    const modCounterValue = modCounter.querySelector('.mod-counter-overlay');
+    if (modCounterValue) {
+        modCounterValue.id = `group-${newIndex}-mod-counter-value`;
     }
+}
+
 
     // Update onclick attributes
     group.querySelectorAll('.dice-counter').forEach(counter => {
@@ -280,6 +293,7 @@ function save() {
             const countElement = groupElement.querySelector(
                 `.counter-overlay[id$="group-${groupId}-${diceType}-counter-value"]`
             );
+            
             groupDiceCounts[diceType] = countElement
                 ? parseInt(countElement.textContent, 10)
                 : 0;
@@ -288,6 +302,7 @@ function save() {
         const modElement = groupElement.querySelector(
             `.mod-counter-overlay[id$="group-${groupId}-mod-counter-value"]`
         );
+        
         groupDiceCounts.mod = modElement ? parseInt(modElement.value, 10) : 0;
 
         savedDiceGroups.push({
@@ -406,6 +421,8 @@ function addSavedRoll(rollName, savedDiceGroups, rollType) {
     rollEntry.dataset.timestamp = Date.now();
     rollEntry.dataset.rollName = rollName;
 
+    console.log("Group Data Passed to addSavedRoll:", savedDiceGroups);
+
     const diceDisplay = document.createElement("div");
     diceDisplay.className = "roll-entry-dice";
 
@@ -415,6 +432,12 @@ function addSavedRoll(rollName, savedDiceGroups, rollType) {
         groupDiv.dataset.groupIndex = index;
         groupDiv.dataset.diceCounts = JSON.stringify(group.diceCounts);
 
+        console.log("Group name in addSavedRoll before processing:", group.name);
+
+        const groupName = group.name && group.name.trim() ? group.name.trim() : `Group ${index + 1}`;
+
+        console.log("Determined group name in addSavedRoll:", groupName);
+
         const diceGroupText = Object.entries(group.diceCounts)
             .filter(([diceType, count]) => count > 0 && diceType !== "mod")
             .map(([diceType, count]) => `${count}${diceType}`)
@@ -423,7 +446,8 @@ function addSavedRoll(rollName, savedDiceGroups, rollType) {
         const modifier = group.diceCounts.mod;
         const modifierText = modifier !== 0 ? `${modifier >= 0 ? "+" : ""}${modifier}` : "";
 
-        const groupName = group.name || `Group ${index + 1}`;
+        console.log("Rendering group:", groupName, "with dice:", diceGroupText);
+
         groupDiv.textContent = `${groupName}: ${diceGroupText}${modifierText ? ` ${modifierText}` : ""}`;
         diceDisplay.appendChild(groupDiv);
     });
@@ -464,6 +488,13 @@ function addSavedRoll(rollName, savedDiceGroups, rollType) {
 
     sortSavedRolls();
 }
+
+
+
+
+
+
+
 
 function startEditingSavedRoll(elementOrId) {
     let rollEntry;
@@ -637,8 +668,12 @@ function updateSavedRoll(rollId, rollData) {
 
         const modifier = group.diceCounts.mod;
         const modifierText = modifier !== 0 ? `${modifier >= 0 ? "+" : ""}${modifier}` : "";
+        console.log("Group name in addSavedRoll before processing:", group.name);
 
-        const groupName = group.name || `Group ${index + 1}`;
+        // const groupName = group.name || `Group ${index + 1}`;
+        const groupName = group.name && group.name.trim() ? group.name.trim() : `Group ${index + 1}`;
+
+
         groupDiv.textContent = `${groupName}: ${diceGroupText}${modifierText ? ` ${modifierText}` : ""}`;
         diceDisplay.appendChild(groupDiv);
     });
