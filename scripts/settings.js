@@ -10,7 +10,7 @@ function defaultSettings(settingName){
         autoLoadRolls: false,
         autoSaveRolls: false,
         autoResetEdit: false,
-        critBehavior: 'double-die-count'
+        critBehavior: 'double-total'
     }
     return settings[settingName];
 }

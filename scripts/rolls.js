@@ -32,14 +32,17 @@ const rollsModule = (function () {
                 const groupId = groupElement.id;
                 const groupDiceCounts = {};
                 const groupNameInput = groupElement.querySelector('.dice-group-name-input');
-                const groupName = groupNameInput ? groupNameInput.value : `Group ${parseInt(groupId) + 1}`;
+                const groupName = groupNameInput && groupNameInput.value.trim() ? groupNameInput.value.trim() : `Group ${parseInt(groupId) + 1}`;
+
+
+
     
                 diceTypes.forEach((diceType) => {
-                    const countElement = document.getElementById(`${groupId}-${diceType}-counter-value`);
+                    const countElement = document.getElementById(`group-${groupId}-${diceType}-counter-value`);
                     groupDiceCounts[diceType] = countElement ? parseInt(countElement.textContent, 10) : 0;
                 });
     
-                const modElement = document.getElementById(`${groupId}-mod-counter-value`);
+                const modElement = document.getElementById(`group-${groupId}-mod-counter-value`);
                 groupDiceCounts.mod = modElement ? parseInt(modElement.value, 10) : 0;
     
                 updatedDiceGroupsData.push({
@@ -226,7 +229,7 @@ const rollsModule = (function () {
                 groupRollString = groupRollString.startsWith('+') ? groupRollString.slice(1) : groupRollString;
     
                 if (groupRollString) {
-                    let groupName = group.name || `Group ${index + 1}`;
+                    let groupName = group.name && group.name.trim() ? group.name.trim() : `Group ${index + 1}`;
                     let rollObject = { 
                         name: groupName, 
                         roll: groupRollString 
@@ -674,16 +677,16 @@ const rollsModule = (function () {
     async function displayResults(resultGroups, rollId) {
         try {
             console.log(`Displaying results for roll ID: ${rollId}`);
-    
+            
             // Ensure each result group has a name and description
             const namedResultGroups = resultGroups.map((group, index) => ({
                 ...group,
-                name: group.name || `Group ${index + 1}`,
+                name: group.name ? group.name : `Group ${index + 1}`, // Ensure the custom group name is used
                 description: group.description || group.result.description || ''
             }));
-    
+            
             console.log('Named Result Groups:', JSON.stringify(namedResultGroups, null, 2));
-    
+            
             // Send the results to TaleSpire
             await TS.dice.sendDiceResult(namedResultGroups, rollId);
             console.log(`Results sent successfully for roll ${rollId}`);
@@ -692,6 +695,7 @@ const rollsModule = (function () {
             throw error;
         }
     }
+    
 
     // PUBLIC API //
     return {

@@ -45,7 +45,7 @@
                 <button id="retrieve-backup-button" onclick="handleRetrieveBackup()">Retrieve Data Backup</button>
                 <br>
                 <br>
-                <div class="version">Version: 3.0</div>
+                <div class="version">Version: 3.1</div>
             </div>
 
             <br>
@@ -56,11 +56,13 @@
 
             <br> 
 
-            <div class="content-col-dice">
-            </div>
-            <div class="button-container unselectable">
-                <button id="add-group-btn" onclick="addDiceGroup()">Add Group</button>
-                <button id="remove-group-btn" onclick="removeDiceGroup()">Remove Group</button>
+            <div class="scrolling-content">
+                <div class="content-col-dice">
+                </div>
+                <div class="button-container unselectable">
+                    <button id="add-group-btn" onclick="addDiceGroup()">Add Group</button>
+                    <button id="remove-group-btn" onclick="removeDiceGroup()">Remove Group</button>
+                </div>
             </div>
             
             <div class="button-container unselectable">
@@ -88,8 +90,9 @@
                 </div>
             </div>
             
-            <div id="saved-rolls" class="saved-rolls-container"></div>
-            
+            <div class="scrolling-content">
+                <div id="saved-rolls" class="saved-rolls-container"></div>
+            </div>
         </div>
 
         <div class="footer">
