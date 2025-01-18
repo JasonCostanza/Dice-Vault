@@ -1,2 +1,3 @@
 .localStorage/
 node_modules/
+coverage/
