@@ -14,6 +14,12 @@ const userSettingsModel = (function (document) {
 
     const save = () => {
         console.log("Saving user settings.");
+        // Would we put this here or in the component?
+        // TS.localStorage.global.setBlob(JSON.stringify(settings)).then(() => {
+        //     console.log('Settings saved successfully.');
+        // }).catch(error => {
+        //     console.error('Failed to save settings:', error);
+        // });
     };
 
     // PUBLIC API //
@@ -24,4 +30,4 @@ const userSettingsModel = (function (document) {
     };
 })(document);
 
-module.exports = userSettingsModel;
+export default userSettingsModel;

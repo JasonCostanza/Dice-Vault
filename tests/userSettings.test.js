@@ -2,6 +2,9 @@
  * @jest-environment jsdom
  */
 
+import userSettingsModel from "../scripts/userSettings.model.js";
+import userSettingsComponent from "../scripts/userSettings.component.js";
+
 test("Toggle user settings display when settings menu element not found. Does not display user settings.", () => {
     // Arrange
     document.body.innerHTML = `
@@ -10,7 +13,6 @@ test("Toggle user settings display when settings menu element not found. Does no
         </div>
         <div class="hidden"></div>
     `;
-    const userSettingsComponent = require("../scripts/userSettings.component.js");
     let settingsButton = document.getElementById("settings-button");
     let sut = userSettingsComponent;
 
@@ -26,8 +28,6 @@ test("Handle auto load rolls changed event when toggled to true. Changes setting
     document.body.innerHTML = `
         <input type="checkbox" id="auto-load" checked />
     `;
-    const userSettingsModel = require("../scripts/userSettings.model.js");
-    const userSettingsComponent = require("../scripts/userSettings.component.js");
     let sut = userSettingsComponent;
 
     // Act
@@ -35,4 +35,18 @@ test("Handle auto load rolls changed event when toggled to true. Changes setting
 
     // Assert
     expect(userSettingsModel.getAutoLoadRolls()).toBe(true);
+});
+
+test("Handle auto load rolls changed event when toggled to false. Changes setting value to false.", () => {
+    // Arrange
+    document.body.innerHTML = `
+        <input type="checkbox" id="auto-load" />
+    `;
+    let sut = userSettingsComponent;
+
+    // Act
+    sut.handleAutoLoadSettingChangedEvent();
+
+    // Assert
+    expect(userSettingsModel.getAutoLoadRolls()).toBe(false);
 });

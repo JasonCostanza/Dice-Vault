@@ -1,4 +1,5 @@
-const userSettingsModel = require("./userSettings.model.js");
+//const userSettingsModel = require("./userSettings.model.js");
+import userSettingsModel from "./userSettings.model.js";
 
 const userSettingsComponent = (function (document, userSettingsModel) {
     function handleToggleSettingsDisplayEvent() {
@@ -11,6 +12,7 @@ const userSettingsComponent = (function (document, userSettingsModel) {
             document.getElementById("auto-load").checked
         );
         userSettingsModel.save();
+        //saveLoadModule.updateAutoButtons();
     }
 
     // PUBLIC API //
@@ -20,4 +22,4 @@ const userSettingsComponent = (function (document, userSettingsModel) {
     };
 })(document, userSettingsModel);
 
-module.exports = userSettingsComponent;
+export default userSettingsComponent;
