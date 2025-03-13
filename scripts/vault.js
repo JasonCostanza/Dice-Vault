@@ -58,8 +58,6 @@ function decrement(type) {
     }
 }
 
-
-
 function negativeMod(modId) {
     const counterId = modId + "-counter-value";
     const counter = document.getElementById(counterId);
@@ -149,13 +147,6 @@ function updateDiceGroupsData() {
     // Log full updated diceGroupsData to see if the group name is properly set
     console.log('Updated diceGroupsData:', JSON.stringify(diceGroupsData, null, 2));
 }
-
-
-
-
-
-
-
 
 function removeDiceGroup() {
     updateDiceGroupsData();
@@ -488,13 +479,6 @@ function addSavedRoll(rollName, savedDiceGroups, rollType) {
 
     sortSavedRolls();
 }
-
-
-
-
-
-
-
 
 function startEditingSavedRoll(elementOrId) {
     let rollEntry;
