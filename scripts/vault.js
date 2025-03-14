@@ -79,35 +79,34 @@ function addDiceGroup() {
     diceGroup.id = `${groupIndex}`;
     let diceHTML = "";
 
-    // Add name input field
+    // Add group name input field
     diceHTML += `
         <div class="dice-group-container">
-            <div class="dice-group-name">
-                <input type="text" class="dice-group-name-input" id="group-${groupIndex}-name" placeholder="Group Name">
-            </div>
-            <div class="dice-row">
+        <div class="dice-group-name">
+            <input type="text" class="dice-group-name-input" id="group-${groupIndex}-name" placeholder="Group Name">
+        </div>
+        <div class="dice-row">
     `;
 
+    // Add dice counters
     diceTypes.forEach((type) => {
         diceHTML += `
             <div class="dice-counter unselectable" id="group-${groupIndex}-${type}-counter">
-    <i class="ts-icon-${type} ts-icon-large" onclick="increment('group-${groupIndex}-${type}')" oncontextmenu="decrement('group-${groupIndex}-${type}'); return false;"></i>
-    <div class="counter-overlay" id="group-${groupIndex}-${type}-counter-value">0</div>
-    <div class="dice-label">${type.toUpperCase()}</div>
-</div>
+                <i class="ts-icon-${type} ts-icon-large" onclick="increment('group-${groupIndex}-${type}')" oncontextmenu="decrement('group-${groupIndex}-${type}'); return false;"></i>
+                <div class="counter-overlay" id="group-${groupIndex}-${type}-counter-value">0</div>
+                <div class="dice-label">${type.toUpperCase()}</div>
+            </div>
         `;
     });
 
+    // Add modifier counter
     diceHTML += `
-            <div class="plus-sign"><span>+</span></div>
-            <div class="dice-counter unselectable" id="group-${groupIndex}-mod-counter">
-    <i class="ts-icon-circle-dotted ts-icon-large mod-holder"></i>
-    <input type="number" class="counter-overlay mod-counter-overlay" id="group-${groupIndex}-mod-counter-value" value="0" min="-999" max="999" onfocus="this.select()" />
-    <div class="dice-label">MOD</div>
-</div>
-
+        <div class="plus-sign"><span>+</span></div>
+        <div class="dice-counter unselectable" id="group-${groupIndex}-mod-counter">
+            <i class="ts-icon-circle-dotted ts-icon-large mod-holder"></i>
+            <input type="number" class="counter-overlay mod-counter-overlay" id="group-${groupIndex}-mod-counter-value" value="0" min="-999" max="999" onfocus="this.select()" />
+            <div class="dice-label">MOD</div>
         </div>
-    </div>
     `;
 
     diceGroup.innerHTML = diceHTML;
