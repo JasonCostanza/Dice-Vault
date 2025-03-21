@@ -88,6 +88,7 @@ function addDiceGroup() {
         <div class="dice-row">
     `;
 
+    // TODO: Put this code back in for the img src
     //<i class="ts-icon-${type} ts-icon-large" onclick="increment('group-${groupIndex}-${type}')" oncontextmenu="decrement('group-${groupIndex}-${type}'); return false;"></i>
     // Add dice counters
     diceTypes.forEach((type) => {
@@ -100,6 +101,7 @@ function addDiceGroup() {
         `;
     });
 
+    // TODO: Put this code back in for the img src
     // <i class="ts-icon-circle-dotted ts-icon-large mod-holder"></i>
     // Add modifier counter
     diceHTML += `
