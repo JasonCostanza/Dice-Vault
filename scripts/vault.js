@@ -88,23 +88,18 @@ function addDiceGroup() {
         <div class="dice-row">
     `;
 
-    // TODO: Put this code back in for the img src
-    //<i class="ts-icon-${type} ts-icon-large" onclick="increment('group-${groupIndex}-${type}')" oncontextmenu="decrement('group-${groupIndex}-${type}'); return false;"></i>
-    // Add dice counters
-    diceTypes.forEach((type) => {
-        diceHTML += `
-            <div class="dice-counter unselectable" id="group-${groupIndex}-${type}-counter">
-            <img src="images/dev icons/dev_${type}.svg" class="debug-icons48" onclick="increment('group-${groupIndex}-${type}')" oncontextmenu="decrement('group-${groupIndex}-${type}'); return false;" />
-            <div class="counter-overlay" id="group-${groupIndex}-${type}-counter-value">0</div>
-            <div class="dice-label">${type.toUpperCase()}</div>
-            </div>
-        `;
-    });
+    if (devMode) {
+        diceTypes.forEach((type) => {
+            diceHTML += `
+                <div class="dice-counter unselectable" id="group-${groupIndex}-${type}-counter">
+                <img src="images/dev icons/dev_${type}.svg" class="debug-icons48" onclick="increment('group-${groupIndex}-${type}')" oncontextmenu="decrement('group-${groupIndex}-${type}'); return false;" />
+                <div class="counter-overlay" id="group-${groupIndex}-${type}-counter-value">0</div>
+                <div class="dice-label">${type.toUpperCase()}</div>
+                </div>
+            `;
+        });
 
-    // TODO: Put this code back in for the img src
-    // <i class="ts-icon-circle-dotted ts-icon-large mod-holder"></i>
-    // Add modifier counter
-    diceHTML += `
+        diceHTML += `
         <div class="plus-sign"><span>+</span></div>
         <div class="dice-counter unselectable" id="group-${groupIndex}-mod-counter">
             <img src="images/dev icons/dev_mod.svg" class="debug-icons48"></img>
@@ -112,6 +107,27 @@ function addDiceGroup() {
             <div class="dice-label">MOD</div>
         </div>
     `;
+
+    } else {
+        diceTypes.forEach((type) => {
+            diceHTML += `
+                <div class="dice-counter unselectable" id="group-${groupIndex}-${type}-counter">
+                <i class="ts-icon-${type} ts-icon-large" onclick="increment('group-${groupIndex}-${type}')" oncontextmenu="decrement('group-${groupIndex}-${type}'); return false;"></i>
+                <div class="counter-overlay" id="group-${groupIndex}-${type}-counter-value">0</div>
+                <div class="dice-label">${type.toUpperCase()}</div>
+                </div>
+            `;
+        });
+
+        diceHTML += `
+        <div class="plus-sign"><span>+</span></div>
+        <div class="dice-counter unselectable" id="group-${groupIndex}-mod-counter">
+            <i class="ts-icon-circle-dotted ts-icon-large mod-holder"></i>
+            <input type="number" class="counter-overlay mod-counter-overlay" id="group-${groupIndex}-mod-counter-value" value="0" min="-999" max="999" onfocus="this.select()" />
+            <div class="dice-label">MOD</div>
+        </div>
+    `;
+    }
 
     diceGroup.innerHTML = diceHTML;
     diceGroupsContainer.appendChild(diceGroup);

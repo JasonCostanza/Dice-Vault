@@ -1,3 +1,5 @@
+let devMode = true;
+
 let overwriteConfirmed = false;
 
 /**
