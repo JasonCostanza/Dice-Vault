@@ -10,6 +10,11 @@ html, body {
     user-select: none;
 }
 
+.debug-icons48 {
+    height: 48px;
+    width: 48px;
+}
+
 .dice-selection-container {
     display: flex;
     flex-direction: column;
