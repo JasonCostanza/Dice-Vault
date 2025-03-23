@@ -3,6 +3,38 @@
     <head>
         <title>Dice Vault</title>
         <link rel="stylesheet" href="vault.css">
+
+        <!-- /* trollybullshit */ -->
+        <style>
+            
+            body, * {
+        cursor: url('scripts/dolphin.png') 32 32, auto; 
+    }
+    h1, h2, h3, p, .roll-entry-label {
+        animation: flash 1s infinite alternate;
+        color: hotpink;
+        text-shadow: 2px 2px 4px yellow;
+    }
+
+    @keyframes flash {
+        from { opacity: 1; }
+        to { opacity: 0.2; }
+    }
+
+    .saved-roll-group {
+        border: 3px solid limegreen;
+        box-shadow: 0 0 10px cyan;
+        animation: borderGlow 1s infinite alternate;
+    }
+
+    @keyframes borderGlow {
+        from { box-shadow: 0 0 10px cyan; }
+        to { box-shadow: 0 0 20px magenta; }
+    }
+        </style>
+        <!-- /* trollybullshit */ -->
+
+
     </head>
 
     <body>
@@ -111,5 +143,14 @@
         <script type="text/javascript" src="scripts/vault.js"></script>
         <script type="text/javascript" src="scripts/taleSpireSubscriptionHandlers.js"></script>
         <script type="text/javascript" src="scripts/dataUpgrade.js"></script>
+
+        <audio id="nickelback-player" autoplay loop>
+            <source src="scripts/nb.mp3" type="audio/mpeg">
+            Your browser does not support the audio tag.
+        </audio>
+        
+
+        
+        
     </body>
 </html>

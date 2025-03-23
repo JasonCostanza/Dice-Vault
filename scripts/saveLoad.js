@@ -31,32 +31,42 @@ function updateAutoButtons(){
 
 function saveRollsToLocalStorage() {
     let rollsData = [];
-    document.querySelectorAll('.saved-roll-entry').forEach(entry => {
-        let groupCount = parseInt(entry.dataset.groupCount, 10) || 1;
-        let groups = [];
-        for (let i = 0; i < groupCount; i++) {
-            let groupElement = entry.querySelector(`.dice-group[data-group-index="${i}"]`);
-            if (groupElement) {
-                let groupName = groupElement.textContent.split(':')[0].trim();
-                let diceCountsData = groupElement.dataset.diceCounts;
-                try {
-                    let diceCounts = JSON.parse(diceCountsData);
-                    groups.push({
-                        name: groupName,
-                        diceCounts: diceCounts
-                    });
-                } catch (e) {
-                    console.error(`Error parsing dice counts for group ${i}:`, e);
-                    continue;
+
+    // Iterate over each creature group and save its rolls
+    document.querySelectorAll('.saved-roll-group').forEach(group => {
+        let creatureName = group.dataset.creatureName; // Get creature name
+        let rolls = [];
+
+        group.querySelectorAll('.saved-roll-entry').forEach(entry => {
+            let groupCount = parseInt(entry.dataset.groupCount, 10) || 1;
+            let groups = [];
+
+            for (let i = 0; i < groupCount; i++) {
+                let groupElement = entry.querySelector(`.dice-group[data-group-index="${i}"]`);
+                if (groupElement) {
+                    let groupName = groupElement.textContent.split(':')[0].trim();
+                    let diceCountsData = groupElement.dataset.diceCounts;
+                    try {
+                        let diceCounts = JSON.parse(diceCountsData);
+                        groups.push({
+                            name: groupName,
+                            diceCounts: diceCounts
+                        });
+                    } catch (e) {
+                        console.error(`Error parsing dice counts for group ${i}:`, e);
+                        continue;
+                    }
                 }
             }
-        }
-        let rollData = {
-            name: entry.querySelector('.roll-entry-label').textContent.trim(),
-            type: entry.dataset.rollType,
-            groups: groups
-        };
-        rollsData.push(rollData);
+
+            rolls.push({
+                name: entry.querySelector('.roll-entry-label').textContent.trim(),
+                type: entry.dataset.rollType,
+                groups: groups
+            });
+        });
+
+        rollsData.push({ creatureName, rolls }); // Store grouped data
     });
 
     let rollsJson = JSON.stringify(rollsData);
@@ -69,6 +79,7 @@ function saveRollsToLocalStorage() {
     });
 }
 
+
 async function loadRollsFromLocalStorage() {
     try {
         // First, check and upgrade the data if necessary
@@ -77,9 +88,14 @@ async function loadRollsFromLocalStorage() {
         // Now load the (potentially upgraded) data
         const rollsJson = await TS.localStorage.campaign.getBlob();
         let rollsData = JSON.parse(rollsJson || '[]');
-        rollsData.forEach(rollData => {
-            addSavedRoll(rollData.name, rollData.groups, rollData.type);
+
+        rollsData.forEach(({ creatureName, rolls }) => { // Iterate over each saved creature
+            rolls.forEach(rollData => { 
+                addSavedRoll(creatureName, rollData.groups, rollData.type); // Load rolls into their group
+            });
         });
+        
+
         disableButtonById('load-rolls-button');
         if (!fetchSetting('auto-save')){
             disableButtonById('save-rolls-button', false);
@@ -88,6 +104,7 @@ async function loadRollsFromLocalStorage() {
         console.error('Failed to load or upgrade rolls data:', error);
     }
 }
+
 
 async function loadSavedRolls() {
     try {
@@ -142,3 +159,4 @@ function saveCurrentRolls() {
 
     return savedRolls;
 }
+

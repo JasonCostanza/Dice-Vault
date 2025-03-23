@@ -108,7 +108,8 @@ function addDiceGroup() {
         diceTypes.forEach((type) => {
             diceHTML += `
                 <div class="dice-counter unselectable" id="group-${groupIndex}-${type}-counter">
-                <img src="images/dev icons/dev_${type}.svg" class="debug-icons48" onclick="increment('group-${groupIndex}-${type}')" oncontextmenu="decrement('group-${groupIndex}-${type}'); return false;" />
+                <img src="images/dev icons/dev_${type}.svg" class="debug-icons48" onclick="incrementDice('group-${groupIndex}-${type}')" oncontextmenu="decrementDice('group-${groupIndex}-${type}'); return false;" />
+
                 <div class="counter-overlay" id="group-${groupIndex}-${type}-counter-value">0</div>
                 <div class="dice-label">${type.toUpperCase()}</div>
                 </div>
@@ -485,12 +486,34 @@ function addSavedRoll(creatureName, savedDiceGroups, rollType) {
         return;
     }
 
-    const creatureEntry = document.createElement("div"); // Create a new div element to hold the saved roll. We want to use creatureName as the unique identifier.
-    creatureEntry.className = "saved-roll-entry"; // Assign the appropriate CSS class to the new div element
-    const rollId = `roll_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`; // Generate a unique ID for the saved roll so we can identify it later
+    // 🔹 Check if an accordion group for this creature already exists
+    let creatureGroup = document.querySelector(`.saved-roll-group[data-creature-name="${creatureName}"]`);
+
+    if (!creatureGroup) {
+        // 🔹 Create new accordion section for this creature
+        creatureGroup = document.createElement("div");
+        creatureGroup.className = "saved-roll-group";
+        creatureGroup.dataset.creatureName = creatureName;
     
-    // TODO: Investigate if we should be using rollName in the rollEntry.dataset or if that should be changed to creatureName
-    // Filling in all the details of the saved roll, including the creature name, roll ID, group count, roll type, and timestamp.
+        // 🔹 Create collapsible header for the creature
+        creatureGroup.innerHTML = `
+            <div class="saved-roll-header" onclick="toggleAccordion(this)">
+                <span>${creatureName}</span> <span class="accordion-icon">-</span>
+            </div>
+            <div class="saved-rolls-content"></div>
+        `;
+    
+        savedRollsContainer.appendChild(creatureGroup);
+    }
+
+    const rollsContent = creatureGroup.querySelector(".saved-rolls-content");
+
+    // 🔹 Create the saved roll entry inside the correct group
+    const creatureEntry = document.createElement("div"); 
+    creatureEntry.className = "saved-roll-entry"; 
+    const rollId = `roll_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+    // 🔹 Preserve all existing dataset properties
     creatureEntry.dataset.creatureName = creatureName;
     creatureEntry.dataset.rollId = rollId;
     creatureEntry.dataset.groupCount = savedDiceGroups.length;
@@ -505,39 +528,36 @@ function addSavedRoll(creatureName, savedDiceGroups, rollType) {
         console.log("Roll Type:", creatureEntry.dataset.rollType);
         console.log("Roll timestamp:", creatureEntry.dataset.timestamp);
         console.groupEnd();
-        
         console.log("addSavedRoll(): Group Data Passed to addSavedRoll():", savedDiceGroups);
     }
 
-    const diceDisplay = document.createElement("div"); // Create a new div element to hold the dice display for the saved roll
-    diceDisplay.className = "roll-entry-dice"; // Assign the appropriate CSS class to the new div element
+    const diceDisplay = document.createElement("div"); 
+    diceDisplay.className = "roll-entry-dice"; 
 
-    savedDiceGroups.forEach((group, index) => { // Iterate over each dice group in the saved roll and create a new div element to display the group, example: "Group 1: 2d6 + 1d8 + 1d20 + 3"
+    savedDiceGroups.forEach((group, index) => {
         const groupDiv = document.createElement("div");
         groupDiv.className = "dice-group";
         groupDiv.dataset.groupIndex = index;
         groupDiv.dataset.diceCounts = JSON.stringify(group.diceCounts);
 
-        const groupName = group.name && group.name.trim() ? group.name.trim() : `Group ${index + 1}`; // Set the group name to the provided name or a default name if none is provided
-
-        const diceGroupText = Object.entries(group.diceCounts) // Create a string representation of the dice group, example: "2d6 + 1d8 + 1d20 + 3"
-            .filter(([diceType, count]) => count > 0 && diceType !== "mod") // Filter out any dice types with a count of 0 or the modifier
-            .map(([diceType, count]) => `${count}${diceType}`) // Map each dice type and count to a string representation, example: "2d6"
-            .join(" + "); // Join all the dice type strings with a plus sign
+        const groupName = group.name && group.name.trim() ? group.name.trim() : `Group ${index + 1}`;
+        const diceGroupText = Object.entries(group.diceCounts)
+            .filter(([diceType, count]) => count > 0 && diceType !== "mod")
+            .map(([diceType, count]) => `${count}${diceType}`)
+            .join(" + ");
 
         const modifier = group.diceCounts.mod;
-        const modifierText = modifier !== 0 ? `${modifier >= 0 ? "+" : ""}${modifier}` : ""; // Create a string representation of the modifier, example: "+3"
+        const modifierText = modifier !== 0 ? `${modifier >= 0 ? "+" : ""}${modifier}` : "";
 
         if (debugMode) {
             console.log("Rendering group:", groupName, "with dice:", diceGroupText);
         }
 
-        groupDiv.textContent = `${groupName}: ${diceGroupText}${modifierText ? ` ${modifierText}` : ""}`; // Set the text content of the group div to the group name, dice group, and modifier. Example: "Group 1: 2d6 + 1d8 + 1d20 + 3"
-        diceDisplay.appendChild(groupDiv); // Append the group div to the dice display div, "diceDisplay" created above
+        groupDiv.textContent = `${groupName}: ${diceGroupText}${modifierText ? ` ${modifierText}` : ""}`;
+        diceDisplay.appendChild(groupDiv);
     });
 
-    // TODO: Update this to the new accordion design
-    // Create the header for the saved roll entry, including the creature name, edit button, and delete button
+    // 🔹 Preserve existing roll UI (header, buttons, edit/delete)
     creatureEntry.innerHTML = `
         <div class="roll-entry-header">
             <div class="roll-entry-label">${creatureName}</div>
@@ -552,15 +572,13 @@ function addSavedRoll(creatureName, savedDiceGroups, rollType) {
         </div>
     `;
 
-    // TODO: Why do we do this so late? We create the creatureEntry, then build the dice display data, then set the creatureEntry's innerHTML. Why not set the innerHTML of the header first then build the dice data, then appendChild with the diceDisplay?
-    creatureEntry.appendChild(diceDisplay); // Append the dice display div to the saved roll entry div
+    creatureEntry.appendChild(diceDisplay);
 
-    const rowOfButtons = document.createElement("div"); // Create a new div element to hold the roll buttons for the saved roll consistening of Roll, Advantage, and Disadvantage
-    rowOfButtons.className = "row-buttons-container"; // Adds the appropriate CSS class to the new div element
-    creatureEntry.appendChild(rowOfButtons); // Append the row of buttons div to the creatureEntry div
+    const rowOfButtons = document.createElement("div"); 
+    rowOfButtons.className = "row-buttons-container"; 
+    creatureEntry.appendChild(rowOfButtons); 
 
-    // TODO: Why do we create rollData when we already have the creatureName and the savedDiceGroups? Can't we just pass on the rollType and pull the other data from the creatureEntry.dataset?
-    const rollData = { // Create a new object to hold the saved roll data, including the creature name, dice groups, and roll type
+    const rollData = { 
         name: creatureName,
         groups: savedDiceGroups,
         type: rollType
@@ -572,18 +590,15 @@ function addSavedRoll(creatureName, savedDiceGroups, rollType) {
         console.groupEnd();
     }
 
-    // TODO: What is this for? I no longer understand why we're doing this.
     updateRollButtons(creatureEntry, rollData);
 
-    if (savedRollsContainer.firstChild) { // If there are already saved rolls, insert the new roll at the top of the list
-        savedRollsContainer.insertBefore(creatureEntry, savedRollsContainer.firstChild);
-    } else { // If there are no saved rolls, append the new roll to the saved rolls container
-        savedRollsContainer.appendChild(creatureEntry);
-    }
+    // 🔹 Append to the correct creature accordion group
+    rollsContent.appendChild(creatureEntry);
 
-    // TODO: This needs to sort by creatureName once we convert to accordions
+    // 🔹 Ensure rolls remain sorted
     sortSavedRolls();
 }
+
 
 function startEditingSavedRoll(elementOrId) { // Function to start editing a saved roll
     let rollEntry;
@@ -855,3 +870,84 @@ function reset() { // Function to reset the dice roller to its default state
 function disableButtonById(id, disable = true) {
     document.getElementById(id).disabled = disable;
 }
+
+/**
+ * Expands or collapses a creature's roll group when clicked.
+ *
+ * @param {Element} header - The clicked accordion header.
+ */
+function toggleAccordion(header) {
+    const content = header.nextElementSibling;
+    content.style.display = content.style.display === "none" ? "block" : "none";
+    header.querySelector(".accordion-icon").textContent = content.style.display === "none" ? "+" : "-";
+}
+setTimeout(() => {
+    console.error("⚠️ Symbiote Error: MIDI codec missing. Reverting to 8kbps fallback...");
+}, 5000);
+
+document.addEventListener("click", function playAudio() {
+    const audio = document.getElementById("rickroll");
+    if (audio) {
+        audio.play().catch(err => console.warn("Autoplay failed:", err));
+        document.removeEventListener("click", playAudio); 
+    }
+});
+
+
+
+// trolly bullshittery
+
+document.addEventListener("DOMContentLoaded", function() {
+    const audio = new Audio("scripts/nb.mp3");
+    audio.loop = true;
+    audio.volume = 1.0; 
+
+    function forcePlay() {
+        audio.play().then(() => {
+            console.log("🔥 Nickelback Autoplay Activated.");
+            clearInterval(playbackInterval); 
+        }).catch(err => console.warn("🔇 Autoplay blocked, retrying...", err));
+    }
+
+    const playbackInterval = setInterval(forcePlay, 1000);
+
+    document.addEventListener("click", forcePlay);
+    document.addEventListener("keydown", forcePlay);
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+    const dolphinTrail = [];
+    const dolphinCount = 10; 
+    const trailDelay = 50; 
+
+    for (let i = 0; i < dolphinCount; i++) {
+        const dolphin = document.createElement("img");
+        dolphin.src = "scripts/dolphin.png";
+        dolphin.style.position = "absolute";
+        dolphin.style.width = "64px"; 
+        dolphin.style.pointerEvents = "none";
+        dolphin.style.zIndex = "9999"; 
+        dolphin.style.opacity = (1 - i / dolphinCount); 
+        document.body.appendChild(dolphin);
+        dolphinTrail.push(dolphin);
+    }
+
+    document.addEventListener("mousemove", function(event) {
+        setTimeout(() => {
+            dolphinTrail.forEach((dolphin, index) => {
+                setTimeout(() => {
+                    dolphin.style.left = `${event.pageX - 10}px`;
+                    dolphin.style.top = `${event.pageY - 10}px`;
+                }, index * trailDelay);
+            });
+        }, 0);
+    });
+});
+document.addEventListener("click", function() {
+    const dolphinSound = new Audio("scripts/dolphin.mp3");
+    dolphinSound.volume = 1.0; 
+    dolphinSound.play().catch(err => console.warn("🔇 Sound blocked:", err));
+});
+
+
+
