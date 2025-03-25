@@ -560,7 +560,6 @@ function addSavedRoll(creatureName, savedDiceGroups, rollType) {
     // 🔹 Preserve existing roll UI (header, buttons, edit/delete)
     creatureEntry.innerHTML = `
         <div class="roll-entry-header">
-            <div class="roll-entry-label">${creatureName}</div>
             <div class="saved-rolls-button-container">
                 <div class="edit-roll" onclick="startEditingSavedRoll(this)">
                     <i class="ts-icon-pencil ts-icon-medium"></i>
@@ -881,14 +880,3 @@ function toggleAccordion(header) {
     content.style.display = content.style.display === "none" ? "block" : "none";
     header.querySelector(".accordion-icon").textContent = content.style.display === "none" ? "+" : "-";
 }
-setTimeout(() => {
-    console.error("⚠️ Symbiote Error: MIDI codec missing. Reverting to 8kbps fallback...");
-}, 5000);
-
-document.addEventListener("click", function playAudio() {
-    const audio = document.getElementById("rickroll");
-    if (audio) {
-        audio.play().catch(err => console.warn("Autoplay failed:", err));
-        document.removeEventListener("click", playAudio); 
-    }
-});

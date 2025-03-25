@@ -10,6 +10,11 @@ html, body {
     user-select: none;
 }
 
+.debug-icons16 {
+    height: 16px;
+    width: 16px;
+}
+
 .debug-icons48 {
     height: 48px;
     width: 48px;
