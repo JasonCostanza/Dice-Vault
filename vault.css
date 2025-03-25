@@ -20,6 +20,11 @@ html, body {
     width: 48px;
 }
 
+.accordion-icon {
+    font-weight: bold;
+    transition: transform 0.3s ease;
+}
+
 .dice-selection-container {
     display: flex;
     flex-direction: column;
