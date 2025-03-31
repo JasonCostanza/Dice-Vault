@@ -617,35 +617,18 @@ function addSavedRoll(creatureName, savedDiceGroups, rollType) {
     });
 
     // Set up the roll entry with its label and buttons
-    if (!devMode) {
-        creatureEntry.innerHTML = `
-            <div class="roll-entry-header">
-                <div class="saved-rolls-button-container">
-                    <div class="edit-roll" onclick="startEditingSavedRoll(this)">
-                        <i class="ts-icon-pencil ts-icon-medium"></i>
-                    </div>
-                    <div class="delete-roll" onclick="deleteSavedRoll(this)">
-                        <i class="ts-icon-trash ts-icon-medium"></i>
-                    </div>
-                </div>
+    const editIcon = devMode ? '<img src="images/dev icons/dev_pencil.svg" class="debug-icons16">' : '<i class="ts-icon-pencil ts-icon-medium"></i>';
+    const deleteIcon = devMode ? '<img src="images/dev icons/dev_trash.svg" class="debug-icons16">' : '<i class="ts-icon-trash ts-icon-medium"></i>';
+
+    creatureEntry.innerHTML = `
+        <div class="roll-entry-header">
+            <div class="saved-rolls-button-container">
+                <div class="edit-roll" onclick="startEditingSavedRoll(this)">${editIcon}</div>
+                <div class="delete-roll" onclick="deleteSavedRoll(this)">${deleteIcon}</div>
             </div>
-            <div class="roll-entry-dice-container"></div>
-        `;
-    } else {
-        creatureEntry.innerHTML = `
-            <div class="roll-entry-header">
-                <div class="saved-rolls-button-container">
-                    <div class="edit-roll" onclick="startEditingSavedRoll(this)">
-                        <img src="images/dev icons/dev_pencil.svg" class="debug-icons16"></img>
-                    </div>
-                    <div class="delete-roll" onclick="deleteSavedRoll(this)">
-                        <img src="images/dev icons/dev_trash.svg" class="debug-icons16"></img>
-                    </div>
-                </div>
-            </div>
-            <div class="roll-entry-dice-container"></div>
-        `;
-    }
+        </div>
+        <div class="roll-entry-dice-container"></div>
+    `;
 
     // Add the dice display to the container
     const diceContainer = creatureEntry.querySelector('.roll-entry-dice-container');
