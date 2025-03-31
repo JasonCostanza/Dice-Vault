@@ -557,34 +557,22 @@ function addSavedRoll(creatureName, savedDiceGroups, rollType) {
         diceDisplay.appendChild(groupDiv);
     });
 
-    // 🔹 Preserve existing roll UI (header, buttons, edit/delete)
-    if (!devMode) {
-        creatureEntry.innerHTML = `
-            <div class="roll-entry-header">
-                <div class="saved-rolls-button-container">
-                    <div class="edit-roll" onclick="startEditingSavedRoll(this)">
-                        <i class="ts-icon-pencil ts-icon-medium"></i>
-                    </div>
-                    <div class="delete-roll" onclick="deleteSavedRoll(this)">
-                        <i class="ts-icon-trash ts-icon-medium"></i>
-                    </div>
-                </div>
-            </div>
-        `;
-    } else {
-        creatureEntry.innerHTML = `
-        <div class="roll-entry-header">
+    creatureEntry.innerHTML = `
+    <div class="roll-entry-header">
         <div class="saved-rolls-button-container">
-                <div class="edit-roll" onclick="startEditingSavedRoll(this)">
-                    <img src="images/dev icons/dev_pencil.svg" class="debug-icons16"></img>
-                </div>
-                <div class="delete-roll" onclick="deleteSavedRoll(this)">
-                    <img src="images/dev icons/dev_trash.svg" class="debug-icons16"></img>
-                </div>
+            <div class="edit-roll" onclick="startEditingSavedRoll(this)">
+                ${!devMode ? 
+                    '<i class="ts-icon-pencil ts-icon-medium"></i>' : 
+                    '<img src="images/dev icons/dev_pencil.svg" class="debug-icons16"></img>'}
+            </div>
+            <div class="delete-roll" onclick="deleteSavedRoll(this)">
+                ${!devMode ? 
+                    '<i class="ts-icon-trash ts-icon-medium"></i>' : 
+                    '<img src="images/dev icons/dev_trash.svg" class="debug-icons16"></img>'}
             </div>
         </div>
-        `;
-    }
+    </div>
+`;
 
     creatureEntry.appendChild(diceDisplay);
 
