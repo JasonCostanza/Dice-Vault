@@ -452,7 +452,10 @@ button:focus-visible {
     background-color: var(--ts-button-background);
     font-family: 'OptimusPrinceps', sans-serif;
     padding: 10px;
+    /* Remove outer border that would be redundant with the accordion container */
+    border-radius: 3px;
 }
+
 
 .saved-roll-entry.editing {
     background-color: #2c662e;
@@ -463,28 +466,66 @@ button:focus-visible {
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    margin-bottom: 8px;
 }
 
 .roll-entry-label {
     font-weight: bold;
-    text-align: left;
-    margin: 5px 0;
-    flex-grow: 1;
-    margin-right: 10px;
+    min-width: 120px;
+    max-width: 150px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.roll-entry-display {
+    flex: 1;
+    margin: 0 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .roll-entry-dice {
-    display: block;
-    text-align: left;
-    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
     width: 100%;
-    white-space: pre-line;
+    gap: 5px;
 }
 
 /* Accordion for Saved Rolls */
 .accordion-icon {
     font-weight: bold;
     transition: transform 0.3s ease;
+}
+
+.saved-roll-group {
+    margin-bottom: 10px;
+    border: 1px solid var(--ts-accessibility-border);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.saved-roll-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: var(--ts-background-secondary);
+    cursor: pointer;
+    font-weight: bold;
+    user-select: none;
+}
+
+.saved-roll-header:hover {
+    background-color: var(--ts-button-hover);
+}
+
+.saved-rolls-content {
+    padding: 5px;
+    background-color: var(--ts-background-primary);
+    /* Initially expanded */
+    display: block;
 }
 
 /* Dice Icons */
@@ -627,4 +668,32 @@ button:focus-visible {
 
 .overwrite-modal {
     pointer-events: auto;
+}
+
+
+
+/* Dice group styling */
+.dice-info {
+    color: var(--ts-color-secondary);
+}
+
+.dice-group {
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    background-color: var(--ts-background-secondary);
+    padding: 3px 8px;
+    border-radius: 3px;
+    width: 100%;
+}
+
+.dice-group-name-text {
+    font-weight: bold;
+    margin-right: 2px;
+}
+
+.roll-entry-dice-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 }

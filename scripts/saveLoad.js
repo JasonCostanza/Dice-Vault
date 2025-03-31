@@ -29,6 +29,9 @@ function updateAutoButtons(){
     }
 }
 
+/**
+ * Saves roll data to local storage, respecting the accordion structure.
+ */
 function saveRollsToLocalStorage() {
     let rollsData = [];
 
@@ -80,6 +83,9 @@ function saveRollsToLocalStorage() {
 }
 
 
+/**
+ * Loads roll data from local storage, creating accordion structure.
+ */
 async function loadRollsFromLocalStorage() {
     try {
         // First, check and upgrade the data if necessary
