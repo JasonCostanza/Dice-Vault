@@ -596,7 +596,7 @@ function addSavedRoll(creatureName, savedDiceGroups, rollType) {
             .join(" + ");
 
         const modifier = group.diceCounts.mod;
-        const modifierText = modifier !== 0 ? `${modifier >= 0 ? "+" : ""}${modifier}` : "";
+        const modifierText = modifier !== 0 ? `${modifier >= 0 ? "+ " : ""}${modifier}` : "";
 
         if (debugMode) {
             console.log("Rendering group:", groupName, "with dice:", diceGroupText);
