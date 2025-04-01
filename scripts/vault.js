@@ -108,7 +108,7 @@ function addDiceGroup() {
         diceTypes.forEach((type) => {
             diceHTML += `
                 <div class="dice-counter unselectable" id="group-${groupIndex}-${type}-counter">
-                <img src="images/dev icons/dev_${type}.svg" class="debug-icons48" onclick="incrementDice('group-${groupIndex}-${type}')" oncontextmenu="decrementDice('group-${groupIndex}-${type}'); return false;" />
+                <img src="images/dev_icons/dev_${type}.png" class="debug-icons48" onclick="incrementDice('group-${groupIndex}-${type}')" oncontextmenu="decrementDice('group-${groupIndex}-${type}'); return false;" />
 
                 <div class="counter-overlay" id="group-${groupIndex}-${type}-counter-value">0</div>
                 <div class="dice-label">${type.toUpperCase()}</div>
@@ -119,7 +119,7 @@ function addDiceGroup() {
         diceHTML += `
         <div class="plus-sign"><span>+</span></div>
         <div class="dice-counter unselectable" id="group-${groupIndex}-mod-counter">
-            <img src="images/dev icons/dev_mod.svg" class="debug-icons48"></img>
+            <img src="images/dev_icons/dev_mod.png" class="debug-icons48"></img>
             <input type="number" class="counter-overlay mod-counter-overlay" id="group-${groupIndex}-mod-counter-value" value="0" min="-999" max="999" onfocus="this.select()" />
             <div class="dice-label">MOD</div>
         </div>
@@ -617,8 +617,8 @@ function addSavedRoll(creatureName, savedDiceGroups, rollType) {
     });
 
     // Set up the roll entry with its label and buttons
-    const editIcon = devMode ? '<img src="images/dev icons/dev_pencil.svg" class="debug-icons16">' : '<i class="ts-icon-pencil ts-icon-medium"></i>';
-    const deleteIcon = devMode ? '<img src="images/dev icons/dev_trash.svg" class="debug-icons16">' : '<i class="ts-icon-trash ts-icon-medium"></i>';
+    const editIcon = devMode ? '<img src="images/dev_icons/dev_pencil.png" class="debug-icons16">' : '<i class="ts-icon-pencil ts-icon-medium"></i>';
+    const deleteIcon = devMode ? '<img src="images/dev_icons/dev_trash." class="debug-icons16">' : '<i class="ts-icon-trash ts-icon-medium"></i>';
 
     creatureEntry.innerHTML = `
         <div class="roll-entry-header">
