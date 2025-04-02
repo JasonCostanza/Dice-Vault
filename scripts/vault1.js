@@ -96,21 +96,19 @@ function addDiceGroup() {
     const accordionHeader = document.createElement("div");
     accordionHeader.className = "dice-group-header";
     accordionHeader.innerHTML = `
-        <span class="group-title" id="accordion-title-${groupIndex}">New Group</span>
-        <span class="accordion-toggle" onclick="toggleDiceGroupAccordion(event)">V</span>
-    `;
+    <span class="group-title" id="accordion-title-${groupIndex}">New Group</span>
+    <span class="accordion-toggle" onclick="toggleDiceGroupAccordion(event)">v</span>
+`;
+
 
     const content = document.createElement("div");
     content.className = "dice-selection";
     content.id = `${groupIndex}`;
-    content.style.maxHeight = "0px";
-    content.style.overflow = "hidden";
-    content.style.display = "none";
 
     let diceHTML = `
         <div class="dice-group-container">
             <div class="dice-group-name">
-                <input type="text" class="dice-group-name-input" id="group-${groupIndex}-name" placeholder="Group Name"
+                <input type="text" style="margin-top: 5px;" class="dice-group-name-input" id="group-${groupIndex}-name" placeholder="Group Name" 
                     oninput="document.getElementById('accordion-title-${groupIndex}').textContent = this.value || 'New Group';">
             </div>
             <div class="dice-row">
@@ -138,24 +136,12 @@ function addDiceGroup() {
     `;
 
     content.innerHTML = diceHTML;
-
     wrapper.appendChild(accordionHeader);
     wrapper.appendChild(content);
     diceGroupsContainer.appendChild(wrapper);
-    wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-    // Animate open new group
-    requestAnimationFrame(() => {
-        content.style.display = 'flex';
-        content.style.maxHeight = content.scrollHeight + 'px';
-    });
-
-    accordionHeader.querySelector('.accordion-toggle').textContent = 'V';
-    accordionHeader.querySelector('.accordion-toggle').classList.add('rotate');
 
     updateDiceGroupsData();
 }
-
 
 
 function updateDiceGroupsData() {
@@ -196,15 +182,42 @@ function updateDiceGroupsData() {
 }
 
 function removeDiceGroup() {
-    const wrappers = document.querySelectorAll('.dice-group-wrapper');
-    if (wrappers.length > 1) {
-        wrappers[wrappers.length - 1].remove();
-        diceGroupsData.pop();
-    } else {
-        console.warn("Can't remove the last group.");
-    }
-
     updateDiceGroupsData();
+    const wrappers = document.querySelectorAll('.dice-group-wrapper');
+    
+    if (wrappers.length > 1) {
+        const lastWrapper = wrappers[wrappers.length - 1];
+        lastWrapper.remove();
+        diceGroupsData.pop();
+
+        // Renumber remaining groups
+        const updatedWrappers = document.querySelectorAll('.dice-group-wrapper');
+        updatedWrappers.forEach((wrapper, index) => {
+            const groupId = `${index}`;
+            const input = wrapper.querySelector('.dice-group-name-input');
+            const title = wrapper.querySelector('.group-title');
+            const content = wrapper.querySelector('.dice-selection');
+
+            // Update IDs and input handlers
+            if (input) {
+                input.id = `group-${groupId}-name`;
+                input.setAttribute('oninput', `document.getElementById('accordion-title-${groupId}').textContent = this.value || 'New Group';`);
+            }
+
+            if (title) {
+                title.id = `accordion-title-${groupId}`;
+            }
+
+            if (content) {
+                content.id = groupId;
+            }
+
+            updateGroupElementIds(wrapper, index);
+        });
+
+    } else {
+        console.warn("Cannot remove the last remaining group.");
+    }
 }
 
 
@@ -1011,27 +1024,13 @@ function toggleAccordion(header) {
 
 function toggleDiceGroupAccordion(event) {
     const header = event.target.closest('.dice-group-header');
-    const wrapper = header.parentElement;
     const content = header.nextElementSibling;
     const icon = header.querySelector('.accordion-toggle');
-    const isCollapsed = !content.style.maxHeight || content.style.maxHeight === '0px';
-
-    if (isCollapsed) {
+    if (content.style.display === 'none') {
         content.style.display = 'flex';
-        requestAnimationFrame(() => {
-            content.style.maxHeight = content.scrollHeight + 'px';
-        });
-        icon.textContent = 'V';
-        icon.classList.add('rotate');
+        icon.textContent = 'v';
     } else {
-        content.style.maxHeight = '0px';
-        setTimeout(() => {
-            content.style.display = 'none';
-        }, 300);
-        icon.textContent = '>>>';
-        icon.classList.remove('rotate');
+        content.style.display = 'none';
+        icon.textContent = '^';
     }
 }
-
-
-
