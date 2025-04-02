@@ -130,7 +130,7 @@ function addDiceGroup() {
         diceTypes.forEach((type) => {
             diceHTML += `
                 <div class="dice-counter unselectable" id="group-${groupIndex}-${type}-counter">
-                <i class="ts-icon-${type} ts-icon-large" onclick="increment('group-${groupIndex}-${type}')" oncontextmenu="decrement('group-${groupIndex}-${type}'); return false;"></i>
+                <i class="ts-icon-${type} ts-icon-large" onclick="incrementDice('group-${groupIndex}-${type}')" oncontextmenu="decrementDice('group-${groupIndex}-${type}'); return false;"></i>
                 <div class="counter-overlay" id="group-${groupIndex}-${type}-counter-value">0</div>
                 <div class="dice-label">${type.toUpperCase()}</div>
                 </div>
@@ -234,8 +234,8 @@ if (modCounter) {
     // Update onclick attributes
     group.querySelectorAll('.dice-counter').forEach(counter => {
         const diceType = counter.id.split('-')[1];
-        counter.querySelector('.ts-icon-large').setAttribute('onclick', `increment('group-${newIndex}-${diceType}')`);
-        counter.querySelector('.ts-icon-large').setAttribute('oncontextmenu', `decrement('group-${newIndex}-${diceType}'); return false;`);
+        counter.querySelector('.ts-icon-large').setAttribute('onclick', `incrementDice('group-${newIndex}-${diceType}')`);
+        counter.querySelector('.ts-icon-large').setAttribute('oncontextmenu', `decrementDice('group-${newIndex}-${diceType}'); return false;`);
     });
 }
 
@@ -618,8 +618,8 @@ function addSavedRoll(creatureName, savedDiceGroups, rollType) {
     });
 
     // Set up the roll entry with its label and buttons
-    const editIcon = devMode ? '<img src="images/dev_icons/dev_pencil.png" class="debug-icons16">' : '<i class="ts-icon-pencil ts-icon-medium"></i>';
-    const deleteIcon = devMode ? '<img src="images/dev_icons/dev_trash." class="debug-icons16">' : '<i class="ts-icon-trash ts-icon-medium"></i>';
+    const editIcon = devMode ? '<img src="images/dev_icons/dev_pencil.png" class="debug-icons16">' : '<i class="ts-icon-pencil ts-icon-xsmall"></i>';
+    const deleteIcon = devMode ? '<img src="images/dev_icons/dev_trash." class="debug-icons16">' : '<i class="ts-icon-trash ts-icon-xsmall"></i>';
 
     creatureEntry.innerHTML = `
         <div class="roll-entry-header">
