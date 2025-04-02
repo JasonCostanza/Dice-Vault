@@ -246,17 +246,17 @@ button:focus-visible {
 }
 
 /* Roll Name Input */
-.roll-name-container {
-    margin-bottom: 20px;
+.creature-name-container {
+    margin-bottom: 5px;
     display: flex;
     align-items: center;
 }
 
-.roll-name-container label {
+.creature-name-container label {
     margin-right: 10px;
 }
 
-#roll-name {
+#creature-name {
     flex-grow: 1;
     padding: 5px;
     font-size: 1em;
@@ -265,10 +265,8 @@ button:focus-visible {
 /* Dice Groups & Selection */
 .dice-selection {
     display: flex;
-    justify-content: center;
     align-items: center;
-    gap: 5px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .content-col-dice {
@@ -299,7 +297,7 @@ button:focus-visible {
 }
 
 .dice-group-name-input.editing,
-#roll-name.editing {
+#creature-name.editing {
     border-color: #ff0000;
 }
 
@@ -681,10 +679,14 @@ button:focus-visible {
     margin-bottom: 5px;
     display: flex;
     align-items: center;
-    background-color: var(--ts-background-secondary);
     padding: 3px 8px;
     border-radius: 3px;
     width: 100%;
+}
+
+.dice-group-container {
+    width: 90%;
+    display: block;
 }
 
 .dice-group-name-text {

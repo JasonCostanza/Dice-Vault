@@ -96,11 +96,12 @@ function addDiceGroup() {
     let diceHTML = "";
 
     // Add group name input field
+    // TODO: dice-group-container doesn't exist in vault.css
     diceHTML += `
         <div class="dice-group-container">
-        <div class="dice-group-name">
-            <input type="text" class="dice-group-name-input" id="group-${groupIndex}-name" placeholder="Group Name">
-        </div>
+            <div class="dice-group-name">
+                <input type="text" class="dice-group-name-input" id="group-${groupIndex}-name" placeholder="Group Name">
+            </div>
         <div class="dice-row">
     `;
 
