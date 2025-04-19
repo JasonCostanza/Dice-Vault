@@ -160,36 +160,26 @@ function updateDiceGroupsData() {
     diceGroupElements.forEach((groupElement) => {
         const groupId = groupElement.id;
         const groupDiceCounts = {};
-        // Find the header input for this group
-        const header = groupElement.previousElementSibling;
-        const groupNameInput = header.querySelector('.dice-group-name-input');
+        
+        // Find the wrapper and header for this group
+        const wrapper = groupElement.closest('.dice-group-wrapper');
+        const header = wrapper ? wrapper.querySelector('.dice-group-header') : null;
+        const groupNameInput = header ? header.querySelector('.dice-group-name-input') : null;
         const groupName = groupNameInput && groupNameInput.value.trim() ? groupNameInput.value.trim() : `Group ${parseInt(groupId) + 1}`;
 
-        if (debugMode) { // If debug mode is enabled, log the group name to the console
-            console.log("Group Name in updateDiceGroupsData:", groupName);
-        };
-
         diceTypes.forEach((diceType) => {
-            const countElement = groupElement.querySelector(`[id="group-${groupId}-${diceType}-counter-value"]`);
+            const countElement = document.getElementById(`group-${groupId}-${diceType}-counter-value`);
             groupDiceCounts[diceType] = countElement ? parseInt(countElement.textContent, 10) : 0;
         });
 
-        const modElement = groupElement.querySelector(`[id="${groupId}-mod-counter-value"]`);
+        const modElement = document.getElementById(`group-${groupId}-mod-counter-value`);
         groupDiceCounts.mod = modElement ? parseInt(modElement.value, 10) : 0;
-
-        if (debugMode) { // If debug mode is enabled, log the group name and dice counts to the console
-            console.log("Group Dice Counts in updateDiceGroupsData:", groupDiceCounts);
-        };
 
         diceGroupsData.push({
             name: groupName,
             diceCounts: groupDiceCounts
         });
     });
-
-    if (debugMode) { // If debug mode is enabled, log the updated dice groups data to the console
-        console.log('Updated diceGroupsData:', JSON.stringify(diceGroupsData, null, 2));
-    };
 }
 
 function removeDiceGroup() {
@@ -410,7 +400,11 @@ function save() {
     diceGroupElements.forEach((groupElement, index) => {
         const groupId = groupElement.id;
         const groupDiceCounts = {};
-        const groupNameInput = groupElement.querySelector(`#group-${groupId}-name`);
+        
+        // Find the wrapper and header for this group
+        const wrapper = groupElement.closest('.dice-group-wrapper');
+        const header = wrapper ? wrapper.querySelector('.dice-group-header') : null;
+        const groupNameInput = header ? header.querySelector('.dice-group-name-input') : null;
         const groupName = groupNameInput && groupNameInput.value.trim() ? groupNameInput.value.trim() : `Group ${index + 1}`;
 
         diceTypes.forEach((diceType) => {
