@@ -749,6 +749,35 @@ button:focus-visible {
     background-color: var(--ts-button-hover);
 }
 
+.header-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.dice-group-name-input.header-input {
+    background-color: transparent;
+    border: 1px solid transparent;
+    font-size: 1em;
+    padding: 2px 4px;
+    margin: 0;
+    cursor: text;
+    width: auto;
+    min-width: 120px;
+    font-weight: bold;
+    color: var(--ts-color-primary);
+}
+
+.dice-group-name-input.header-input:hover,
+.dice-group-name-input.header-input:focus {
+    border-color: var(--ts-accessibility-border);
+    background-color: var(--ts-background-secondary);
+}
+
+.dice-group-name-input.header-input.editing {
+    border-color: #ff0000;
+}
+
 .accordion-toggle {
     font-size: 1.3em;
     transition: transform 0.2s ease;

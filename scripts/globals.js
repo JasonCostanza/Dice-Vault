@@ -1,7 +1,7 @@
 /**
  * devMode controls whether we dynamically load assets from Talespire or use placeholder dev assets to work on the symbiote without Talespire running to visualize changes.
  */
-let devMode = false
+let devMode = false;
 /**
  * debugMode controls whether we log debug messages to the console.
  */

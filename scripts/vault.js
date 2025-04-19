@@ -28,7 +28,6 @@ function isDiceGroupEmpty(diceGroup) {
     return Object.entries(diceGroup.diceCounts).every(([key, value]) => key === 'mod' || value === 0);
 }
 
-
 /**
  * Increments the dice counter value for a given dice type.
  *
@@ -56,7 +55,6 @@ function incrementDice(type) {
         console.error("Counter element not found:", counterId);
     }
 }
-
 
 /**
  * Decrements the dice count for a specified type.
@@ -96,7 +94,10 @@ function addDiceGroup() {
     const accordionHeader = document.createElement("div");
     accordionHeader.className = "dice-group-header";
     accordionHeader.innerHTML = `
-        <span class="group-title" id="accordion-title-${groupIndex}">New Group</span>
+        <div class="header-content">
+            <input type="text" class="dice-group-name-input header-input" id="group-${groupIndex}-name" 
+                placeholder="Group Name" value="New Group">
+        </div>
         <span class="accordion-toggle" onclick="toggleDiceGroupAccordion(event)">V</span>
     `;
 
@@ -109,10 +110,6 @@ function addDiceGroup() {
 
     let diceHTML = `
         <div class="dice-group-container">
-            <div class="dice-group-name">
-                <input type="text" class="dice-group-name-input" id="group-${groupIndex}-name" placeholder="Group Name"
-                    oninput="document.getElementById('accordion-title-${groupIndex}').textContent = this.value || 'New Group';">
-            </div>
             <div class="dice-row">
     `;
 
@@ -156,8 +153,6 @@ function addDiceGroup() {
     updateDiceGroupsData();
 }
 
-
-
 function updateDiceGroupsData() {
     diceGroupsData = [];
 
@@ -165,7 +160,9 @@ function updateDiceGroupsData() {
     diceGroupElements.forEach((groupElement) => {
         const groupId = groupElement.id;
         const groupDiceCounts = {};
-        const groupNameInput = groupElement.querySelector('.dice-group-name-input');
+        // Find the header input for this group
+        const header = groupElement.previousElementSibling;
+        const groupNameInput = header.querySelector('.dice-group-name-input');
         const groupName = groupNameInput && groupNameInput.value.trim() ? groupNameInput.value.trim() : `Group ${parseInt(groupId) + 1}`;
 
         if (debugMode) { // If debug mode is enabled, log the group name to the console
@@ -358,6 +355,44 @@ function deleteSavedRoll(element) {
     }
 }
 
+function abortEditing() {
+    const editingRollId = document.body.dataset.editingRollId;
+    if (editingRollId) {
+        const editingRollEntry = document.querySelector(`.saved-roll-entry[data-roll-id="${editingRollId}"]`);
+        if (editingRollEntry) {
+            editingRollEntry.classList.remove('editing');
+            const editButton = editingRollEntry.querySelector('.edit-roll');
+            if (editButton) editButton.classList.remove('editing');
+        }
+        delete document.body.dataset.editingRollId;
+    }
+
+    // Reset the creature name input and label
+    const creatureNameInput = document.getElementById('creature-name');
+    if (creatureNameInput) {
+        creatureNameInput.classList.remove('editing');
+    }
+
+    const rollLabelElement = document.querySelector('label[for="creature-name"]');
+    if (rollLabelElement) {
+        rollLabelElement.textContent = 'Roll Label';
+        rollLabelElement.classList.remove('editing');
+    }
+
+    // Remove editing class from group name inputs
+    const groupNameInputs = document.querySelectorAll('.dice-group-name-input');
+    groupNameInputs.forEach(input => {
+        input.classList.remove('editing');
+    });
+
+    // Remove editing class from Add Group and Remove Group buttons
+    const addGroupButton = document.getElementById('add-group-button');
+    if (addGroupButton) addGroupButton.classList.remove('editing');
+    
+    const removeGroupButton = document.getElementById('remove-group-button');
+    if (removeGroupButton) removeGroupButton.classList.remove('editing');
+}
+
 function save() {
     const editingRollId = document.body.dataset.editingRollId;
     const creatureName = document.getElementById('creature-name').value.trim() || 'Unnamed Roll';
@@ -517,6 +552,163 @@ function creatureNameExists(creatureName) {
     return exists;
 }
 
+function createRollButton(imageName, rollType, rollGroups, cssClasses, parent) { // Function to create a roll button for a saved roll
+    const rollButton = document.createElement("div"); // Create a new div element to hold the roll button
+    rollButton.className = cssClasses; // Assign the appropriate CSS classes to the roll button before creating it
+    rollButton.onclick = function () { // Add an onclick event listener to the roll button to roll the dice group
+        if (!Array.isArray(rollGroups) || rollGroups.length === 0 || rollGroups.every(isDiceGroupEmpty)) { // If the roll groups array is not an array or is empty or all the dice groups are empty then log an error and return
+            console.error('Attempted to roll an empty or invalid saved roll');
+            return;
+        }
+        rollsModule.roll(rollType, rollGroups); // Roll the dice group with the specified roll type and dice groups
+    };
+
+    // Creating the image icon for the roll button and adding the css class then appending it to the roll button
+    const imageIcon = document.createElement("img");
+    imageIcon.src = `./images/icons/${imageName}.png`;
+    imageIcon.className = "roll-type-image";
+    rollButton.appendChild(imageIcon);
+
+    if (parent && typeof parent.appendChild === 'function') { // If the parent element exists and has an appendChild function then append the roll button to the parent element
+        parent.appendChild(rollButton);
+    } else {
+        console.error('Invalid parent element provided to createRollButton');
+    }
+
+    return rollButton;
+}
+
+function updateRollButtons(rollEntry, rollData) { // Function to update the roll buttons for a saved roll
+    const rowOfButtons = rollEntry.querySelector('.row-buttons-container');
+    if (!rowOfButtons) { // If the row of buttons container doesn't exist then log an error and return
+        console.error('Row of buttons container not found in roll entry');
+        return;
+    }
+
+    rowOfButtons.innerHTML = '';
+    
+    createRollButton("rolling", "normal", rollData.groups, "roll-button row-button", rowOfButtons);
+    createRollButton("advantage", "advantage", rollData.groups, "roll-button row-button", rowOfButtons);
+    createRollButton("disadvantage", "disadvantage", rollData.groups, "roll-button row-button", rowOfButtons);
+    createRollButton("best-of-three", "best-of-three", rollData.groups, "roll-button row-button", rowOfButtons);
+    createRollButton("crit", "crit-dice", rollData.groups, "roll-button row-button", rowOfButtons);
+}
+
+/**
+ * Updates a saved roll with new data.
+ * 
+ * This function updates an existing roll entry with new data. It also handles
+ * updating the accordion structure if the creature name has changed.
+ * 
+ * @param {string} rollId - The ID of the roll to update.
+ * @param {Object} rollData - The new roll data.
+ */
+function updateSavedRoll(rollId, rollData) {
+    const rollEntry = document.querySelector(`.saved-roll-entry[data-roll-id="${rollId}"]`);
+    if (!rollEntry) {
+        console.error(`Roll entry with ID ${rollId} not found`);
+        return;
+    }
+
+    const oldCreatureName = rollEntry.dataset.creatureName;
+    const newCreatureName = rollData.name;
+    
+    // Update roll label
+    rollEntry.querySelector('.roll-entry-label').textContent = rollData.groups[0].name || "Unnamed Roll";
+    rollEntry.dataset.creatureName = newCreatureName;
+
+    // Update dice display
+    const diceDisplay = rollEntry.querySelector('.roll-entry-dice');
+    diceDisplay.innerHTML = '';
+    
+    rollData.groups.forEach((group, index) => {
+        const groupDiv = document.createElement('div');
+        groupDiv.className = 'dice-group';
+        groupDiv.dataset.groupIndex = index;
+        groupDiv.dataset.diceCounts = JSON.stringify(group.diceCounts);
+
+        const diceGroupText = Object.entries(group.diceCounts)
+            .filter(([diceType, count]) => count > 0 && diceType !== "mod")
+            .map(([diceType, count]) => `${count}${diceType}`)
+            .join(" + ");
+
+        const modifier = group.diceCounts.mod;
+        const modifierText = modifier !== 0 ? `${modifier >= 0 ? "+" : ""}${modifier}` : "";
+        
+        if (debugMode) {
+            console.log("Group name in updateSavedRoll before processing:", group.name);
+        }
+
+        const groupName = group.name && group.name.trim() ? group.name.trim() : `Group ${index + 1}`;
+
+        // Create spans for styled content
+        const groupNameSpan = document.createElement("span");
+        groupNameSpan.className = "dice-group-name-text";
+        groupNameSpan.textContent = groupName;
+        
+        const diceInfoSpan = document.createElement("span");
+        diceInfoSpan.className = "dice-info";
+        diceInfoSpan.textContent = `: ${diceGroupText}${modifierText ? ` ${modifierText}` : ""}`;
+        
+        groupDiv.appendChild(groupNameSpan);
+        groupDiv.appendChild(diceInfoSpan);
+        
+        diceDisplay.appendChild(groupDiv);
+    });
+
+    rollEntry.dataset.groupCount = rollData.groups.length;
+
+    updateRollButtons(rollEntry, rollData);
+
+    rollEntry.dataset.timestamp = Date.now();
+
+    // If the creature name has changed, move the roll to the correct accordion group
+    if (oldCreatureName !== newCreatureName) {
+        const oldCreatureGroup = rollEntry.closest('.saved-roll-group');
+        
+        // Check if a group for the new creature name already exists
+        let newCreatureGroup = document.querySelector(`.saved-roll-group[data-creature-name="${newCreatureName}"]`);
+        
+        if (!newCreatureGroup) {
+            // Create a new accordion group for this creature
+            newCreatureGroup = document.createElement("div");
+            newCreatureGroup.className = "saved-roll-group";
+            newCreatureGroup.dataset.creatureName = newCreatureName;
+            
+            newCreatureGroup.innerHTML = `
+                <div class="saved-roll-header" onclick="toggleAccordion(this)">
+                    <span>${newCreatureName}</span> <span class="accordion-icon">-</span>
+                </div>
+                <div class="saved-rolls-content"></div>
+            `;
+            
+            const savedRollsContainer = document.querySelector(".saved-rolls-container");
+            savedRollsContainer.appendChild(newCreatureGroup);
+        }
+        
+        // Move the roll entry to the new group
+        const newRollsContent = newCreatureGroup.querySelector('.saved-rolls-content');
+        newRollsContent.appendChild(rollEntry);
+        
+        // If old group is now empty, remove it
+        const remainingRolls = oldCreatureGroup.querySelectorAll('.saved-roll-entry');
+        if (remainingRolls.length === 0) {
+            oldCreatureGroup.remove();
+        }
+        
+        // Re-sort all rolls
+        sortSavedRolls();
+    }
+
+    rollEntry.classList.remove('editing');
+    const editButton = rollEntry.querySelector('.edit-roll');
+    if (editButton) {
+        editButton.classList.remove('editing');
+    }
+    
+    delete document.body.dataset.editingRollId;
+}
+
 /**
  * Adds a saved roll to the appropriate creature accordion group.
  *
@@ -660,7 +852,6 @@ function addSavedRoll(creatureName, savedDiceGroups, rollType) {
     sortSavedRolls();
 }
 
-
 function startEditingSavedRoll(elementOrId) { // Function to start editing a saved roll
     let rollEntry;
     let rollId;
@@ -718,231 +909,34 @@ function startEditingSavedRoll(elementOrId) { // Function to start editing a sav
     diceSelectionContainer.innerHTML = '';
     
     // TOOD: This needs to be updated to the new accordion design
-    for (let i = 0; i < groupCount; i++) { // Iterate over each group in the saved roll and create a new dice group div for each one
-        addDiceGroup(); // In theory this will be updated to the accordion design already
-        const groupDiv = rollEntry.querySelector(`.dice-group[data-group-index="${i}"]`); // Get the dice group div for the current group index
-        const groupData = JSON.parse(groupDiv.dataset.diceCounts); // Parse the dice counts from the data attribute of the dice group div and store it in groupData
-        const groupName = groupDiv.textContent.split(':')[0].trim(); // Get the group name from the dice group div and trim any whitespace from the beginning and end then store it in groupName
+    for (let i = 0; i < groupCount; i++) {
+        addDiceGroup();
+        const groupDiv = rollEntry.querySelector(`.dice-group[data-group-index="${i}"]`);
+        const groupData = JSON.parse(groupDiv.dataset.diceCounts);
+        const groupName = groupDiv.textContent.split(':')[0].trim();
         
-        const groupNameInput = document.getElementById(`group-${i}-name`);
-        if (groupNameInput) { // If the group name input field exists then set the value to the group name and add the "editing" CSS class
+        // Update to target the header input instead
+        const diceGroupWrapper = document.querySelectorAll('.dice-group-wrapper')[i];
+        const groupNameInput = diceGroupWrapper.querySelector('.dice-group-name-input');
+        if (groupNameInput) {
             groupNameInput.value = groupName;
             groupNameInput.classList.add('editing');
         }
         
-        diceTypes.forEach(diceType => { // Iterate over each dice type and update the count for each type in the dice group
+        diceTypes.forEach(diceType => {
             const countElement = document.getElementById(`group-${i}-${diceType}-counter-value`);
-            if (countElement) { // If the count element exists then set the text content to the count for the current dice type or 0 if it doesn't exist
+            if (countElement) {
                 countElement.textContent = groupData[diceType] || '0';
             }
         });
         
         const modElement = document.getElementById(`group-${i}-mod-counter-value`);
-        if (modElement) { // If the mod element exists then set the value to the mod for the current group or 0 if it doesn't exist
+        if (modElement) {
             modElement.value = groupData.mod || '0';
         }
     }
-    
-    window.scrollTo(0, 0); // Scroll to the top of the page. We do this if you're editing a saved creature or roll where the edit form is off the top of the screen
-    document.body.dataset.editingRollId = rollId;
-    rollEntry.classList.add('editing');
-    const editButton = rollEntry.querySelector('.edit-roll');
-    if (editButton) { // If the edit button exists then add the "editing" CSS class
-        editButton.classList.add('editing');
-    }
-}
 
-/**
- * Updates a saved roll with new data.
- * 
- * This function updates an existing roll entry with new data. It also handles
- * updating the accordion structure if the creature name has changed.
- * 
- * @param {string} rollId - The ID of the roll to update.
- * @param {Object} rollData - The new roll data.
- */
-function updateSavedRoll(rollId, rollData) {
-    const rollEntry = document.querySelector(`.saved-roll-entry[data-roll-id="${rollId}"]`);
-    if (!rollEntry) {
-        console.error(`Roll entry with ID ${rollId} not found`);
-        return;
-    }
 
-    const oldCreatureName = rollEntry.dataset.creatureName;
-    const newCreatureName = rollData.name;
-    
-    // Update roll label
-    rollEntry.querySelector('.roll-entry-label').textContent = rollData.groups[0].name || "Unnamed Roll";
-    rollEntry.dataset.creatureName = newCreatureName;
-
-    // Update dice display
-    const diceDisplay = rollEntry.querySelector('.roll-entry-dice');
-    diceDisplay.innerHTML = '';
-    
-    rollData.groups.forEach((group, index) => {
-        const groupDiv = document.createElement('div');
-        groupDiv.className = 'dice-group';
-        groupDiv.dataset.groupIndex = index;
-        groupDiv.dataset.diceCounts = JSON.stringify(group.diceCounts);
-
-        const diceGroupText = Object.entries(group.diceCounts)
-            .filter(([diceType, count]) => count > 0 && diceType !== "mod")
-            .map(([diceType, count]) => `${count}${diceType}`)
-            .join(" + ");
-
-        const modifier = group.diceCounts.mod;
-        const modifierText = modifier !== 0 ? `${modifier >= 0 ? "+" : ""}${modifier}` : "";
-        
-        if (debugMode) {
-            console.log("Group name in updateSavedRoll before processing:", group.name);
-        }
-
-        const groupName = group.name && group.name.trim() ? group.name.trim() : `Group ${index + 1}`;
-
-        // Create spans for styled content
-        const groupNameSpan = document.createElement("span");
-        groupNameSpan.className = "dice-group-name-text";
-        groupNameSpan.textContent = groupName;
-        
-        const diceInfoSpan = document.createElement("span");
-        diceInfoSpan.className = "dice-info";
-        diceInfoSpan.textContent = `: ${diceGroupText}${modifierText ? ` ${modifierText}` : ""}`;
-        
-        groupDiv.appendChild(groupNameSpan);
-        groupDiv.appendChild(diceInfoSpan);
-        
-        diceDisplay.appendChild(groupDiv);
-    });
-
-    rollEntry.dataset.groupCount = rollData.groups.length;
-
-    updateRollButtons(rollEntry, rollData);
-
-    rollEntry.dataset.timestamp = Date.now();
-
-    // If the creature name has changed, move the roll to the correct accordion group
-    if (oldCreatureName !== newCreatureName) {
-        const oldCreatureGroup = rollEntry.closest('.saved-roll-group');
-        
-        // Check if a group for the new creature name already exists
-        let newCreatureGroup = document.querySelector(`.saved-roll-group[data-creature-name="${newCreatureName}"]`);
-        
-        if (!newCreatureGroup) {
-            // Create a new accordion group for this creature
-            newCreatureGroup = document.createElement("div");
-            newCreatureGroup.className = "saved-roll-group";
-            newCreatureGroup.dataset.creatureName = newCreatureName;
-            
-            newCreatureGroup.innerHTML = `
-                <div class="saved-roll-header" onclick="toggleAccordion(this)">
-                    <span>${newCreatureName}</span> <span class="accordion-icon">-</span>
-                </div>
-                <div class="saved-rolls-content"></div>
-            `;
-            
-            const savedRollsContainer = document.querySelector(".saved-rolls-container");
-            savedRollsContainer.appendChild(newCreatureGroup);
-        }
-        
-        // Move the roll entry to the new group
-        const newRollsContent = newCreatureGroup.querySelector('.saved-rolls-content');
-        newRollsContent.appendChild(rollEntry);
-        
-        // If old group is now empty, remove it
-        const remainingRolls = oldCreatureGroup.querySelectorAll('.saved-roll-entry');
-        if (remainingRolls.length === 0) {
-            oldCreatureGroup.remove();
-        }
-        
-        // Re-sort all rolls
-        sortSavedRolls();
-    }
-
-    rollEntry.classList.remove('editing');
-    const editButton = rollEntry.querySelector('.edit-roll');
-    if (editButton) {
-        editButton.classList.remove('editing');
-    }
-    
-    delete document.body.dataset.editingRollId;
-}
-
-function abortEditing() {
-    const editingRollId = document.body.dataset.editingRollId;
-    if (editingRollId) {
-        const editingRollEntry = document.querySelector(`.saved-roll-entry[data-roll-id="${editingRollId}"]`);
-        if (editingRollEntry) {
-            editingRollEntry.classList.remove('editing');
-            const editButton = editingRollEntry.querySelector('.edit-roll');
-            if (editButton) editButton.classList.remove('editing');
-        }
-        delete document.body.dataset.editingRollId;
-    }
-
-    // Reset the creature name input and label
-    const creatureNameInput = document.getElementById('roll-name');
-    creatureNameInput.classList.remove('editing');
-
-    const rollLabelElement = document.querySelector('label[for="roll-name"]');
-    if (rollLabelElement) {
-        rollLabelElement.textContent = 'Roll Label';
-        rollLabelElement.classList.remove('editing');
-    }
-
-    // Remove editing class from group name inputs
-    const groupNameInputs = document.querySelectorAll('.dice-group-name-input');
-    groupNameInputs.forEach(input => {
-        input.classList.remove('editing');
-    });
-
-    // Remove editing class from Add Group and Remove Group buttons
-    const addGroupButton = document.getElementById('add-group-button');
-    const removeGroupButton = document.getElementById('remove-group-button');
-    if (addGroupButton) addGroupButton.classList.remove('editing');
-    if (removeGroupButton) removeGroupButton.classList.remove('editing');
-}
-
-function updateRollButtons(rollEntry, rollData) { // Function to update the roll buttons for a saved roll
-    const rowOfButtons = rollEntry.querySelector('.row-buttons-container');
-    if (!rowOfButtons) { // If the row of buttons container doesn't exist then log an error and return
-        console.error('Row of buttons container not found in roll entry');
-        return;
-    }
-
-    rowOfButtons.innerHTML = '';
-    
-    createRollButton("rolling", "normal", rollData.groups, "roll-button row-button", rowOfButtons);
-    createRollButton("advantage", "advantage", rollData.groups, "roll-button row-button", rowOfButtons);
-    createRollButton("disadvantage", "disadvantage", rollData.groups, "roll-button row-button", rowOfButtons);
-    createRollButton("best-of-three", "best-of-three", rollData.groups, "roll-button row-button", rowOfButtons);
-    createRollButton("crit", "crit-dice", rollData.groups, "roll-button row-button", rowOfButtons);
-}
-
-function createRollButton(imageName, rollType, rollGroups, cssClasses, parent) { // Function to create a roll button for a saved roll
-    const rollButton = document.createElement("div"); // Create a new div element to hold the roll button
-    rollButton.className = cssClasses; // Assign the appropriate CSS classes to the roll button before creating it
-    rollButton.onclick = function () { // Add an onclick event listener to the roll button to roll the dice group
-        if (!Array.isArray(rollGroups) || rollGroups.length === 0 || rollGroups.every(isDiceGroupEmpty)) { // If the roll groups array is not an array or is empty or all the dice groups are empty then log an error and return
-            console.error('Attempted to roll an empty or invalid saved roll');
-            return;
-        }
-        rollsModule.roll(rollType, rollGroups); // Roll the dice group with the specified roll type and dice groups
-    };
-
-    // Creating the image icon for the roll button and adding the css class then appending it to the roll button
-    const imageIcon = document.createElement("img");
-    imageIcon.src = `./images/icons/${imageName}.png`;
-    imageIcon.className = "roll-type-image";
-    rollButton.appendChild(imageIcon);
-
-    if (parent && typeof parent.appendChild === 'function') { // If the parent element exists and has an appendChild function then append the roll button to the parent element
-        parent.appendChild(rollButton);
-    } else {
-        console.error('Invalid parent element provided to createRollButton');
-    }
-
-    return rollButton;
-}
 
 function reset() { // Function to reset the dice roller to its default state
     document.getElementById("creature-name").value = "";
@@ -984,15 +978,6 @@ function reset() { // Function to reset the dice roller to its default state
 }
 
 /**
- * Function to disable a button by its ID. We use this against the save/load buttons when auto-load and auto-save is enabled
- * @param {string} id - The ID of the button to disable 
- * @param {bool} disable - Whether to disable the button or not. Default is true
- */
-function disableButtonById(id, disable = true) {
-    document.getElementById(id).disabled = disable;
-}
-
-/**
  * Toggles the visibility of a creature's roll group when clicked.
  *
  * This function handles the expansion and collapse of an accordion section
@@ -1009,29 +994,32 @@ function toggleAccordion(header) {
     header.querySelector(".accordion-icon").textContent = isHidden ? "-" : "+";
 }
 
-function toggleDiceGroupAccordion(event) {
-    const header = event.target.closest('.dice-group-header');
-    const wrapper = header.parentElement;
-    const content = header.nextElementSibling;
-    const icon = header.querySelector('.accordion-toggle');
-    const isCollapsed = !content.style.maxHeight || content.style.maxHeight === '0px';
+    function toggleDiceGroupAccordion(event) {
+        if (event.target.tagName.toLowerCase() === 'input') {
+            // Don't toggle when clicking on input field
+            return;
+        }
 
-    if (isCollapsed) {
-        content.style.display = 'flex';
-        requestAnimationFrame(() => {
-            content.style.maxHeight = content.scrollHeight + 'px';
-        });
-        icon.textContent = 'V';
-        icon.classList.add('rotate');
-    } else {
-        content.style.maxHeight = '0px';
-        setTimeout(() => {
-            content.style.display = 'none';
-        }, 300);
-        icon.textContent = '>>>';
-        icon.classList.remove('rotate');
+        const header = event.target.closest('.dice-group-header');
+        const wrapper = header.parentElement;
+        const content = header.nextElementSibling;
+        const icon = header.querySelector('.accordion-toggle');
+        const isCollapsed = !content.style.maxHeight || content.style.maxHeight === '0px';
+
+        if (isCollapsed) {
+            content.style.display = 'flex';
+            requestAnimationFrame(() => {
+                content.style.maxHeight = content.scrollHeight + 'px';
+            });
+            icon.textContent = 'V';
+            icon.classList.add('rotate');
+        } else {
+            content.style.maxHeight = '0px';
+            setTimeout(() => {
+                content.style.display = 'none';
+            }, 300);
+            icon.textContent = '>>>';
+            icon.classList.remove('rotate');
+        }
     }
 }
-
-
-

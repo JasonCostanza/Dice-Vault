@@ -1,11 +1,10 @@
-function performAutoLoads(){
+/**
+ * Performs auto loading/saving based on user settings
+ */
+function performAutoLoads() {
     if (fetchSetting('auto-load')) {
         console.log('Auto-loading rolls from local storage.');
         loadRollsFromLocalStorage();
-    }
-
-    if (fetchSetting('auto-save')) {
-
     }
 
     updateAutoButtons();
@@ -166,3 +165,16 @@ function saveCurrentRolls() {
     return savedRolls;
 }
 
+/**
+ * Disables or enables a button by its ID.
+ * @param {string} id - The ID of the button to disable or enable
+ * @param {boolean} disable - Whether to disable the button. Default is true
+ */
+function disableButtonById(id, disable = true) {
+    const button = document.getElementById(id);
+    if (button) {
+        button.disabled = disable;
+    } else {
+        console.error(`Button with ID "${id}" not found`);
+    }
+}
