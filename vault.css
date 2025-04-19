@@ -704,12 +704,6 @@ button:focus-visible {
     box-sizing: border-box;
 }
 
-.dice-group-container {
-    width: 100%;
-    box-sizing: border-box;
-}
-
-
 .dice-group-name-text {
     font-weight: bold;
     margin-right: 2px;
@@ -788,16 +782,6 @@ button:focus-visible {
     transform: rotate(180deg);
 }
 
-
-/* .dice-group-container {
-    overflow: hidden;
-    max-height: 0;
-    transition: max-height 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    padding: 0 10px 10px;
-} */
-
 /* Shrink dice rows slightly */
 .dice-selection {
     gap: 8px;
@@ -835,8 +819,10 @@ button:focus-visible {
 }
 
 .dice-group-container {
+    width: 100%;
+    box-sizing: border-box;
     max-height: 100% !important;
-    overflow: hidden;
+    overflow: visible;
     transition: max-height 0.3s ease-in-out;
     display: flex;
     flex-direction: column;
