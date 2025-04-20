@@ -152,16 +152,14 @@ body {
 
 /* Footer */
 .footer {
-    position: fixed;
     bottom: 0;
     width: 100%;
     background-color: var(--ts-background-primary);
-    padding: 10px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     z-index: 10;
-    border-top: 1px solid var(--ts-accessibility-border);
+    border-top: 2px solid var(--ts-accessibility-border);
 }
 
 
@@ -796,16 +794,6 @@ button:focus-visible {
     border-color: #ff0000;
 }
 
-.accordion-toggle {
-    font-size: 1.3em;
-    transition: transform 0.2s ease;
-    margin-left: 10px;
-    color: var(--ts-color-secondary);
-}
-.accordion-toggle.rotate {
-    transform: rotate(180deg);
-}
-
 .dice-group-name-input {
     font-size: 0.95em;
     padding: 4px 6px;
@@ -819,9 +807,10 @@ button:focus-visible {
     width: 100%;
 }
 
-
-.accordion-toggle.rotate {
-    transform: rotate(180deg);
+.accordion-toggle {
+    font-size: 1.3em;
+    margin-left: 10px;
+    color: var(--ts-color-secondary);
 }
 
 .dice-group-container {
