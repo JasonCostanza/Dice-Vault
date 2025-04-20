@@ -314,19 +314,32 @@ button:focus-visible {
 }
 
 .dice-row {
+    /* display: flex;
+    align-items: center;*/
+    justify-content: space-between; 
     display: flex;
+    /* flex-direction: column; */
     align-items: center;
-    justify-content: space-between;
+    justify-content: center; 
+    position: relative;
+    /* width: 70px; */
+    margin: 5px;
+    padding-top: 10px;
+    gap: 6px; 
 }
 
 /* Dice Counters */
 .dice-counter {
+    height: 100px; 
+    display: flex;
+    justify-content: center;
+    
     position: relative;
     display: inline-flex;
     flex-direction: column;
     align-items: center;
     cursor: pointer;
-    margin: 5px;
+    margin: 1px;
 }
 
 .counter-overlay {
@@ -782,28 +795,22 @@ button:focus-visible {
     transform: rotate(180deg);
 }
 
-/* Shrink dice rows slightly */
-.dice-selection {
-    gap: 8px;
-    flex-wrap: wrap;
-}
-
-
-
 .dice-group-name-input {
     font-size: 0.95em;
     padding: 4px 6px;
     margin-bottom: 4px;
 }
 
-
-
 .dice-selection {
     gap: 6px;
     flex-wrap: wrap;
     margin-top: 4px;
+    margin-bottom: 4px;
     font-size: 0.85em;
     padding-bottom: 0px;
+    height: 100% !important;
+    justify-content: center;
+    /* background-color: #4CAF50 !important; */
 }
 
 .dice-group-name-input {
