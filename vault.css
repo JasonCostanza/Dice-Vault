@@ -268,7 +268,14 @@ button:focus-visible {
 .dice-selection {
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    height: 100% !important;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    padding-bottom: 0px;
+    font-size: 0.85em;
 }
 
 .content-col-dice {
@@ -323,9 +330,9 @@ button:focus-visible {
     justify-content: center; 
     position: relative;
     /* width: 70px; */
-    margin: 5px;
-    padding-top: 10px;
-    gap: 6px; 
+    margin: 2px;
+    padding-top: 5px;
+    gap: 3px; 
 }
 
 /* Dice Counters */
@@ -801,18 +808,6 @@ button:focus-visible {
     margin-bottom: 4px;
 }
 
-.dice-selection {
-    gap: 6px;
-    flex-wrap: wrap;
-    margin-top: 4px;
-    margin-bottom: 4px;
-    font-size: 0.85em;
-    padding-bottom: 0px;
-    height: 100% !important;
-    justify-content: center;
-    /* background-color: #4CAF50 !important; */
-}
-
 .dice-group-name-input {
     font-size: 0.85em;
     padding: 3px 5px;
@@ -833,11 +828,6 @@ button:focus-visible {
     transition: max-height 0.3s ease-in-out;
     display: flex;
     flex-direction: column;
-    padding: 0 10px 10px;
-}
-
-.dice-selection {
-    background-color: rgba(56, 57, 61, 0.05); /* debug only */
 }
 
 .group-action-bar {
