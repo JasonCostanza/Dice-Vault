@@ -99,8 +99,17 @@ function addDiceGroup() {
             <input type="text" class="dice-group-name-input header-input" id="group-${groupIndex}-name" 
                 placeholder="Group Name" value="New Group">
         </div>
-        <span class="accordion-toggle" onclick="toggleDiceGroupAccordion(event)">V</span>
+        <span class="accordion-toggle">V</span>
     `;
+
+    accordionHeader.addEventListener('click', function(event) {
+        // Skip if we're clicking on the input
+        if (event.target.classList.contains('header-input') || 
+            event.target.classList.contains('dice-group-name-input')) {
+            return;
+        }
+        toggleDiceGroupAccordion(event);
+    });
 
     const content = document.createElement("div");
     content.className = "dice-selection";
@@ -969,33 +978,10 @@ function toggleAccordion(header) {
 }
 
 function toggleDiceGroupAccordion(event) {
-    if (debugMode) {
-        console.log("Event target:", event.target);
-        console.log("Event target tag:", event.target.tagName);
-        console.log("Event target class:", event.target.className);
-        console.log("Event coordinates:", event.clientX, event.clientY);
-    }
-
-    // Check if we're in the input field's area but not actually on the input
-    const inputField = event.target.closest('.dice-group-header').querySelector('input');
-    if (inputField) {
-        const inputRect = inputField.getBoundingClientRect();
-        console.log("Input field rect:", inputRect);
-        console.log("Is point in input area:", 
-            event.clientX >= inputRect.left && 
-            event.clientX <= inputRect.right && 
-            event.clientY >= inputRect.top && 
-            event.clientY <= inputRect.bottom);
-    }
-
-    // Prevent toggling when clicking directly on an input field
-    if (event.target === event.target.closest('.dice-group-header').querySelector('input')) {
-        if (debugMode) {
-            console.log("Input clicked, ignoring toggle");
-        }
-        return;
-    }
-
+    // Stop propagation to prevent parent handlers from firing
+    event.stopPropagation();
+    
+    // Find the closest header, content and icon elements
     const header = event.target.closest('.dice-group-header');
     if (!header) {
         console.error(".dice-group-header not found");
@@ -1012,7 +998,6 @@ function toggleDiceGroupAccordion(event) {
 
     // Check if collapsed based on display style
     const isCollapsed = content.style.display === 'none';
-    console.log("Is collapsed:", isCollapsed);
 
     if (isCollapsed) {
         // Expand
@@ -1020,12 +1005,10 @@ function toggleDiceGroupAccordion(event) {
         content.style.maxHeight = 'none'; // Allow natural height
         icon.textContent = 'V';
         icon.classList.add('rotate');
-        console.log("Expanded accordion");
     } else {
         // Collapse
         content.style.display = 'none';
         icon.textContent = '>>>';
         icon.classList.remove('rotate');
-        console.log("Collapsed accordion");
     }
 }
