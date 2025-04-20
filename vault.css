@@ -278,6 +278,10 @@ button:focus-visible {
     font-size: 0.85em;
 }
 
+.dice-selection.collapsed {
+    display: none;
+}
+
 .content-col-dice {
     display: flex;
     flex-direction: column;

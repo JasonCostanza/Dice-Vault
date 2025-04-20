@@ -144,10 +144,11 @@ function addDiceGroup() {
     wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     // Make sure the content is fully visible immediately
+    content.classList.remove('collapsed');
     content.style.display = 'flex';
     content.style.maxHeight = 'none'; // Allow natural height
 
-    accordionHeader.querySelector('.accordion-toggle').textContent = 'V';
+    // accordionHeader.querySelector('.accordion-toggle').textContent = 'V';
     accordionHeader.querySelector('.accordion-toggle').classList.add('rotate');
 
     updateDiceGroupsData();
@@ -967,24 +968,51 @@ function toggleAccordion(header) {
     header.querySelector(".accordion-icon").textContent = isHidden ? "-" : "+";
 }
 
-// In vault.js - update the toggleDiceGroupAccordion function
 function toggleDiceGroupAccordion(event) {
+    if (debugMode) {
+        console.log("Event target:", event.target);
+        console.log("Event target tag:", event.target.tagName);
+        console.log("Event target class:", event.target.className);
+        console.log("Event coordinates:", event.clientX, event.clientY);
+    }
+
+    // Check if we're in the input field's area but not actually on the input
+    const inputField = event.target.closest('.dice-group-header').querySelector('input');
+    if (inputField) {
+        const inputRect = inputField.getBoundingClientRect();
+        console.log("Input field rect:", inputRect);
+        console.log("Is point in input area:", 
+            event.clientX >= inputRect.left && 
+            event.clientX <= inputRect.right && 
+            event.clientY >= inputRect.top && 
+            event.clientY <= inputRect.bottom);
+    }
+
     // Prevent toggling when clicking directly on an input field
-    if (event.target.tagName.toLowerCase() === 'input') {
+    if (event.target === event.target.closest('.dice-group-header').querySelector('input')) {
+        if (debugMode) {
+            console.log("Input clicked, ignoring toggle");
+        }
         return;
     }
 
     const header = event.target.closest('.dice-group-header');
-    if (!header) return; // Safety check
+    if (!header) {
+        console.error(".dice-group-header not found");
+        return;
+    } 
     
-    const wrapper = header.parentElement;
     const content = header.nextElementSibling;
     const icon = header.querySelector('.accordion-toggle');
     
-    if (!content || !icon) return; // Safety check
+    if (!content || !icon) {
+        console.error("Content or icon not found for toggleDiceGroupAccordion");
+        return;
+    }
 
     // Check if collapsed based on display style
     const isCollapsed = content.style.display === 'none';
+    console.log("Is collapsed:", isCollapsed);
 
     if (isCollapsed) {
         // Expand
@@ -992,10 +1020,12 @@ function toggleDiceGroupAccordion(event) {
         content.style.maxHeight = 'none'; // Allow natural height
         icon.textContent = 'V';
         icon.classList.add('rotate');
+        console.log("Expanded accordion");
     } else {
         // Collapse
         content.style.display = 'none';
         icon.textContent = '>>>';
         icon.classList.remove('rotate');
+        console.log("Collapsed accordion");
     }
 }
