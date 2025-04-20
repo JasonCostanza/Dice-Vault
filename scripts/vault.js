@@ -400,7 +400,7 @@ function abortEditing() {
 
 function save() {
     const editingRollId = document.body.dataset.editingRollId;
-    const creatureName = document.getElementById('creature-name').value.trim() || 'Unnamed Roll';
+    const creatureName = document.getElementById('creature-name').value.trim() || 'Unnamed';
 
     const diceGroupElements = document.querySelectorAll(".dice-selection");
     savedDiceGroups = [];
@@ -823,13 +823,14 @@ function addSavedRoll(creatureName, savedDiceGroups, rollType) {
     const deleteIcon = devMode ? '<img src="images/dev_icons/dev_trash." class="debug-icons16">' : '<i class="ts-icon-trash ts-icon-xsmall"></i>';
 
     creatureEntry.innerHTML = `
-        <div class="roll-entry-header">
-            <div class="saved-rolls-button-container">
+        <div class="roll-entry-container">
+            <div class="roll-entry-dice-container"></div>
+            <div class="buttons-container">
                 <div class="edit-roll" onclick="startEditingSavedRoll(this)">${editIcon}</div>
                 <div class="delete-roll" onclick="deleteSavedRoll(this)">${deleteIcon}</div>
             </div>
         </div>
-        <div class="roll-entry-dice-container"></div>
+        <div class="row-buttons-container"></div>
     `;
 
     // Add the dice display to the container
