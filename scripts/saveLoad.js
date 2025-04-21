@@ -28,9 +28,6 @@ function updateAutoButtons(){
     }
 }
 
-/**
- * Saves roll data to local storage, respecting the accordion structure.
- */
 function saveRollsToLocalStorage() {
     let rollsData = [];
 
@@ -62,8 +59,8 @@ function saveRollsToLocalStorage() {
             }
 
             rolls.push({
-                name: entry.querySelector('.roll-entry-label').textContent.trim(),
-                type: entry.dataset.rollType,
+                name: entry.dataset.creatureName, // Changed from using .roll-entry-label
+                type: entry.dataset.rollType || 'normal',
                 groups: groups
             });
         });
@@ -81,14 +78,10 @@ function saveRollsToLocalStorage() {
     });
 }
 
-
-/**
- * Loads roll data from local storage, creating accordion structure.
- */
 async function loadRollsFromLocalStorage() {
     try {
         // First, check and upgrade the data if necessary
-        await checkAndUpgradeRollsData();
+        // await checkAndUpgradeRollsData();
 
         // Now load the (potentially upgraded) data
         const rollsJson = await TS.localStorage.campaign.getBlob();
@@ -109,7 +102,6 @@ async function loadRollsFromLocalStorage() {
         console.error('Failed to load or upgrade rolls data:', error);
     }
 }
-
 
 async function loadSavedRolls() {
     try {
