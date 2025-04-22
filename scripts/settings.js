@@ -114,3 +114,6 @@ async function handleRetrieveBackup() {
         alert('An error occurred while retrieving the backup. Please check the console for details.');
     }
 }
+
+// Export to global scope
+window.fetchSetting = fetchSetting;
