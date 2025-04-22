@@ -456,6 +456,7 @@ function save() {
         type: 'normal'
     };
 
+    // Check if we're editing an existing roll
     if (editingRollId) {
         updateSavedRoll(editingRollId, rollData);
         if (debugMode) {
@@ -465,10 +466,29 @@ function save() {
             console.groupEnd();
         }
     } else {
+        // Check if a similar roll already exists
+        const existingRoll = findExistingRoll(creatureName, savedDiceGroups);
+        
+        if (existingRoll && !overwriteConfirmed) {
+            // Show the overwrite modal to confirm
+            showOverwriteModal(creatureName);
+            return; // Stop execution here until user makes a choice
+        }
+        
+        // Reset the flag after using it
+        if (overwriteConfirmed) {
+            overwriteConfirmed = false;
+            
+            // If there was an existing roll, delete it before adding the new one
+            if (existingRoll) {
+                existingRoll.remove();
+            }
+        }
+        
+        // Add the new roll
         addSavedRoll(rollData.name, rollData.groups, rollData.type);
         if (debugMode) {
             console.group("Adding Roll");
-            console.log("Editing roll:", editingRollId);
             console.log("Roll data:", rollData);
             console.groupEnd();
         }
@@ -490,6 +510,55 @@ function save() {
     updateAutoButtons();
 }
 
+function findExistingRoll(creatureName, groupsData) {
+    const savedRollEntries = document.querySelectorAll('.saved-roll-entry');
+    
+    for (const entry of savedRollEntries) {
+        // Skip the roll that's currently being edited if any
+        if (document.body.dataset.editingRollId && entry.dataset.rollId === document.body.dataset.editingRollId) {
+            continue;
+        }
+        
+        // Check if creature name matches
+        if (entry.dataset.creatureName !== creatureName) {
+            continue;
+        }
+        
+        // Check if group count matches
+        const groupCount = parseInt(entry.dataset.groupCount || 0, 10);
+        if (groupCount !== groupsData.length) {
+            continue;
+        }
+        
+        // Check each group's name only
+        let groupsMatch = true;
+        for (let i = 0; i < groupCount; i++) {
+            const groupElement = entry.querySelector(`.dice-group[data-group-index="${i}"]`);
+            if (!groupElement) {
+                groupsMatch = false;
+                break;
+            }
+            
+            // Get group name from the entry
+            const groupNameText = groupElement.querySelector('.dice-group-name-text');
+            const savedGroupName = groupNameText ? groupNameText.textContent.trim() : `Group ${i + 1}`;
+            
+            // Check if group name matches
+            if (savedGroupName !== groupsData[i].name) {
+                groupsMatch = false;
+                break;
+            }
+        }
+        
+        // If all group names match, we found a match - dice counts are intentionally ignored
+        if (groupsMatch) {
+            return entry;
+        }
+    }
+    
+    return null;
+}
+
 function showOverwriteModal(creatureName) {
     toggleOverlay(true);
 
@@ -505,9 +574,13 @@ function showOverwriteModal(creatureName) {
     modal.style.zIndex = '1000';
     modal.style.boxShadow = '0 4px 8px var(--ts-background-primary)';
     modal.style.borderRadius = '4px';
+    modal.style.color = 'var(--ts-color-primary)';
+    modal.style.textAlign = 'center';
+    modal.style.minWidth = '300px';
 
     modal.innerHTML = `
-        <p>Overwrite "${creatureName}"?</p>
+        <p>A saved creature named "${creatureName}" with the same roll group names already exists.</p>
+        <p>Do you want to replace it with your new configuration?</p>
         <div style="display: flex; justify-content: space-around; margin-top: 20px;">
             <button id="overwrite-yes" class="black-button">Yes</button>
             <button id="overwrite-no" class="black-button">No</button>
@@ -526,6 +599,7 @@ function showOverwriteModal(creatureName) {
     document.getElementById('overwrite-no').addEventListener('click', () => {
         document.body.removeChild(modal);
         toggleOverlay(false);
+        // Don't set overwriteConfirmed flag - just abort
     });
 }
 

@@ -35,7 +35,7 @@ function loadGlobalSettings(){
         const settings = JSON.parse(settingsJson || '{}');
         document.getElementById('auto-load').checked = settings.autoLoadRolls || defaultSettings('autoLoadRolls');
         document.getElementById('auto-save').checked = settings.autoSaveRolls || defaultSettings('autoSaveRolls');
-        document.getElementById('auto-reset').checked = settings.autoSaveRolls || defaultSettings('autoResetEdit');
+        document.getElementById('auto-reset').checked = settings.autoResetEdit || defaultSettings('autoResetEdit');
         document.getElementById('crit-behavior').value = settings.critBehavior || defaultSettings('critBehavior');
         performAutoLoads();
     }).catch(error => {
