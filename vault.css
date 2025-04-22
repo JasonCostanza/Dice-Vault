@@ -380,20 +380,22 @@ button:focus-visible {
     position: absolute;
     top: 40%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -40%);
     pointer-events: none;
     z-index: 2;
     font-size: 1.5em;
-    color: #000000;
+    color: var(--ts-background-primary);
+    font-weight: bold;
     text-shadow:
-        -1px -1px 0 #ffffff,
-        1px -1px 0 #ffffff,
-        -1px 1px 0 #ffffff,
-        1px 1px 0 #ffffff;
+        -1px -1px 0 var(--ts-color-primary),
+        1px -1px 0  var(--ts-color-primary),
+        -1px 1px 0  var(--ts-color-primary),
+        1px 1px 0   var(--ts-color-primary);
 }
 
 .mod-counter-overlay {
     height: 1.6em;
+    width: 40px;
     text-align: center;
     border: none;
     left: 50%;
@@ -414,11 +416,11 @@ button:focus-visible {
 }
 
 .mod-counter-overlay:focus-visible {
-    background-color: var(--ts-background-tertiary);
+    background-color: var(--ts-background-secondary);
 }
 
 .mod-counter-overlay:hover {
-    background-color: var(--ts-background-tertiary);
+    background-color: var(--ts-background-secondary);
 }
 
 .dice-label {
@@ -444,9 +446,14 @@ button:focus-visible {
     height: auto;
     text-align: center;
     line-height: 1.2em;
+    border: 1px solid var(--ts-color-primary);
     cursor: pointer;
 }
 
+.wide-button{
+    border: 1px solid var(--ts-color-primary);
+    cursor: pointer;
+}
 
 /* Force consistent size across all roll-type images */
 .rolling-button img.roll-type-image {
@@ -464,12 +471,12 @@ button:focus-visible {
     text-align: center;
     cursor: pointer;
     border-radius: 4px;
-    border: 2px solid var(--ts-color-secondary);
+    border: 1px solid var(--ts-color-primary);
     transition: background-color 0.3s;
 }
 
 .roll-button:hover {
-    background-color: #56a5bd;
+    background-color: var(--ts-button-hover);
 }
 
 .buttons-container {
@@ -520,22 +527,17 @@ button:focus-visible {
 
 
 .saved-roll-entry {
-    border: 1px solid #ccc;
+    border: 1px solid var(--ts-accessibility-border);
     margin-bottom: 5px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    background-color: var(--ts-button-background);
+    background-color: var(--ts-background-tertiary);
     font-family: 'OptimusPrinceps', sans-serif;
     padding: 10px;
     border-radius: 3px;
     cursor: default;
-}
-
-
-.saved-roll-entry.editing {
-    background-color: #2c662e;
 }
 
 .roll-entry-container {
@@ -595,7 +597,7 @@ button:focus-visible {
     justify-content: space-between;
     align-items: center;
     padding: 10px;
-    background-color: var(--ts-background-secondary);
+    background-color: var(--ts-button-background);
     cursor: pointer;
     font-weight: bold;
     user-select: none;
@@ -673,14 +675,15 @@ button:focus-visible {
     margin: 0 5px;
     transition: background-color 0.2s;
     cursor: pointer;
+    border: 1px solid var(--ts-color-primary);
 }
 
 .edit-roll {
-    background-color: var(--ts-background-primary);
+    background-color: var(--ts-button-background);
 }
 
 .edit-roll:hover {
-    background-color: var(--ts-background-tertiary);
+    background-color: var(--ts-button-hover);
 }
 
 .delete-roll {
