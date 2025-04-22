@@ -142,13 +142,11 @@ button,
     width: 38px;
     height: 38px;
     padding-bottom: 15px;
-    background-color: black;
-    color: rgb(0, 0, 0);
     border-radius: 50%;
 }
 
 .active-menu {
-    background-color: grey !important;
+    background-color: var(--ts-background-tertiary) !important;
 }
 
 #settings-menu {
@@ -279,6 +277,14 @@ button:focus-visible {
     cursor: text;
 }
 
+#creature-name:hover {
+    background-color: var(--ts-background-tertiary);
+}
+
+#creature-name:focus {
+    background-color: var(--ts-background-tertiary);
+}
+
 /* Dice Groups & Selection */
 .dice-selection {
     display: flex;
@@ -291,6 +297,7 @@ button:focus-visible {
     margin-bottom: 4px;
     padding-bottom: 0px;
     font-size: 0.85em;
+    background-color: var(--ts-background-tertiary);
 }
 
 .dice-selection.collapsed {
@@ -337,7 +344,8 @@ button:focus-visible {
 
 .dice-group-name-input.editing,
 #creature-name.editing {
-    border-color: #ff0000;
+    /* border-color: var(--ts-color-danger); */
+    border: 2px solid var(--ts-color-danger);
 }
 
 .dice-row {
@@ -406,11 +414,11 @@ button:focus-visible {
 }
 
 .mod-counter-overlay:focus-visible {
-    background-color: rgba(150, 150, 150, 0.3);
+    background-color: var(--ts-background-tertiary);
 }
 
 .mod-counter-overlay:hover {
-    background-color: rgba(150, 150, 150, 0.3);
+    background-color: var(--ts-background-tertiary);
 }
 
 .dice-label {
@@ -451,8 +459,8 @@ button:focus-visible {
     display: block;
     padding: 5px 10px;
     margin-top: 10px;
-    background-color: #284b6b;
-    color: rgb(255, 255, 255);
+    background-color: var(--ts-button-background);
+    color: var(--ts-color-primary);
     text-align: center;
     cursor: pointer;
     border-radius: 4px;
@@ -668,38 +676,32 @@ button:focus-visible {
 }
 
 .edit-roll {
-    background-color: #868686;
-    color: rgb(0, 0, 0);
+    background-color: var(--ts-background-primary);
 }
 
 .edit-roll:hover {
-    background-color: #4e4e4e;
+    background-color: var(--ts-background-tertiary);
 }
 
 .delete-roll {
-    background-color: #f88c8c;
-    color: rgb(0, 0, 0);
+    background-color: var(--ts-accent-primary);
 }
 
 .delete-roll:hover {
-    background-color: #ff0000;
-}
-
-.edit-roll.editing {
-    background-color: #4CAF50;
+    background-color: var(--ts-color-danger);
 }
 
 /* Sort Options */
 .select-list {
     padding: 8px 16px;
     margin-left: 10px;
-    border: 2px solid var(--ts-color-primary);
+    border: 1px solid var(--ts-color-primary);
     border-radius: 4px;
-    background-color: var(--ts-background-secondary);
+    background-color: var(--ts-button-background);
     color: var(--ts-color-primary);
     font-family: 'Gill Sans', sans-serif;
     font-weight: bold;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 4px var(--ts-button-background);
     appearance: none;
     cursor: pointer;
     transition: background-color 0.3s, border-color 0.3s;
@@ -742,7 +744,7 @@ button:focus-visible {
 
 /* Dice group styling */
 .dice-info {
-    color: var(--ts-color-secondary);
+    color: var(--ts-color-primary);
 }
 
 .dice-group {
@@ -768,12 +770,12 @@ button:focus-visible {
     /* margin-bottom: 8px; */
     overflow: hidden;
     background-color: var(--ts-background-secondary);
-    box-shadow: 0 0 8px rgba(0,0,0,0.2);
+    box-shadow: 0 0 8px var(--ts-accessibility-border);
     transition: all 0.3s ease-in-out;
 }
 
 .dice-group-header {
-    background-color: var(--ts-background-primary);
+    background-color: var(--ts-background-secondary);
     padding: 6px 12px;
     font-weight: bold;
     display: flex;
@@ -783,10 +785,6 @@ button:focus-visible {
     font-size: 1em;
     border-bottom: 1px solid var(--ts-accessibility-border);
     cursor: pointer;
-}
-
-.dice-group-header:hover {
-    background-color: var(--ts-button-hover);
 }
 
 .header-content {
@@ -812,11 +810,11 @@ button:focus-visible {
 .dice-group-name-input.header-input:hover,
 .dice-group-name-input.header-input:focus {
     border-color: var(--ts-accessibility-border);
-    background-color: var(--ts-background-secondary);
+    background-color: var(--ts-background-tertiary);
 }
 
 .dice-group-name-input.header-input.editing {
-    border-color: #ff0000;
+    border-color: var(--ts-color-danger);
 }
 
 .dice-group-name-input {
@@ -870,19 +868,3 @@ button:focus-visible {
     width: auto;
     height: 32px;
 }
-
-#dice-group-scroll {
-    max-height: 340px; /* adjust this value as needed */
-    overflow-y: auto;
-    padding: 4px;
-    scroll-behavior: smooth;
-}
-#dice-group-scroll::-webkit-scrollbar {
-    width: 6px;
-}
-
-#dice-group-scroll::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 0.2);
-    border-radius: 4px;
-}
-

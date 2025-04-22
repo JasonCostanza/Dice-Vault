@@ -501,9 +501,9 @@ function showOverwriteModal(creatureName) {
     modal.style.transform = 'translate(-50%, -50%)';
     modal.style.backgroundColor = 'var(--ts-background-primary)';
     modal.style.padding = '20px';
-    modal.style.border = '4px solid #ff0000';
+    modal.style.border = '4px solid var(--ts-accessibility-border)';
     modal.style.zIndex = '1000';
-    modal.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
+    modal.style.boxShadow = '0 4px 8px var(--ts-background-primary)';
     modal.style.borderRadius = '4px';
 
     modal.innerHTML = `
@@ -538,7 +538,7 @@ function toggleOverlay(show) {
         overlay.style.left = '0';
         overlay.style.width = '100%';
         overlay.style.height = '100%';
-        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+        overlay.style.backgroundColor = 'var(--ts-background-primary)';
         overlay.style.zIndex = '999';
         overlay.style.pointerEvents = 'auto';  // This allows the overlay to receive mouse events
         document.body.appendChild(overlay);
