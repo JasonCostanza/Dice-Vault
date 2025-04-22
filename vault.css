@@ -633,15 +633,15 @@ button:focus-visible {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: black;
+    color: var(--ts-background-primary);
     font-size: 1.75em;
     pointer-events: none;
     z-index: 1;
     text-shadow:
-        -1px -1px 0 #ffffff,
-        1px -1px 0 #ffffff,
-        -1px 1px 0 #ffffff,
-        1px 1px 0 #ffffff;
+        -1px -1px 0 var(--ts-color-primary),
+        1px -1px 0  var(--ts-color-primary),
+        -1px 1px 0  var(--ts-color-primary),
+        1px 1px 0   var(--ts-color-primary);
 }
 
 /* Debug Icons (for development mode) */
