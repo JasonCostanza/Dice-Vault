@@ -229,9 +229,16 @@ function updateGroupElementIds(group, newIndex) {
     });
 }
 
+/**
+ * Sorts saved roll accordions based on the selected sort option.
+ * 
+ * This function sorts the accordion containers (creature groups) based on
+ * the selected sorting option. It preserves the internal structure of each
+ * accordion while reordering them in the container.
+ */
 function sortSavedRolls() {
     if (debugMode) {
-        console.log("Sorting saved rolls...");
+        console.log("Sorting creature groups...");
     }
 
     const sortOption = document.getElementById("sort-options").value;
@@ -307,14 +314,43 @@ function sortSavedRolls() {
     savedRollsContainer.innerHTML = "";
     accordionGroups.forEach(group => savedRollsContainer.appendChild(group));
 
-    // Now sort the rolls within each creature group using the same sorting criteria
-    accordionGroups.forEach(group => {
+    // After sorting creature groups, also apply the current roll sorting option
+    sortRollsWithinGroups();
+
+    if (debugMode) {
+        console.log("Creature group sorting complete");
+    }
+}
+
+/**
+ * Sorts roll entries within each creature group based on the selected sort option.
+ * 
+ * This function only sorts the individual roll entries within each creature group
+ * without affecting the order of the creature groups themselves.
+ */
+function sortRollsWithinGroups() {
+    if (debugMode) {
+        console.log("Sorting roll entries within creature groups...");
+    }
+
+    const sortOption = document.getElementById("sort-rolls-options").value;
+    const creatureGroups = document.querySelectorAll('.saved-roll-group');
+
+    if (creatureGroups.length === 0) {
+        if (debugMode) {
+            console.error("No creature groups found");
+        }
+        return;
+    }
+
+    // Sort roll entries within each creature group
+    creatureGroups.forEach(group => {
         const rollsContent = group.querySelector('.saved-rolls-content');
         if (!rollsContent) return;
 
         const rollEntries = Array.from(rollsContent.querySelectorAll('.saved-roll-entry'));
         
-        // Apply the same sorting logic to roll entries
+        // Apply sorting logic to roll entries
         switch (sortOption) {
             case "newest":
                 rollEntries.sort((a, b) => {
@@ -362,16 +398,24 @@ function sortSavedRolls() {
     });
 
     if (debugMode) {
-        console.log("Accordion and roll entry sorting complete");
+        console.log("Roll entry sorting complete");
     }
 }
 
 function initializeSortingFunctionality() {
-    const sortOptions = document.getElementById("sort-options");
-    if (sortOptions) {
-        sortOptions.addEventListener("change", sortSavedRolls);
+    const creatureSortOptions = document.getElementById("sort-options");
+    const rollsSortOptions = document.getElementById("sort-rolls-options");
+    
+    if (creatureSortOptions) {
+        creatureSortOptions.addEventListener("change", sortSavedRolls);
     } else {
-        console.error("Sort options element not found");
+        console.error("Creature sort options element not found");
+    }
+    
+    if (rollsSortOptions) {
+        rollsSortOptions.addEventListener("change", sortRollsWithinGroups);
+    } else {
+        console.error("Roll sort options element not found");
     }
 }
 

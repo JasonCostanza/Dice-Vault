@@ -80,13 +80,23 @@
 
             <div class="saved-rolls-header">
                 <label class="field-title unselectable">Pinned Rolls</label>
-                <div id="sort-options-container">
-                    <select id="sort-options" class='select-list' onchange="sortSavedRolls()">
-                        <option value="newest">Newest</option>
-                        <option value="oldest">Oldest</option>
-                        <option value="nameAsc">Sort A-Z</option>
-                        <option value="nameDesc">Sort Z-A</option>
-                    </select>
+                <div class="sort-options-container">
+                    <div id="sort-options-container">
+                        <select id="sort-options" class='creature-sort-list' onchange="sortSavedRolls()">
+                            <option value="newest">Newest</option>
+                            <option value="oldest">Oldest</option>
+                            <option value="nameAsc">A-Z</option>
+                            <option value="nameDesc">Z-A</option>
+                        </select>
+                    </div>
+                    <div id="sort-rolls-options-container">
+                        <select id="sort-rolls-options" class='roll-groups-sort-list' onchange="sortRollsWithinGroups()">
+                            <option value="newest">Newest</option>
+                            <option value="oldest">Oldest</option>
+                            <option value="nameAsc">A-Z</option>
+                            <option value="nameDesc">Z-A</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             
