@@ -147,91 +147,64 @@ const rollsModule = (function () {
         }
     }
 
-/**
-     * Constructs an array of dice roll descriptors based on the provided roll name
-     * and dice groups data.
-     *
-     * This function iterates over each group of dice counts provided in the global
-     * `diceGroupsData` array. For each group, it constructs a string representation
-     * of the dice rolls, including the count and type of each die, and any modifiers.
-     * These strings are then used to create objects that pair the provided roll name
-     * with the constructed roll string.
-     *
-     * The function is designed to support the
-     * [Talespire URL scheme](https://feedback.talespire.com/kb/article/talespire-url-scheme)
-     * for dice rolls, allowing these descriptors to be used for generating URLs that
-     * trigger specific dice rolls within the Talespire game.
-     * 
-     * If the rollType is advantage or disadvantage, it adds appropriate suffixes
-     * to the group names.
-     *
-     * Example of a dice roll object in the returned array:
-     * ```
-     * {
-     *     name: 'TEST',
-     *     roll: '+1d4+1d6+5'
-     * }
-     * ```
-     *
-     * @param {string} rollType - The type of roll being performed (normal, advantage, etc.)
-     *
-     * @returns {Array<Object>} An array of objects, each containing a `name` and a `roll`
-     *                          string that describes the dice roll.
-     */
-function constructDiceRollDescriptors(rollType) {
-    let diceRollObjects = [];
-
-    diceGroupsData.forEach((group, index) => {
-        if (!isDiceGroupEmpty(group)) {
-            let groupRollString = "";
-
-            for (const [die, count] of Object.entries(group.diceCounts)) {
-                if (die !== "mod" && count > 0) {
-                    groupRollString += `+${count}${die}`;
+    function constructDiceRollDescriptors(rollType) {
+        let diceRollObjects = [];
+    
+        diceGroupsData.forEach((group, index) => {
+            if (!isDiceGroupEmpty(group)) {
+                let groupRollString = "";
+    
+                // Handle all dice types, including those that might be missing
+                diceTypes.forEach(diceType => {
+                    const count = group.diceCounts[diceType] || 0;
+                    if (count > 0) {
+                        groupRollString += `+${count}${diceType}`;
+                    }
+                });
+    
+                // Handle modifier which might be missing
+                let modValue = group.diceCounts.mod || 0;
+                if (modValue !== 0) {
+                    let modPart = modValue > 0 ? `+${modValue}` : `${modValue}`;
+                    groupRollString += modPart;
+                }
+    
+                // Remove leading '+' if present
+                groupRollString = groupRollString.startsWith('+') ? groupRollString.slice(1) : groupRollString;
+    
+                if (groupRollString) {
+                    let groupName = group.name && group.name.trim() ? group.name.trim() : `Group ${index + 1}`;
+                    
+                    // Add suffix based on roll type
+                    switch (rollType) {
+                        case rollTypes.advantage:
+                            groupName += " (adv.)";
+                            break;
+                        case rollTypes.disadvantage:
+                            groupName += " (dis.)";
+                            break;
+                        case rollTypes.bestofThree:
+                            groupName += " (Bo3)";
+                            break;
+                        case rollTypes.critical:
+                            groupName += " (Crit)";
+                            break;
+                        default:
+                            break;
+                    }
+                    
+                    let rollObject = { 
+                        name: groupName, 
+                        roll: groupRollString 
+                    };
+                    diceRollObjects.push(rollObject);
                 }
             }
-
-            let modValue = parseInt(group.diceCounts.mod, 10);
-            if (modValue !== 0) {
-                let modPart = modValue > 0 ? `+${modValue}` : `${modValue}`;
-                groupRollString += modPart;
-            }
-
-            // Remove leading '+' if present
-            groupRollString = groupRollString.startsWith('+') ? groupRollString.slice(1) : groupRollString;
-
-            if (groupRollString) {
-                let groupName = group.name && group.name.trim() ? group.name.trim() : `Group ${index + 1}`;
-                
-                // Add suffix based on roll type
-                switch (rollType) {
-                    case rollTypes.advantage:
-                        groupName += " (adv.)";
-                        break;
-                    case rollTypes.disadvantage:
-                        groupName += " (dis.)";
-                        break;
-                    case rollTypes.bestofThree:
-                        groupName += " (Bo3)";
-                        break;
-                    case rollTypes.critical:
-                        groupName += " (Crit)";
-                        break;
-                    default:
-                        break;
-                }
-                
-                let rollObject = { 
-                    name: groupName, 
-                    roll: groupRollString 
-                };
-                diceRollObjects.push(rollObject);
-            }
-        }
-    });
-
-    return diceRollObjects;
-}
+        });
+    
+        return diceRollObjects;
+    }
+    
 
     /**
      * Handles the processing of roll events, including roll results and roll removals.

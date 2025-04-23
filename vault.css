@@ -60,7 +60,8 @@ button,
 }
 
 .scrolling-content {
-    max-height: 600px;
+    margin-top: 5px;
+    max-height: 90%;
     overflow-y: auto;
 }
 

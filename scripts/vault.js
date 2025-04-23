@@ -12,20 +12,17 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-/**
- * Checks if a dice group is empty.
- *
- * A dice group is considered empty if it is null, undefined, or if all dice counts are zero
- * (excluding the 'mod' key).
- *
- * @param {Object} diceGroup - The dice group to check.
- * @returns {boolean} - Returns true if the dice group is empty, otherwise false.
- */
 function isDiceGroupEmpty(diceGroup) {
     if (!diceGroup || !diceGroup.diceCounts) {
         return true; // Consider it empty if there's no data
     }
-    return Object.entries(diceGroup.diceCounts).every(([key, value]) => key === 'mod' || value === 0);
+    
+    // Check if any dice type has a non-zero count
+    // We need to check all possible dice types since some might be missing
+    return !diceTypes.some(diceType => {
+        const count = diceGroup.diceCounts[diceType] || 0;
+        return count > 0;
+    }) && (!diceGroup.diceCounts.mod || diceGroup.diceCounts.mod === 0);
 }
 
 /**
@@ -683,12 +680,12 @@ function updateSavedRoll(rollId, rollData) {
         groupDiv.dataset.diceCounts = JSON.stringify(group.diceCounts);
 
         const diceGroupText = Object.entries(group.diceCounts)
-            .filter(([diceType, count]) => count > 0 && diceType !== "mod")
-            .map(([diceType, count]) => `${count}${diceType}`)
-            .join(" + ");
-
-        const modifier = group.diceCounts.mod;
-        const modifierText = modifier !== 0 ? `${modifier >= 0 ? "+" : ""}${modifier}` : "";
+        .filter(([diceType, count]) => count > 0 && diceType !== "mod")
+        .map(([diceType, count]) => `${count}${diceType}`)
+        .join(" + ");
+    
+        const modifier = group.diceCounts.mod || 0;
+        const modifierText = modifier !== 0 ? `${modifier >= 0 ? "+ " : ""}${modifier}` : "";
 
         const groupName = group.name && group.name.trim() ? group.name.trim() : `Group ${index + 1}`;
 
@@ -815,11 +812,11 @@ function addSavedRoll(creatureName, savedRoll) {
 
         const groupName = group.name && group.name.trim() ? group.name.trim() : `Group ${index + 1}`;
         const diceGroupText = Object.entries(group.diceCounts)
-            .filter(([diceType, count]) => count > 0 && diceType !== "mod")
-            .map(([diceType, count]) => `${count}${diceType}`)
-            .join(" + ");
-
-        const modifier = group.diceCounts.mod;
+        .filter(([diceType, count]) => count > 0 && diceType !== "mod")
+        .map(([diceType, count]) => `${count}${diceType}`)
+        .join(" + ");
+    
+        const modifier = group.diceCounts.mod || 0;
         const modifierText = modifier !== 0 ? `${modifier >= 0 ? "+ " : ""}${modifier}` : "";
 
         // Create spans for styled content

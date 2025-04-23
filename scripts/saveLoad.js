@@ -47,9 +47,18 @@ function saveRollsToLocalStorage() {
                     let diceCountsData = groupElement.dataset.diceCounts;
                     try {
                         let diceCounts = JSON.parse(diceCountsData);
+                        
+                        // Filter out zero values
+                        let filteredDiceCounts = {};
+                        Object.entries(diceCounts).forEach(([diceType, count]) => {
+                            if (count !== 0) {
+                                filteredDiceCounts[diceType] = count;
+                            }
+                        });
+                        
                         savedRoll.push({
                             name: groupName,
-                            diceCounts: diceCounts
+                            diceCounts: filteredDiceCounts
                         });
                     } catch (e) {
                         console.error(`Error parsing dice counts for group ${i}:`, e);
