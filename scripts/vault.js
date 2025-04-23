@@ -229,13 +229,6 @@ function updateGroupElementIds(group, newIndex) {
     });
 }
 
-/**
- * Sorts saved roll accordions based on the selected sort option.
- * 
- * This function sorts the accordion containers (creature groups) based on
- * the selected sorting option. It preserves the internal structure of each
- * accordion while reordering them in the container.
- */
 function sortSavedRolls() {
     if (debugMode) {
         console.log("Sorting saved rolls...");
@@ -314,8 +307,62 @@ function sortSavedRolls() {
     savedRollsContainer.innerHTML = "";
     accordionGroups.forEach(group => savedRollsContainer.appendChild(group));
 
+    // Now sort the rolls within each creature group using the same sorting criteria
+    accordionGroups.forEach(group => {
+        const rollsContent = group.querySelector('.saved-rolls-content');
+        if (!rollsContent) return;
+
+        const rollEntries = Array.from(rollsContent.querySelectorAll('.saved-roll-entry'));
+        
+        // Apply the same sorting logic to roll entries
+        switch (sortOption) {
+            case "newest":
+                rollEntries.sort((a, b) => {
+                    const aTimestamp = parseInt(a.dataset.timestamp) || 0;
+                    const bTimestamp = parseInt(b.dataset.timestamp) || 0;
+                    return bTimestamp - aTimestamp; // Descending order for newest
+                });
+                break;
+            case "oldest":
+                rollEntries.sort((a, b) => {
+                    const aTimestamp = parseInt(a.dataset.timestamp) || Infinity;
+                    const bTimestamp = parseInt(b.dataset.timestamp) || Infinity;
+                    return aTimestamp - bTimestamp; // Ascending order for oldest
+                });
+                break;
+            case "nameAsc":
+                rollEntries.sort((a, b) => {
+                    // Use the first group's name as the roll name for sorting
+                    const aGroupDiv = a.querySelector('.dice-group[data-group-index="0"]');
+                    const bGroupDiv = b.querySelector('.dice-group[data-group-index="0"]');
+                    
+                    const aName = aGroupDiv ? aGroupDiv.querySelector('.dice-group-name-text')?.textContent || "" : "";
+                    const bName = bGroupDiv ? bGroupDiv.querySelector('.dice-group-name-text')?.textContent || "" : "";
+                    
+                    return aName.localeCompare(bName); // A-Z
+                });
+                break;
+            case "nameDesc":
+                rollEntries.sort((a, b) => {
+                    // Use the first group's name as the roll name for sorting
+                    const aGroupDiv = a.querySelector('.dice-group[data-group-index="0"]');
+                    const bGroupDiv = b.querySelector('.dice-group[data-group-index="0"]');
+                    
+                    const aName = aGroupDiv ? aGroupDiv.querySelector('.dice-group-name-text')?.textContent || "" : "";
+                    const bName = bGroupDiv ? bGroupDiv.querySelector('.dice-group-name-text')?.textContent || "" : "";
+                    
+                    return bName.localeCompare(aName); // Z-A
+                });
+                break;
+        }
+
+        // Clear and re-append the sorted roll entries
+        rollsContent.innerHTML = "";
+        rollEntries.forEach(entry => rollsContent.appendChild(entry));
+    });
+
     if (debugMode) {
-        console.log("Accordion sorting complete");
+        console.log("Accordion and roll entry sorting complete");
     }
 }
 
