@@ -34,11 +34,11 @@ function saveRollsToLocalStorage() {
     // Iterate over each creature group and save its rolls
     document.querySelectorAll('.saved-roll-group').forEach(group => {
         let creatureName = group.dataset.creatureName; // Get creature name
-        let rolls = [];
+        let allCreatureRolls = [];
 
         group.querySelectorAll('.saved-roll-entry').forEach(entry => {
             let groupCount = parseInt(entry.dataset.groupCount, 10) || 1;
-            let groups = [];
+            let savedRoll = [];
 
             for (let i = 0; i < groupCount; i++) {
                 let groupElement = entry.querySelector(`.dice-group[data-group-index="${i}"]`);
@@ -47,7 +47,7 @@ function saveRollsToLocalStorage() {
                     let diceCountsData = groupElement.dataset.diceCounts;
                     try {
                         let diceCounts = JSON.parse(diceCountsData);
-                        groups.push({
+                        savedRoll.push({
                             name: groupName,
                             diceCounts: diceCounts
                         });
@@ -58,14 +58,12 @@ function saveRollsToLocalStorage() {
                 }
             }
 
-            rolls.push({
-                name: entry.dataset.creatureName, // Changed from using .roll-entry-label
-                type: entry.dataset.rollType || 'normal',
-                groups: groups
+            allCreatureRolls.push({
+                savedRoll: savedRoll
             });
         });
 
-        rollsData.push({ creatureName, rolls }); // Store grouped data
+        rollsData.push({ creatureName, allCreatureRolls }); // Store grouped data
     });
 
     let rollsJson = JSON.stringify(rollsData);
@@ -80,26 +78,23 @@ function saveRollsToLocalStorage() {
 
 async function loadRollsFromLocalStorage() {
     try {
-        // First, check and upgrade the data if necessary
-        // await checkAndUpgradeRollsData();
-
-        // Now load the (potentially upgraded) data
+        // Now load the data
         const rollsJson = await TS.localStorage.campaign.getBlob();
         let rollsData = JSON.parse(rollsJson || '[]');
 
-        rollsData.forEach(({ creatureName, rolls }) => { // Iterate over each saved creature
-            rolls.forEach(rollData => { 
-                addSavedRoll(creatureName, rollData.groups, rollData.type); // Load rolls into their group
+        rollsData.forEach(({ creatureName, allCreatureRolls }) => { // Iterate over each saved creature
+            allCreatureRolls.forEach(({ savedRoll }) => { 
+                // Add each saved roll to the creature's group
+                addSavedRoll(creatureName, savedRoll);
             });
         });
         
-
         disableButtonById('load-rolls-button');
         if (!fetchSetting('auto-save')){
             disableButtonById('save-rolls-button', false);
         }
     } catch (error) {
-        console.error('Failed to load or upgrade rolls data:', error);
+        console.error('Failed to load rolls data:', error);
     }
 }
 

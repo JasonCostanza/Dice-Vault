@@ -405,13 +405,6 @@ function save() {
     const diceGroupElements = document.querySelectorAll(".dice-selection");
     savedDiceGroups = [];
 
-    if (debugMode) {
-        console.group("Save()")
-        console.log(creatureName);
-        console.log("savedDiceGroups[] should be empty:", savedDiceGroups);
-        console.groupEnd();
-    }
-
     diceGroupElements.forEach((groupElement, index) => {
         const groupId = groupElement.id;
         const groupDiceCounts = {};
@@ -442,29 +435,16 @@ function save() {
             name: groupName,
             diceCounts: groupDiceCounts
         });
-
-        if (debugMode) {
-            console.group("Saved().savedDiceGroups[]");
-            console.log("savedDiceGroups[]:", savedDiceGroups);
-            console.groupEnd();
-        }
     });
 
     const rollData = {
         name: creatureName,
-        groups: savedDiceGroups,
-        type: 'normal'
+        groups: savedDiceGroups
     };
 
     // Check if we're editing an existing roll
     if (editingRollId) {
         updateSavedRoll(editingRollId, rollData);
-        if (debugMode) {
-            console.group("Editing Roll");
-            console.log("Editing roll:", editingRollId);
-            console.log("Roll data:", rollData);
-            console.groupEnd();
-        }
     } else {
         // Check if a similar roll already exists
         const existingRoll = findExistingRoll(creatureName, savedDiceGroups);
@@ -486,12 +466,7 @@ function save() {
         }
         
         // Add the new roll
-        addSavedRoll(rollData.name, rollData.groups, rollData.type);
-        if (debugMode) {
-            console.group("Adding Roll");
-            console.log("Roll data:", rollData);
-            console.groupEnd();
-        }
+        addSavedRoll(rollData.name, savedDiceGroups);
     }
 
     abortEditing();
@@ -677,15 +652,6 @@ function updateRollButtons(rollEntry, rollData) { // Function to update the roll
     createRollButton("crit", "crit-dice", rollData.groups, "roll-button row-button", rowOfButtons);
 }
 
-/**
- * Updates a saved roll with new data.
- * 
- * This function updates an existing roll entry with new data. It also handles
- * updating the accordion structure if the creature name has changed.
- * 
- * @param {string} rollId - The ID of the roll to update.
- * @param {Object} rollData - The new roll data.
- */
 function updateSavedRoll(rollId, rollData) {
     const rollEntry = document.querySelector(`.saved-roll-entry[data-roll-id="${rollId}"]`);
     if (!rollEntry) {
@@ -696,7 +662,7 @@ function updateSavedRoll(rollId, rollData) {
     const oldCreatureName = rollEntry.dataset.creatureName;
     const newCreatureName = rollData.name;
 
-    // Update roll label
+    // Update roll label (use the first group's name as label)
     rollEntry.querySelector('.roll-entry-label').textContent = rollData.groups[0].name || "Unnamed Roll";
     rollEntry.dataset.creatureName = newCreatureName;
 
@@ -704,7 +670,13 @@ function updateSavedRoll(rollId, rollData) {
     const diceDisplay = rollEntry.querySelector('.roll-entry-dice');
     diceDisplay.innerHTML = '';
 
-    rollData.groups.forEach((group, index) => {
+    // Convert the groups to savedRoll format
+    const savedRoll = rollData.groups.map(group => ({
+        name: group.name,
+        diceCounts: group.diceCounts
+    }));
+
+    savedRoll.forEach((group, index) => {
         const groupDiv = document.createElement('div');
         groupDiv.className = 'dice-group';
         groupDiv.dataset.groupIndex = index;
@@ -717,10 +689,6 @@ function updateSavedRoll(rollId, rollData) {
 
         const modifier = group.diceCounts.mod;
         const modifierText = modifier !== 0 ? `${modifier >= 0 ? "+" : ""}${modifier}` : "";
-
-        if (debugMode) {
-            console.log("Group name in updateSavedRoll before processing:", group.name);
-        }
 
         const groupName = group.name && group.name.trim() ? group.name.trim() : `Group ${index + 1}`;
 
@@ -739,9 +707,10 @@ function updateSavedRoll(rollId, rollData) {
         diceDisplay.appendChild(groupDiv);
     });
 
-    rollEntry.dataset.groupCount = rollData.groups.length;
+    rollEntry.dataset.groupCount = savedRoll.length;
 
-    updateRollButtons(rollEntry, rollData);
+    // Update roll buttons to work with new structure
+    updateRollButtons(rollEntry, { groups: savedRoll });
 
     rollEntry.dataset.timestamp = Date.now();
 
@@ -792,18 +761,7 @@ function updateSavedRoll(rollId, rollData) {
     delete document.body.dataset.editingRollId;
 }
 
-/**
- * Adds a saved roll to the appropriate creature accordion group.
- *
- * This function organizes saved rolls by creature name in collapsible accordion sections.
- * If an accordion for the specified creature already exists, the roll is added to that section.
- * Otherwise, a new accordion section is created for the creature.
- *
- * @param {string} creatureName - The name of the creature for which the roll is being saved.
- * @param {Array} savedDiceGroups - Array of dice group objects containing dice counts and group names.
- * @param {string} rollType - The type of roll (normal, advantage, etc.).
- */
-function addSavedRoll(creatureName, savedDiceGroups, rollType) {
+function addSavedRoll(creatureName, savedRoll) {
     const savedRollsContainer = document.querySelector(".saved-rolls-container");
 
     if (!savedRollsContainer) {
@@ -841,25 +799,15 @@ function addSavedRoll(creatureName, savedDiceGroups, rollType) {
     // Preserve all existing dataset properties
     creatureEntry.dataset.creatureName = creatureName;
     creatureEntry.dataset.rollId = rollId;
-    creatureEntry.dataset.groupCount = savedDiceGroups.length;
-    creatureEntry.dataset.rollType = rollType || 'normal';
+    creatureEntry.dataset.groupCount = savedRoll.length;
+    creatureEntry.dataset.rollType = 'normal';
     creatureEntry.dataset.timestamp = Date.now();
 
-    if (debugMode) {
-        console.group("addSavedRoll()");
-        console.log("Creature Name:", creatureEntry.dataset.creatureName);
-        console.log("Roll ID:", creatureEntry.dataset.rollId);
-        console.log("Roll group count:", creatureEntry.dataset.groupCount);
-        console.log("Roll Type:", creatureEntry.dataset.rollType);
-        console.log("Roll timestamp:", creatureEntry.dataset.timestamp);
-        console.groupEnd();
-        console.log("addSavedRoll(): Group Data Passed to addSavedRoll():", savedDiceGroups);
-    }
-
+    // Create the roll display
     const diceDisplay = document.createElement("div");
     diceDisplay.className = "roll-entry-dice";
 
-    savedDiceGroups.forEach((group, index) => {
+    savedRoll.forEach((group, index) => {
         const groupDiv = document.createElement("div");
         groupDiv.className = "dice-group";
         groupDiv.dataset.groupIndex = index;
@@ -874,11 +822,7 @@ function addSavedRoll(creatureName, savedDiceGroups, rollType) {
         const modifier = group.diceCounts.mod;
         const modifierText = modifier !== 0 ? `${modifier >= 0 ? "+ " : ""}${modifier}` : "";
 
-        if (debugMode) {
-            console.log("Rendering group:", groupName, "with dice:", diceGroupText);
-        }
-
-        // Create a span for the dice info to allow styling
+        // Create spans for styled content
         const groupNameSpan = document.createElement("span");
         groupNameSpan.className = "dice-group-name-text";
         groupNameSpan.textContent = groupName;
@@ -915,19 +859,8 @@ function addSavedRoll(creatureName, savedDiceGroups, rollType) {
     rowOfButtons.className = "row-buttons-container";
     creatureEntry.appendChild(rowOfButtons);
 
-    const rollData = {
-        name: creatureName,
-        groups: savedDiceGroups,
-        type: rollType
-    };
-
-    if (debugMode) {
-        console.group("addSavedRoll(): rollData");
-        console.log("Roll data:", rollData);
-        console.groupEnd();
-    }
-
-    updateRollButtons(creatureEntry, rollData);
+    // Update to work with new structure
+    updateRollButtons(creatureEntry, { groups: savedRoll });
 
     // Append to the correct creature accordion group
     rollsContent.appendChild(creatureEntry);
