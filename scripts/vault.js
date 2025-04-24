@@ -336,13 +336,6 @@ function sortRollsWithinGroups() {
     const sortOption = document.getElementById("sort-rolls-options").value;
     const creatureGroups = document.querySelectorAll('.saved-roll-group');
 
-    if (creatureGroups.length === 0) {
-        if (debugMode) {
-            console.error("No creature groups found");
-        }
-        return;
-    }
-
     // Sort roll entries within each creature group
     creatureGroups.forEach(group => {
         const rollsContent = group.querySelector('.saved-rolls-content');
