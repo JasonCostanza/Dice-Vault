@@ -278,6 +278,7 @@ button:focus-visible {
     padding: 5px;
     font-size: 1em;
     cursor: text;
+    border: 3px solid transparent;
 }
 
 #creature-name:hover {
@@ -343,6 +344,7 @@ button:focus-visible {
     padding: 5px;
     font-size: 1em;
     cursor: pointer;
+    border: 3px solid transparent;
 }
 
 .dice-group-wrapper {

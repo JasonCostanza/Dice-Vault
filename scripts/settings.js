@@ -76,8 +76,9 @@ async function handleRetrieveBackup() {
             // Create a modal or dialog to display the backup data
             const modal = document.createElement('div');
             modal.style.position = 'fixed';
-            modal.style.left = '10%';
-            modal.style.top = '10%';
+            modal.style.left = '50%';
+            modal.style.top = '50%';
+            modal.style.transform = 'translate(-50%, -50%)';
             modal.style.width = '80%';
             modal.style.height = '50%';
             modal.style.backgroundColor = 'white';
