@@ -346,7 +346,7 @@ button:focus-visible {
 }
 
 .dice-group-wrapper {
-    border: 1px solid var(--ts-accessibility-border);
+    border: 3px solid transparent;
     border-radius: 6px;
     /* margin-bottom: 8px; */
     overflow: hidden;
@@ -358,7 +358,7 @@ button:focus-visible {
 #creature-name.editing,
 .dice-group-name-input.editing,
 .dice-group-wrapper.editing {
-    border: 3px solid var(--ts-color-danger) !important;
+    border-color: var(--ts-color-danger) !important;
     box-sizing: border-box !important;
     margin: 0;
 }
