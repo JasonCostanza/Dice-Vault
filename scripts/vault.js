@@ -94,7 +94,7 @@ function addDiceGroup() {
     accordionHeader.innerHTML = `
         <div class="header-content">
             <input type="text" class="dice-group-name-input header-input" id="group-${groupIndex}-name" 
-                placeholder="Group Name" value="New Group">
+                placeholder="Group Name" value="Group">
         </div>
         <span class="accordion-toggle">-</span>
     `;
@@ -478,11 +478,17 @@ function abortEditing() {
         input.classList.remove('editing');
     });
 
+    // Remove editing class from dice group wrappers
+    const diceGroupWrappers = document.querySelectorAll('.dice-group-wrapper');
+    diceGroupWrappers.forEach(wrapper => {
+        wrapper.classList.remove('editing');
+    });
+
     // Remove editing class from Add Group and Remove Group buttons
-    const addGroupButton = document.getElementById('add-group-button');
+    const addGroupButton = document.getElementById('add-group-btn');
     if (addGroupButton) addGroupButton.classList.remove('editing');
 
-    const removeGroupButton = document.getElementById('remove-group-button');
+    const removeGroupButton = document.getElementById('remove-group-btn');
     if (removeGroupButton) removeGroupButton.classList.remove('editing');
 }
 
@@ -556,6 +562,12 @@ function save() {
         // Add the new roll
         addSavedRoll(rollData.name, savedDiceGroups);
     }
+
+    // Remove editing classes from dice group wrappers
+    const diceGroupWrappers = document.querySelectorAll('.dice-group-wrapper');
+    diceGroupWrappers.forEach(wrapper => {
+        wrapper.classList.remove('editing');
+    });
 
     abortEditing();
 
@@ -750,8 +762,12 @@ function updateSavedRoll(rollId, rollData) {
     const oldCreatureName = rollEntry.dataset.creatureName;
     const newCreatureName = rollData.name;
 
-    // Update roll label (use the first group's name as label)
-    rollEntry.querySelector('.roll-entry-label').textContent = rollData.groups[0].name || "Unnamed Roll";
+    // Update roll label (use the first group's name as label) - Check if element exists first
+    const rollEntryLabel = rollEntry.querySelector('.roll-entry-label');
+    if (rollEntryLabel) {
+        rollEntryLabel.textContent = rollData.groups[0].name || "Unnamed Roll";
+    }
+    
     rollEntry.dataset.creatureName = newCreatureName;
 
     // Update dice display
@@ -930,6 +946,7 @@ function addSavedRoll(creatureName, savedRoll) {
 
     creatureEntry.innerHTML = `
         <div class="roll-entry-container">
+            
             <div class="roll-entry-dice-container"></div>
             <div class="buttons-container">
                 <div class="edit-roll" onclick="startEditingSavedRoll(this)">${editIcon}</div>
@@ -957,14 +974,14 @@ function addSavedRoll(creatureName, savedRoll) {
     sortSavedRolls();
 }
 
-function startEditingSavedRoll(elementOrId) { // Function to start editing a saved roll
+function startEditingSavedRoll(elementOrId) {
     let rollEntry;
     let rollId;
 
-    if (typeof elementOrId === 'string') { // If the argument is a string, assume it's the roll ID, then find the roll entry and roll ID
-        rollEntry = document.querySelector(`.saved-roll-entry[data-roll-id="${rollId}"]`);
+    if (typeof elementOrId === 'string') {
+        rollEntry = document.querySelector(`.saved-roll-entry[data-roll-id="${elementOrId}"]`);
         rollId = elementOrId;
-    } else if (elementOrId instanceof Element) { // If the argument is an element, assume it's the edit button, then find the roll entry and roll ID
+    } else if (elementOrId instanceof Element) {
         rollEntry = elementOrId.closest('.saved-roll-entry');
         rollId = rollEntry ? rollEntry.dataset.rollId : null;
     } else {
@@ -986,22 +1003,28 @@ function startEditingSavedRoll(elementOrId) { // Function to start editing a sav
         abortEditing();
     }
 
+    document.body.dataset.editingRollId = rollId;
+    rollEntry.classList.add('editing');
+
+    if (elementOrId instanceof Element) {
+        elementOrId.classList.add('editing');
+    }
+
     const groupCount = parseInt(rollEntry.dataset.groupCount, 10);
-    const rollName = rollEntry.dataset.rollName || '';
+    const creatureName = rollEntry.dataset.creatureName || '';
 
-    const rollNameInput = document.getElementById('creature-name'); // Get the input field for the creature name
-    rollNameInput.value = rollName; // Set the value of the creature name input field to the creature name of the saved roll so the user can edit it
-    rollNameInput.classList.add('editing'); // Add the "editing" CSS class to the creature name input field
+    const creatureNameInput = document.getElementById('creature-name');
+    creatureNameInput.value = creatureName;
+    creatureNameInput.classList.add('editing');
 
-    const creatureLabelElement = document.querySelector('label[for="creature-name"]'); // Get the label for the creature name input field
-    if (creatureLabelElement) { // If the label exists then set the text content to "Editing . . ." and add the "editing" CSS class
+    const creatureLabelElement = document.querySelector('label[for="creature-name"]');
+    if (creatureLabelElement) {
         creatureLabelElement.textContent = `Editing . . .`;
         creatureLabelElement.classList.add('editing');
     }
 
-    // TODO: Simpllify this to just be if (document.getElementById('add-group-button')) if possible. We're not using the variables anywhere else, no need to store them
-    const addGroupButton = document.getElementById('add-group-button'); // delete this
-    const removeGroupButton = document.getElementById('remove-group-button'); // delete this
+    const addGroupButton = document.getElementById('add-group-btn');
+    const removeGroupButton = document.getElementById('remove-group-btn');
     if (addGroupButton) {
         addGroupButton.classList.add('editing');
     }
@@ -1009,19 +1032,19 @@ function startEditingSavedRoll(elementOrId) { // Function to start editing a sav
         removeGroupButton.classList.add('editing');
     }
 
-    // TODO: This name sucks. I don't know what it is referring to by name alone.
     const diceSelectionContainer = document.querySelector('.content-col-dice');
     diceSelectionContainer.innerHTML = '';
 
-    // TOOD: This needs to be updated to the new accordion design
     for (let i = 0; i < groupCount; i++) {
         addDiceGroup();
         const groupDiv = rollEntry.querySelector(`.dice-group[data-group-index="${i}"]`);
         const groupData = JSON.parse(groupDiv.dataset.diceCounts);
-        const groupName = groupDiv.textContent.split(':')[0].trim();
-
-        // Update to target the header input instead
+        const groupName = groupDiv.querySelector('.dice-group-name-text').textContent.trim();
+    
+        // Apply editing class to all dice group wrappers
         const diceGroupWrapper = document.querySelectorAll('.dice-group-wrapper')[i];
+        diceGroupWrapper.classList.add('editing');
+        
         const groupNameInput = diceGroupWrapper.querySelector('.dice-group-name-input');
         if (groupNameInput) {
             groupNameInput.value = groupName;

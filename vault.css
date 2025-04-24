@@ -123,10 +123,9 @@ button,
 }
 
 .field-title {
-    margin-bottom: 0.4em;
     flex-shrink: 0;
-    font-size: 1.2em;
-    color: var(--ts-color-secondary);
+    font-size: 1.6em;
+    color: var(--ts-color-primary);
 }
 
 .label-desc {
@@ -346,10 +345,22 @@ button:focus-visible {
     cursor: pointer;
 }
 
+.dice-group-wrapper {
+    border: 1px solid var(--ts-accessibility-border);
+    border-radius: 6px;
+    /* margin-bottom: 8px; */
+    overflow: hidden;
+    background-color: var(--ts-background-secondary);
+    box-shadow: 0 0 8px var(--ts-accessibility-border);
+    transition: all 0.3s ease-in-out;
+}
+
+#creature-name.editing,
 .dice-group-name-input.editing,
-#creature-name.editing {
-    /* border-color: var(--ts-color-danger); */
-    border: 2px solid var(--ts-color-danger);
+.dice-group-wrapper.editing {
+    border: 3px solid var(--ts-color-danger) !important;
+    box-sizing: border-box !important;
+    margin: 0;
 }
 
 .dice-row {
@@ -699,6 +710,19 @@ button:focus-visible {
 }
 
 /* Sort Options */
+.sort-wrapper {
+    display: flex;
+    align-items: center;
+    margin-right: 5px;
+}
+
+.sort-label {
+    font-size: 0.85em;
+    color: var(--ts-color-secondary);
+    margin-right: 5px;
+    white-space: nowrap;
+}
+
 .creature-sort-list {
     padding: 8px 16px;
     margin-left: 10px;
@@ -716,8 +740,9 @@ button:focus-visible {
 
 .sort-options-container {
     display: flex;
-    gap: 10px;
+    gap: 15px;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 #sort-options-container, #sort-rolls-options-container {
@@ -730,7 +755,7 @@ button:focus-visible {
     color: var(--ts-color-primary);
     position: absolute;
     right: 5px;
-    top: 45%;
+    top: 50%;
     transform: translateY(-50%);
     pointer-events: none;
 }
@@ -801,15 +826,7 @@ button:focus-visible {
 }
 
 /*  */
-.dice-group-wrapper {
-    border: 1px solid var(--ts-accessibility-border);
-    border-radius: 6px;
-    /* margin-bottom: 8px; */
-    overflow: hidden;
-    background-color: var(--ts-background-secondary);
-    box-shadow: 0 0 8px var(--ts-accessibility-border);
-    transition: all 0.3s ease-in-out;
-}
+
 
 .dice-group-header {
     background-color: var(--ts-background-secondary);
@@ -848,10 +865,6 @@ button:focus-visible {
 .dice-group-name-input.header-input:focus {
     border-color: var(--ts-accessibility-border);
     background-color: var(--ts-background-tertiary);
-}
-
-.dice-group-name-input.header-input.editing {
-    border-color: var(--ts-color-danger);
 }
 
 .dice-group-name-input {

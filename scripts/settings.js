@@ -90,10 +90,12 @@ async function handleRetrieveBackup() {
             
             const closeButton = document.createElement('button');
             closeButton.textContent = 'Close';
+            closeButton.classList.add('wide-button');
             closeButton.onclick = () => document.body.removeChild(modal);
 
             const copyButton = document.createElement('button');
-            copyButton.textContent = 'Copy to Clipboard';
+            copyButton.textContent = 'Copy';
+            copyButton.classList.add('wide-button');
             copyButton.onclick = () => {
                 textArea.select();
                 document.execCommand('copy');
