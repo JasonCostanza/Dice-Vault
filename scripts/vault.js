@@ -232,14 +232,16 @@ function updateGroupElementIds(group, newIndex) {
 /**
  * Sorts saved roll accordions based on the selected sort option.
  * 
- * This function sorts the accordion containers (creature groups) based on
- * the selected sorting option. It preserves the internal structure of each
- * accordion while reordering them in the container.
+ * This function first sorts the groups within each roll alphabetically, then
+ * sorts the rolls themselves based on the selected criteria.
  */
 function sortSavedRolls() {
     if (debugMode) {
         console.log("Sorting creature groups...");
     }
+
+    // First, sort groups within each roll
+    sortGroupsWithinRolls();
 
     const sortOption = document.getElementById("sort-options").value;
     const savedRollsContainer = document.querySelector(".saved-rolls-container");
@@ -325,8 +327,8 @@ function sortSavedRolls() {
 /**
  * Sorts roll entries within each creature group based on the selected sort option.
  * 
- * This function only sorts the individual roll entries within each creature group
- * without affecting the order of the creature groups themselves.
+ * This function sorts individual roll entries within each creature group based on
+ * the name of the first dice group in each roll.
  */
 function sortRollsWithinGroups() {
     if (debugMode) {
@@ -395,21 +397,83 @@ function sortRollsWithinGroups() {
     }
 }
 
+/**
+ * Sorts the dice groups within each saved roll entry alphabetically by group name.
+ * 
+ * This function reorganizes the DOM elements representing dice groups within
+ * each saved roll to be in alphabetical order based on their names.
+ */
+function sortGroupsWithinRolls() {
+    if (debugMode) {
+        console.log("Sorting dice groups within each roll...");
+    }
+
+    // Get all saved roll entries
+    const rollEntries = document.querySelectorAll('.saved-roll-entry');
+    
+    rollEntries.forEach(rollEntry => {
+        const diceDisplay = rollEntry.querySelector('.roll-entry-dice');
+        if (!diceDisplay) return;
+        
+        // Get all dice groups in this roll entry
+        const diceGroups = Array.from(diceDisplay.querySelectorAll('.dice-group'));
+        
+        // Sort dice groups by their name
+        diceGroups.sort((a, b) => {
+            const aName = a.querySelector('.dice-group-name-text')?.textContent || "";
+            const bName = b.querySelector('.dice-group-name-text')?.textContent || "";
+            return aName.localeCompare(bName);
+        });
+        
+        // Reorder the dice groups in the DOM
+        diceDisplay.innerHTML = '';
+        diceGroups.forEach(group => diceDisplay.appendChild(group));
+        
+        // Update group indices after reordering
+        diceGroups.forEach((group, index) => {
+            group.dataset.groupIndex = index;
+        });
+    });
+
+    if (debugMode) {
+        console.log("Groups within rolls sorted alphabetically");
+    }
+}
+
+/**
+ * Initializes and sets up event listeners for the sorting functionality.
+ * 
+ * This function adds event listeners to the sort dropdowns and ensures
+ * that both the group-within-roll sorting and roll-within-group sorting
+ * are properly applied.
+ */
 function initializeSortingFunctionality() {
     const creatureSortOptions = document.getElementById("sort-options");
     const rollsSortOptions = document.getElementById("sort-rolls-options");
     
     if (creatureSortOptions) {
-        creatureSortOptions.addEventListener("change", sortSavedRolls);
+        creatureSortOptions.addEventListener("change", () => {
+            sortGroupsWithinRolls(); // First sort groups within each roll
+            sortSavedRolls(); // Then sort the rolls
+        });
     } else {
         console.error("Creature sort options element not found");
     }
     
     if (rollsSortOptions) {
-        rollsSortOptions.addEventListener("change", sortRollsWithinGroups);
+        rollsSortOptions.addEventListener("change", () => {
+            sortGroupsWithinRolls(); // First sort groups within each roll
+            sortRollsWithinGroups(); // Then sort the rolls within groups
+        });
     } else {
         console.error("Roll sort options element not found");
     }
+
+    // Initial sort when loading the page
+    document.addEventListener("DOMContentLoaded", () => {
+        sortGroupsWithinRolls();
+        sortSavedRolls();
+    });
 }
 
 /**
