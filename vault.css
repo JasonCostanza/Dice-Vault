@@ -851,7 +851,7 @@ button:focus-visible {
 }
 
 .dice-group-name-input.header-input {
-    background-color: transparent;
+    background-color: var(--ts-background-tertiary);
     border: 1px solid transparent;
     font-size: 1em;
     padding: 2px 4px;
@@ -866,7 +866,7 @@ button:focus-visible {
 .dice-group-name-input.header-input:hover,
 .dice-group-name-input.header-input:focus {
     border-color: var(--ts-accessibility-border);
-    background-color: var(--ts-background-tertiary);
+    background-color: var(--ts-background-primary);
 }
 
 .dice-group-name-input {
