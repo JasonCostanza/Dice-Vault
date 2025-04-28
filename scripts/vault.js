@@ -94,7 +94,7 @@ function addDiceGroup() {
     accordionHeader.innerHTML = `
         <div class="header-content">
             <input type="text" class="dice-group-name-input header-input" id="group-${groupIndex}-name" 
-                placeholder="Group Name" value="Group">
+                placeholder="Enter Group Name">
         </div>
         <span class="accordion-toggle">-</span>
     `;
