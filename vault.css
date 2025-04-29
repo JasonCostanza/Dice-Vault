@@ -1,25 +1,4 @@
-/**
-TABLE OF CONTENTS
-
-Base Styles & General Layout - foundational styling for the page
-Scrollbars - all scrollbar-related styles
-Utilities - reusable utility classes like .unselectable and .hidden
-Header Menu & Settings - styles for the settings menu components
-Footer - styles for the page footer
-Buttons - all button styles including common button behaviors
-Roll Name Input - styles for the roll name input section
-Dice Groups & Selection - styles for the dice selection interface
-Dice Counters - styles specific to the dice counter components
-Rolling Buttons - styles for the roll action buttons
-Saved Rolls Section - styles for the saved rolls area
-Accordion for Saved Rolls - styles for the accordion functionality
-Dice Icons - styles for dice icons and their containers
-Debug Icons - styles for development mode icons
-Edit & Delete Buttons - styles for roll management buttons
-Sort Options - styles for the sort dropdown
-Modal Styles - styles for modal dialogs
-Result Display - styles for showing roll results
-*/
+/* TODO: Reogranize this file completely */
 
 /* Base Styles & General Layout */
 html,
@@ -54,6 +33,7 @@ button,
     cursor: pointer;
 }
 
+/* TODO: Not sure if this is used. Need to investigate further */
 .counter-overlay:not(.mod-counter-overlay) {
     pointer-events: none;
     cursor: default;
@@ -128,10 +108,10 @@ button,
     color: var(--ts-color-primary);
 }
 
-.label-desc {
+/* .label-desc {
     color: var(--ts-color-secondary);
     flex: 1;
-}
+} */
 
 /* Header Menu & Settings */
 #menu-bar {
@@ -327,13 +307,13 @@ button:focus-visible {
 }
 
 
-.content-row {
+/* .content-row {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 2%;
-    /* margin-bottom: 0.4em; */
-}
+     margin-bottom: 0.4em;
+} */
 
 .dice-group-name {
     margin-bottom: 10px;
