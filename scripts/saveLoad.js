@@ -1,11 +1,10 @@
-function performAutoLoads(){
+/**
+ * Performs auto loading/saving based on user settings
+ */
+function performAutoLoads() {
     if (fetchSetting('auto-load')) {
         console.log('Auto-loading rolls from local storage.');
         loadRollsFromLocalStorage();
-    }
-
-    if (fetchSetting('auto-save')) {
-
     }
 
     updateAutoButtons();
@@ -31,32 +30,49 @@ function updateAutoButtons(){
 
 function saveRollsToLocalStorage() {
     let rollsData = [];
-    document.querySelectorAll('.saved-roll-entry').forEach(entry => {
-        let groupCount = parseInt(entry.dataset.groupCount, 10) || 1;
-        let groups = [];
-        for (let i = 0; i < groupCount; i++) {
-            let groupElement = entry.querySelector(`.dice-group[data-group-index="${i}"]`);
-            if (groupElement) {
-                let groupName = groupElement.textContent.split(':')[0].trim();
-                let diceCountsData = groupElement.dataset.diceCounts;
-                try {
-                    let diceCounts = JSON.parse(diceCountsData);
-                    groups.push({
-                        name: groupName,
-                        diceCounts: diceCounts
-                    });
-                } catch (e) {
-                    console.error(`Error parsing dice counts for group ${i}:`, e);
-                    continue;
+
+    // Iterate over each creature group and save its rolls
+    document.querySelectorAll('.saved-roll-group').forEach(group => {
+        let creatureName = group.dataset.creatureName; // Get creature name
+        let allCreatureRolls = [];
+
+        group.querySelectorAll('.saved-roll-entry').forEach(entry => {
+            let groupCount = parseInt(entry.dataset.groupCount, 10) || 1;
+            let savedRoll = [];
+
+            for (let i = 0; i < groupCount; i++) {
+                let groupElement = entry.querySelector(`.dice-group[data-group-index="${i}"]`);
+                if (groupElement) {
+                    let groupName = groupElement.textContent.split(':')[0].trim();
+                    let diceCountsData = groupElement.dataset.diceCounts;
+                    try {
+                        let diceCounts = JSON.parse(diceCountsData);
+                        
+                        // Filter out zero values
+                        let filteredDiceCounts = {};
+                        Object.entries(diceCounts).forEach(([diceType, count]) => {
+                            if (count !== 0) {
+                                filteredDiceCounts[diceType] = count;
+                            }
+                        });
+                        
+                        savedRoll.push({
+                            name: groupName,
+                            diceCounts: filteredDiceCounts
+                        });
+                    } catch (e) {
+                        console.error(`Error parsing dice counts for group ${i}:`, e);
+                        continue;
+                    }
                 }
             }
-        }
-        let rollData = {
-            name: entry.querySelector('.roll-entry-label').textContent.trim(),
-            type: entry.dataset.rollType,
-            groups: groups
-        };
-        rollsData.push(rollData);
+
+            allCreatureRolls.push({
+                savedRoll: savedRoll
+            });
+        });
+
+        rollsData.push({ creatureName, allCreatureRolls }); // Store grouped data
     });
 
     let rollsJson = JSON.stringify(rollsData);
@@ -71,21 +87,23 @@ function saveRollsToLocalStorage() {
 
 async function loadRollsFromLocalStorage() {
     try {
-        // First, check and upgrade the data if necessary
-        await checkAndUpgradeRollsData();
-
-        // Now load the (potentially upgraded) data
+        // Now load the data
         const rollsJson = await TS.localStorage.campaign.getBlob();
         let rollsData = JSON.parse(rollsJson || '[]');
-        rollsData.forEach(rollData => {
-            addSavedRoll(rollData.name, rollData.groups, rollData.type);
+
+        rollsData.forEach(({ creatureName, allCreatureRolls }) => { // Iterate over each saved creature
+            allCreatureRolls.forEach(({ savedRoll }) => { 
+                // Add each saved roll to the creature's group
+                addSavedRoll(creatureName, savedRoll);
+            });
         });
+        
         disableButtonById('load-rolls-button');
         if (!fetchSetting('auto-save')){
             disableButtonById('save-rolls-button', false);
         }
     } catch (error) {
-        console.error('Failed to load or upgrade rolls data:', error);
+        console.error('Failed to load rolls data:', error);
     }
 }
 
@@ -141,4 +159,18 @@ function saveCurrentRolls() {
     });
 
     return savedRolls;
+}
+
+/**
+ * Disables or enables a button by its ID.
+ * @param {string} id - The ID of the button to disable or enable
+ * @param {boolean} disable - Whether to disable the button. Default is true
+ */
+function disableButtonById(id, disable = true) {
+    const button = document.getElementById(id);
+    if (button) {
+        button.disabled = disable;
+    } else {
+        console.error(`Button with ID "${id}" not found`);
+    }
 }

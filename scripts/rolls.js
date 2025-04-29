@@ -1,21 +1,5 @@
 const rollsModule = (function () {
-    /**
-     * Executes a dice roll operation based on specified roll name and type.
-     * 
-     * This function performs the following steps:
-     * 1. Collects dice data from the UI.
-     * 2. Determines the roll type and critical hit behavior.
-     * 3. Applies the "double-die-count" critical behavior if applicable.
-     * 4. Prepares the dice roll for TaleSpire's dice tray.
-     * 5. Initiates the roll in TaleSpire.
-     * 
-     * It handles normal rolls as well as various types of critical hits,
-     * applying the appropriate behavior based on user settings.
-     *
-     * @param {string} rollNameParam - The name of the roll, used for display and logging purposes.
-     * @param {string} rollTypeParam - The type of the roll (e.g., 'normal', 'critical'),
-     *                                 which influences how the dice are rolled and processed.
-     */
+
     function roll(rollTypeParam, groupsData) {
         let selectedType = rollTypeParam || rollTypes.normal;
         let updatedDiceGroupsData = groupsData || [];
@@ -31,11 +15,12 @@ const rollsModule = (function () {
             diceGroupElements.forEach((groupElement) => {
                 const groupId = groupElement.id;
                 const groupDiceCounts = {};
-                const groupNameInput = groupElement.querySelector('.dice-group-name-input');
+                
+                // Get the wrapper that contains the header with the group name
+                const wrapper = groupElement.closest('.dice-group-wrapper');
+                const header = wrapper ? wrapper.querySelector('.dice-group-header') : null;
+                const groupNameInput = header ? header.querySelector('.dice-group-name-input') : null;
                 const groupName = groupNameInput && groupNameInput.value.trim() ? groupNameInput.value.trim() : `Group ${parseInt(groupId) + 1}`;
-
-
-
     
                 diceTypes.forEach((diceType) => {
                     const countElement = document.getElementById(`group-${groupId}-${diceType}-counter-value`);
@@ -72,25 +57,9 @@ const rollsModule = (function () {
         putDiceToRollIntoDiceTray(selectedType, critBehavior);
     }
 
-    /**
-     * Prepares and sends a dice roll configuration to TaleSpire's dice tray.
-     * 
-     * This function performs the following steps:
-     * 1. Builds a roll name based on the provided parameters.
-     * 2. Constructs dice roll descriptors.
-     * 3. Builds a dice tray configuration.
-     * 4. Sends the configuration to TaleSpire's dice tray.
-     * 5. Tracks the roll ID for future reference.
-     * 
-     * @param {string} rollNameParam - The base name for the roll.
-     * @param {string} selectedType - The type of roll (e.g., 'normal', 'critical').
-     * @param {string} critBehavior - The critical hit behavior to apply, if applicable.
-     * 
-     * @throws {Error} If there's an error creating roll descriptors.
-     */
     function putDiceToRollIntoDiceTray(selectedType, critBehavior) {
         try {
-            let baseDiceDescriptors = constructDiceRollDescriptors();
+            let baseDiceDescriptors = constructDiceRollDescriptors(selectedType);
             
             if (baseDiceDescriptors.length === 0) {
                 console.warn("No dice to roll after filtering empty groups");
@@ -178,48 +147,23 @@ const rollsModule = (function () {
         }
     }
 
-    /**
-     * Constructs an array of dice roll descriptors based on the provided roll name
-     * and dice groups data.
-     *
-     * This function iterates over each group of dice counts provided in the global
-     * `diceGroupsData` array. For each group, it constructs a string representation
-     * of the dice rolls, including the count and type of each die, and any modifiers.
-     * These strings are then used to create objects that pair the provided roll name
-     * with the constructed roll string.
-     *
-     * The function is designed to support the
-     * [Talespire URL scheme](https://feedback.talespire.com/kb/article/talespire-url-scheme)
-     * for dice rolls, allowing these descriptors to be used for generating URLs that
-     * trigger specific dice rolls within the Talespire game.
-     *
-     * Example of a dice roll object in the returned array:
-     * ```
-     * {
-     *     name: 'TEST',
-     *     roll: '+1d4+1d6+5'
-     * }
-     * ```
-     *
-     * @param {string} rollName - The name to be associated with each dice roll descriptor.
-     *
-     * @returns {Array<Object>} An array of objects, each containing a `name` and a `roll`
-     *                          string that describes the dice roll.
-     */
-    function constructDiceRollDescriptors() {
+    function constructDiceRollDescriptors(rollType) {
         let diceRollObjects = [];
     
         diceGroupsData.forEach((group, index) => {
             if (!isDiceGroupEmpty(group)) {
                 let groupRollString = "";
     
-                for (const [die, count] of Object.entries(group.diceCounts)) {
-                    if (die !== "mod" && count > 0) {
-                        groupRollString += `+${count}${die}`;
+                // Handle all dice types, including those that might be missing
+                diceTypes.forEach(diceType => {
+                    const count = group.diceCounts[diceType] || 0;
+                    if (count > 0) {
+                        groupRollString += `+${count}${diceType}`;
                     }
-                }
+                });
     
-                let modValue = parseInt(group.diceCounts.mod, 10);
+                // Handle modifier which might be missing
+                let modValue = group.diceCounts.mod || 0;
                 if (modValue !== 0) {
                     let modPart = modValue > 0 ? `+${modValue}` : `${modValue}`;
                     groupRollString += modPart;
@@ -230,6 +174,25 @@ const rollsModule = (function () {
     
                 if (groupRollString) {
                     let groupName = group.name && group.name.trim() ? group.name.trim() : `Group ${index + 1}`;
+                    
+                    // Add suffix based on roll type
+                    switch (rollType) {
+                        case rollTypes.advantage:
+                            groupName += " (adv.)";
+                            break;
+                        case rollTypes.disadvantage:
+                            groupName += " (dis.)";
+                            break;
+                        case rollTypes.bestofThree:
+                            groupName += " (Bo3)";
+                            break;
+                        case rollTypes.critical:
+                            groupName += " (Crit)";
+                            break;
+                        default:
+                            break;
+                    }
+                    
                     let rollObject = { 
                         name: groupName, 
                         roll: groupRollString 
@@ -241,6 +204,7 @@ const rollsModule = (function () {
     
         return diceRollObjects;
     }
+    
 
     /**
      * Handles the processing of roll events, including roll results and roll removals.
@@ -378,42 +342,23 @@ const rollsModule = (function () {
         }
     }
 
-    /**
-     * Retrieves and processes the reportable roll results group based on the roll type.
-     *
-     * This function handles the complexity of different roll types, ensuring that
-     * the correct results are reported based on the game's rules for advantage,
-     * disadvantage, and other special roll types. It performs the following:
-     * 1. Determines the appropriate handling based on the roll type.
-     * 2. For advantage, disadvantage, or best-of-three rolls, it calls specific
-     *    handler functions to process the results accordingly.
-     * 3. For normal rolls, it returns the original results.
-     * 4. Ensures the return value is always an array of result groups.
-     *
-     * @param {Object} roll - The roll object containing the dice roll information.
-     * @param {string} rollType - A string representing the type of roll (e.g., 'advantage',
-     *                            'disadvantage', 'bestofThree', 'normal').
-     *
-     * @returns {Promise<Array<Object>>} A promise that resolves with an array of reportable
-     *                                   roll results groups, processed according to the roll type.
-     */
     async function getReportableRollResultsGroup(roll, rollType) {
         let resultGroups;
     
         switch (rollType) {
             case rollTypes.advantage:
                 resultGroups = await handleAdvantageRoll(roll);
-                resultGroups = addPrefixToGroupNames(resultGroups, "With Advantage: ");
+                // Remove the prefix addition
                 break;
     
             case rollTypes.disadvantage:
                 resultGroups = await handleDisadvantageRoll(roll);
-                resultGroups = addPrefixToGroupNames(resultGroups, "With Disadvantage: ");
+                // Remove the prefix addition
                 break;
     
             case rollTypes.bestofThree:
                 resultGroups = await handleBestOfThreeRoll(roll);
-                resultGroups = addPrefixToGroupNames(resultGroups, "Best of Three: ");
+                // Remove the prefix addition
                 break;
     
             default:
@@ -649,9 +594,9 @@ const rollsModule = (function () {
             }
     
             // Update the group name to include "Critical" if it's a crit behavior
-            if (critBehavior !== "none") {
-                group.name = group.name ? `Critical: ${group.name}` : "Critical Roll";
-            }
+            // if (critBehavior !== "none") {
+            //     group.name = group.name ? `${group.name}` : "Critical Roll";
+            // }
     
             return {
                 ...group,
@@ -659,31 +604,52 @@ const rollsModule = (function () {
             };
         });
     }
-    
-    /**
-     * Asynchronously sends dice roll results to the TaleSpire game interface.
-     * 
-     * This function is responsible for communicating the results of dice rolls to Talespire.
-     * It can handle multiple result groups, sending each group individually to TaleSpire.
-     * If any send operation fails, an error is logged and thrown.
-     * 
-     * @param {Array<Object>} resultGroups - An array of objects, each containing dice roll results to be sent.
-     * @param {string} rollId - A unique identifier for the roll, used to track the results within TaleSpire.
-     * 
-     * @returns {Promise<void>} A promise that resolves when all dice results have been successfully sent,
-     *                          or rejects if an error occurs during the process.
-     * @throws {Error} If there's an error sending any of the result groups.
-     */
+
     async function displayResults(resultGroups, rollId) {
         try {
             console.log(`Displaying results for roll ID: ${rollId}`);
             
+            // Get roll info to know the roll type
+            const rollInfo = trackedRollIds[rollId];
+            const rollType = rollInfo ? rollInfo.type : null;
+            
             // Ensure each result group has a name and description
-            const namedResultGroups = resultGroups.map((group, index) => ({
-                ...group,
-                name: group.name ? group.name : `Group ${index + 1}`, // Ensure the custom group name is used
-                description: group.description || group.result.description || ''
-            }));
+            const namedResultGroups = resultGroups.map((group, index) => {
+                // Preserve the group name if it exists
+                let groupName = group.name || `Group ${index + 1}`;
+                
+                // Add suffix based on roll type if not already present
+                switch (rollType) {
+                    case rollTypes.advantage:
+                        if (!groupName.endsWith(' (adv.)')) {
+                            groupName += ' (adv.)';
+                        }
+                        break;
+                    case rollTypes.disadvantage:
+                        if (!groupName.endsWith(' (dis.)')) {
+                            groupName += ' (dis.)';
+                        }
+                        break;
+                    case rollTypes.bestofThree:
+                        if (!groupName.endsWith(' (Bo3)')) {
+                            groupName += ' (Bo3)';
+                        }
+                        break;
+                    case rollTypes.critical:
+                        if (!groupName.endsWith(' (Crit)')) {
+                            groupName += ' (Crit)';
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                
+                return {
+                    ...group,
+                    name: groupName,
+                    description: group.description || group.result.description || ''
+                };
+            });
             
             console.log('Named Result Groups:', JSON.stringify(namedResultGroups, null, 2));
             
@@ -695,7 +661,6 @@ const rollsModule = (function () {
             throw error;
         }
     }
-    
 
     // PUBLIC API //
     return {

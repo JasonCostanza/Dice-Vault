@@ -35,7 +35,7 @@ function loadGlobalSettings(){
         const settings = JSON.parse(settingsJson || '{}');
         document.getElementById('auto-load').checked = settings.autoLoadRolls || defaultSettings('autoLoadRolls');
         document.getElementById('auto-save').checked = settings.autoSaveRolls || defaultSettings('autoSaveRolls');
-        document.getElementById('auto-reset').checked = settings.autoSaveRolls || defaultSettings('autoResetEdit');
+        document.getElementById('auto-reset').checked = settings.autoResetEdit || defaultSettings('autoResetEdit');
         document.getElementById('crit-behavior').value = settings.critBehavior || defaultSettings('critBehavior');
         performAutoLoads();
     }).catch(error => {
@@ -76,8 +76,9 @@ async function handleRetrieveBackup() {
             // Create a modal or dialog to display the backup data
             const modal = document.createElement('div');
             modal.style.position = 'fixed';
-            modal.style.left = '10%';
-            modal.style.top = '10%';
+            modal.style.left = '50%';
+            modal.style.top = '50%';
+            modal.style.transform = 'translate(-50%, -50%)';
             modal.style.width = '80%';
             modal.style.height = '50%';
             modal.style.backgroundColor = 'white';
@@ -90,10 +91,12 @@ async function handleRetrieveBackup() {
             
             const closeButton = document.createElement('button');
             closeButton.textContent = 'Close';
+            closeButton.classList.add('wide-button');
             closeButton.onclick = () => document.body.removeChild(modal);
 
             const copyButton = document.createElement('button');
-            copyButton.textContent = 'Copy to Clipboard';
+            copyButton.textContent = 'Copy';
+            copyButton.classList.add('wide-button');
             copyButton.onclick = () => {
                 textArea.select();
                 document.execCommand('copy');
@@ -114,3 +117,6 @@ async function handleRetrieveBackup() {
         alert('An error occurred while retrieving the backup. Please check the console for details.');
     }
 }
+
+// Export to global scope
+window.fetchSetting = fetchSetting;

@@ -4,7 +4,9 @@
         <title>Dice Vault</title>
         <link rel="stylesheet" href="vault.css">
     </head>
-
+<style>
+    
+</style>
     <body>
         <div class="content">
             <div id="menu-bar">
@@ -14,11 +16,11 @@
                 <hr/>
                 <table>
                     <tr>
-                        <td><label class="field-title">Auto-Load Saved Rolls</label></td>
+                        <td><label class="field-title">Automatically load data</label></td>
                         <td><input type="checkbox" id="auto-load" class="settings-input" onchange="saveGlobalSettings()" unchecked></td>
                     </tr>
                     <tr>
-                        <td><label class="field-title">Auto-Save Saved Rolls</label></td>
+                        <td><label class="field-title">Automatically save data</label></td>
                         <td><input type="checkbox" id="auto-save" class="settings-input" onchange="saveGlobalSettings()" unchecked></td>
                     </tr>
                     <tr>
@@ -42,30 +44,28 @@
                     </tr>
                 </table>
                 <hr/>
-                <button id="retrieve-backup-button" onclick="handleRetrieveBackup()">Retrieve Data Backup</button>
+                <button id="retrieve-backup-button" class="wide-button" onclick="handleRetrieveBackup()">Retrieve Data Backup</button>
                 <br>
                 <br>
-                <div class="version">Version: 3.1</div>
+                <div class="version">Version: 4.0</div>
             </div>
 
-            <br>
-
-            <div class="roll-name-container">
-                <input type="text" id="roll-name" name="roll-name" placeholder="Enter roll name">
+            <div class="creature-name-container">
+                <input type="text" id="creature-name" name="creature-name" placeholder="Enter creature name">
             </div>
 
-            <br> 
+            <div class="button-container unselectable group-action-bar">
+                <button id="add-group-btn" class="wide-button" onclick="addDiceGroup()">+ Group</button>
+                <button id="remove-group-btn" class="wide-button" onclick="removeDiceGroup()">- Group</button>
+            </div>
 
-            <div class="scrolling-content">
-                <div class="content-col-dice">
-                </div>
-                <div class="button-container unselectable">
-                    <button id="add-group-btn" onclick="addDiceGroup()">Add Group</button>
-                    <button id="remove-group-btn" onclick="removeDiceGroup()">Remove Group</button>
-                </div>
+            <div class="content-scroll-wrapper">
+                <div class="content-col-dice"></div>
             </div>
             
-            <div class="button-container unselectable">
+            
+            
+            <div class="button-container unselectable floating-roll-buttons">
                 <button class="rolling-button" onclick="rollsModule.roll('normal')"><img class="roll-type-image" src="./images/icons/rolling.png" alt="roll dice"/><br/>Roll</button>
                 <button class="rolling-button" onclick="rollsModule.roll('advantage')"><img class="roll-type-image" src="./images/icons/advantage.png" alt="advantage"/><br/>Advantage</button>
                 <button class="rolling-button" onclick="rollsModule.roll('disadvantage')"><img class="roll-type-image" src="./images/icons/disadvantage.png" alt="disadvantage"/><br/>Disadvantage</button>
@@ -73,20 +73,33 @@
                 <button class="rolling-button" onclick="rollsModule.roll('crit-dice')"><img class="roll-type-image" src="./images/icons/crit.png" alt="critical hit"/><br/>Critical</button>
             </div>
             
-            <div class="button-container unselectable">
-                <button id="reset-btn" onclick="reset()">Reset</button>
-                <button id="save-btn" onclick="save()">Pin</button>
+            <div class="button-container unselectable floating-roll-buttons">
+                <button id="reset-btn" class="wide-button" onclick="reset()">Reset</button>
+                <button id="save-btn" class="wide-button" onclick="save()">Pin</button>
             </div><br>
 
             <div class="saved-rolls-header">
                 <label class="field-title unselectable">Pinned Rolls</label>
-                <div id="sort-options-container">
-                    <select id="sort-options" class='select-list' onchange="sortSavedRolls()">
-                        <option value="newest">Newest</option>
-                        <option value="oldest">Oldest</option>
-                        <option value="nameAsc">Sort A-Z</option>
-                        <option value="nameDesc">Sort Z-A</option>
-                    </select>
+                <div class="sort-options-container">
+                    <div id="sort-options-container" class="sort-wrapper">
+                        <label class="sort-label">Creature sort:</label>
+                        <select id="sort-options" class='creature-sort-list' onchange="sortSavedRolls()">
+                            <option value="newest">Newest</option>
+                            <option value="oldest">Oldest</option>
+                            <option value="nameAsc">A-Z</option>
+                            <option value="nameDesc">Z-A</option>
+                        </select>
+                    </div>
+                    <div id="sort-rolls-options-container" class="sort-wrapper">
+                        <label class="sort-label">Groups sort:</label>
+                        <select id="sort-rolls-options" class='roll-groups-sort-list' onchange="sortRollsWithinGroups()">
+                            <option value="default">Default</option>
+                            <option value="newest">Newest</option>
+                            <option value="oldest">Oldest</option>
+                            <option value="nameAsc">A-Z</option>
+                            <option value="nameDesc">Z-A</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             
@@ -101,6 +114,7 @@
             <i class="ts-icon-character-gamemaster"></i><div style="font-family: 'Enchanted Land', cursive; color: #dddddd; font-size: 0.7em;"> "May the rolls be in your favor"</div>
 
             <button id="load-rolls-button" class="black-button">Load Saves</button>
+            <!-- <div class="footer-spacer"></div> -->
         </div>
 
         <script type="text/javascript" src="scripts/globals.js"></script>

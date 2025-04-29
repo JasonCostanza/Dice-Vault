@@ -4,24 +4,30 @@
 
 # Dice-Vault
 
-Talespire symbiote which offers an expanded dice rolling experience without the complexity of a full character sheet.
+Talespire symbiote which offers an expanded dice rolling experience that is system-agnostic without requiring a full character sheet.
 
 Check it out on [Mod.io](https://mod.io/g/talespire/m/dice-vault).
 
   ## Features
-  - Name your rolls and have them recorded in chat.
-  - Throw as many dice as you need, including adding or subtracting negative modifiers modifiers.
-  - Roll using advantage, disadvantage, best-of-3, or 5 different commonly used critical hit methods.
-  - Save a roll preset to quickly roll it again in the future.
-  - Save your dice vault collection to local storage so you never lose your carefully crafted dice vault or share it with your friends and fellow players.
-  - Saved presets are specific to the campaign. Have a preset collection for each campaign you're participating in!
-  - 5 different rolling styles with 5 different common critical hit methods. These modes include a standard roll, advantage, disadvantage, best-of-3, and critical hit (configured via the settings menu).
+  - Give your rolls a name and record the results in chat.
+  - Throw as many dice as you need and add or subtract any modifiers.
+  - Roll using advantage, disadvantage, best-of-3, or various other commonly used critical hit methods.
+  - Pin a frequently used roll to quickly reuse it.
+  - Save your dice vault collection to local storage so you never lose your carefully crafted dice vault.
+  - Campaign-specific vaults. Have a preset collection for each campaign you're participating in!
 
 # A Note about Updating and Locally Saved Rolls
-Over time, the underlying data structure of the rolls in this symbiote has changed a few times and it's a lot of effort and trouble to try and create an updater function inside the symbiote. For this reason, encourage you to write down the rolls you need so you can recreate them after you install the update.
+With major version releases, it is potential that data structures will change and this will render old data unusable. The amount of effort it is to write updater code is a lot of work and maintenance. I strongly recommend you copy your rolls down before updating so you can recreate them in the new version(s).
 
 # Changelog
 ```
+4.0
+- Pinned rolls are now organized by creature name. Each creature can now be collaspsed and expanded to make your pinned roll list more organized.
+- Pinned rolls can now be sorted more granularly with sort functions for creatures and groups independely.
+- Added a "Default" sorting option for groups so you can put the roll groups back to the order in which you added them instead of the other sort options.
+- Improved the overall color scheme to better match Talespire's design guide as well as communicate editable fields more clearly.
+3.1
+- Fixed a bug where adding too many roll groups would break the UI
 3.0
 - New feature: Named roll groups! Previously we expanded functionality to let you roll independent roll groups. Unfortunately, all the groups shared the same name according to Talespire. This has been resolved and all roll groups can have their own unique name. If no name is provided, it defaults to "Group 1", "Group 2", etc. This caused another change in the data structure so rolls from old versions will not roll forward from prior versions of Dice Vault.
 - Edit buttons on saved rolls allows for modifying a saved roll without deleting it!
@@ -62,37 +68,29 @@ Over time, the underlying data structure of the rolls in this symbiote has chang
   6. Select `Dice Vault` in the `Active` section.
 
 # How to Use
-1. Type the name of the roll you want to throw, example "Dagger Strike".
-2. Left click to increment and right click to decrement the dice.
-3. Enter a modifier into the text box if you need one, example, "5" or "-5".
-4. Roll right away by selecting the style of roll you need, standard, advantage, etc. or create a preset with the `Save` button.
-5. To reset the staged roll, use the `reset` button.
+1. If you want, enter a name for the creature
+2. If you want, enter a name for the roll group
+3. If you want, add additional roll groups. Example, a flaming longsword deals one group of slashing damage and another group of fire damage.
+4. Left click to increment and right click to decrement the dice that you wish to roll.
+5. Enter a modifier into the text box if you need one, example, "5" or "-5".
+6. Roll right away by selecting the style of roll you need, standard, advantage, etc. or create a preset with the `Pin` button.
 
-To delete a preset, use the trash bin icon.
+To delete a pinned roll, use the trash bin icon.
 
 # Report Issues
-Create an issue in the github reposity on the [Issues Tab](https://github.com/JasonCostanza/Dice-Vault/issues).
+Create an issue in the github page on the [Issues Tab](https://github.com/JasonCostanza/Dice-Vault/issues).
 
 Any information you can provide to reproducing your issue is appreciated including reproduction steps, screenshots or video, and anything else you think is important.
 
 # Roadmap
-See our github issues tab for bugs and enhancements on the roadmap.
+See the github issues tab for bugs and enhancements on the roadmap. This project is purely a hobby project and I cannot guarantee timelines of anything depending on my life priorities and free time.
 
-With the recent announcement of the official Dice Engine feature undergoing development, future development of Dice Vault may be postponed or carefully measured against what the Talespire team is developing. This symbiote was born in the gap of what Dice Engine (official feature) will potentially cover. At the time of writing this, we don't have full clarity on what the official feature will do in full.
+With the recent announcement of the official Dice Engine feature undergoing development, future development of Dice Vault may be slowed or postponed. This symbiote was born in the gap of what Dice Engine (the official feature) will potentially solve. At this time, we don't have full clarity on what the official feature will do. Stay tuned! If Dice Vault continues to have a place, then I plan on continuing to support and develop the tool. Feel free to submit feature requests in the meantime.
 
 # Special Thanks
 [DeeForce](https://github.com/D33Force)
 [PanoramicPanda](https://github.com/PanoramicPanda)
 [kbarnett](https://github.com/kbarnett)
 
-# Contribor Environment Configuration
-If you wish to contribute to the project you are more than welcome to create a feature branch, add your contributions, and open a PR against `main`. To get your local environment set up, it's a pretty easy process:
-  1. Clone the repository directly to the game's local directory: `C:\Users\%username%\AppData\LocalLow\BouncyRock Entertainment\TaleSpire\Symbiotes`. Note the username needs to be your username. I develop on Windows so I do not have access to the Mac directory which coincides with this. I recommend doing this to avoid having to copy/paste every time you want to test your changes.
-  2. Using your IDE of choice, open the folder. For me, that is `...\TaleSpire\Symbiotes\Dice Vault Dev`.
-  3. Launch Talespire and enable Symbiotes in the game settings.
-  4. Open the Symbiote sidebar and open the Symbiote. To make this easier, you can rename the symbiote in the `manifest.json` to something like "Symbiote DEV" or something to make it stand out from production version(s) of the same symbiote. Example, "Dice Vault" is the production version and "Dice Vault DEV" will be the one in active development. **DO NOT** include this name change in your PRs.
-  5. Make the changes you wish to the code files and make sure you save all changes and to all files.
-  6. In Talespire, the Symbiote will automatically do a domain reload and display your updated changes. There is no need to build, deploy, or otherwise. If you do not see the Symbiote update, verify you have the right one opened in the side panel if there are multiple versions with identical names in your Symbiote list, ensure all files did actually save, and verify that there's not extra folder levels after `...\Symbiotes`, example `...\Symbiotes\DEV\Dice Vault` as that may interfere with the game registering the Symbiote's codebase.
-  7. To live debug the code and your changes, you can use Talespire's web developer portal which you open in your web browser of choice at the following: `localhost:8080`.
-  8. After navigating to this address, ensure the Symbiote is active and visible in the Symbiote panel. If it appears blank or doesn't load, the symbiote must be actively loaded to access this panel. Try opening your Symbiote in the game and then refresh this portal.
-  9. Select the Symbiote from the list, in this case, "Dice Vault" or whatever custom name you gave it in the manifest.json in step 4. This allows you to debug the source code, HTML elements, and debug console log among other tools. Any error returned by Unity or `console.log` for example will be recorded here. You can also set breakpoints and add values to watches if you wish.
+# Want to contribute code?
+I am more than happy to let anyone contribute code changes. Reach out to me on Discord (Json_Blob) so we can discuss the design and requirements of what you're seeking and we will see if it's a good fit for Dice Vault.

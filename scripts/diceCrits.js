@@ -32,24 +32,19 @@ function onePointFiveResultsRecursive(result) {
     return result;
 }
 
-/**
- * Doubles the count of dice in roll groups, leaving modifiers unchanged.
- * 
- * This function is typically used for the "double-die-count" critical hit behavior.
- * It doubles the number of each type of die in the roll, but does not modify the modifier.
- *
- * @param {Array<Object>} rollGroups - An array of objects, each representing a group of dice counts.
- * @returns {Array<Object>} A new array of objects with doubled dice counts.
- */
 function doubleDiceCounts(rollGroups) {
     return rollGroups.map(group => {
         let doubledGroup = { ...group };
         doubledGroup.diceCounts = { ...group.diceCounts };
-        for (const [die, count] of Object.entries(group.diceCounts)) {
-            if (die !== 'mod') {
-                doubledGroup.diceCounts[die] = count * 2;
+        
+        // Handle all dice types, even those that are missing from diceCounts
+        diceTypes.forEach(diceType => {
+            const count = group.diceCounts[diceType] || 0;
+            if (count > 0) {
+                doubledGroup.diceCounts[diceType] = count * 2;
             }
-        }
+        });
+        
         return doubledGroup;
     });
 }
