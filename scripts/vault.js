@@ -1055,8 +1055,8 @@ function addSavedRoll(creatureName, savedRoll) {
     });
 
     // Set up the roll entry with its label and buttons
-    const editIcon = devMode ? '<img src="images/dev_icons/dev_pencil.png" class="debug-icons16">' : '<i class="ts-icon-pencil ts-icon-xsmall"></i>';
-    const deleteIcon = devMode ? '<img src="images/dev_icons/dev_trash." class="debug-icons16">' : '<i class="ts-icon-trash ts-icon-xsmall"></i>';
+    const editIcon = '<i class="ts-icon-pencil ts-icon-xsmall"></i>'
+    const deleteIcon = '<i class="ts-icon-trash ts-icon-xsmall"></i>'
 
     creatureEntry.innerHTML = `
         <div class="roll-entry-container">
