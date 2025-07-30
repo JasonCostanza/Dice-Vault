@@ -718,6 +718,33 @@ button:focus-visible {
     appearance: none;
     cursor: pointer;
     transition: background-color 0.3s, border-color 0.3s;
+    height: auto;
+    max-height: none;
+    overflow: visible;
+}
+
+/* Hide scrollbars on dropdown select elements */
+.creature-sort-list::-webkit-scrollbar,
+.roll-groups-sort-list::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+.creature-sort-list::-webkit-scrollbar-track,
+.roll-groups-sort-list::-webkit-scrollbar-track {
+    display: none !important;
+}
+
+.creature-sort-list::-webkit-scrollbar-thumb,
+.roll-groups-sort-list::-webkit-scrollbar-thumb {
+    display: none !important;
+}
+
+.creature-sort-list,
+.roll-groups-sort-list {
+    scrollbar-width: none !important; /* Firefox */
+    -ms-overflow-style: none !important; /* Internet Explorer 10+ */
 }
 
 .sort-options-container {
@@ -756,18 +783,21 @@ button:focus-visible {
     margin-left: 10px;
     border: 1px solid var(--ts-color-primary);
     border-radius: 4px;
-    background-color: var(--ts-background-secondary);
+    background-color: var(--ts-button-background);
     color: var(--ts-color-primary);
     font-family: 'Gill Sans', sans-serif;
     font-weight: bold;
-    box-shadow: 0 2px 4px var(--ts-background-secondary);
+    box-shadow: 0 2px 4px var(--ts-button-background);
     appearance: none;
     cursor: pointer;
     transition: background-color 0.3s, border-color 0.3s;
+    height: auto;
+    max-height: none;
+    overflow: visible;
 }
 
 .roll-groups-sort-list:hover {
-    background-color: var(--ts-background-tertiary);
+    background-color: var(--ts-button-hover);
     border-color: var(--ts-color-secondary);
 }
 

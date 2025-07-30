@@ -59,14 +59,12 @@ const rollsModule = (function () {
             alert(`Error: Cannot roll groups with only modifiers and no dice.\n\nGroups with this issue: ${groupNames}\n\nPlease add at least one die to these groups or set their modifier to 0.`);
             return;
         }
-    
-        if (diceGroupsData.every(isDiceGroupEmpty)) {
+
+        if (diceGroupsData.every(diceGroupManager.isDiceGroupEmpty.bind(diceGroupManager))) {
             console.warn("Attempted to roll with empty dice groups");
             alert("Error: No dice selected for rolling. Please add at least one die to a group before rolling.");
             return;
-        }
-    
-        let critBehavior = fetchSetting("crit-behavior");
+        }        let critBehavior = fetchSetting("crit-behavior");
     
         if (selectedType === rollTypes.critical) {
             if (critBehavior === "double-die-count") {
@@ -175,7 +173,7 @@ const rollsModule = (function () {
         let diceRollObjects = [];
     
         diceGroupsData.forEach((group, index) => {
-            if (!isDiceGroupEmpty(group)) {
+            if (!diceGroupManager.isDiceGroupEmpty(group)) {
                 let groupRollString = "";
                 let hasDice = false;
     

@@ -436,14 +436,12 @@ class SavedRollManager {
                 newCreatureGroup.className = "saved-roll-group";
                 newCreatureGroup.dataset.creatureName = newCreatureName;
 
-                newCreatureGroup.innerHTML = `
-                    <div class="saved-roll-header" onclick="toggleAccordion(this)">
-                        <span>${newCreatureName}</span> <span class="accordion-icon">-</span>
-                    </div>
-                    <div class="saved-rolls-content"></div>
-                `;
-
-                const savedRollsContainer = document.querySelector(".saved-rolls-container");
+            newCreatureGroup.innerHTML = `
+                <div class="saved-roll-header" onclick="uiManager.toggleAccordion(this)">
+                    <span>${newCreatureName}</span> <span class="accordion-icon">-</span>
+                </div>
+                <div class="saved-rolls-content"></div>
+            `;                const savedRollsContainer = document.querySelector(".saved-rolls-container");
                 savedRollsContainer.appendChild(newCreatureGroup);
             }
 
@@ -511,15 +509,13 @@ class SavedRollManager {
             creatureGroup.className = "saved-roll-group";
             creatureGroup.dataset.creatureName = creatureName;
 
-            // Create collapsible header for the creature
-            creatureGroup.innerHTML = `
-                <div class="saved-roll-header" onclick="toggleAccordion(this)">
-                    <span>${creatureName}</span> <span class="accordion-icon">-</span>
-                </div>
-                <div class="saved-rolls-content"></div>
-            `;
-
-            savedRollsContainer.appendChild(creatureGroup);
+        // Create collapsible header for the creature
+        creatureGroup.innerHTML = `
+            <div class="saved-roll-header" onclick="uiManager.toggleAccordion(this)">
+                <span>${creatureName}</span> <span class="accordion-icon">-</span>
+            </div>
+            <div class="saved-rolls-content"></div>
+        `;            savedRollsContainer.appendChild(creatureGroup);
         }
 
         const rollsContent = creatureGroup.querySelector(".saved-rolls-content");

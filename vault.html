@@ -55,8 +55,8 @@
             </div>
 
             <div class="button-container unselectable group-action-bar">
-                <button id="add-group-btn" class="wide-button" onclick="addDiceGroup()">+ Group</button>
-                <button id="remove-group-btn" class="wide-button" onclick="removeDiceGroup()">- Group</button>
+                <button id="add-group-btn" class="wide-button" onclick="diceGroupManager.addDiceGroup()">+ Group</button>
+                <button id="remove-group-btn" class="wide-button" onclick="diceGroupManager.removeDiceGroup()">- Group</button>
             </div>
 
             <div class="content-scroll-wrapper">
@@ -74,8 +74,8 @@
             </div>
             
             <div class="button-container unselectable floating-roll-buttons">
-                <button id="reset-btn" class="wide-button" onclick="reset()">Reset</button>
-                <button id="save-btn" class="wide-button" onclick="save()">Pin</button>
+                <button id="reset-btn" class="wide-button" onclick="savedRollManager.reset()">Reset</button>
+                <button id="save-btn" class="wide-button" onclick="savedRollManager.save()">Pin</button>
             </div><br>
 
             <div class="saved-rolls-header">
@@ -83,7 +83,7 @@
                 <div class="sort-options-container">
                     <div id="sort-options-container" class="sort-wrapper">
                         <label class="sort-label">Creature sort:</label>
-                        <select id="sort-options" class='creature-sort-list' onchange="sortSavedRolls()">
+                        <select id="sort-options" class='creature-sort-list' onchange="rollSorter.sortSavedRolls()">
                             <option value="newest">Newest</option>
                             <option value="oldest">Oldest</option>
                             <option value="nameAsc">A-Z</option>
@@ -92,7 +92,7 @@
                     </div>
                     <div id="sort-rolls-options-container" class="sort-wrapper">
                         <label class="sort-label">Groups sort:</label>
-                        <select id="sort-rolls-options" class='roll-groups-sort-list' onchange="sortRollsWithinGroups()">
+                        <select id="sort-rolls-options" class='roll-groups-sort-list' onchange="rollSorter.sortRollsWithinGroups()">
                             <option value="default">Default</option>
                             <option value="newest">Newest</option>
                             <option value="oldest">Oldest</option>
@@ -126,7 +126,7 @@
         <script type="text/javascript" src="scripts/RollSorter.js"></script>
         <script type="text/javascript" src="scripts/SavedRollManager.js"></script>
         <script type="text/javascript" src="scripts/UIManager.js"></script>
-        <script type="text/javascript" src="scripts/vault.js"></script>
+        <script type="text/javascript" src="scripts/main.js"></script>
         <script type="text/javascript" src="scripts/taleSpireSubscriptionHandlers.js"></script>
         <script type="text/javascript" src="scripts/dataUpgrade.js"></script>
     </body>
