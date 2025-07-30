@@ -32,6 +32,10 @@ function isDiceGroupEmpty(diceGroup) {
     return diceGroupManager.isDiceGroupEmpty(diceGroup);
 }
 
+function hasOnlyModifier(diceGroup) {
+    return diceGroupManager.hasOnlyModifier(diceGroup);
+}
+
 function toggleDiceGroupAccordion(event) {
     return diceGroupManager.toggleDiceGroupAccordion(event);
 }

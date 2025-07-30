@@ -39,8 +39,30 @@ const rollsModule = (function () {
     
         diceGroupsData = updatedDiceGroupsData;
     
+        // Check for groups with only modifiers (error case)
+        const modifierOnlyGroups = diceGroupsData.filter(group => {
+            if (!group || !group.diceCounts) return false;
+            
+            const hasDice = diceTypes.some(diceType => {
+                const count = group.diceCounts[diceType] || 0;
+                return count > 0;
+            });
+            
+            const hasModifier = group.diceCounts.mod && group.diceCounts.mod !== 0;
+            
+            return !hasDice && hasModifier;
+        });
+    
+        if (modifierOnlyGroups.length > 0) {
+            const groupNames = modifierOnlyGroups.map(group => group.name || 'Unnamed Group').join(', ');
+            console.error(`Cannot roll groups with only modifiers and no dice: ${groupNames}`);
+            alert(`Error: Cannot roll groups with only modifiers and no dice.\n\nGroups with this issue: ${groupNames}\n\nPlease add at least one die to these groups or set their modifier to 0.`);
+            return;
+        }
+    
         if (diceGroupsData.every(isDiceGroupEmpty)) {
             console.warn("Attempted to roll with empty dice groups");
+            alert("Error: No dice selected for rolling. Please add at least one die to a group before rolling.");
             return;
         }
     
@@ -63,6 +85,7 @@ const rollsModule = (function () {
             
             if (baseDiceDescriptors.length === 0) {
                 console.warn("No dice to roll after filtering empty groups");
+                alert("Error: No valid dice groups found for rolling. Please ensure at least one group has dice selected.");
                 return;
             }
     
@@ -77,6 +100,7 @@ const rollsModule = (function () {
             });
         } catch (error) {
             console.error("Error creating roll descriptors:", error);
+            alert("Error: Failed to create dice roll. Please check your dice configuration and try again.");
         }
     }
 
@@ -153,12 +177,14 @@ const rollsModule = (function () {
         diceGroupsData.forEach((group, index) => {
             if (!isDiceGroupEmpty(group)) {
                 let groupRollString = "";
+                let hasDice = false;
     
                 // Handle all dice types, including those that might be missing
                 diceTypes.forEach(diceType => {
                     const count = group.diceCounts[diceType] || 0;
                     if (count > 0) {
                         groupRollString += `+${count}${diceType}`;
+                        hasDice = true;
                     }
                 });
     
@@ -169,10 +195,11 @@ const rollsModule = (function () {
                     groupRollString += modPart;
                 }
     
-                // Remove leading '+' if present
-                groupRollString = groupRollString.startsWith('+') ? groupRollString.slice(1) : groupRollString;
-    
-                if (groupRollString) {
+                // Additional safety check: only create roll objects if there are actual dice
+                if (hasDice && groupRollString) {
+                    // Remove leading '+' if present
+                    groupRollString = groupRollString.startsWith('+') ? groupRollString.slice(1) : groupRollString;
+                    
                     let groupName = group.name && group.name.trim() ? group.name.trim() : `Group ${index + 1}`;
                     
                     // Add suffix based on roll type
@@ -198,6 +225,9 @@ const rollsModule = (function () {
                         roll: groupRollString 
                     };
                     diceRollObjects.push(rollObject);
+                } else if (!hasDice && modValue !== 0) {
+                    // This should not happen anymore due to the validation in roll(), but let's log it just in case
+                    console.warn(`Skipping group "${group.name || `Group ${index + 1}`}" - cannot roll modifier without dice`);
                 }
             }
         });

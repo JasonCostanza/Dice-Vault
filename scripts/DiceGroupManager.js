@@ -12,7 +12,7 @@ class DiceGroupManager {
     /**
      * Checks if a dice group is empty (no dice selected)
      * @param {Object} diceGroup - The dice group to check
-     * @returns {boolean} - True if the group is empty
+     * @returns {boolean} - True if the group is empty or only has modifiers
      */
     isDiceGroupEmpty(diceGroup) {
         if (!diceGroup || !diceGroup.diceCounts) {
@@ -20,10 +20,33 @@ class DiceGroupManager {
         }
         
         // Check if any dice type has a non-zero count
+        // A group is considered empty for rolling purposes if it has no dice,
+        // regardless of whether it has modifiers (since you can't roll modifiers alone)
         return !this.diceTypes.some(diceType => {
             const count = diceGroup.diceCounts[diceType] || 0;
             return count > 0;
-        }) && (!diceGroup.diceCounts.mod || diceGroup.diceCounts.mod === 0);
+        });
+    }
+
+    /**
+     * Checks if a dice group has only modifiers and no dice
+     * @param {Object} diceGroup - The dice group to check
+     * @returns {boolean} - True if the group has only modifiers
+     */
+    hasOnlyModifier(diceGroup) {
+        if (!diceGroup || !diceGroup.diceCounts) {
+            return false;
+        }
+        
+        // Check if group has no dice but has a non-zero modifier
+        const hasDice = this.diceTypes.some(diceType => {
+            const count = diceGroup.diceCounts[diceType] || 0;
+            return count > 0;
+        });
+        
+        const hasModifier = diceGroup.diceCounts.mod && diceGroup.diceCounts.mod !== 0;
+        
+        return !hasDice && hasModifier;
     }
 
     /**

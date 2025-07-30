@@ -126,6 +126,34 @@ class SavedRollManager {
             });
         });
 
+        // Check for groups with only modifiers (error case)
+        const modifierOnlyGroups = savedDiceGroups.filter(group => {
+            if (!group || !group.diceCounts) return false;
+            
+            const hasDice = diceTypes.some(diceType => {
+                const count = group.diceCounts[diceType] || 0;
+                return count > 0;
+            });
+            
+            const hasModifier = group.diceCounts.mod && group.diceCounts.mod !== 0;
+            
+            return !hasDice && hasModifier;
+        });
+
+        if (modifierOnlyGroups.length > 0) {
+            const groupNames = modifierOnlyGroups.map(group => group.name || 'Unnamed Group').join(', ');
+            console.error(`Cannot pin/save groups with only modifiers and no dice: ${groupNames}`);
+            alert(`Error: Cannot pin groups with only modifiers and no dice.\n\nGroups with this issue: ${groupNames}\n\nPlease add at least one die to these groups or set their modifier to 0 before pinning.`);
+            return;
+        }
+
+        // Check if all groups are empty
+        if (savedDiceGroups.every(this.diceGroupManager.isDiceGroupEmpty.bind(this.diceGroupManager))) {
+            console.warn("Attempted to pin/save empty dice groups");
+            alert("Error: No dice selected for pinning. Please add at least one die to a group before pinning.");
+            return;
+        }
+
         const rollData = {
             name: creatureName,
             groups: savedDiceGroups
@@ -455,6 +483,25 @@ class SavedRollManager {
             return;
         }
 
+        // Defensive validation: Check for groups with only modifiers (mainly for legacy data)
+        const modifierOnlyGroups = savedRoll.filter(group => {
+            if (!group || !group.diceCounts) return false;
+            
+            const hasDice = diceTypes.some(diceType => {
+                const count = group.diceCounts[diceType] || 0;
+                return count > 0;
+            });
+            
+            const hasModifier = group.diceCounts.mod && group.diceCounts.mod !== 0;
+            
+            return !hasDice && hasModifier;
+        });
+
+        if (modifierOnlyGroups.length > 0) {
+            const groupNames = modifierOnlyGroups.map(group => group.name || 'Unnamed Group').join(', ');
+            console.warn(`Loading saved roll "${creatureName}" with groups that have only modifiers: ${groupNames}. These groups will not be rollable.`);
+        }
+
         // Check if an accordion group for this creature already exists
         let creatureGroup = document.querySelector(`.saved-roll-group[data-creature-name="${creatureName}"]`);
 
@@ -590,10 +637,39 @@ class SavedRollManager {
         const rollButton = document.createElement("div");
         rollButton.className = cssClasses;
         rollButton.onclick = function () {
-            if (!Array.isArray(rollGroups) || rollGroups.length === 0 || rollGroups.every(diceGroupManager.isDiceGroupEmpty.bind(diceGroupManager))) {
+            if (!Array.isArray(rollGroups) || rollGroups.length === 0) {
                 console.error('Attempted to roll an empty or invalid saved roll');
+                alert('Error: This saved roll has no valid dice groups.');
                 return;
             }
+            
+            // Check for groups with only modifiers
+            const modifierOnlyGroups = rollGroups.filter(group => {
+                if (!group || !group.diceCounts) return false;
+                
+                const hasDice = diceTypes.some(diceType => {
+                    const count = group.diceCounts[diceType] || 0;
+                    return count > 0;
+                });
+                
+                const hasModifier = group.diceCounts.mod && group.diceCounts.mod !== 0;
+                
+                return !hasDice && hasModifier;
+            });
+            
+            if (modifierOnlyGroups.length > 0) {
+                const groupNames = modifierOnlyGroups.map(group => group.name || 'Unnamed Group').join(', ');
+                console.error(`Cannot roll saved roll with groups that have only modifiers: ${groupNames}`);
+                alert(`Error: Cannot roll groups with only modifiers and no dice.\n\nGroups with this issue: ${groupNames}\n\nPlease edit this saved roll to add dice or remove the modifiers.`);
+                return;
+            }
+            
+            if (rollGroups.every(diceGroupManager.isDiceGroupEmpty.bind(diceGroupManager))) {
+                console.error('Attempted to roll an empty or invalid saved roll');
+                alert('Error: This saved roll has no dice selected. Please edit the saved roll to add at least one die.');
+                return;
+            }
+            
             rollsModule.roll(rollType, rollGroups);
         };
 
