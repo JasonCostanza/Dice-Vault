@@ -87,14 +87,20 @@ function saveRollsToLocalStorage() {
 
 async function loadRollsFromLocalStorage() {
     try {
+        // Clear all existing saved rolls before loading to prevent duplicates
+        const savedRollsContainer = document.querySelector('.saved-rolls-container');
+        if (savedRollsContainer) {
+            savedRollsContainer.innerHTML = '';
+        }
+
         // Now load the data
         const rollsJson = await TS.localStorage.campaign.getBlob();
         let rollsData = JSON.parse(rollsJson || '[]');
 
         rollsData.forEach(({ creatureName, allCreatureRolls }) => { // Iterate over each saved creature
             allCreatureRolls.forEach(({ savedRoll }) => { 
-                // Add each saved roll to the creature's group
-                addSavedRoll(creatureName, savedRoll);
+                // Add each saved roll to the creature's group using the SavedRollManager instance
+                savedRollManager.addSavedRoll(creatureName, savedRoll);
             });
         });
         
@@ -112,7 +118,8 @@ async function loadSavedRolls() {
         const savedData = await TS.localStorage.campaign.getBlob();
         const savedRolls = JSON.parse(savedData || '[]');
         savedRolls.forEach(roll => {
-            addSavedRoll(roll.name, roll.type, roll.counts);
+            // Use the SavedRollManager instance instead of global function
+            savedRollManager.addSavedRoll(roll.name, roll.type, roll.counts);
         });
     } catch (e) {
         console.error('Failed to load saved rolls:', e);
