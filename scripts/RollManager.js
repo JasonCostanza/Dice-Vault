@@ -1,4 +1,4 @@
-const rollsModule = (function () {
+const rollManager = (function () {
 
     function roll(rollTypeParam, groupsData) {
         let selectedType = rollTypeParam || rollTypes.normal;

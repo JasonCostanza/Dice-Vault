@@ -66,11 +66,11 @@
             
             
             <div class="button-container unselectable floating-roll-buttons">
-                <button class="rolling-button" onclick="rollsModule.roll('normal')"><img class="roll-type-image" src="./images/icons/rolling.png" alt="roll dice"/><br/>Roll</button>
-                <button class="rolling-button" onclick="rollsModule.roll('advantage')"><img class="roll-type-image" src="./images/icons/advantage.png" alt="advantage"/><br/>Advantage</button>
-                <button class="rolling-button" onclick="rollsModule.roll('disadvantage')"><img class="roll-type-image" src="./images/icons/disadvantage.png" alt="disadvantage"/><br/>Disadvantage</button>
-                <button class="rolling-button" onclick="rollsModule.roll('best-of-three')"><img class="roll-type-image" src="./images/icons/best-of-three.png" alt="best of three"/><br/>Best of 3</button>
-                <button class="rolling-button" onclick="rollsModule.roll('crit-dice')"><img class="roll-type-image" src="./images/icons/crit.png" alt="critical hit"/><br/>Critical</button>
+                <button class="rolling-button" onclick="rollManager.roll('normal')"><img class="roll-type-image" src="./images/icons/rolling.png" alt="roll dice"/><br/>Roll</button>
+                <button class="rolling-button" onclick="rollManager.roll('advantage')"><img class="roll-type-image" src="./images/icons/advantage.png" alt="advantage"/><br/>Advantage</button>
+                <button class="rolling-button" onclick="rollManager.roll('disadvantage')"><img class="roll-type-image" src="./images/icons/disadvantage.png" alt="disadvantage"/><br/>Disadvantage</button>
+                <button class="rolling-button" onclick="rollManager.roll('best-of-three')"><img class="roll-type-image" src="./images/icons/best-of-three.png" alt="best of three"/><br/>Best of 3</button>
+                <button class="rolling-button" onclick="rollManager.roll('crit-dice')"><img class="roll-type-image" src="./images/icons/crit.png" alt="critical hit"/><br/>Critical</button>
             </div>
             
             <div class="button-container unselectable floating-roll-buttons">
@@ -118,10 +118,10 @@
         </div>
 
         <script type="text/javascript" src="scripts/globals.js"></script>
-        <script type="text/javascript" src="scripts/settings.js"></script>
-        <script type="text/javascript" src="scripts/saveLoad.js"></script>
-        <script type="text/javascript" src="scripts/diceCrits.js"></script>
-        <script type="text/javascript" src="scripts/rolls.js"></script>
+        <script type="text/javascript" src="scripts/SettingsManager.js"></script>
+        <script type="text/javascript" src="scripts/SaveLoadManager.js"></script>
+        <script type="text/javascript" src="scripts/CriticalManager.js"></script>
+        <script type="text/javascript" src="scripts/RollManager.js"></script>
         <script type="text/javascript" src="scripts/DiceGroupManager.js"></script>
         <script type="text/javascript" src="scripts/RollSorter.js"></script>
         <script type="text/javascript" src="scripts/SavedRollManager.js"></script>
