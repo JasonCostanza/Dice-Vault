@@ -1,3 +1,9 @@
+/**
+ * Toggles the visibility of the settings menu.
+ * 
+ * This function shows or hides the settings menu and updates the settings button
+ * to reflect the current state.
+ */
 function toggleSettingsDisplay() {
     const settingsContainer = document.getElementById('settings-menu');
     const settingsButton = document.getElementById('settings-button');
@@ -5,6 +11,15 @@ function toggleSettingsDisplay() {
     settingsButton.classList.toggle('active-menu');
 }
 
+/**
+ * Returns the default value for a given setting.
+ * 
+ * This function provides default values for all available settings in the application.
+ * It's used when loading settings to ensure all settings have valid values.
+ *
+ * @param {string} settingName - The name of the setting to get the default value for
+ * @returns {*} The default value for the specified setting
+ */
 function defaultSettings(settingName){
     const settings = {
         autoLoadRolls: false,
@@ -15,6 +30,12 @@ function defaultSettings(settingName){
     return settings[settingName];
 }
 
+/**
+ * Saves the current global settings to TaleSpire's local storage.
+ * 
+ * This function collects all current setting values from the UI and saves them
+ * to TaleSpire's global local storage for persistence across sessions.
+ */
 function saveGlobalSettings(){
     const settings = {
         autoLoadRolls: document.getElementById('auto-load').checked,
@@ -30,6 +51,12 @@ function saveGlobalSettings(){
     updateAutoButtons();
 }
 
+/**
+ * Loads global settings from TaleSpire's local storage.
+ * 
+ * This function retrieves previously saved settings from TaleSpire's global local storage
+ * and applies them to the UI. If no settings are found, it uses default values.
+ */
 function loadGlobalSettings(){
     TS.localStorage.global.getBlob().then(settingsJson => {
         const settings = JSON.parse(settingsJson || '{}');
@@ -43,6 +70,15 @@ function loadGlobalSettings(){
     });
 }
 
+/**
+ * Fetches the current value of a setting from the UI.
+ * 
+ * This function retrieves the current value of a setting element from the DOM
+ * and returns it in the appropriate format (boolean for checkboxes, string for selects).
+ *
+ * @param {string} settingName - The ID of the setting element to fetch
+ * @returns {boolean|string|undefined} The current value of the setting, or undefined if not found
+ */
 function fetchSetting(settingName){
     const setting = document.getElementById(settingName)
     if (setting === null){
@@ -59,6 +95,12 @@ function fetchSetting(settingName){
     }
 }
 
+/**
+ * Handles the retrieval and display of backup data.
+ * 
+ * This function retrieves backup data from local storage and displays it in a modal
+ * for the user to copy. It's used for data recovery purposes.
+ */
 async function handleRetrieveBackup() {
     try {
         const backupData = await getDataBackup();

@@ -10,6 +10,12 @@ function performAutoLoads() {
     updateAutoButtons();
 }
 
+/**
+ * Updates the auto-load and auto-save button states based on current settings.
+ * 
+ * This function checks the current auto-load and auto-save settings and updates
+ * the button text and disabled state accordingly.
+ */
 function updateAutoButtons(){
     if (fetchSetting('auto-load')) {
         document.getElementById('load-rolls-button').innerText = 'Auto-Loading';
@@ -28,6 +34,13 @@ function updateAutoButtons(){
     }
 }
 
+/**
+ * Saves all current dice configurations to TaleSpire's local storage.
+ * 
+ * This function iterates through all saved roll groups and their entries,
+ * collecting the dice configuration data and saving it as JSON to TaleSpire's
+ * campaign-specific local storage.
+ */
 function saveRollsToLocalStorage() {
     let rollsData = [];
 
@@ -85,6 +98,12 @@ function saveRollsToLocalStorage() {
     });
 }
 
+/**
+ * Loads saved dice configurations from TaleSpire's local storage.
+ * 
+ * This function retrieves previously saved dice configurations from TaleSpire's
+ * campaign-specific local storage and restores them to the UI using the SavedRollManager.
+ */
 async function loadRollsFromLocalStorage() {
     try {
         // Clear all existing saved rolls before loading to prevent duplicates
@@ -113,6 +132,12 @@ async function loadRollsFromLocalStorage() {
     }
 }
 
+/**
+ * Loads saved rolls from local storage (legacy function).
+ * 
+ * This function is a legacy version of loadRollsFromLocalStorage that handles
+ * the old data format. It's kept for backward compatibility.
+ */
 async function loadSavedRolls() {
     try {
         const savedData = await TS.localStorage.campaign.getBlob();
@@ -126,6 +151,14 @@ async function loadSavedRolls() {
     }
 }
 
+/**
+ * Saves the current rolls to local storage (legacy function).
+ * 
+ * This function collects all current saved roll entries and returns them
+ * in a format suitable for saving to local storage. It's kept for backward compatibility.
+ * 
+ * @returns {Array<Object>} Array of saved roll objects with name, type, and counts properties
+ */
 function saveCurrentRolls() {
     const savedRollsElements = document.querySelectorAll('.saved-roll-entry');
 

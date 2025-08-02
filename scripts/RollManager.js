@@ -1,5 +1,16 @@
 const rollManager = (function () {
 
+    /**
+     * Initiates a dice roll with the specified roll type and dice groups data.
+     * 
+     * This function validates the dice groups data, applies critical hit behaviors
+     * if necessary, and sends the dice to TaleSpire's dice tray for rolling.
+     * It handles various roll types including normal, advantage, disadvantage,
+     * best-of-three, and critical rolls.
+     *
+     * @param {string} rollTypeParam - The type of roll to perform (normal, advantage, disadvantage, best-of-three, crit-dice)
+     * @param {Array<Object>} groupsData - Array of dice group objects with dice counts and modifiers
+     */
     function roll(rollTypeParam, groupsData) {
         let selectedType = rollTypeParam || rollTypes.normal;
         let updatedDiceGroupsData = groupsData || [];
@@ -77,6 +88,15 @@ const rollManager = (function () {
         putDiceToRollIntoDiceTray(selectedType, critBehavior);
     }
 
+    /**
+     * Sends dice to TaleSpire's dice tray for rolling.
+     * 
+     * This function constructs dice roll descriptors from the current dice groups
+     * and sends them to TaleSpire's dice system for processing.
+     *
+     * @param {string} selectedType - The type of roll being performed
+     * @param {string} critBehavior - The critical hit behavior to apply
+     */
     function putDiceToRollIntoDiceTray(selectedType, critBehavior) {
         try {
             let baseDiceDescriptors = constructDiceRollDescriptors(selectedType);
@@ -169,6 +189,16 @@ const rollManager = (function () {
         }
     }
 
+    /**
+     * Constructs dice roll descriptors from the current dice groups data.
+     * 
+     * This function iterates through all dice groups and creates roll descriptors
+     * for TaleSpire's dice system. It handles dice counts, modifiers, and group names,
+     * and adds appropriate suffixes based on the roll type.
+     *
+     * @param {string} rollType - The type of roll being performed
+     * @returns {Array<Object>} Array of dice roll descriptor objects with name and roll properties
+     */
     function constructDiceRollDescriptors(rollType) {
         let diceRollObjects = [];
     
@@ -370,6 +400,17 @@ const rollManager = (function () {
         }
     }
 
+    /**
+     * Gets the reportable roll results group based on the roll type.
+     * 
+     * This function processes roll results based on the roll type and applies
+     * appropriate logic for advantage, disadvantage, and best-of-three rolls.
+     * For normal rolls, it returns the original results unchanged.
+     *
+     * @param {Object} roll - The roll object containing results groups
+     * @param {string} rollType - The type of roll that was performed
+     * @returns {Promise<Array<Object>>} A promise that resolves to the processed roll results groups
+     */
     async function getReportableRollResultsGroup(roll, rollType) {
         let resultGroups;
     
@@ -397,6 +438,16 @@ const rollManager = (function () {
         return Array.isArray(resultGroups) ? resultGroups : [resultGroups];
     }
 
+    /**
+     * Adds a prefix to all group names in the result groups.
+     * 
+     * This function is used to modify group names when displaying results
+     * to indicate the type of roll that was performed.
+     *
+     * @param {Array<Object>} resultGroups - Array of result group objects
+     * @param {string} prefix - The prefix to add to each group name
+     * @returns {Array<Object>} Array of result groups with modified names
+     */
     function addPrefixToGroupNames(resultGroups, prefix) {
         return resultGroups.map(group => ({
             ...group,
@@ -633,6 +684,17 @@ const rollManager = (function () {
         });
     }
 
+    /**
+     * Displays the processed roll results in TaleSpire.
+     * 
+     * This function takes the final processed roll results and sends them to TaleSpire
+     * for display. It ensures each result group has proper names and descriptions,
+     * and adds appropriate suffixes based on the roll type.
+     *
+     * @param {Array<Object>} resultGroups - Array of processed roll result groups
+     * @param {string} rollId - The ID of the roll being displayed
+     * @returns {Promise<void>} A promise that resolves when the results have been sent to TaleSpire
+     */
     async function displayResults(resultGroups, rollId) {
         try {
             console.log(`Displaying results for roll ID: ${rollId}`);

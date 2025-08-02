@@ -114,6 +114,30 @@ async function checkAndUpgradeRollsData() {
 }
 
 /**
+ * Upgrades rolls data from version 2.0 to the current format.
+ * 
+ * This function converts the old data format to the new format that supports
+ * multiple dice groups per roll. It transforms the single counts object into
+ * an array of group objects.
+ *
+ * @param {Array<Object>} oldData - Array of roll objects in the old format
+ * @returns {Array<Object>} Array of roll objects in the new format
+ */
+function upgradeRollsData2_0To2_x(oldData) {
+    return oldData.map(roll => {
+        // Convert the old single counts object to an array with one group
+        const upgradedRoll = {
+            name: roll.name,
+            groups: [{
+                name: roll.name,
+                diceCounts: roll.counts
+            }]
+        };
+        return upgradedRoll;
+    });
+}
+
+/**
  * Retrieves the backup of the original data before upgrade.
  * 
  * @returns {Promise<Object|null>} A promise that resolves to the backup data object,

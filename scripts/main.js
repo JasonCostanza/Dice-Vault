@@ -34,3 +34,21 @@ document.addEventListener("DOMContentLoaded", () => {
         loadButton.addEventListener("click", loadRollsFromLocalStorage);
     }
 });
+
+/**
+ * Saves the current dice configuration to local storage.
+ * This function collects all dice groups from the UI and saves them
+ * to TaleSpire's local storage system.
+ */
+function saveRollsToLocalStorage() {
+    // Implementation is in SaveLoadManager.js
+}
+
+/**
+ * Loads saved dice configurations from local storage.
+ * This function retrieves previously saved dice groups from TaleSpire's
+ * local storage and restores them to the UI.
+ */
+function loadRollsFromLocalStorage() {
+    // Implementation is in SaveLoadManager.js
+}
