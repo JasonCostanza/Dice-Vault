@@ -75,7 +75,8 @@ const rollManager = (function () {
             console.warn("Attempted to roll with empty dice groups");
             alert("Error: No dice selected for rolling. Please add at least one die to a group before rolling.");
             return;
-        }        let critBehavior = fetchSetting("crit-behavior");
+        }
+        let critBehavior = fetchSetting("crit-behavior");
     
         if (selectedType === rollTypes.critical) {
             if (critBehavior === "double-die-count") {

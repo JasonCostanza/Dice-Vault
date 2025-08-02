@@ -7,6 +7,9 @@ const rollSorter = new RollSorter();
 const savedRollManager = new SavedRollManager(diceGroupManager, rollSorter);
 const uiManager = new UIManager();
 
+// Create global rollsModule reference for TaleSpire subscription handlers
+const rollsModule = rollManager;
+
 // === APPLICATION INITIALIZATION ===
 // Set up essential event listeners and initialize the application
 
