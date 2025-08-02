@@ -268,7 +268,7 @@ class SavedRollManager {
      * @param {string} creatureName - The name of the creature being saved
      */
     showOverwriteModal(creatureName) {
-        this.toggleOverlay(true);
+        uiManager.showOverlay(true);
 
         const modal = document.createElement('div');
         modal.className = 'overwrite-modal';
@@ -299,41 +299,16 @@ class SavedRollManager {
 
         document.getElementById('overwrite-yes').addEventListener('click', () => {
             document.body.removeChild(modal);
-            this.toggleOverlay(false);
+            uiManager.showOverlay(false);
             overwriteConfirmed = true;  // Set the flag to true
             this.save(); // Call save() again to proceed with saving
         });
 
         document.getElementById('overwrite-no').addEventListener('click', () => {
             document.body.removeChild(modal);
-            this.toggleOverlay(false);
+            uiManager.showOverlay(false);
             // Don't set overwriteConfirmed flag - just abort
         });
-    }
-
-    /**
-     * Toggles the modal overlay
-     * @param {boolean} show - Whether to show or hide the overlay
-     */
-    toggleOverlay(show) {
-        if (show) {
-            const overlay = document.createElement('div');
-            overlay.id = 'modal-overlay';
-            overlay.style.position = 'fixed';
-            overlay.style.top = '0';
-            overlay.style.left = '0';
-            overlay.style.width = '100%';
-            overlay.style.height = '100%';
-            overlay.style.backgroundColor = 'var(--ts-background-primary)';
-            overlay.style.zIndex = '999';
-            overlay.style.pointerEvents = 'auto';  // This allows the overlay to receive mouse events
-            document.body.appendChild(overlay);
-        } else {
-            const overlay = document.getElementById('modal-overlay');
-            if (overlay) {
-                overlay.remove();
-            }
-        }
     }
 
     /**
