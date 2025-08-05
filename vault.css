@@ -1,6 +1,23 @@
-/* TODO: Reogranize this file completely */
+/* ====================================================================
+   DICE VAULT - CSS STYLESHEET
+   ====================================================================
+   Organized into logical sections for better maintainability:
+   1. Base Styles & Reset
+   2. Layout & Structure
+   3. Scrollbars
+   4. Utility Classes
+   5. Header & Navigation
+   6. Buttons & Form Elements
+   7. Dice System
+   8. Saved Rolls
+   9. Counters
+   10. Modals & Overlays
+   ==================================================================== */
 
-/* Base Styles & General Layout */
+/* ====================================================================
+   1. BASE STYLES & RESET
+   ==================================================================== */
+
 html,
 body {
     background-color: var(--ts-background-primary);
@@ -14,6 +31,10 @@ body {
     user-select: none;
 }
 
+/* ====================================================================
+   2. LAYOUT & STRUCTURE
+   ==================================================================== */
+
 .content {
     overflow: hidden;
     display: flex;
@@ -22,30 +43,32 @@ body {
     height: 100%;
 }
 
-button, 
-.ts-icon-large,
-.roll-button,
-.edit-roll,
-.delete-roll,
-.accordion-toggle,
-.saved-roll-header,
-.dice-counter {
-    cursor: pointer;
-}
-
-/* TODO: Not sure if this is used. Need to investigate further */
-.counter-overlay:not(.mod-counter-overlay) {
-    pointer-events: none;
-    cursor: default;
-}
-
 .scrolling-content {
     margin-top: 5px;
     max-height: 90%;
     overflow-y: auto;
 }
 
-/* Scrollbars */
+/* Content Columns */
+.content-col-dice {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 4px;
+}
+
+.content-scroll-wrapper {
+    flex-shrink: 0;
+    max-height: 360px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+/* ====================================================================
+   3. SCROLLBARS
+   ==================================================================== */
+
+/* Default Scrollbars */
 ::-webkit-scrollbar {
     width: 6px;
 }
@@ -71,6 +94,7 @@ button,
     transition: ease-in-out 0.2s;
 }
 
+/* Scrolling Content Scrollbars */
 .scrolling-content::-webkit-scrollbar {
     width: 10px;
 }
@@ -89,7 +113,31 @@ button,
     background: #555;
 }
 
-/* Utilities */
+/* Hide Scrollbars on Dropdown Selects */
+.creature-sort-list::-webkit-scrollbar,
+.roll-groups-sort-list::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+.creature-sort-list::-webkit-scrollbar-track,
+.roll-groups-sort-list::-webkit-scrollbar-track,
+.creature-sort-list::-webkit-scrollbar-thumb,
+.roll-groups-sort-list::-webkit-scrollbar-thumb {
+    display: none !important;
+}
+
+.creature-sort-list,
+.roll-groups-sort-list {
+    scrollbar-width: none !important; /* Firefox */
+    -ms-overflow-style: none !important; /* Internet Explorer 10+ */
+}
+
+/* ====================================================================
+   4. UTILITY CLASSES
+   ==================================================================== */
+
 .unselectable {
     user-select: none;
 }
@@ -108,12 +156,36 @@ button,
     color: var(--ts-color-primary);
 }
 
-/* .label-desc {
+.version {
+    font-size: 0.8em;
     color: var(--ts-color-secondary);
-    flex: 1;
-} */
+    text-align: center;
+}
 
-/* Header Menu & Settings */
+/* Cursor Styles */
+button, 
+.ts-icon-large,
+.roll-button,
+.edit-roll,
+.edit-counter,
+.delete-roll,
+.accordion-toggle,
+.saved-roll-header,
+.dice-counter {
+    cursor: pointer;
+}
+
+/* Note: Investigate usage of this selector */
+.counter-overlay:not(.mod-counter-overlay) {
+    pointer-events: none;
+    cursor: default;
+}
+
+/* ====================================================================
+   5. HEADER & NAVIGATION
+   ==================================================================== */
+
+/* Menu Bar */
 #menu-bar {
     padding: 5px;
 }
@@ -138,12 +210,6 @@ button,
     z-index: 1;
 }
 
-.version {
-    font-size: 0.8em;
-    color: var(--ts-color-secondary);
-    text-align: center;
-}
-
 /* Footer */
 .footer {
     bottom: 0;
@@ -156,8 +222,11 @@ button,
     border-top: 2px solid var(--ts-accessibility-border);
 }
 
+/* ====================================================================
+   6. BUTTONS & FORM ELEMENTS
+   ==================================================================== */
 
-/* Buttons */
+/* Base Button & Input Styles */
 button,
 input {
     background-color: var(--ts-background-secondary);
@@ -184,6 +253,7 @@ input:focus-visible {
     background-color: var(--ts-background-primary);
 }
 
+/* Button Specific Styles */
 button {
     background-color: var(--ts-button-background);
     width: 150px;
@@ -199,16 +269,39 @@ button:focus-visible {
     background-color: var(--ts-button-hover);
 }
 
+/* Button Containers */
 .button-container {
     display: flex;
     justify-content: center;
     gap: 10px;
     align-items: center;
-    /* padding-top: 2%; */
-    margin-top:     7px;
-    margin-bottom:  7px;
+    margin-top: 7px;
+    margin-bottom: 7px;
 }
 
+.buttons-container {
+    display: flex;
+    margin-left: 10px;
+    align-items: center;
+}
+
+.row-buttons-container {
+    display: flex;
+    margin-top: 5px;
+    justify-content: space-around;
+}
+
+.row-button {
+    flex: 1;
+    margin: 0 5px;
+    height: 40px;
+}
+
+.row-button img {
+    height: 40px;
+}
+
+/* Specialized Button Types */
 .black-button {
     padding: 5px 15px;
     margin: 5px;
@@ -241,7 +334,80 @@ button:focus-visible {
     color: var(--ts-accent-hover) !important;
 }
 
-/* Roll Name Input */
+/* Rolling Buttons */
+.rolling-button {
+    font-size: 0.75em;
+    padding: 4px 6px;
+    width: 66px;
+    height: auto;
+    text-align: center;
+    line-height: 1.2em;
+    border: 1px solid var(--ts-color-primary);
+    cursor: pointer;
+}
+
+.wide-button {
+    border: 1px solid var(--ts-color-primary);
+    cursor: pointer;
+}
+
+/* Force consistent size across all roll-type images */
+.rolling-button img.roll-type-image {
+    height: 32px !important;
+    width: auto;
+    margin-bottom: 4px;
+}
+
+.roll-button {
+    display: block;
+    padding: 5px 10px;
+    margin-top: 10px;
+    background-color: var(--ts-button-background);
+    color: var(--ts-color-primary);
+    text-align: center;
+    cursor: pointer;
+    border-radius: 4px;
+    border: 1px solid var(--ts-color-primary);
+    transition: background-color 0.3s;
+}
+
+.roll-button:hover {
+    background-color: var(--ts-button-hover);
+}
+
+/* Edit & Delete Action Buttons */
+.edit-roll, .delete-roll, .edit-counter, .delete-counter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0 5px;
+    transition: background-color 0.2s;
+    cursor: pointer;
+    border: 1px solid var(--ts-color-primary);
+}
+
+.edit-roll, .edit-counter {
+    background-color: var(--ts-button-background);
+}
+
+.edit-roll:hover, .edit-counter:hover {
+    background-color: var(--ts-button-hover);
+}
+
+.delete-roll, .delete-counter {
+    background-color: var(--ts-accent-primary);
+}
+
+.delete-roll:hover, .delete-counter:hover {
+    background-color: var(--ts-color-danger);
+}
+
+/* Form Input Specific Styles */
 .creature-name-container {
     margin-top: 20px;
     margin-bottom: 5px;
@@ -269,6 +435,16 @@ button:focus-visible {
     background-color: var(--ts-background-tertiary);
 }
 
+#creature-name.editing {
+    border-color: var(--ts-color-danger) !important;
+    box-sizing: border-box !important;
+    margin: 0;
+}
+
+/* ====================================================================
+   7. DICE SYSTEM
+   ==================================================================== */
+
 /* Dice Groups & Selection */
 .dice-selection {
     display: flex;
@@ -288,33 +464,59 @@ button:focus-visible {
     display: none;
 }
 
-.content-col-dice {
+/* Dice Group Structure */
+.dice-group-wrapper {
+    border: 3px solid transparent;
+    border-radius: 6px;
+    overflow: hidden;
+    background-color: var(--ts-background-secondary);
+    box-shadow: 0 0 8px var(--ts-accessibility-border);
+    transition: all 0.3s ease-in-out;
+}
+
+.dice-group-wrapper.editing {
+    border-color: var(--ts-color-danger) !important;
+    box-sizing: border-box !important;
+    margin: 0;
+}
+
+.dice-group {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.dice-group-container {
+    width: 100%;
+    box-sizing: border-box;
+    max-height: 100% !important;
+    overflow: visible;
+    transition: max-height 0.3s ease-in-out;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    padding: 4px;
-    /* overflow-y: auto; */
-    /* max-height: 350px; adjust as needed */
-    /* border: 1px solid var(--ts-accessibility-border); */
-    /* margin-bottom: 10px; */
 }
 
-.content-scroll-wrapper {
-    flex-shrink: 0;
-    max-height: 360px; /* similar to .content-col-dice max-height */
-    overflow-y: auto;
-    padding-right: 4px;
-}
-
-
-/* .content-row {
+/* Dice Group Header */
+.dice-group-header {
+    background-color: var(--ts-background-secondary);
+    padding: 6px 12px;
+    font-weight: bold;
     display: flex;
-    flex-direction: row;
+    justify-content: space-between;
     align-items: center;
-    gap: 2%;
-     margin-bottom: 0.4em;
-} */
+    color: var(--ts-color-primary);
+    font-size: 1em;
+    border-bottom: 1px solid var(--ts-accessibility-border);
+    cursor: pointer;
+}
 
+.header-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    max-width: 95%;
+}
+
+/* Dice Group Names & Inputs */
 .dice-group-name {
     margin-bottom: 10px;
 }
@@ -327,37 +529,83 @@ button:focus-visible {
     border: 3px solid transparent;
 }
 
-.dice-group-wrapper {
-    border: 3px solid transparent;
-    border-radius: 6px;
-    /* margin-bottom: 8px; */
-    overflow: hidden;
-    background-color: var(--ts-background-secondary);
-    box-shadow: 0 0 8px var(--ts-accessibility-border);
-    transition: all 0.3s ease-in-out;
-}
-
-#creature-name.editing,
-.dice-group-name-input.editing,
-.dice-group-wrapper.editing {
+.dice-group-name-input.editing {
     border-color: var(--ts-color-danger) !important;
     box-sizing: border-box !important;
     margin: 0;
 }
 
+.dice-group-name-input.header-input {
+    background-color: var(--ts-background-tertiary);
+    border: 1px solid transparent;
+    font-size: 1em;
+    padding: 2px 4px;
+    margin: 0;
+    cursor: text;
+    width: auto;
+    min-width: 120px;
+    font-weight: bold;
+    color: var(--ts-color-primary);
+}
+
+.dice-group-name-input.header-input:hover,
+.dice-group-name-input.header-input:focus {
+    border-color: var(--ts-accessibility-border);
+    background-color: var(--ts-background-primary);
+}
+
+/* Accordion Toggle */
+.accordion-toggle {
+    font-size: 1.3em;
+    margin-left: 10px;
+    color: var(--ts-color-secondary);
+    display: flex;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* Group Action Bar */
+.group-action-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0 4px;
+    background-color: var(--ts-background-primary);
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    border-bottom: 1px solid var(--ts-accessibility-border);
+}
+
+.group-action-bar button {
+    font-size: 0.9em;
+    padding: 4px 12px;
+    width: auto;
+    height: 32px;
+}
+
+/* Dice Rows & Layout */
 .dice-row {
-    /* display: flex;
-    align-items: center;*/
     justify-content: space-between; 
     display: flex;
-    /* flex-direction: column; */
     align-items: center;
     justify-content: center; 
     position: relative;
-    /* width: 70px; */
     margin: 2px;
     padding-top: 5px;
     gap: 3px; 
+}
+
+/* Plus Sign Between Dice */
+.plus-sign {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2em;
+    color: var(--ts-color-primary);
+    margin: 0 10px;
+    user-select: none;
 }
 
 /* Dice Counters */
@@ -420,109 +668,93 @@ button:focus-visible {
     background-color: var(--ts-background-secondary);
 }
 
+/* Dice Labels & Icons */
 .dice-label {
     margin-top: 5px;
     font-size: 0.8em;
 }
 
-.plus-sign {
-    display: flex;
+.ts-icon-medium {
+    font-size: 30px;
+    user-select: none;
+    z-index: 0;
+}
+
+.dice-icon-container {
+    position: relative;
+    display: inline-flex;
     justify-content: center;
     align-items: center;
-    font-size: 2em;
+}
+
+.dice-count {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--ts-background-primary);
+    font-size: 1.75em;
+    pointer-events: none;
+    z-index: 1;
+    text-shadow:
+        -1px -1px 0 var(--ts-color-primary),
+        1px -1px 0  var(--ts-color-primary),
+        -1px 1px 0  var(--ts-color-primary),
+        1px 1px 0   var(--ts-color-primary);
+}
+
+/* Dice Info & Display */
+.dice-info {
     color: var(--ts-color-primary);
-    margin: 0 10px;
-    user-select: none;
 }
 
-/* Rolling Buttons */
-.rolling-button {
-    font-size: 0.75em;
-    padding: 4px 6px;
-    width: 66px;
-    height: auto;
-    text-align: center;
-    line-height: 1.2em;
-    border: 1px solid var(--ts-color-primary);
-    cursor: pointer;
+.dice-group-name-text {
+    font-weight: bold;
+    margin-right: 2px;
 }
 
-.wide-button{
-    border: 1px solid var(--ts-color-primary);
-    cursor: pointer;
+/* Debug Icons (for development mode) */
+.debug-icons16 {
+    height: 16px;
+    width: 16px;
 }
 
-/* Force consistent size across all roll-type images */
-.rolling-button img.roll-type-image {
-    height: 32px !important;
-    width: auto;
-    margin-bottom: 4px;
-}
-
-.roll-button {
-    display: block;
-    padding: 5px 10px;
-    margin-top: 10px;
-    background-color: var(--ts-button-background);
-    color: var(--ts-color-primary);
-    text-align: center;
-    cursor: pointer;
-    border-radius: 4px;
-    border: 1px solid var(--ts-color-primary);
-    transition: background-color 0.3s;
-}
-
-.roll-button:hover {
-    background-color: var(--ts-button-hover);
-}
-
-.buttons-container {
-    display: flex;
-    margin-left: 10px;
-    align-items: center;
-}
-
-.row-buttons-container {
-    display: flex;
-    margin-top: 5px;
-    justify-content: space-around;
-}
-
-.row-button {
-    flex: 1;
-    margin: 0 5px;
-    height: 40px;
-}
-
-.row-button img {
-    height: 40px;
+.debug-icons48 {
+    height: 48px;
+    width: 48px;
 }
 
 
 
-/* Saved Rolls Section */
+/* ====================================================================
+   8. SAVED ROLLS SECTION
+   ==================================================================== */
+
+/* Saved Rolls Header */
 .saved-rolls-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
+/* Saved Rolls Container */
 .saved-rolls-container {
     flex-grow: 1;
     overflow-y: auto;
     margin-bottom: 10px;
-    max-height: calc(100vh - 250px); /* was 160px or 170px before */
+    max-height: calc(100vh - 250px);
     border: 1px solid var(--ts-accessibility-border);
     padding: 5px;
     margin-top: 10px;
 }
+
 .saved-rolls-container::after {
     content: '';
     display: block;
     height: 60px; /* Matches or slightly exceeds footer height */
 }
 
-
+/* Saved Roll Entries */
 .saved-roll-entry {
     border: 1px solid var(--ts-accessibility-border);
     margin-bottom: 5px;
@@ -576,6 +808,12 @@ button:focus-visible {
     gap: 5px;
 }
 
+.roll-entry-dice-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
 /* Accordion for Saved Rolls */
 .accordion-icon {
     font-weight: bold;
@@ -611,85 +849,15 @@ button:focus-visible {
     display: block;
 }
 
-/* Dice Icons */
-.ts-icon-medium {
-    font-size: 30px;
-    user-select: none;
-    z-index: 0;
-}
-
-.dice-icon-container {
-    position: relative;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.dice-count {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: var(--ts-background-primary);
-    font-size: 1.75em;
-    pointer-events: none;
-    z-index: 1;
-    text-shadow:
-        -1px -1px 0 var(--ts-color-primary),
-        1px -1px 0  var(--ts-color-primary),
-        -1px 1px 0  var(--ts-color-primary),
-        1px 1px 0   var(--ts-color-primary);
-}
-
-/* Debug Icons (for development mode) */
-.debug-icons16 {
-    height: 16px;
-    width: 16px;
-}
-
-.debug-icons48 {
-    height: 48px;
-    width: 48px;
-}
-
-/* Edit & Delete Buttons */
+/* Saved Rolls Button Container */
 .saved-rolls-button-container {
     display: flex;
     margin-left: auto;
 }
 
-
-
-.edit-roll, .delete-roll {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    font-size: 18px;
-    font-weight: bold;
-    margin: 0 5px;
-    transition: background-color 0.2s;
-    cursor: pointer;
-    border: 1px solid var(--ts-color-primary);
-}
-
-.edit-roll {
-    background-color: var(--ts-button-background);
-}
-
-.edit-roll:hover {
-    background-color: var(--ts-button-hover);
-}
-
-.delete-roll {
-    background-color: var(--ts-accent-primary);
-}
-
-.delete-roll:hover {
-    background-color: var(--ts-color-danger);
-}
+/* ====================================================================
+   9. SORTING & DROPDOWNS
+   ==================================================================== */
 
 /* Sort Options */
 .sort-wrapper {
@@ -705,7 +873,16 @@ button:focus-visible {
     white-space: nowrap;
 }
 
-.creature-sort-list {
+.sort-options-container {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Sort Dropdown Styles */
+.creature-sort-list,
+.roll-groups-sort-list {
     padding: 8px 16px;
     margin-left: 10px;
     border: 1px solid var(--ts-color-primary);
@@ -723,42 +900,25 @@ button:focus-visible {
     overflow: visible;
 }
 
-/* Hide scrollbars on dropdown select elements */
-.creature-sort-list::-webkit-scrollbar,
-.roll-groups-sort-list::-webkit-scrollbar {
-    display: none !important;
-    width: 0 !important;
-    height: 0 !important;
+.creature-sort-list:hover,
+.roll-groups-sort-list:hover {
+    background-color: var(--ts-button-hover);
+    border-color: var(--ts-color-secondary);
 }
 
-.creature-sort-list::-webkit-scrollbar-track,
-.roll-groups-sort-list::-webkit-scrollbar-track {
-    display: none !important;
+.creature-sort-list::-ms-expand,
+.roll-groups-sort-list::-ms-expand {
+    display: none;
 }
 
-.creature-sort-list::-webkit-scrollbar-thumb,
-.roll-groups-sort-list::-webkit-scrollbar-thumb {
-    display: none !important;
-}
-
-.creature-sort-list,
-.roll-groups-sort-list {
-    scrollbar-width: none !important; /* Firefox */
-    -ms-overflow-style: none !important; /* Internet Explorer 10+ */
-}
-
-.sort-options-container {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-#sort-options-container, #sort-rolls-options-container {
+/* Dropdown Arrow Indicators */
+#sort-options-container, 
+#sort-rolls-options-container {
     position: relative;
 }
 
-#sort-options-container:after, #sort-rolls-options-container:after {
+#sort-options-container:after, 
+#sort-rolls-options-container:after {
     content: '\2193';
     font-size: 15px;
     color: var(--ts-color-primary);
@@ -769,43 +929,93 @@ button:focus-visible {
     pointer-events: none;
 }
 
-.creature-sort-list:hover {
-    background-color: var(--ts-button-hover);
-    border-color: var(--ts-color-secondary);
+/* ====================================================================
+   10. COUNTERS SYSTEM
+   ==================================================================== */
+
+/* Counter Entries */
+.counter-entry {
+    border: 1px solid var(--ts-accessibility-border);
+    border-radius: 3px;
+    margin-bottom: 5px;
+    background-color: var(--ts-background-tertiary);
+    padding: 10px;
 }
 
-.creature-sort-list::-ms-expand {
-    display: none;
+.counter-display {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1;
 }
 
-.roll-groups-sort-list {
-    padding: 8px 16px;
-    margin-left: 10px;
+.counter-purpose {
+    font-weight: bold;
+    color: var(--ts-color-primary);
+    font-size: 0.95em;
+    flex: 1;
+    margin-right: 10px;
+}
+
+/* Counter Controls */
+.counter-controls {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    gap: 5px;
+}
+
+.counter-decrement,
+.counter-increment {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
     border: 1px solid var(--ts-color-primary);
-    border-radius: 4px;
     background-color: var(--ts-button-background);
     color: var(--ts-color-primary);
-    font-family: 'Gill Sans', sans-serif;
+    font-size: 18px;
     font-weight: bold;
-    box-shadow: 0 2px 4px var(--ts-button-background);
-    appearance: none;
     cursor: pointer;
-    transition: background-color 0.3s, border-color 0.3s;
-    height: auto;
-    max-height: none;
-    overflow: visible;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
 }
 
-.roll-groups-sort-list:hover {
+.counter-decrement:hover,
+.counter-increment:hover {
     background-color: var(--ts-button-hover);
-    border-color: var(--ts-color-secondary);
 }
 
-.roll-groups-sort-list::-ms-expand {
-    display: none;
+.counter-value {
+    width: 60px;
+    height: 24px;
+    text-align: center;
+    border: 1px solid var(--ts-color-primary);
+    border-radius: 4px;
+    background-color: var(--ts-background-tertiary);
+    color: var(--ts-color-primary);
+    font-size: 14px;
+    font-weight: bold;
+    padding: 0 5px;
 }
 
-/* Modal Styles */
+.counter-value:focus {
+    outline: none;
+    border-color: var(--ts-accent-primary);
+    background-color: var(--ts-background-primary);
+}
+
+.counter-value::-webkit-inner-spin-button,
+.counter-value::-webkit-outer-spin-button {
+    opacity: 1;
+    height: 20px;
+}
+
+/* ====================================================================
+   11. MODALS & OVERLAYS
+   ==================================================================== */
+
 #modal-overlay {
     pointer-events: auto;
 }
@@ -814,119 +1024,24 @@ button:focus-visible {
     pointer-events: auto;
 }
 
+/* ====================================================================
+   12. LEGACY & DEPRECATED STYLES
+   ==================================================================== */
 
+/* Note: The following styles may be deprecated or unused.
+   Consider reviewing and removing if not needed. */
 
-/* Dice group styling */
-.dice-info {
-    color: var(--ts-color-primary);
-}
-
-.dice-group {
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.dice-group-name-text {
-    font-weight: bold;
-    margin-right: 2px;
-}
-
-.roll-entry-dice-container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-/*  */
-
-
-.dice-group-header {
-    background-color: var(--ts-background-secondary);
-    padding: 6px 12px;
-    font-weight: bold;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: var(--ts-color-primary);
-    font-size: 1em;
-    border-bottom: 1px solid var(--ts-accessibility-border);
-    cursor: pointer;
-}
-
-.header-content {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    max-width: 95%;
-}
-
-.dice-group-name-input.header-input {
-    background-color: var(--ts-background-tertiary);
-    border: 1px solid transparent;
-    font-size: 1em;
-    padding: 2px 4px;
-    margin: 0;
-    cursor: text;
-    width: auto;
-    min-width: 120px;
-    font-weight: bold;
-    color: var(--ts-color-primary);
-}
-
-.dice-group-name-input.header-input:hover,
-.dice-group-name-input.header-input:focus {
-    border-color: var(--ts-accessibility-border);
-    background-color: var(--ts-background-primary);
-}
-
-.dice-group-name-input {
-    font-size: 0.95em;
-    padding: 4px 6px;
-    margin-bottom: 4px;
-}
-
-.dice-group-name-input {
-    font-size: 0.85em;
-    padding: 3px 5px;
-    margin-bottom: 3px;
-    width: 100%;
-}
-
-.accordion-toggle {
-    font-size: 1.3em;
-    margin-left: 10px;
+/* Commented out label-desc - investigate if needed
+.label-desc {
     color: var(--ts-color-secondary);
-    display: flex;
-    align-items: center !important;
-    justify-content: center !important;
-}
+    flex: 1;
+} */
 
-.dice-group-container {
-    width: 100%;
-    box-sizing: border-box;
-    max-height: 100% !important;
-    overflow: visible;
-    transition: max-height 0.3s ease-in-out;
+/* Commented out content-row - investigate if needed
+.content-row {
     display: flex;
-    flex-direction: column;
-}
-
-.group-action-bar {
-    display: flex;
-    justify-content: center;
+    flex-direction: row;
     align-items: center;
-    gap: 10px;
-    padding: 6px 0 4px;
-    background-color: var(--ts-background-primary);
-    position: sticky;
-    top: 0;
-    z-index: 3;
-    border-bottom: 1px solid var(--ts-accessibility-border);
-}
-
-.group-action-bar button {
-    font-size: 0.9em;
-    padding: 4px 12px;
-    width: auto;
-    height: 32px;
-}
+    gap: 2%;
+    margin-bottom: 0.4em;
+} */
