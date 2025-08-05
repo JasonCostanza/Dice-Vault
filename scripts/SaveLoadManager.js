@@ -80,21 +80,30 @@ function saveRollsToLocalStorage() {
                 }
             }
 
-            allCreatureRolls.push({
-                savedRoll: savedRoll
-            });
+            // Only add to allCreatureRolls if savedRoll contains data
+            if (savedRoll.length > 0) {
+                allCreatureRolls.push({
+                    savedRoll: savedRoll
+                });
+            }
         });
 
         rollsData.push({ creatureName, allCreatureRolls }); // Store grouped data
     });
 
-    let rollsJson = JSON.stringify(rollsData);
-    TS.localStorage.campaign.setBlob(rollsJson).then(() => {
-        console.log('Rolls data saved successfully.');
+    // Include counter information in the save data
+    const saveData = {
+        rollsData: rollsData,
+        counters: counterManager.counters || []
+    };
+
+    let saveJson = JSON.stringify(saveData);
+    TS.localStorage.campaign.setBlob(saveJson).then(() => {
+        console.log('Rolls data and counters saved successfully.');
         disableButtonById('save-rolls-button');
         disableButtonById('load-rolls-button');
     }).catch(error => {
-        console.error('Failed to save rolls data:', error);
+        console.error('Failed to save rolls data and counters:', error);
     });
 }
 
@@ -112,10 +121,43 @@ async function loadRollsFromLocalStorage() {
             savedRollsContainer.innerHTML = '';
         }
 
-        // Now load the data
-        const rollsJson = await TS.localStorage.campaign.getBlob();
-        let rollsData = JSON.parse(rollsJson || '[]');
+        // Clear existing counters before loading
+        counterManager.counters = [];
+        const counterElements = document.querySelectorAll('.counter-entry');
+        counterElements.forEach(element => element.remove());
 
+        // Now load the data
+        const saveJson = await TS.localStorage.campaign.getBlob();
+        let saveData;
+        
+        try {
+            saveData = JSON.parse(saveJson || '{}');
+        } catch (e) {
+            console.error('Error parsing save data:', e);
+            return;
+        }
+
+        // Handle both new format (with counters) and legacy format (rolls only)
+        let rollsData;
+        if (saveData.rollsData) {
+            // New format with counters
+            rollsData = saveData.rollsData;
+            
+            // Load counters if they exist
+            if (saveData.counters && Array.isArray(saveData.counters)) {
+                saveData.counters.forEach(counter => {
+                    counterManager.addCounter(counter);
+                });
+            }
+        } else if (Array.isArray(saveData)) {
+            // Legacy format - just rolls data
+            rollsData = saveData;
+        } else {
+            console.log('No valid save data found.');
+            return;
+        }
+
+        // Load rolls data
         rollsData.forEach(({ creatureName, allCreatureRolls }) => { // Iterate over each saved creature
             allCreatureRolls.forEach(({ savedRoll }) => { 
                 // Add each saved roll to the creature's group using the SavedRollManager instance
@@ -128,7 +170,7 @@ async function loadRollsFromLocalStorage() {
             disableButtonById('save-rolls-button', false);
         }
     } catch (error) {
-        console.error('Failed to load rolls data:', error);
+        console.error('Failed to load rolls data and counters:', error);
     }
 }
 
@@ -199,6 +241,20 @@ function saveCurrentRolls() {
     });
 
     return savedRolls;
+}
+
+/**
+ * Handles auto-save logic or enables save/load buttons for manual saving.
+ * This function should be called whenever data changes (rolls, counters, etc.)
+ * to maintain consistency with the auto-save feature.
+ */
+function handleDataChange() {
+    if (fetchSetting("auto-save")) {
+        saveRollsToLocalStorage();
+    } else {
+        disableButtonById("save-rolls-button", false);
+        disableButtonById("load-rolls-button", false);
+    }
 }
 
 /**

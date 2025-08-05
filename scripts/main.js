@@ -6,6 +6,7 @@ const diceGroupManager = new DiceGroupManager();
 const rollSorter = new RollSorter();
 const savedRollManager = new SavedRollManager(diceGroupManager, rollSorter);
 const uiManager = new UIManager();
+const counterManager = new CounterManager();
 
 // Create global rollsModule reference for TaleSpire subscription handlers
 const rollsModule = rollManager;
@@ -38,20 +39,5 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-/**
- * Saves the current dice configuration to local storage.
- * This function collects all dice groups from the UI and saves them
- * to TaleSpire's local storage system.
- */
-function saveRollsToLocalStorage() {
-    // Implementation is in SaveLoadManager.js
-}
-
-/**
- * Loads saved dice configurations from local storage.
- * This function retrieves previously saved dice groups from TaleSpire's
- * local storage and restores them to the UI.
- */
-function loadRollsFromLocalStorage() {
-    // Implementation is in SaveLoadManager.js
-}
+// Save/load functions are implemented in SaveLoadManager.js
+// No need to redefine them here

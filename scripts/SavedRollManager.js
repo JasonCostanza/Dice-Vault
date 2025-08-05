@@ -29,12 +29,7 @@ class SavedRollManager {
             creatureGroup.remove();
         }
 
-        if (fetchSetting("auto-save")) {
-            saveRollsToLocalStorage();
-        } else {
-            disableButtonById("load-rolls-button", false);
-            disableButtonById("save-rolls-button", false);
-        }
+        handleDataChange();
     }
 
     /**
@@ -198,12 +193,7 @@ class SavedRollManager {
             this.reset();
         }
 
-        if (fetchSetting("auto-save")) {
-            saveRollsToLocalStorage();
-        } else {
-            disableButtonById("save-rolls-button", false);
-            disableButtonById("load-rolls-button", false);
-        }
+        handleDataChange();
 
         updateAutoButtons();
     }

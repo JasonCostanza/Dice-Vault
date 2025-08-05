@@ -74,8 +74,9 @@
             </div>
             
             <div class="button-container unselectable floating-roll-buttons">
-                <button id="reset-btn" class="wide-button" onclick="savedRollManager.reset()">Reset</button>
                 <button id="save-btn" class="wide-button" onclick="savedRollManager.save()">Pin</button>
+                <button id="reset-btn" class="wide-button" onclick="savedRollManager.reset()">Reset</button>
+                <button id="new-counter" class="wide-button" onclick="counterManager.newCounter()">New Counter</button>
             </div><br>
 
             <div class="saved-rolls-header">
@@ -109,11 +110,11 @@
         </div>
 
         <div class="footer">
-            <button id="save-rolls-button" class="black-button" onclick="saveRollsToLocalStorage()">Save Locally</button>
+            <button id="save-rolls-button" class="black-button">Save Locally</button>
             
             <i class="ts-icon-character-gamemaster"></i><div style="font-family: 'Enchanted Land', cursive; color: #dddddd; font-size: 0.7em;"> "May the rolls be in your favor"</div>
 
-            <button id="load-rolls-button" class="black-button" onclick="loadRollsFromLocalStorage()">Load Saves</button>
+            <button id="load-rolls-button" class="black-button">Load Saves</button>
             <!-- <div class="footer-spacer"></div> -->
         </div>
 
@@ -126,6 +127,7 @@
         <script type="text/javascript" src="scripts/RollSorter.js"></script>
         <script type="text/javascript" src="scripts/SavedRollManager.js"></script>
         <script type="text/javascript" src="scripts/UIManager.js"></script>
+        <script type="text/javascript" src="scripts/CounterManager.js"></script>
         <script type="text/javascript" src="scripts/main.js"></script>
         <script type="text/javascript" src="scripts/taleSpireSubscriptionHandlers.js"></script>
     </body>

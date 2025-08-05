@@ -152,6 +152,93 @@ class UIManager {
     }
 
     /**
+     * Shows an input modal with OK/Cancel buttons
+     * @param {string} message - The input prompt message
+     * @param {string} placeholder - Optional placeholder text for the input
+     * @param {string} title - Optional title for the modal
+     * @param {string} defaultValue - Optional default value for the input
+     * @returns {Promise<string|null>} - Resolves with input value or null if cancelled
+     */
+    showInput(message, placeholder = '', title = 'Input', defaultValue = '') {
+        return new Promise((resolve) => {
+            this.showOverlay(true);
+
+            const modal = document.createElement('div');
+            modal.className = 'ui-modal';
+            modal.style.position = 'fixed';
+            modal.style.left = '50%';
+            modal.style.top = '50%';
+            modal.style.transform = 'translate(-50%, -50%)';
+            modal.style.backgroundColor = 'var(--ts-background-primary)';
+            modal.style.padding = '20px';
+            modal.style.border = '4px solid var(--ts-accessibility-border)';
+            modal.style.zIndex = '1000';
+            modal.style.boxShadow = '0 4px 8px var(--ts-background-primary)';
+            modal.style.borderRadius = '4px';
+            modal.style.color = 'var(--ts-color-primary)';
+            modal.style.textAlign = 'center';
+            modal.style.minWidth = '300px';
+
+            modal.innerHTML = `
+                <h3>${title}</h3>
+                <p style="margin-bottom: 15px;">${message}</p>
+                <input type="text" id="modal-input" 
+                       placeholder="${placeholder}" 
+                       value="${defaultValue}"
+                       style="width: 100%; padding: 8px; margin-bottom: 15px; 
+                              border: 1px solid var(--ts-accessibility-border); 
+                              border-radius: 4px; background-color: var(--ts-background-tertiary);
+                              color: var(--ts-color-primary); font-size: 14px;">
+                <div style="display: flex; justify-content: space-around; margin-top: 20px;">
+                    <button id="modal-ok" class="black-button">OK</button>
+                    <button id="modal-cancel" class="black-button">Cancel</button>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+
+            const input = document.getElementById('modal-input');
+            const okBtn = document.getElementById('modal-ok');
+            const cancelBtn = document.getElementById('modal-cancel');
+
+            // Focus the input
+            input.focus();
+            input.select();
+
+            // Handle Enter key
+            const handleEnter = (e) => {
+                if (e.key === 'Enter') {
+                    okBtn.click();
+                }
+            };
+
+            // Handle Escape key
+            const handleEscape = (e) => {
+                if (e.key === 'Escape') {
+                    cancelBtn.click();
+                }
+            };
+
+            input.addEventListener('keydown', handleEnter);
+            document.addEventListener('keydown', handleEscape);
+
+            okBtn.addEventListener('click', () => {
+                document.removeEventListener('keydown', handleEscape);
+                document.body.removeChild(modal);
+                this.showOverlay(false);
+                resolve(input.value.trim());
+            });
+
+            cancelBtn.addEventListener('click', () => {
+                document.removeEventListener('keydown', handleEscape);
+                document.body.removeChild(modal);
+                this.showOverlay(false);
+                resolve(null);
+            });
+        });
+    }
+
+    /**
      * Toggles the modal overlay
      * @param {boolean} show - Whether to show or hide the overlay
      */
