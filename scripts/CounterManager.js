@@ -135,31 +135,27 @@ class CounterManager {
      * Deletes a counter
      * @param {Element} element - The delete button element
      */
-    async deleteCounter(element) {
+    deleteCounter(element) {
         const counterEntry = element.closest('.counter-entry');
         const counterId = counterEntry.dataset.counterId;
         
-        const confirmed = await uiManager.showConfirmation("Are you sure you want to delete this counter?", "Delete Counter");
+        // Remove from array
+        this.counters = this.counters.filter(c => c.id !== counterId);
         
-        if (confirmed) {
-            // Remove from array
-            this.counters = this.counters.filter(c => c.id !== counterId);
-            
-            // Remove from DOM
-            counterEntry.remove();
-            
-            // Check if Counters group is now empty and remove it
-            const countersGroup = document.querySelector(`.saved-roll-group[data-creature-name="Counters"]`);
-            if (countersGroup) {
-                const remainingCounters = countersGroup.querySelectorAll('.counter-entry');
-                if (remainingCounters.length === 0) {
-                    countersGroup.remove();
-                }
+        // Remove from DOM
+        counterEntry.remove();
+        
+        // Check if Counters group is now empty and remove it
+        const countersGroup = document.querySelector(`.saved-roll-group[data-creature-name="Counters"]`);
+        if (countersGroup) {
+            const remainingCounters = countersGroup.querySelectorAll('.counter-entry');
+            if (remainingCounters.length === 0) {
+                countersGroup.remove();
             }
-            
-            this.saveCounters();
-            handleDataChange();
         }
+        
+        this.saveCounters();
+        handleDataChange();
     }
 
     /**
@@ -227,13 +223,7 @@ class CounterManager {
             <div class="roll-entry-container">
                 <div class="counter-display">
                     <span class="counter-purpose">${counter.purpose}</span>
-                    <div class="counter-controls">
-                        <button class="counter-decrement" onclick="counterManager.decrementCounter('${counter.id}')">-</button>
-                        <input type="number" class="counter-value" value="${counter.value}" 
-                               onchange="counterManager.updateCounterValue('${counter.id}', this.value)"
-                               onfocus="this.select()">
-                        <button class="counter-increment" onclick="counterManager.incrementCounter('${counter.id}')">+</button>
-                    </div>
+                    <input type="number" class="counter-value" value="${counter.value}" onchange="counterManager.updateCounterValue('${counter.id}', this.value)">
                 </div>
                 <div class="buttons-container">
                     <div class="edit-counter" onclick="counterManager.startEditingCounter(this)">${editIcon}</div>

@@ -129,18 +129,27 @@ function doubleTotal(result) {
  * @returns {Object} A new result object with doubled dice results.
  */
 function doubleResultsRecursive(result) {
+    // Handle null/undefined results
+    if (!result || typeof result !== 'object') {
+        console.warn('doubleResultsRecursive received invalid result:', result);
+        return result;
+    }
+
     if (result.kind && Array.isArray(result.results)) {
         return {
             ...result,
-            results: result.results.map(r => r * 2),
-            total: (result.total || 0) * 2,
+            results: result.results.map(r => {
+                const num = Number(r);
+                return isNaN(num) ? r : num * 2;
+            }),
+            total: Math.floor(Number(result.total || 0) * 2),
             description: `Critical Hit! Dice results doubled`
         };
     } else if (result.operator && Array.isArray(result.operands)) {
         return {
             ...result,
             operands: result.operands.map(doubleResultsRecursive),
-            total: (result.total || 0) * 2,
+            total: Math.floor(Number(result.total || 0) * 2),
             description: `Critical Hit! Dice results doubled`
         };
     }

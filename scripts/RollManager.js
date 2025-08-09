@@ -647,12 +647,16 @@ const rollManager = (function () {
     
         return resultGroups.map(group => {
             let modifiedResult;
+            console.log('Processing group for crit behavior:', critBehavior, 'Group:', group);
+            
             switch (critBehavior) {
                 case "double-total":
                     modifiedResult = doubleTotal(group.result);
                     break;
                 case "double-die-result":
-                    modifiedResult = doubleDiceResults(group.result);
+                    console.log('Applying double-die-result to:', group.result);
+                    modifiedResult = doubleResultsRecursive(group.result);
+                    console.log('Result after doubling:', modifiedResult);
                     break;
                 case "max-die":
                     modifiedResult = maximizeDice(group.result);

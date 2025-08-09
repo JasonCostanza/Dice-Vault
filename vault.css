@@ -988,7 +988,7 @@ button:focus-visible {
 }
 
 .counter-value {
-    width: 60px;
+    width: 50px;
     height: 24px;
     text-align: center;
     border: 1px solid var(--ts-color-primary);
@@ -998,6 +998,7 @@ button:focus-visible {
     font-size: 14px;
     font-weight: bold;
     padding: 0 5px;
+    flex-grow: 0;
 }
 
 .counter-value:focus {
