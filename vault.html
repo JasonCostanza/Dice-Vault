@@ -47,7 +47,7 @@
                 <button id="retrieve-backup-button" class="wide-button" onclick="handleRetrieveBackup()">Retrieve Data Backup</button>
                 <br>
                 <br>
-                <div class="version">Version: 4.0</div>
+                <div class="version">Version: 5.1</div>
             </div>
 
             <div class="creature-name-container">
@@ -55,8 +55,8 @@
             </div>
 
             <div class="button-container unselectable group-action-bar">
-                <button id="add-group-btn" class="wide-button" onclick="addDiceGroup()">+ Group</button>
-                <button id="remove-group-btn" class="wide-button" onclick="removeDiceGroup()">- Group</button>
+                <button id="add-group-btn" class="wide-button" onclick="diceGroupManager.addDiceGroup()">+ Group</button>
+                <button id="remove-group-btn" class="wide-button" onclick="diceGroupManager.removeDiceGroup()">- Group</button>
             </div>
 
             <div class="content-scroll-wrapper">
@@ -66,16 +66,17 @@
             
             
             <div class="button-container unselectable floating-roll-buttons">
-                <button class="rolling-button" onclick="rollsModule.roll('normal')"><img class="roll-type-image" src="./images/icons/rolling.png" alt="roll dice"/><br/>Roll</button>
-                <button class="rolling-button" onclick="rollsModule.roll('advantage')"><img class="roll-type-image" src="./images/icons/advantage.png" alt="advantage"/><br/>Advantage</button>
-                <button class="rolling-button" onclick="rollsModule.roll('disadvantage')"><img class="roll-type-image" src="./images/icons/disadvantage.png" alt="disadvantage"/><br/>Disadvantage</button>
-                <button class="rolling-button" onclick="rollsModule.roll('best-of-three')"><img class="roll-type-image" src="./images/icons/best-of-three.png" alt="best of three"/><br/>Best of 3</button>
-                <button class="rolling-button" onclick="rollsModule.roll('crit-dice')"><img class="roll-type-image" src="./images/icons/crit.png" alt="critical hit"/><br/>Critical</button>
+                <button class="rolling-button" onclick="rollManager.roll('normal')"><img class="roll-type-image" src="./images/icons/rolling.png" alt="roll dice"/><br/>Roll</button>
+                <button class="rolling-button" onclick="rollManager.roll('advantage')"><img class="roll-type-image" src="./images/icons/advantage.png" alt="advantage"/><br/>Advantage</button>
+                <button class="rolling-button" onclick="rollManager.roll('disadvantage')"><img class="roll-type-image" src="./images/icons/disadvantage.png" alt="disadvantage"/><br/>Disadvantage</button>
+                <button class="rolling-button" onclick="rollManager.roll('best-of-three')"><img class="roll-type-image" src="./images/icons/best-of-three.png" alt="best of three"/><br/>Best of 3</button>
+                <button class="rolling-button" onclick="rollManager.roll('crit-dice')"><img class="roll-type-image" src="./images/icons/crit.png" alt="critical hit"/><br/>Critical</button>
             </div>
             
             <div class="button-container unselectable floating-roll-buttons">
-                <button id="reset-btn" class="wide-button" onclick="reset()">Reset</button>
-                <button id="save-btn" class="wide-button" onclick="save()">Pin</button>
+                <button id="save-btn" class="wide-button" onclick="savedRollManager.save()">Pin</button>
+                <button id="reset-btn" class="wide-button" onclick="savedRollManager.reset()">Reset</button>
+                <button id="new-counter" class="wide-button" onclick="counterManager.newCounter()">New Counter</button>
             </div><br>
 
             <div class="saved-rolls-header">
@@ -83,7 +84,7 @@
                 <div class="sort-options-container">
                     <div id="sort-options-container" class="sort-wrapper">
                         <label class="sort-label">Creature sort:</label>
-                        <select id="sort-options" class='creature-sort-list' onchange="sortSavedRolls()">
+                        <select id="sort-options" class='creature-sort-list' onchange="rollSorter.sortSavedRolls()">
                             <option value="newest">Newest</option>
                             <option value="oldest">Oldest</option>
                             <option value="nameAsc">A-Z</option>
@@ -92,7 +93,7 @@
                     </div>
                     <div id="sort-rolls-options-container" class="sort-wrapper">
                         <label class="sort-label">Groups sort:</label>
-                        <select id="sort-rolls-options" class='roll-groups-sort-list' onchange="sortRollsWithinGroups()">
+                        <select id="sort-rolls-options" class='roll-groups-sort-list' onchange="rollSorter.sortRollsWithinGroups()">
                             <option value="default">Default</option>
                             <option value="newest">Newest</option>
                             <option value="oldest">Oldest</option>
@@ -118,12 +119,16 @@
         </div>
 
         <script type="text/javascript" src="scripts/globals.js"></script>
-        <script type="text/javascript" src="scripts/settings.js"></script>
-        <script type="text/javascript" src="scripts/saveLoad.js"></script>
-        <script type="text/javascript" src="scripts/diceCrits.js"></script>
-        <script type="text/javascript" src="scripts/rolls.js"></script>
-        <script type="text/javascript" src="scripts/vault.js"></script>
+        <script type="text/javascript" src="scripts/SettingsManager.js"></script>
+        <script type="text/javascript" src="scripts/SaveLoadManager.js"></script>
+        <script type="text/javascript" src="scripts/CriticalManager.js"></script>
+        <script type="text/javascript" src="scripts/RollManager.js"></script>
+        <script type="text/javascript" src="scripts/DiceGroupManager.js"></script>
+        <script type="text/javascript" src="scripts/RollSorter.js"></script>
+        <script type="text/javascript" src="scripts/SavedRollManager.js"></script>
+        <script type="text/javascript" src="scripts/UIManager.js"></script>
+        <script type="text/javascript" src="scripts/CounterManager.js"></script>
+        <script type="text/javascript" src="scripts/main.js"></script>
         <script type="text/javascript" src="scripts/taleSpireSubscriptionHandlers.js"></script>
-        <script type="text/javascript" src="scripts/dataUpgrade.js"></script>
     </body>
 </html>

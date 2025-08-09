@@ -1,5 +1,16 @@
-const rollsModule = (function () {
+const rollManager = (function () {
 
+    /**
+     * Initiates a dice roll with the specified roll type and dice groups data.
+     * 
+     * This function validates the dice groups data, applies critical hit behaviors
+     * if necessary, and sends the dice to TaleSpire's dice tray for rolling.
+     * It handles various roll types including normal, advantage, disadvantage,
+     * best-of-three, and critical rolls.
+     *
+     * @param {string} rollTypeParam - The type of roll to perform (normal, advantage, disadvantage, best-of-three, crit-dice)
+     * @param {Array<Object>} groupsData - Array of dice group objects with dice counts and modifiers
+     */
     function roll(rollTypeParam, groupsData) {
         let selectedType = rollTypeParam || rollTypes.normal;
         let updatedDiceGroupsData = groupsData || [];
@@ -39,11 +50,32 @@ const rollsModule = (function () {
     
         diceGroupsData = updatedDiceGroupsData;
     
-        if (diceGroupsData.every(isDiceGroupEmpty)) {
-            console.warn("Attempted to roll with empty dice groups");
+        // Check for groups with only modifiers (error case)
+        const modifierOnlyGroups = diceGroupsData.filter(group => {
+            if (!group || !group.diceCounts) return false;
+            
+            const hasDice = diceTypes.some(diceType => {
+                const count = group.diceCounts[diceType] || 0;
+                return count > 0;
+            });
+            
+            const hasModifier = group.diceCounts.mod && group.diceCounts.mod !== 0;
+            
+            return !hasDice && hasModifier;
+        });
+    
+        if (modifierOnlyGroups.length > 0) {
+            const groupNames = modifierOnlyGroups.map(group => group.name || 'Unnamed Group').join(', ');
+            console.error(`Cannot roll groups with only modifiers and no dice: ${groupNames}`);
+            alert(`Error: Cannot roll groups with only modifiers and no dice.\n\nGroups with this issue: ${groupNames}\n\nPlease add at least one die to these groups or set their modifier to 0.`);
             return;
         }
-    
+
+        if (diceGroupsData.every(diceGroupManager.isDiceGroupEmpty.bind(diceGroupManager))) {
+            console.warn("Attempted to roll with empty dice groups");
+            alert("Error: No dice selected for rolling. Please add at least one die to a group before rolling.");
+            return;
+        }
         let critBehavior = fetchSetting("crit-behavior");
     
         if (selectedType === rollTypes.critical) {
@@ -57,12 +89,22 @@ const rollsModule = (function () {
         putDiceToRollIntoDiceTray(selectedType, critBehavior);
     }
 
+    /**
+     * Sends dice to TaleSpire's dice tray for rolling.
+     * 
+     * This function constructs dice roll descriptors from the current dice groups
+     * and sends them to TaleSpire's dice system for processing.
+     *
+     * @param {string} selectedType - The type of roll being performed
+     * @param {string} critBehavior - The critical hit behavior to apply
+     */
     function putDiceToRollIntoDiceTray(selectedType, critBehavior) {
         try {
             let baseDiceDescriptors = constructDiceRollDescriptors(selectedType);
             
             if (baseDiceDescriptors.length === 0) {
                 console.warn("No dice to roll after filtering empty groups");
+                alert("Error: No valid dice groups found for rolling. Please ensure at least one group has dice selected.");
                 return;
             }
     
@@ -77,6 +119,7 @@ const rollsModule = (function () {
             });
         } catch (error) {
             console.error("Error creating roll descriptors:", error);
+            alert("Error: Failed to create dice roll. Please check your dice configuration and try again.");
         }
     }
 
@@ -147,18 +190,30 @@ const rollsModule = (function () {
         }
     }
 
+    /**
+     * Constructs dice roll descriptors from the current dice groups data.
+     * 
+     * This function iterates through all dice groups and creates roll descriptors
+     * for TaleSpire's dice system. It handles dice counts, modifiers, and group names,
+     * and adds appropriate suffixes based on the roll type.
+     *
+     * @param {string} rollType - The type of roll being performed
+     * @returns {Array<Object>} Array of dice roll descriptor objects with name and roll properties
+     */
     function constructDiceRollDescriptors(rollType) {
         let diceRollObjects = [];
     
         diceGroupsData.forEach((group, index) => {
-            if (!isDiceGroupEmpty(group)) {
+            if (!diceGroupManager.isDiceGroupEmpty(group)) {
                 let groupRollString = "";
+                let hasDice = false;
     
                 // Handle all dice types, including those that might be missing
                 diceTypes.forEach(diceType => {
                     const count = group.diceCounts[diceType] || 0;
                     if (count > 0) {
                         groupRollString += `+${count}${diceType}`;
+                        hasDice = true;
                     }
                 });
     
@@ -169,10 +224,11 @@ const rollsModule = (function () {
                     groupRollString += modPart;
                 }
     
-                // Remove leading '+' if present
-                groupRollString = groupRollString.startsWith('+') ? groupRollString.slice(1) : groupRollString;
-    
-                if (groupRollString) {
+                // Additional safety check: only create roll objects if there are actual dice
+                if (hasDice && groupRollString) {
+                    // Remove leading '+' if present
+                    groupRollString = groupRollString.startsWith('+') ? groupRollString.slice(1) : groupRollString;
+                    
                     let groupName = group.name && group.name.trim() ? group.name.trim() : `Group ${index + 1}`;
                     
                     // Add suffix based on roll type
@@ -198,6 +254,9 @@ const rollsModule = (function () {
                         roll: groupRollString 
                     };
                     diceRollObjects.push(rollObject);
+                } else if (!hasDice && modValue !== 0) {
+                    // This should not happen anymore due to the validation in roll(), but let's log it just in case
+                    console.warn(`Skipping group "${group.name || `Group ${index + 1}`}" - cannot roll modifier without dice`);
                 }
             }
         });
@@ -342,6 +401,17 @@ const rollsModule = (function () {
         }
     }
 
+    /**
+     * Gets the reportable roll results group based on the roll type.
+     * 
+     * This function processes roll results based on the roll type and applies
+     * appropriate logic for advantage, disadvantage, and best-of-three rolls.
+     * For normal rolls, it returns the original results unchanged.
+     *
+     * @param {Object} roll - The roll object containing results groups
+     * @param {string} rollType - The type of roll that was performed
+     * @returns {Promise<Array<Object>>} A promise that resolves to the processed roll results groups
+     */
     async function getReportableRollResultsGroup(roll, rollType) {
         let resultGroups;
     
@@ -369,6 +439,16 @@ const rollsModule = (function () {
         return Array.isArray(resultGroups) ? resultGroups : [resultGroups];
     }
 
+    /**
+     * Adds a prefix to all group names in the result groups.
+     * 
+     * This function is used to modify group names when displaying results
+     * to indicate the type of roll that was performed.
+     *
+     * @param {Array<Object>} resultGroups - Array of result group objects
+     * @param {string} prefix - The prefix to add to each group name
+     * @returns {Array<Object>} Array of result groups with modified names
+     */
     function addPrefixToGroupNames(resultGroups, prefix) {
         return resultGroups.map(group => ({
             ...group,
@@ -567,12 +647,16 @@ const rollsModule = (function () {
     
         return resultGroups.map(group => {
             let modifiedResult;
+            console.log('Processing group for crit behavior:', critBehavior, 'Group:', group);
+            
             switch (critBehavior) {
                 case "double-total":
                     modifiedResult = doubleTotal(group.result);
                     break;
                 case "double-die-result":
-                    modifiedResult = doubleDiceResults(group.result);
+                    console.log('Applying double-die-result to:', group.result);
+                    modifiedResult = doubleResultsRecursive(group.result);
+                    console.log('Result after doubling:', modifiedResult);
                     break;
                 case "max-die":
                     modifiedResult = maximizeDice(group.result);
@@ -605,6 +689,17 @@ const rollsModule = (function () {
         });
     }
 
+    /**
+     * Displays the processed roll results in TaleSpire.
+     * 
+     * This function takes the final processed roll results and sends them to TaleSpire
+     * for display. It ensures each result group has proper names and descriptions,
+     * and adds appropriate suffixes based on the roll type.
+     *
+     * @param {Array<Object>} resultGroups - Array of processed roll result groups
+     * @param {string} rollId - The ID of the roll being displayed
+     * @returns {Promise<void>} A promise that resolves when the results have been sent to TaleSpire
+     */
     async function displayResults(resultGroups, rollId) {
         try {
             console.log(`Displaying results for roll ID: ${rollId}`);

@@ -3,7 +3,11 @@
  */
 let debugMode = true; // Set to false to disable console logging
 
-// TODO: JSDoc comment this
+/**
+ * Flag used to confirm overwriting of existing saved rolls.
+ * This is set to true when the user confirms they want to overwrite
+ * an existing roll with the same name and group structure.
+ */
 let overwriteConfirmed = false;
 
 /**

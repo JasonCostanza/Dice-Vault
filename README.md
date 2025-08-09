@@ -13,6 +13,7 @@ Check it out on [Mod.io](https://mod.io/g/talespire/m/dice-vault).
   - Throw as many dice as you need and add or subtract any modifiers.
   - Roll using advantage, disadvantage, best-of-3, or various other commonly used critical hit methods.
   - Pin a frequently used roll to quickly reuse it.
+  - Create counters to track persistent effects like damage over time, spell durations, or any numerical values you need to monitor.
   - Save your dice vault collection to local storage so you never lose your carefully crafted dice vault.
   - Campaign-specific vaults. Have a preset collection for each campaign you're participating in!
 
@@ -21,6 +22,8 @@ With major version releases, it is potential that data structures will change an
 
 # Changelog
 ```
+5.0
+- Refactored code to be more maintainable. No user facing changes.
 4.0
 - Pinned rolls are now organized by creature name. Each creature can now be collaspsed and expanded to make your pinned roll list more organized.
 - Pinned rolls can now be sorted more granularly with sort functions for creatures and groups independely.
@@ -68,14 +71,22 @@ With major version releases, it is potential that data structures will change an
   6. Select `Dice Vault` in the `Active` section.
 
 # How to Use
+## Dice Rolling
 1. If you want, enter a name for the creature
 2. If you want, enter a name for the roll group
 3. If you want, add additional roll groups. Example, a flaming longsword deals one group of slashing damage and another group of fire damage.
-4. Left click to increment and right click to decrement the dice that you wish to roll.
+4. Left click to increment and right click to decrement the dice that you wish.
 5. Enter a modifier into the text box if you need one, example, "5" or "-5".
-6. Roll right away by selecting the style of roll you need, standard, advantage, etc. or create a preset with the `Pin` button.
+6. Roll right away by selecting the style of roll you need, standard, advantage, disadvantage, etc., or pin it for later.
 
-To delete a pinned roll, use the trash bin icon.
+## Counters
+1. Click the "New Counter" button to create a new counter.
+2. Enter a purpose for the counter (e.g., "persistent fire damage", "spell duration", "hit points").
+3. Use the + and - buttons to increment or decrement the counter value.
+4. Click directly on the number input to manually enter a value.
+5. Use the edit button to change the counter's purpose.
+6. Use the delete button to remove the counter.
+7. All counters are automatically saved and will persist between sessions.
 
 # Report Issues
 Create an issue in the github page on the [Issues Tab](https://github.com/JasonCostanza/Dice-Vault/issues).

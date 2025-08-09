@@ -22,9 +22,9 @@ The `saveLoad.js` file is integral to the Dice Vault symbiote, focusing on the p
 
 The `settings.js` file is dedicated to managing the configuration settings of the Dice Vault symbiote. It provides mechanisms for storing, retrieving, and updating user preferences and application settings. This includes options for dice roll behavior, visual themes, and other customizable features that enhance user interaction with the Dice Vault.
 
-## vault.js
+## main.js
 
-The `vault.js` file acts as the central repository and interface for the Dice Vault symbiote, managing the collection of dice, roll types, and user-defined roll configurations. It provides a structured way to access and manipulate the dice and roll settings, facilitating the creation, storage, and retrieval of custom dice combinations and roll logic. This file ensures that all dice-related operations are efficiently handled and easily accessible, supporting the dynamic needs of users for customizing their dice rolling experience.
+The `main.js` file serves as the application entry point and coordination layer for the Dice Vault symbiote. It initializes all class instances (DiceGroupManager, RollSorter, SavedRollManager, UIManager), handles dependency injection, and sets up essential event listeners. This file orchestrates the startup sequence and provides the bridge between HTML event handlers and the class-based architecture. After refactoring, it has been transformed from a monolithic code file into a clean, focused coordination layer of just 36 lines.
 
 ## taleSpireSubscriptionHandlers.js
 
