@@ -35,7 +35,7 @@ let trackedRollIds = {};
 /**
  * Array containing all dice denominations that exist.
  */
-const diceTypes = ["d4", "d6", "d8", "d10", "d12", "d20"];
+const diceTypes = ["d4", "d6", "d8", "d10", "d100", "d12", "d20"];
 
 /**
  * Defines the available roll types for dice operations. The available roll
