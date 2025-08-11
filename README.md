@@ -22,36 +22,43 @@ With major version releases, it is potential that data structures will change an
 
 # Changelog
 ```
-5.0
+# 5.2
+- Few Feature: Added D100's to the dice lineup for systems like Mothership or any other D100 situations.
+# 5.1
+- New Feature: Simple counters - create a simple counter to store a value and a purpose like, "Persist Fire Damage" or "Sickened".
+- Bug fix: Better handling for attempting to roll or pin a group with a modifier and no dice.
+- Bug fix: In certain scenarios, loading data could use duplicate entries to be created in the pinned rolls list
+- Improvement: Redid all the JSDoc comments on the source code to improve understanding and maintainability.
+# # 5.0
 - Refactored code to be more maintainable. No user facing changes.
-4.0
+# # 4.0
 - Pinned rolls are now organized by creature name. Each creature can now be collaspsed and expanded to make your pinned roll list more organized.
 - Pinned rolls can now be sorted more granularly with sort functions for creatures and groups independely.
 - Added a "Default" sorting option for groups so you can put the roll groups back to the order in which you added them instead of the other sort options.
 - Improved the overall color scheme to better match Talespire's design guide as well as communicate editable fields more clearly.
-3.1
+# 3.1
 - Fixed a bug where adding too many roll groups would break the UI
-3.0
+# 3.0
 - New feature: Named roll groups! Previously we expanded functionality to let you roll independent roll groups. Unfortunately, all the groups shared the same name according to Talespire. This has been resolved and all roll groups can have their own unique name. If no name is provided, it defaults to "Group 1", "Group 2", etc. This caused another change in the data structure so rolls from old versions will not roll forward from prior versions of Dice Vault.
 - Edit buttons on saved rolls allows for modifying a saved roll without deleting it!
 - Buttons have been renamed to clarify their purpose. Pin a roll only stores the roll for that play session. Save Locally stores your pinned rolls into ./localstorage. These terms will be the new nomenclature going forward. "Pin" is temporary, "Save" is permanent.
-2.1
+# 2.1
 - 3 critical hit modes: 1.5x total, 3x total, and 4x total
-2.0
+# 2.0
 - New feature: Roll groups! Create multiple groups of dice which do not add together. Useful for situations where dice needs to be rolled together but not all combined. "I cast Magic Missile at 3rd level dealing, three 1d4's of damage." In this situation we report three independent results with 1 throw, instead of 3d4 we do not add them together so it's three seperate results of 1d4. Useful for all kinds of situations like crossbows where the bolt deals damage and then the magical properties of an explosive bolt for example.
 - New UI to saved rolls. Instead of displaying images for dice, we know parse it down to simple and familiar roll strings, "1d4+1d6+5", or "1d20+14". You will notice saved roll cards are now much smaller allowing you to see more at one time. We will expand on this UI in future releases to further improve the UI.
 - Breaking change: the data structure we used to use in 1.3 is out. This means your old saved data will not work in 2.0.
-1.3
+# 1.3
 - Added Critical Hit support with 5 different styles
 - Updated the UI to flow better with iconography
-1.2
+# 1.2
 - Improved sort list
 - Modifier is now a text input field
 - Cleaned up CSS to not allow drag-selection of random things
 - Added an options menu
-1.1
+# 1.1
 - Added ability to roll "Best of Three" (@PanoramicPanda)
-1.0
+# 1.0
 - Public Release!
 ```
 

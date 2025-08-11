@@ -134,7 +134,7 @@ class DiceGroupManager {
         this.diceTypes.forEach((type) => {
             diceHTML += `
                 <div class="dice-counter unselectable" id="group-${groupIndex}-${type}-counter">
-                    <i class="ts-icon-${type} ts-icon-large" onclick="diceGroupManager.incrementDice('group-${groupIndex}-${type}')" 
+                    <i class="ts-icon-${type} ts-icon-size48" onclick="diceGroupManager.incrementDice('group-${groupIndex}-${type}')" 
                     oncontextmenu="diceGroupManager.decrementDice('group-${groupIndex}-${type}'); return false;"></i>
                     <div class="counter-overlay" id="group-${groupIndex}-${type}-counter-value">0</div>
                     <div class="dice-label">${type.toUpperCase()}</div>
@@ -145,7 +145,7 @@ class DiceGroupManager {
         diceHTML += `
             <div class="plus-sign"><span>+</span></div>
             <div class="dice-counter unselectable" id="group-${groupIndex}-mod-counter">
-                <i class="ts-icon-circle-dotted ts-icon-large mod-holder"></i>
+                <i class="ts-icon-circle-dotted ts-icon-size48 mod-holder"></i>
                 <input type="number" class="counter-overlay mod-counter-overlay" 
                 id="group-${groupIndex}-mod-counter-value" value="0" min="-999" max="999" onfocus="this.select()" />
                 <div class="dice-label">MOD</div>
@@ -250,8 +250,8 @@ class DiceGroupManager {
         // Update onclick attributes
         group.querySelectorAll('.dice-counter').forEach(counter => {
             const diceType = counter.id.split('-')[1];
-            counter.querySelector('.ts-icon-large').setAttribute('onclick', `diceGroupManager.incrementDice('group-${newIndex}-${diceType}')`);
-            counter.querySelector('.ts-icon-large').setAttribute('oncontextmenu', `diceGroupManager.decrementDice('group-${newIndex}-${diceType}'); return false;`);
+            counter.querySelector('.ts-icon-size48').setAttribute('onclick', `diceGroupManager.incrementDice('group-${newIndex}-${diceType}')`);
+            counter.querySelector('.ts-icon-size48').setAttribute('oncontextmenu', `diceGroupManager.decrementDice('group-${newIndex}-${diceType}'); return false;`);
         });
     }
 
