@@ -675,15 +675,15 @@ button:focus-visible {
     font-size: 0.8em;
 }
 
-i.ts-icon-size48 {
-    padding-right: 48px;
-    padding-bottom: 48px;
+i.ts-icon-size55 {
+    padding-right: 55px;
+    padding-bottom: 55px;
 }
 
-i.ts-icon-size48::before {
-    background-size: 48px;
-    width: 48px;
-    height: 48px;
+i.ts-icon-size55::before {
+    background-size: 55px;
+    width: 55px;
+    height: 55px;
 }
 
 .dice-icon-container {
