@@ -254,6 +254,11 @@ input:focus-visible {
     background-color: var(--ts-background-primary);
 }
 
+/* Text Input Specific Styles */
+input[type="text"] {
+    cursor: text;
+}
+
 /* Button Specific Styles */
 button {
     background-color: var(--ts-button-background);
