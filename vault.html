@@ -12,43 +12,6 @@
             <div id="menu-bar">
                 <i class="ts-icon-gear" id="settings-button" onclick="toggleSettingsDisplay()"></i>
             </div>
-            <div id="settings-menu" class="hidden">
-                <hr/>
-                <table>
-                    <tr>
-                        <td><label class="field-title">Automatically load data</label></td>
-                        <td><input type="checkbox" id="auto-load" class="settings-input" onchange="saveGlobalSettings()" unchecked></td>
-                    </tr>
-                    <tr>
-                        <td><label class="field-title">Automatically save data</label></td>
-                        <td><input type="checkbox" id="auto-save" class="settings-input" onchange="saveGlobalSettings()" unchecked></td>
-                    </tr>
-                    <tr>
-                        <td><label class="field-title">Auto-Reset Dice on Save</label></td>
-                        <td><input type="checkbox" id="auto-reset" class="settings-input"onchange="saveGlobalSettings()" unchecked></td>
-                    </tr>
-                    <tr>
-                        <td><label class="field-title">Crit Behavior</label></td>
-                        <td>
-                            <select id="crit-behavior">
-                                <option value="one-point-five-total">1.5x Total</option>
-                                <option value="double-total">2x Total</option>
-                                <option value="triple-total">3x Total</option>
-                                <option value="quadruple-total">4x Total</option>
-                                <option value="double-die-count">2x Die Quantity</option>
-                                <option value="double-die-result">2x the Die Results</option>
-                                <option value="max-die">Max Die Result</option>
-                                <option value="max-plus">Max + Raw Die Result</option>
-                            </select>
-                        </td>
-                    </tr>
-                </table>
-                <hr/>
-                <button id="copy-backup-button" class="wide-button" onclick="handleCopyToClipboard()">Copy to Clipboard</button>
-                <br>
-                <br>
-                <div class="version">Version: 5.3</div>
-            </div>
 
             <div class="creature-name-container">
                 <input type="text" id="creature-name" name="creature-name" placeholder="Enter creature name">
@@ -116,6 +79,53 @@
 
             <button id="load-rolls-button" class="black-button">Load Saves</button>
             <!-- <div class="footer-spacer"></div> -->
+        </div>
+
+        <!-- Settings Modal -->
+        <div id="settings-modal" class="modal hidden">
+            <div class="modal-overlay" onclick="toggleSettingsDisplay()"></div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Settings</h2>
+                    <span class="modal-close" onclick="toggleSettingsDisplay()">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <table>
+                        <tr>
+                            <td><label class="field-title">Automatically load data</label></td>
+                            <td><input type="checkbox" id="auto-load" class="settings-input" onchange="saveGlobalSettings()" unchecked></td>
+                        </tr>
+                        <tr>
+                            <td><label class="field-title">Automatically save data</label></td>
+                            <td><input type="checkbox" id="auto-save" class="settings-input" onchange="saveGlobalSettings()" unchecked></td>
+                        </tr>
+                        <tr>
+                            <td><label class="field-title">Auto-Reset Dice on Save</label></td>
+                            <td><input type="checkbox" id="auto-reset" class="settings-input" onchange="saveGlobalSettings()" unchecked></td>
+                        </tr>
+                        <tr>
+                            <td><label class="field-title">Crit Behavior</label></td>
+                            <td>
+                                <select id="crit-behavior">
+                                    <option value="one-point-five-total">1.5x Total</option>
+                                    <option value="double-total">2x Total</option>
+                                    <option value="triple-total">3x Total</option>
+                                    <option value="quadruple-total">4x Total</option>
+                                    <option value="double-die-count">2x Die Quantity</option>
+                                    <option value="double-die-result">2x the Die Results</option>
+                                    <option value="max-die">Max Die Result</option>
+                                    <option value="max-plus">Max + Raw Die Result</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                    <hr/>
+                    <button id="copy-backup-button" class="wide-button" onclick="handleCopyToClipboard()">Copy to Clipboard</button>
+                    <br>
+                    <br>
+                    <div class="version">Version: 5.3</div>
+                </div>
+            </div>
         </div>
 
         <script type="text/javascript" src="scripts/globals.js"></script>

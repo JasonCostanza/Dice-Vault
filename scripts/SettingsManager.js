@@ -1,13 +1,13 @@
 /**
- * Toggles the visibility of the settings menu.
+ * Toggles the visibility of the settings modal.
  * 
- * This function shows or hides the settings menu and updates the settings button
+ * This function shows or hides the settings modal and updates the settings button
  * to reflect the current state.
  */
 function toggleSettingsDisplay() {
-    const settingsContainer = document.getElementById('settings-menu');
+    const settingsModal = document.getElementById('settings-modal');
     const settingsButton = document.getElementById('settings-button');
-    settingsContainer.classList.toggle('hidden');
+    settingsModal.classList.toggle('hidden');
     settingsButton.classList.toggle('active-menu');
 }
 
@@ -235,6 +235,21 @@ async function handleRetrieveBackup() {
         alert('An error occurred while retrieving the backup. Please check the console for details.');
     }
 }
+
+/**
+ * Handles keyboard events for the settings modal.
+ * Closes the modal when the Escape key is pressed.
+ */
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        const settingsModal = document.getElementById('settings-modal');
+        const settingsButton = document.getElementById('settings-button');
+        if (settingsModal && !settingsModal.classList.contains('hidden')) {
+            settingsModal.classList.add('hidden');
+            settingsButton.classList.remove('active-menu');
+        }
+    }
+});
 
 // Export to global scope
 window.fetchSetting = fetchSetting;
