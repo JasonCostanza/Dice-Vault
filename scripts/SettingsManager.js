@@ -96,6 +96,82 @@ function fetchSetting(settingName){
 }
 
 /**
+ * Handles copying backup data directly to clipboard
+ * 
+ * This function retrieves backup data from local storage and copies it directly
+ * to the clipboard without showing a modal.
+ */
+async function handleCopyToClipboard() {
+    const button = document.getElementById('copy-backup-button');
+    const originalText = button.textContent;
+    const originalStyle = button.style.cssText;
+    
+    try {
+        const backupData = await getDataBackup();
+        if (backupData) {
+            // Convert the backup data to a formatted JSON string
+            const backupString = JSON.stringify(backupData, null, 2);
+            
+            // Use the modern clipboard API to copy the data
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                await navigator.clipboard.writeText(backupString);
+                showCopySuccess(button, originalText, originalStyle);
+            } else {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = backupString;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-9999px';
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showCopySuccess(button, originalText, originalStyle);
+            }
+        } else {
+            showCopyError(button, originalText, originalStyle, 'No backup data found.');
+        }
+    } catch (error) {
+        console.error('Error copying backup to clipboard:', error);
+        showCopyError(button, originalText, originalStyle, 'Failed to copy backup data.');
+    }
+}
+
+/**
+ * Shows success feedback when data is successfully copied to clipboard
+ */
+function showCopySuccess(button, originalText, originalStyle) {
+    button.textContent = 'Copied!';
+    button.style.backgroundColor = '#4CAF50';
+    button.style.color = 'white';
+    button.disabled = true;
+    
+    setTimeout(() => {
+        button.textContent = originalText;
+        button.style.cssText = originalStyle;
+        button.disabled = false;
+    }, 2000);
+}
+
+/**
+ * Shows error feedback when copying fails
+ */
+function showCopyError(button, originalText, originalStyle, message) {
+    button.textContent = '✗ Error';
+    button.style.backgroundColor = '#f44336';
+    button.style.color = 'white';
+    button.disabled = true;
+    
+    setTimeout(() => {
+        button.textContent = originalText;
+        button.style.cssText = originalStyle;
+        button.disabled = false;
+    }, 2000);
+    
+    alert(message);
+}
+
+/**
  * Handles the retrieval and display of backup data.
  * 
  * This function retrieves backup data from local storage and displays it in a modal
