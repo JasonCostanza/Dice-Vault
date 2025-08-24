@@ -237,7 +237,41 @@ The dataset provides diverse roll combinations to test all roll types with diffe
 - Dice count
 - Creation timestamp
 
-The dataset includes creatures and rolls with varied names and creation times to test all sorting functionality.
+### **How Time-Based Sorting Works with Test Data**
+
+**Important Note**: The test dataset JSON file does **not** contain pre-defined timestamps. Instead, timestamps are dynamically generated when the data is loaded into the application.
+
+**Timestamp Generation Process**:
+1. When loading the test dataset, each roll receives a timestamp using `Date.now()`
+2. Rolls are processed **sequentially** in the order they appear in the JSON file
+3. This creates a predictable timestamp sequence based on the JSON structure order
+
+**Creature Loading Order** (determines relative timestamps):
+1. "Ancient Red Dragon" (earliest timestamps)
+2. "Paladin"
+3. "Wizard" 
+4. "Rogue"
+5. "Barbarian"
+6. "Bard"
+7. "Cleric"
+8. "Warlock"
+9. "Sorcerer"
+10. "Goblin Horde"
+11. "NPC Merchant"
+12. "Test Edge Cases"
+13. "Special Characters & Unicode Test" (latest timestamps)
+
+**Sorting Behavior**:
+- **"Newest first"**: Sorts by the newest roll timestamp within each creature group
+- **"Oldest first"**: Sorts by the oldest roll timestamp within each creature group
+- **"Default"**: Maintains creation order (same as "Oldest first" for test data)
+
+**Testing Implications**:
+- The sorting appears to work correctly because creatures loaded later get higher timestamps
+- Each reload of the dataset will generate new timestamps but maintain the same relative order
+- This provides consistent and predictable sorting behavior for testing purposes
+
+The dataset includes creatures and rolls with varied names and this timestamp generation system to test all sorting functionality.
 
 ---
 
