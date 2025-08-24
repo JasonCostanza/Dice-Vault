@@ -9,10 +9,6 @@
 </style>
     <body>
         <div class="content">
-            <div id="menu-bar">
-                <i class="ts-icon-gear" id="settings-button" onclick="toggleSettingsDisplay()"></i>
-            </div>
-
             <div class="creature-name-container">
                 <input type="text" id="creature-name" name="creature-name" placeholder="Enter creature name">
             </div>
@@ -73,12 +69,41 @@
         </div>
 
         <div class="footer">
-            <button id="save-rolls-button" class="black-button">Save Locally</button>
+            <div class="footer-spacer"></div>
             
-            <i class="ts-icon-character-gamemaster"></i><div style="font-family: 'Enchanted Land', cursive; color: #dddddd; font-size: 0.7em;"> "May the rolls be in your favor"</div>
+            <button id="hamburger-menu-button" class="hamburger-button" onclick="toggleMobileMenu()">
+                <img src="./images/icons/hamburger-menu.png" alt="Menu" class="hamburger-icon">
+            </button>
+        </div>
 
-            <button id="load-rolls-button" class="black-button">Load Saves</button>
-            <!-- <div class="footer-spacer"></div> -->
+        <!-- Mobile Menu Modal -->
+        <div id="mobile-menu-modal" class="modal hidden">
+            <div class="modal-overlay" onclick="toggleMobileMenu()"></div>
+            <div class="modal-content mobile-menu-content">
+                <div class="modal-header">
+                    <h2>Menu</h2>
+                    <span class="modal-close" onclick="toggleMobileMenu()">&times;</span>
+                </div>
+                <div class="modal-body mobile-menu-body">
+                    <button id="save-rolls-button" class="mobile-menu-button">
+                        <i class="ts-icon-copy menu-button-icon"></i>
+                        Save Data
+                    </button>
+                    <button id="load-rolls-button" class="mobile-menu-button">
+                        <i class="ts-icon-paste menu-button-icon"></i>
+                        Load Data
+                    </button>
+                    <button class="mobile-menu-button" onclick="toggleSettingsDisplay(); toggleMobileMenu();">
+                        <i class="ts-icon-gear menu-button-icon"></i>
+                        Settings
+                    </button>
+                    
+                    <div class="mobile-menu-quote">
+                        <i class="ts-icon-character-gamemaster"></i>
+                        <div class="quote-text">"May the rolls be in your favor"</div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Settings Modal -->

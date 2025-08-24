@@ -31,11 +31,25 @@ document.addEventListener("DOMContentLoaded", () => {
     const loadButton = document.getElementById("load-rolls-button");
     
     if (saveButton) {
-        saveButton.addEventListener("click", saveRollsToLocalStorage);
+        saveButton.addEventListener("click", () => {
+            saveRollsToLocalStorage();
+            // Close mobile menu after action
+            const mobileMenuModal = document.getElementById('mobile-menu-modal');
+            if (mobileMenuModal && !mobileMenuModal.classList.contains('hidden')) {
+                toggleMobileMenu();
+            }
+        });
     }
     
     if (loadButton) {
-        loadButton.addEventListener("click", loadRollsFromLocalStorage);
+        loadButton.addEventListener("click", () => {
+            loadRollsFromLocalStorage();
+            // Close mobile menu after action
+            const mobileMenuModal = document.getElementById('mobile-menu-modal');
+            if (mobileMenuModal && !mobileMenuModal.classList.contains('hidden')) {
+                toggleMobileMenu();
+            }
+        });
     }
 });
 

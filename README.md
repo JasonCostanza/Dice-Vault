@@ -41,7 +41,7 @@ With major version releases, it is potential that data structures will change an
 # 3.0
 - New feature: Named roll groups! Previously we expanded functionality to let you roll independent roll groups. Unfortunately, all the groups shared the same name according to Talespire. This has been resolved and all roll groups can have their own unique name. If no name is provided, it defaults to "Group 1", "Group 2", etc. This caused another change in the data structure so rolls from old versions will not roll forward from prior versions of Dice Vault.
 - Edit buttons on saved rolls allows for modifying a saved roll without deleting it!
-- Buttons have been renamed to clarify their purpose. Pin a roll only stores the roll for that play session. Save Locally stores your pinned rolls into ./localstorage. These terms will be the new nomenclature going forward. "Pin" is temporary, "Save" is permanent.
+- Buttons have been renamed to clarify their purpose. Pin a roll only stores the roll for that play session. Save Data stores your pinned rolls into ./localstorage. These terms will be the new nomenclature going forward. "Pin" is temporary, "Save" is permanent.
 # 2.1
 - 3 critical hit modes: 1.5x total, 3x total, and 4x total
 # 2.0

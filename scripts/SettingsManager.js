@@ -1,14 +1,11 @@
 /**
  * Toggles the visibility of the settings modal.
  * 
- * This function shows or hides the settings modal and updates the settings button
- * to reflect the current state.
+ * This function shows or hides the settings modal.
  */
 function toggleSettingsDisplay() {
     const settingsModal = document.getElementById('settings-modal');
-    const settingsButton = document.getElementById('settings-button');
     settingsModal.classList.toggle('hidden');
-    settingsButton.classList.toggle('active-menu');
 }
 
 /**
@@ -243,13 +240,26 @@ async function handleRetrieveBackup() {
 document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape') {
         const settingsModal = document.getElementById('settings-modal');
-        const settingsButton = document.getElementById('settings-button');
         if (settingsModal && !settingsModal.classList.contains('hidden')) {
             settingsModal.classList.add('hidden');
-            settingsButton.classList.remove('active-menu');
+        }
+        
+        const mobileMenuModal = document.getElementById('mobile-menu-modal');
+        if (mobileMenuModal && !mobileMenuModal.classList.contains('hidden')) {
+            mobileMenuModal.classList.add('hidden');
         }
     }
 });
+
+/**
+ * Toggles the visibility of the mobile menu modal.
+ * 
+ * This function shows or hides the mobile menu modal for mobile-friendly navigation.
+ */
+function toggleMobileMenu() {
+    const mobileMenuModal = document.getElementById('mobile-menu-modal');
+    mobileMenuModal.classList.toggle('hidden');
+}
 
 // Export to global scope
 window.fetchSetting = fetchSetting;

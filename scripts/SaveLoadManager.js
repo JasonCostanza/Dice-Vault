@@ -17,19 +17,22 @@ function performAutoLoads() {
  * the button text and disabled state accordingly.
  */
 function updateAutoButtons(){
+    const loadButton = document.getElementById('load-rolls-button');
+    const saveButton = document.getElementById('save-rolls-button');
+    
     if (fetchSetting('auto-load')) {
-        document.getElementById('load-rolls-button').innerText = 'Auto-Loading';
+        loadButton.innerHTML = '<i class="ts-icon-paste menu-button-icon"></i>Auto-Loading';
         disableButtonById('load-rolls-button');
     }else{
-        document.getElementById('load-rolls-button').innerText = 'Load Save';
+        loadButton.innerHTML = '<i class="ts-icon-paste menu-button-icon"></i>Load Data';
         disableButtonById('load-rolls-button', false);
     }
 
     if (fetchSetting('auto-save')) {
-        document.getElementById('save-rolls-button').innerText = 'Auto-Saving';
+        saveButton.innerHTML = '<i class="ts-icon-copy menu-button-icon"></i>Auto-Saving';
         disableButtonById('save-rolls-button');
     } else {
-        document.getElementById('save-rolls-button').innerText = 'Save Locally';
+        saveButton.innerHTML = '<i class="ts-icon-copy menu-button-icon"></i>Save Data';
         disableButtonById('save-rolls-button', false);
     }
 }

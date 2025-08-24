@@ -186,18 +186,6 @@ button,
    5. HEADER & NAVIGATION
    ==================================================================== */
 
-/* Menu Bar */
-#menu-bar {
-    padding: 5px;
-}
-
-#settings-button {
-    width: 38px;
-    height: 38px;
-    padding-bottom: 15px;
-    border-radius: 50%;
-}
-
 .active-menu {
     background-color: var(--ts-background-tertiary) !important;
 }
@@ -214,6 +202,13 @@ button,
     align-items: flex-start;
     justify-content: center;
     padding-top: 50px;
+}
+
+/* Mobile Menu Modal - appears from bottom */
+#mobile-menu-modal {
+    align-items: flex-end;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 .modal-overlay {
@@ -300,10 +295,12 @@ button,
     width: 100%;
     background-color: var(--ts-background-primary);
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     z-index: 10;
     border-top: 2px solid var(--ts-accessibility-border);
+    padding: 10px 15px;
+    box-sizing: border-box;
 }
 
 /* ====================================================================
@@ -416,6 +413,157 @@ button:focus-visible {
     background-color: var(--ts-background-primary);
     color: var(--ts-color-secondary);
     cursor: not-allowed;
+}
+
+/* Hamburger Menu Button */
+.hamburger-button {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 8px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+}
+
+.hamburger-button:hover {
+    background-color: var(--ts-background-secondary);
+}
+
+.hamburger-button:focus-visible {
+    outline: 3px solid var(--ts-accessibility-focus);
+    outline-offset: 2px;
+    background-color: var(--ts-background-secondary);
+}
+
+.hamburger-icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* Mobile Menu Modal */
+.mobile-menu-content {
+    width: 100%;
+    max-width: 100vw;
+    margin: 0;
+    border-radius: 20px 20px 0 0;
+    border: none;
+    border-top: 2px solid var(--ts-accessibility-border);
+    animation: slideUpFromBottom 0.3s ease-out;
+}
+
+@keyframes slideUpFromBottom {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+#mobile-menu-modal.hidden .mobile-menu-content {
+    animation: slideDownToBottom 0.3s ease-in;
+}
+
+@keyframes slideDownToBottom {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+}
+
+.mobile-menu-body {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px 20px 30px 20px;
+}
+
+.mobile-menu-button {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 20px;
+    background-color: var(--ts-background-secondary);
+    border: 1px solid var(--ts-accessibility-border);
+    border-radius: 8px;
+    color: var(--ts-color-primary);
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.mobile-menu-button:hover {
+    background-color: var(--ts-background-primary);
+}
+
+.mobile-menu-button:focus-visible {
+    outline: 3px solid var(--ts-accessibility-focus);
+    outline-offset: -1px;
+    background-color: var(--ts-background-primary);
+}
+
+.menu-button-icon {
+    /* width: 20px;
+    height: 20px; */
+    flex-shrink: 0;
+}
+
+/* Mobile Menu Quote Section */
+.mobile-menu-quote {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 20px 0 10px 0;
+    border-top: 1px solid var(--ts-accessibility-border);
+    margin-top: 15px;
+}
+
+.quote-text {
+    font-family: 'Enchanted Land', cursive;
+    color: #dddddd;
+    font-size: 0.8em;
+    font-style: italic;
+}
+
+.footer-spacer {
+    flex: 1;
+}
+
+/* Media queries for smaller screens */
+@media (max-width: 480px) {
+    .mobile-menu-content {
+        width: 100vw;
+        margin: 0;
+        border-radius: 15px 15px 0 0;
+    }
+    
+    .mobile-menu-body {
+        padding: 15px 15px 25px 15px;
+    }
+    
+    .hamburger-button {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .hamburger-icon {
+        width: 20px;
+        height: 20px;
+    }
 }
 
 .unsaved-changes {
