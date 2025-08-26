@@ -1,50 +1,106 @@
 # Scripts
 
-The Dice Vault symbiote uses the following JavaScript files to deliver all of its features.
+The Dice Vault symbiote uses the following JavaScript files to deliver all of its features. The architecture follows a clean class-based design with separate managers for different functionality areas.
 
-## diceCrits.js
+## Core Architecture
 
-The `diceCrits.js` file is dedicated to handling critical hit logic within the Dice Vault symbiote. It defines the rules and behaviors for determining and applying critical hits during dice rolls, including the calculation of enhanced effects or bonuses when certain conditions are met. This file ensures that critical hits are consistently applied across all dice roll operations, enhancing the gameplay experience by adding an extra layer of excitement and unpredictability to the outcomes.
+### main.js
 
-## globals.js
+The `main.js` file serves as the application entry point and coordination layer for the Dice Vault symbiote. It initializes all class instances (DiceGroupManager, RollSorter, SavedRollManager, UIManager, CounterManager), handles dependency injection, and sets up essential event listeners. This file orchestrates the startup sequence and provides the bridge between HTML event handlers and the class-based architecture. The file has been designed as a clean, focused coordination layer that manages application initialization.
 
-The `globals.js` file serves as the foundation for the Dice Vault symbiote by defining and managing global variables and constants that are essential across the application. This includes configurations, state variables, and utility functions that need to be accessed by multiple components or scripts within the Dice Vault.
+### globals.js
 
-## rolls.js
+The `globals.js` file serves as the foundation for the Dice Vault symbiote by defining and managing global variables and constants that are essential across the application. This includes configurations, state variables, utility functions, and dice type definitions that need to be accessed by multiple components or scripts within the Dice Vault.
 
-The `rolls.js` file is a core component of the Dice Vault symbiote, responsible for managing and executing dice roll operations. It defines the logic for initiating rolls, calculating results based on predefined rules, and handling different types of rolls such as standard, advantage, disadvantage, and custom roll types. Additionally, this file may include functions for interpreting roll results and integrating them with other features of the Dice Vault, ensuring a seamless dice rolling experience within the application.
+## Manager Classes
 
-## saveLoad.js
+### DiceGroupManager.js
 
-The `saveLoad.js` file is integral to the Dice Vault symbiote, focusing on the persistence of user data and application state. It encapsulates the functionality for saving user configurations, dice roll histories, and any other relevant state information to a persistent storage medium. Additionally, it handles the loading of this data upon application startup or as needed, ensuring that users can seamlessly continue from where they left off.
+The `DiceGroupManager` class handles all dice group related functionality including creating, updating, and removing dice groups. It manages the dice groups data structure, validates dice group configurations, and provides utilities for checking if dice groups are empty or valid. This class is central to the dice configuration system within the application.
 
-## settings.js
+### RollManager.js
 
-The `settings.js` file is dedicated to managing the configuration settings of the Dice Vault symbiote. It provides mechanisms for storing, retrieving, and updating user preferences and application settings. This includes options for dice roll behavior, visual themes, and other customizable features that enhance user interaction with the Dice Vault.
+The `RollManager` module (using the Revealing Module Pattern) is responsible for managing and executing dice roll operations. It defines the logic for initiating rolls, calculating results based on predefined rules, and handling different types of rolls such as normal, advantage, disadvantage, best-of-three, and critical rolls. It integrates with TaleSpire's dice rolling API and handles the complex logic of dice roll execution.
 
-## main.js
+### SavedRollManager.js
 
-The `main.js` file serves as the application entry point and coordination layer for the Dice Vault symbiote. It initializes all class instances (DiceGroupManager, RollSorter, SavedRollManager, UIManager), handles dependency injection, and sets up essential event listeners. This file orchestrates the startup sequence and provides the bridge between HTML event handlers and the class-based architecture. After refactoring, it has been transformed from a monolithic code file into a clean, focused coordination layer of just 36 lines.
+The `SavedRollManager` class handles all saved roll CRUD operations including saving, loading, editing, deleting, and managing saved rolls. It works closely with the DiceGroupManager and RollSorter to provide comprehensive saved roll functionality. This class manages the persistence and organization of user-created roll configurations.
 
-## taleSpireSubscriptionHandlers.js
+### UIManager.js
 
-The `taleSpireSubscriptionHandlers.js` file contains event handlers for TaleSpire-specific events. It manages the integration between the Dice Vault symbiote and TaleSpire, handling roll results and state change events from the TaleSpire application.
+The `UIManager` class handles UI components, modals, overlays, and interface interactions including accordion toggles, modal management, and UI state changes. It provides a centralized way to manage all user interface interactions and maintains separation between UI logic and business logic.
 
-## dataUpgrade.js
+### SettingsManager.js
 
-The `dataUpgrade.js` file is responsible for upgrading the data structure of saved rolls from older versions to the current version. It ensures backward compatibility and smooth transitions when updating the symbiote.
+The `SettingsManager` module provides functionality for managing the configuration settings of the Dice Vault symbiote. It handles storing, retrieving, and updating user preferences and application settings. This includes options for dice roll behavior, auto-save/auto-load functionality, and other customizable features that enhance user interaction with the Dice Vault.
 
-# Design Patterns & Coding Conventions
+### RollSorter.js
 
-This symbiote uses the following design patterns and coding conventions.
+The `RollSorter` class handles all sorting functionality for saved rolls including sorting creature groups, roll entries, and dice groups within rolls. It provides various sorting options and maintains the organization of saved roll data according to user preferences.
+
+### CounterManager.js
+
+The `CounterManager` class manages counter functionality within the application. It handles creating, updating, and removing counters that can be used for tracking various game states like persistent damage, spell slots, or other numerical game elements.
+
+### CriticalManager.js
+
+The `CriticalManager` module contains functions for handling critical hit logic within the Dice Vault symbiote. It defines the rules and behaviors for determining and applying critical hits during dice rolls, including calculations for enhanced effects like 1.5x damage multipliers. This ensures that critical hits are consistently applied across all dice roll operations.
+
+## Utility and Integration Files
+
+### saveLoad.js
+
+The `saveLoad.js` file focuses on low-level persistence operations for user data and application state. It works in conjunction with SaveLoadManager.js to provide save/load functionality and handles auto-save/auto-load operations based on user settings.
+
+### SaveLoadManager.js
+
+The `SaveLoadManager` module provides higher-level save and load operations, complementing the saveLoad.js file. It handles auto-loading/saving functionality and manages the user interface aspects of save/load operations.
+
+### taleSpireSubscriptionHandlers.js
+
+The `taleSpireSubscriptionHandlers.js` file contains event handlers for TaleSpire-specific events. It manages the integration between the Dice Vault symbiote and TaleSpire, handling roll results and state change events from the TaleSpire application. This file bridges the gap between TaleSpire's API and the Dice Vault's internal systems.
+
+# Design Patterns & Architecture
+
+This symbiote uses the following design patterns and coding conventions to maintain clean, maintainable code.
+
+## Class-Based Architecture
+
+The Dice Vault uses modern ES6 class-based architecture for most of its components. Each manager class is responsible for a specific area of functionality:
+
+- **Manager Classes**: Handle specific domains (DiceGroupManager, SavedRollManager, UIManager, etc.)
+- **Dependency Injection**: Classes receive their dependencies through constructor parameters
+- **Single Responsibility**: Each class has a focused, well-defined purpose
+- **Encapsulation**: Internal state and methods are properly encapsulated within classes
 
 ## Revealing Module Pattern
 
-The Revealing Module Pattern for JavaScript is a variant of the Module Pattern, in which we create a regular JavaScript module, but then we "reveal" public pointers to functions inside the module's scope. This creates a nice code management system in which you can clearly see which functions are meant to be used outside the module and which functions are only meant for the module's internal scope. This is one of the primary attractions of the Module and Revealing Module patterns, as they both make scoping a breeze without overcomplicating code and application design.
+The Revealing Module Pattern is used for certain modules, particularly the RollManager. In this pattern, we create a regular JavaScript module with private functions and variables, then "reveal" public pointers to specific functions. This creates clear separation between public API and internal implementation details.
+
+**Example Structure:**
+```javascript
+const rollManager = (function () {
+    // Private functions and variables
+    function privateFunction() { /* ... */ }
+    
+    // Public API
+    function publicFunction() { /* ... */ }
+    
+    // Reveal public interface
+    return {
+        roll: publicFunction
+    };
+})();
+```
+
+## Functional Programming for Utilities
+
+Utility functions, particularly in SettingsManager and CriticalManager, use functional programming principles with pure functions that have predictable inputs and outputs.
 
 **References**
 
 -   [Mastering the Module Pattern](https://ultimatecourses.com/blog/mastering-the-module-pattern)
+-   [MDN Classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes)
 
 # TaleSpire API Notes
 
