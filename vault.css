@@ -426,7 +426,8 @@ button:focus-visible {
     padding: 8px;
     cursor: pointer;
     border-radius: 8px;
-    width: 50px;
+    width: 80%;
+    max-width: 300px;
     height: 50px;
     display: flex;
     align-items: center;
@@ -544,7 +545,7 @@ button:focus-visible {
 }
 
 .footer-spacer {
-    flex: 1;
+    display: none;
 }
 
 /* Media queries for smaller screens */
@@ -560,7 +561,8 @@ button:focus-visible {
     }
     
     .hamburger-button {
-        width: 45px;
+        width: 85%;
+        max-width: 280px;
         height: 45px;
     }
     

@@ -23,16 +23,11 @@ With major version releases, it is potential that data structures will change an
 # Changelog
 ```
 # 5.4
-- Improvement: Refactored settings menu to a modal interface with keyboard support (Escape key to close).
-- New Feature: Mobile menu modal with hamburger menu icon for better mobile experience.
-- Improvement: Enhanced save and load button labels for better clarity.
-- Improvement: Adjusted modal dimensions for better responsiveness.
+- Improvement: Refactored settings menu to a modal interface with keyboard support (Escape key to close). See the new hamburger menu button at the bottom.
+- Improvement: Moved the Save and Load buttons to the new hamburger menu modal.
 - Bug fix: Removed unused load and save icon images to clean up codebase.
-- Improvement: Enhanced dice icon sizing and cursor pointer interactions.
-- Improvement: Made counter purpose text input field display i-beam cursor for better UX.
 # 5.3
-- Improvement: Changed "Retrieve Local Backup" button to copy data to clipboard for easier data management.
-- Improvement: Updated UI styling and icon sizing for better user experience.
+- Improvement: Changed "Retrieve Local Backup" button to a button which copies the data to your clipboard.
 # 5.2
 - New Feature: Added D100's to the dice lineup for systems like Mothership or any other D100 situations.
 # 5.1
