@@ -22,7 +22,8 @@ function defaultSettings(settingName){
         autoLoadRolls: false,
         autoSaveRolls: false,
         autoResetEdit: false,
-        critBehavior: 'double-total'
+        critBehavior: 'double-total',
+        language: 'en'
     }
     return settings[settingName];
 }
@@ -38,7 +39,8 @@ function saveGlobalSettings(){
         autoLoadRolls: document.getElementById('auto-load').checked,
         autoSaveRolls: document.getElementById('auto-save').checked,
         autoResetEdit: document.getElementById('auto-reset').checked,
-        critBehavior: document.getElementById('crit-behavior').value
+        critBehavior: document.getElementById('crit-behavior').value,
+        language: document.getElementById('language-select').value
     }
     TS.localStorage.global.setBlob(JSON.stringify(settings)).then(() => {
         console.log('Settings saved successfully.');
@@ -61,6 +63,7 @@ function loadGlobalSettings(){
         document.getElementById('auto-save').checked = settings.autoSaveRolls || defaultSettings('autoSaveRolls');
         document.getElementById('auto-reset').checked = settings.autoResetEdit || defaultSettings('autoResetEdit');
         document.getElementById('crit-behavior').value = settings.critBehavior || defaultSettings('critBehavior');
+        document.getElementById('language-select').value = settings.language || defaultSettings('language');
         performAutoLoads();
     }).catch(error => {
         console.error('Failed to load settings:', error);

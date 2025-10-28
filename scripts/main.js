@@ -23,6 +23,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (diceGroupsContainer && diceGroupsContainer.children.length === 0) {
         diceGroupManager.addDiceGroup();
     }
+    
+    // Load language preference and apply translations
+    loadLanguagePreference();
 });
 
 // Set up save/load button event listeners
