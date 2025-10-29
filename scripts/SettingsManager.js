@@ -63,10 +63,21 @@ function loadGlobalSettings(){
         document.getElementById('auto-save').checked = settings.autoSaveRolls || defaultSettings('autoSaveRolls');
         document.getElementById('auto-reset').checked = settings.autoResetEdit || defaultSettings('autoResetEdit');
         document.getElementById('crit-behavior').value = settings.critBehavior || defaultSettings('critBehavior');
-        document.getElementById('language-select').value = settings.language || defaultSettings('language');
+        const language = settings.language || defaultSettings('language');
+        document.getElementById('language-select').value = language;
+        
+        // Apply translations after loading language preference
+        if (typeof applyTranslations === 'function') {
+            applyTranslations(language);
+        }
+        
         performAutoLoads();
     }).catch(error => {
         console.error('Failed to load settings:', error);
+        // Apply default language (English) if loading fails
+        if (typeof applyTranslations === 'function') {
+            applyTranslations('en');
+        }
     });
 }
 

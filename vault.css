@@ -154,6 +154,7 @@ body {
     flex-shrink: 0;
     font-size: 1.6em;
     color: var(--ts-color-primary);
+    margin-right: 8px;
 }
 
 .version {
@@ -1125,7 +1126,7 @@ i.ts-icon-size55::before {
     display: flex;
     gap: 15px;
     align-items: center;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
 }
 
 /* Sort Dropdown Styles */

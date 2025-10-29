@@ -11,6 +11,7 @@ const translations = {
     en: {
         // Main UI
         creatureName: "Enter creature name",
+        groupName: "Enter Group Name",
         addGroup: "+ Group",
         removeGroup: "- Group",
         roll: "Roll",
@@ -72,42 +73,43 @@ const translations = {
     es: {
         // Main UI
         creatureName: "Ingrese nombre de criatura",
+        groupName: "Ingrese Nombre del Grupo",
         addGroup: "+ Grupo",
         removeGroup: "- Grupo",
         roll: "Tirar",
         advantage: "Ventaja",
         disadvantage: "Desventaja",
         bestOf3: "Mejor de 3",
-        critical: "Crítico",
+        critical: "Critico",
         pin: "Fijar",
         reset: "Reiniciar",
         newCounter: "Nuevo Contador",
-        pinnedRolls: "Tiradas Fijadas",
+        pinnedRolls: "Patas",
         creatureSort: "Ordenar criaturas:",
         groupsSort: "Ordenar grupos:",
         
         // Sort options
-        newest: "Más nuevo",
-        oldest: "Más antiguo",
+        newest: "Mas nuevo",
+        oldest: "Mas antiguo",
         nameAsc: "A-Z",
         nameDesc: "Z-A",
-        default: "Predeterminado",
+        default: "por defecto",
         
         // Mobile menu
-        menu: "Menú",
+        menu: "Menu",
         saveData: "Guardar Datos",
         loadData: "Cargar Datos",
-        settings: "Configuración",
-        menuQuote: "\"Que las tiradas estén a tu favor\"",
+        settings: "Configuracion",
+        menuQuote: "\"Que las tiradas esten a tu favor\"",
         
         // Settings modal
         language: "Idioma",
-        autoLoad: "Cargar datos automáticamente",
-        autoSave: "Guardar datos automáticamente",
+        autoLoad: "Cargar datos automaticamente",
+        autoSave: "Guardar datos automaticamente",
         autoReset: "Auto-Reiniciar Dados al Guardar",
-        critBehavior: "Comportamiento Crítico",
+        critBehavior: "Comportamiento Critico",
         copyToClipboard: "Copiar al Portapapeles",
-        version: "Versión",
+        version: "Version",
         
         // Crit behavior options
         onePointFiveTotal: "1.5x Total",
@@ -116,56 +118,57 @@ const translations = {
         quadrupleTotal: "4x Total",
         doubleDieCount: "2x Cantidad de Dados",
         doubleDieResult: "2x Resultados de Dados",
-        maxDie: "Resultado Máximo",
-        maxPlus: "Máx + Resultado Crudo",
+        maxDie: "Resultado Maximo",
+        maxPlus: "Max + Resultado Crudo",
         
         // Language names
-        langEnglish: "Inglés",
-        langSpanish: "Español",
-        langGerman: "Alemán",
-        langFrench: "Francés",
+        langEnglish: "Ingles",
+        langSpanish: "Espanol",
+        langGerman: "Aleman",
+        langFrench: "Frances",
         langItalian: "Italiano",
-        langPortuguese: "Portugués (Brasil)",
+        langPortuguese: "Portugues (Brasil)",
         langRussian: "Ruso",
         langChinese: "Chino (Simplificado)",
-        langJapanese: "Japonés"
+        langJapanese: "Japones"
     },
     de: {
         // Main UI
         creatureName: "Kreaturnamen eingeben",
+        groupName: "Gruppennamen eingeben",
         addGroup: "+ Gruppe",
         removeGroup: "- Gruppe",
-        roll: "Würfeln",
+        roll: "Wuerfeln",
         advantage: "Vorteil",
         disadvantage: "Nachteil",
         bestOf3: "Beste von 3",
         critical: "Kritisch",
         pin: "Anheften",
-        reset: "Zurücksetzen",
-        newCounter: "Neuer Zähler",
-        pinnedRolls: "Angeheftete Würfe",
+        reset: "Zuruecksetzen",
+        newCounter: "Neuer Zaehler",
+        pinnedRolls: "Stifte",
         creatureSort: "Kreatur sortieren:",
         groupsSort: "Gruppen sortieren:",
         
         // Sort options
         newest: "Neueste",
-        oldest: "Älteste",
+        oldest: "Aelteste",
         nameAsc: "A-Z",
         nameDesc: "Z-A",
         default: "Standard",
         
         // Mobile menu
-        menu: "Menü",
+        menu: "Menue",
         saveData: "Daten speichern",
         loadData: "Daten laden",
         settings: "Einstellungen",
-        menuQuote: "\"Mögen die Würfel zu deinen Gunsten fallen\"",
+        menuQuote: "\"Moegen die Wuerfel zu deinen Gunsten fallen\"",
         
         // Settings modal
         language: "Sprache",
         autoLoad: "Daten automatisch laden",
         autoSave: "Daten automatisch speichern",
-        autoReset: "Würfel beim Speichern automatisch zurücksetzen",
+        autoReset: "Wuerfel beim Speichern automatisch zuruecksetzen",
         critBehavior: "Kritisches Verhalten",
         copyToClipboard: "In Zwischenablage kopieren",
         version: "Version",
@@ -175,16 +178,16 @@ const translations = {
         doubleTotal: "2x Gesamt",
         tripleTotal: "3x Gesamt",
         quadrupleTotal: "4x Gesamt",
-        doubleDieCount: "2x Würfelanzahl",
-        doubleDieResult: "2x Würfelergebnisse",
-        maxDie: "Max Würfelergebnis",
-        maxPlus: "Max + Rohes Würfelergebnis",
+        doubleDieCount: "2x Wuerfelanzahl",
+        doubleDieResult: "2x Wuerfelergebnisse",
+        maxDie: "Max Wuerfelergebnis",
+        maxPlus: "Max + Rohes Wuerfelergebnis",
         
         // Language names
         langEnglish: "Englisch",
         langSpanish: "Spanisch",
         langGerman: "Deutsch",
-        langFrench: "Französisch",
+        langFrench: "Franzoesisch",
         langItalian: "Italienisch",
         langPortuguese: "Portugiesisch (Brasilien)",
         langRussian: "Russisch",
@@ -193,40 +196,41 @@ const translations = {
     },
     fr: {
         // Main UI
-        creatureName: "Entrez le nom de la créature",
+        creatureName: "Entrez le nom de la creature",
+        groupName: "Entrez le nom du groupe",
         addGroup: "+ Groupe",
         removeGroup: "- Groupe",
         roll: "Lancer",
         advantage: "Avantage",
-        disadvantage: "Désavantage",
+        disadvantage: "Desavantage",
         bestOf3: "Meilleur de 3",
         critical: "Critique",
-        pin: "Épingler",
-        reset: "Réinitialiser",
+        pin: "Epingler",
+        reset: "Reinitialiser",
         newCounter: "Nouveau Compteur",
-        pinnedRolls: "Lancers Épinglés",
-        creatureSort: "Trier créatures:",
-        groupsSort: "Trier groupes:",
+        pinnedRolls: "Epingles",
+        creatureSort: "Tri par creature:",
+        groupsSort: "Tri par groupe:",
         
         // Sort options
-        newest: "Plus récent",
+        newest: "Plus recent",
         oldest: "Plus ancien",
         nameAsc: "A-Z",
         nameDesc: "Z-A",
-        default: "Par défaut",
+        default: "defaut",
         
         // Mobile menu
         menu: "Menu",
-        saveData: "Sauvegarder Données",
-        loadData: "Charger Données",
-        settings: "Paramètres",
+        saveData: "Sauvegarder Donnees",
+        loadData: "Charger Donnees",
+        settings: "Parametres",
         menuQuote: "\"Que les lancers soient en votre faveur\"",
         
         // Settings modal
         language: "Langue",
-        autoLoad: "Charger automatiquement les données",
-        autoSave: "Sauvegarder automatiquement les données",
-        autoReset: "Réinitialiser automatiquement les dés lors de la sauvegarde",
+        autoLoad: "Charger automatiquement les donnees",
+        autoSave: "Sauvegarder automatiquement les donnees",
+        autoReset: "Reinitialiser automatiquement les des lors de la sauvegarde",
         critBehavior: "Comportement Critique",
         copyToClipboard: "Copier dans le Presse-papiers",
         version: "Version",
@@ -236,25 +240,26 @@ const translations = {
         doubleTotal: "2x Total",
         tripleTotal: "3x Total",
         quadrupleTotal: "4x Total",
-        doubleDieCount: "2x Quantité de Dés",
-        doubleDieResult: "2x Résultats des Dés",
-        maxDie: "Résultat Maximum",
-        maxPlus: "Max + Résultat Brut",
+        doubleDieCount: "2x Quantite de Des",
+        doubleDieResult: "2x Resultats des Des",
+        maxDie: "Resultat Maximum",
+        maxPlus: "Max + Resultat Brut",
         
         // Language names
         langEnglish: "Anglais",
         langSpanish: "Espagnol",
         langGerman: "Allemand",
-        langFrench: "Français",
+        langFrench: "Francais",
         langItalian: "Italien",
-        langPortuguese: "Portugais (Brésil)",
+        langPortuguese: "Portugais (Bresil)",
         langRussian: "Russe",
-        langChinese: "Chinois (Simplifié)",
+        langChinese: "Chinois (Simplifie)",
         langJapanese: "Japonais"
     },
     it: {
         // Main UI
         creatureName: "Inserisci nome creatura",
+        groupName: "Inserisci Nome del Gruppo",
         addGroup: "+ Gruppo",
         removeGroup: "- Gruppo",
         roll: "Tira",
@@ -270,8 +275,8 @@ const translations = {
         groupsSort: "Ordina gruppi:",
         
         // Sort options
-        newest: "Più recente",
-        oldest: "Più vecchio",
+        newest: "Piu recente",
+        oldest: "Piu vecchio",
         nameAsc: "A-Z",
         nameDesc: "Z-A",
         default: "Predefinito",
@@ -297,7 +302,7 @@ const translations = {
         doubleTotal: "2x Totale",
         tripleTotal: "3x Totale",
         quadrupleTotal: "4x Totale",
-        doubleDieCount: "2x Quantità Dadi",
+        doubleDieCount: "2x Quantita Dadi",
         doubleDieResult: "2x Risultati Dadi",
         maxDie: "Risultato Massimo",
         maxPlus: "Max + Risultato Grezzo",
@@ -316,32 +321,33 @@ const translations = {
     "pt-br": {
         // Main UI
         creatureName: "Digite o nome da criatura",
+        groupName: "Digite o Nome do Grupo",
         addGroup: "+ Grupo",
         removeGroup: "- Grupo",
         roll: "Rolar",
         advantage: "Vantagem",
         disadvantage: "Desvantagem",
         bestOf3: "Melhor de 3",
-        critical: "Crítico",
+        critical: "Critico",
         pin: "Fixar",
         reset: "Resetar",
         newCounter: "Novo Contador",
-        pinnedRolls: "Rolagens Fixadas",
+        pinnedRolls: "Alfinetes",
         creatureSort: "Ordenar criaturas:",
         groupsSort: "Ordenar grupos:",
         
         // Sort options
-        newest: "Mais recente",
-        oldest: "Mais antigo",
+        newest: "Recente",
+        oldest: "Antigo",
         nameAsc: "A-Z",
         nameDesc: "Z-A",
-        default: "Padrão",
+        default: "Padrao",
         
         // Mobile menu
         menu: "Menu",
         saveData: "Salvar Dados",
         loadData: "Carregar Dados",
-        settings: "Configurações",
+        settings: "Configuracoes",
         menuQuote: "\"Que as rolagens estejam a seu favor\"",
         
         // Settings modal
@@ -349,9 +355,9 @@ const translations = {
         autoLoad: "Carregar dados automaticamente",
         autoSave: "Salvar dados automaticamente",
         autoReset: "Auto-Resetar Dados ao Salvar",
-        critBehavior: "Comportamento Crítico",
-        copyToClipboard: "Copiar para Área de Transferência",
-        version: "Versão",
+        critBehavior: "Comportamento Critico",
+        copyToClipboard: "Copiar para Area de Transferencia",
+        version: "Versao",
         
         // Crit behavior options
         onePointFiveTotal: "1,5x Total",
@@ -360,203 +366,212 @@ const translations = {
         quadrupleTotal: "4x Total",
         doubleDieCount: "2x Quantidade de Dados",
         doubleDieResult: "2x Resultados dos Dados",
-        maxDie: "Resultado Máximo",
-        maxPlus: "Máx + Resultado Bruto",
+        maxDie: "Resultado Maximo",
+        maxPlus: "Max + Resultado Bruto",
         
         // Language names
-        langEnglish: "Inglês",
+        langEnglish: "Ingles",
         langSpanish: "Espanhol",
-        langGerman: "Alemão",
-        langFrench: "Francês",
+        langGerman: "Alemao",
+        langFrench: "Frances",
         langItalian: "Italiano",
-        langPortuguese: "Português (Brasil)",
+        langPortuguese: "Portugues (Brasil)",
         langRussian: "Russo",
-        langChinese: "Chinês (Simplificado)",
-        langJapanese: "Japonês"
+        langChinese: "Chines (Simplificado)",
+        langJapanese: "Japones"
     },
-    ru: {
+    // ru: {
+        // TODO: warning - No substitute character detected. (Claude 4.5)
+        // Cyrillic characters cannot be approximated with ASCII characters
         // Main UI
-        creatureName: "Введите имя существа",
-        addGroup: "+ Группа",
-        removeGroup: "- Группа",
-        roll: "Бросок",
-        advantage: "Преимущество",
-        disadvantage: "Помеха",
-        bestOf3: "Лучший из 3",
-        critical: "Критический",
-        pin: "Закрепить",
-        reset: "Сброс",
-        newCounter: "Новый Счётчик",
-        pinnedRolls: "Закреплённые Броски",
-        creatureSort: "Сортировка существ:",
-        groupsSort: "Сортировка групп:",
+    //     creatureName: "Введите имя существа",
+    //     groupName: "Введите название группы",
+    //     addGroup: "+ Группа",
+    //     removeGroup: "- Группа",
+    //     roll: "Бросок",
+    //     advantage: "Преимущество",
+    //     disadvantage: "Помеха",
+    //     bestOf3: "Лучший из 3",
+    //     critical: "Критический",
+    //     pin: "Закрепить",
+    //     reset: "Сброс",
+    //     newCounter: "Новый Счётчик",
+    //     pinnedRolls: "Закреплённые Броски",
+    //     creatureSort: "Сортировка существ:",
+    //     groupsSort: "Сортировка групп:",
         
-        // Sort options
-        newest: "Новейшие",
-        oldest: "Старейшие",
-        nameAsc: "А-Я",
-        nameDesc: "Я-А",
-        default: "По умолчанию",
+    //     // Sort options
+    //     newest: "Новейшие",
+    //     oldest: "Старейшие",
+    //     nameAsc: "А-Я",
+    //     nameDesc: "Я-А",
+    //     default: "По умолчанию",
         
-        // Mobile menu
-        menu: "Меню",
-        saveData: "Сохранить Данные",
-        loadData: "Загрузить Данные",
-        settings: "Настройки",
-        menuQuote: "\"Пусть броски будут в вашу пользу\"",
+    //     // Mobile menu
+    //     menu: "Меню",
+    //     saveData: "Сохранить Данные",
+    //     loadData: "Загрузить Данные",
+    //     settings: "Настройки",
+    //     menuQuote: "\"Пусть броски будут в вашу пользу\"",
         
-        // Settings modal
-        language: "Язык",
-        autoLoad: "Автоматически загружать данные",
-        autoSave: "Автоматически сохранять данные",
-        autoReset: "Авто-сброс костей при сохранении",
-        critBehavior: "Поведение Крита",
-        copyToClipboard: "Копировать в Буфер Обмена",
-        version: "Версия",
+    //     // Settings modal
+    //     language: "Язык",
+    //     autoLoad: "Автоматически загружать данные",
+    //     autoSave: "Автоматически сохранять данные",
+    //     autoReset: "Авто-сброс костей при сохранении",
+    //     critBehavior: "Поведение Крита",
+    //     copyToClipboard: "Копировать в Буфер Обмена",
+    //     version: "Версия",
         
-        // Crit behavior options
-        onePointFiveTotal: "1.5x Итого",
-        doubleTotal: "2x Итого",
-        tripleTotal: "3x Итого",
-        quadrupleTotal: "4x Итого",
-        doubleDieCount: "2x Количество Костей",
-        doubleDieResult: "2x Результаты Костей",
-        maxDie: "Макс Результат",
-        maxPlus: "Макс + Чистый Результат",
+    //     // Crit behavior options
+    //     onePointFiveTotal: "1.5x Итого",
+    //     doubleTotal: "2x Итого",
+    //     tripleTotal: "3x Итого",
+    //     quadrupleTotal: "4x Итого",
+    //     doubleDieCount: "2x Количество Костей",
+    //     doubleDieResult: "2x Результаты Костей",
+    //     maxDie: "Макс Результат",
+    //     maxPlus: "Макс + Чистый Результат",
         
-        // Language names
-        langEnglish: "Английский",
-        langSpanish: "Испанский",
-        langGerman: "Немецкий",
-        langFrench: "Французский",
-        langItalian: "Итальянский",
-        langPortuguese: "Португальский (Бразилия)",
-        langRussian: "Русский",
-        langChinese: "Китайский (Упрощённый)",
-        langJapanese: "Японский"
-    },
-    "zh-cn": {
+    //     // Language names
+    //     langEnglish: "Английский",
+    //     langSpanish: "Испанский",
+    //     langGerman: "Немецкий",
+    //     langFrench: "Французский",
+    //     langItalian: "Итальянский",
+    //     langPortuguese: "Португальский (Бразилия)",
+    //     langRussian: "Русский",
+    //     langChinese: "Китайский (Упрощённый)",
+    //     langJapanese: "Японский"
+    // },
+    // "zh-cn": {
+        // TODO: warning - No substitute character detected. (Claude 4.5)
+        // Chinese characters cannot be approximated with ASCII characters
         // Main UI
-        creatureName: "输入生物名称",
-        addGroup: "+ 组",
-        removeGroup: "- 组",
-        roll: "投掷",
-        advantage: "优势",
-        disadvantage: "劣势",
-        bestOf3: "三选一",
-        critical: "重击",
-        pin: "固定",
-        reset: "重置",
-        newCounter: "新计数器",
-        pinnedRolls: "已固定投掷",
-        creatureSort: "生物排序：",
-        groupsSort: "组排序：",
+    //     creatureName: "输入生物名称",
+    //     groupName: "输入组名称",
+    //     addGroup: "+ 组",
+    //     removeGroup: "- 组",
+    //     roll: "投掷",
+    //     advantage: "优势",
+    //     disadvantage: "劣势",
+    //     bestOf3: "三选一",
+    //     critical: "重击",
+    //     pin: "固定",
+    //     reset: "重置",
+    //     newCounter: "新计数器",
+    //     pinnedRolls: "已固定投掷",
+    //     creatureSort: "生物排序：",
+    //     groupsSort: "组排序：",
         
-        // Sort options
-        newest: "最新",
-        oldest: "最旧",
-        nameAsc: "A-Z",
-        nameDesc: "Z-A",
-        default: "默认",
+    //     // Sort options
+    //     newest: "最新",
+    //     oldest: "最旧",
+    //     nameAsc: "A-Z",
+    //     nameDesc: "Z-A",
+    //     default: "默认",
         
-        // Mobile menu
-        menu: "菜单",
-        saveData: "保存数据",
-        loadData: "加载数据",
-        settings: "设置",
-        menuQuote: "\"愿投掷对你有利\"",
+    //     // Mobile menu
+    //     menu: "菜单",
+    //     saveData: "保存数据",
+    //     loadData: "加载数据",
+    //     settings: "设置",
+    //     menuQuote: "\"愿投掷对你有利\"",
         
-        // Settings modal
-        language: "语言",
-        autoLoad: "自动加载数据",
-        autoSave: "自动保存数据",
-        autoReset: "保存时自动重置骰子",
-        critBehavior: "重击行为",
-        copyToClipboard: "复制到剪贴板",
-        version: "版本",
+    //     // Settings modal
+    //     language: "语言",
+    //     autoLoad: "自动加载数据",
+    //     autoSave: "自动保存数据",
+    //     autoReset: "保存时自动重置骰子",
+    //     critBehavior: "重击行为",
+    //     copyToClipboard: "复制到剪贴板",
+    //     version: "版本",
         
-        // Crit behavior options
-        onePointFiveTotal: "1.5倍总计",
-        doubleTotal: "2倍总计",
-        tripleTotal: "3倍总计",
-        quadrupleTotal: "4倍总计",
-        doubleDieCount: "2倍骰子数量",
-        doubleDieResult: "2倍骰子结果",
-        maxDie: "最大骰子结果",
-        maxPlus: "最大值+原始结果",
+    //     // Crit behavior options
+    //     onePointFiveTotal: "1.5倍总计",
+    //     doubleTotal: "2倍总计",
+    //     tripleTotal: "3倍总计",
+    //     quadrupleTotal: "4倍总计",
+    //     doubleDieCount: "2倍骰子数量",
+    //     doubleDieResult: "2倍骰子结果",
+    //     maxDie: "最大骰子结果",
+    //     maxPlus: "最大值+原始结果",
         
-        // Language names
-        langEnglish: "英语",
-        langSpanish: "西班牙语",
-        langGerman: "德语",
-        langFrench: "法语",
-        langItalian: "意大利语",
-        langPortuguese: "葡萄牙语（巴西）",
-        langRussian: "俄语",
-        langChinese: "中文（简体）",
-        langJapanese: "日语"
-    },
-    ja: {
+    //     // Language names
+    //     langEnglish: "英语",
+    //     langSpanish: "西班牙语",
+    //     langGerman: "德语",
+    //     langFrench: "法语",
+    //     langItalian: "意大利语",
+    //     langPortuguese: "葡萄牙语（巴西）",
+    //     langRussian: "俄语",
+    //     langChinese: "中文（简体）",
+    //     langJapanese: "日语"
+    // },
+    // ja: {
+        // TODO: warning - No substitute character detected. (Claude 4.5)
+        // Japanese characters (Hiragana, Katakana, Kanji) cannot be approximated with ASCII characters
         // Main UI
-        creatureName: "クリーチャー名を入力",
-        addGroup: "+ グループ",
-        removeGroup: "- グループ",
-        roll: "ロール",
-        advantage: "有利",
-        disadvantage: "不利",
-        bestOf3: "3個中最高",
-        critical: "クリティカル",
-        pin: "ピン留め",
-        reset: "リセット",
-        newCounter: "新規カウンター",
-        pinnedRolls: "ピン留めロール",
-        creatureSort: "クリーチャー並び替え：",
-        groupsSort: "グループ並び替え：",
+    //     creatureName: "クリーチャー名を入力",
+    //     groupName: "グループ名を入力",
+    //     addGroup: "+ グループ",
+    //     removeGroup: "- グループ",
+    //     roll: "ロール",
+    //     advantage: "有利",
+    //     disadvantage: "不利",
+    //     bestOf3: "3個中最高",
+    //     critical: "クリティカル",
+    //     pin: "ピン留め",
+    //     reset: "リセット",
+    //     newCounter: "新規カウンター",
+    //     pinnedRolls: "ピン留めロール",
+    //     creatureSort: "クリーチャー並び替え：",
+    //     groupsSort: "グループ並び替え：",
         
-        // Sort options
-        newest: "新しい順",
-        oldest: "古い順",
-        nameAsc: "A-Z",
-        nameDesc: "Z-A",
-        default: "デフォルト",
+    //     // Sort options
+    //     newest: "新しい順",
+    //     oldest: "古い順",
+    //     nameAsc: "A-Z",
+    //     nameDesc: "Z-A",
+    //     default: "デフォルト",
         
-        // Mobile menu
-        menu: "メニュー",
-        saveData: "データ保存",
-        loadData: "データ読込",
-        settings: "設定",
-        menuQuote: "\"ロールがあなたに有利でありますように\"",
+    //     // Mobile menu
+    //     menu: "メニュー",
+    //     saveData: "データ保存",
+    //     loadData: "データ読込",
+    //     settings: "設定",
+    //     menuQuote: "\"ロールがあなたに有利でありますように\"",
         
-        // Settings modal
-        language: "言語",
-        autoLoad: "データを自動的に読み込む",
-        autoSave: "データを自動的に保存する",
-        autoReset: "保存時にダイスを自動リセット",
-        critBehavior: "クリティカル動作",
-        copyToClipboard: "クリップボードにコピー",
-        version: "バージョン",
+    //     // Settings modal
+    //     language: "言語",
+    //     autoLoad: "データを自動的に読み込む",
+    //     autoSave: "データを自動的に保存する",
+    //     autoReset: "保存時にダイスを自動リセット",
+    //     critBehavior: "クリティカル動作",
+    //     copyToClipboard: "クリップボードにコピー",
+    //     version: "バージョン",
         
-        // Crit behavior options
-        onePointFiveTotal: "1.5倍合計",
-        doubleTotal: "2倍合計",
-        tripleTotal: "3倍合計",
-        quadrupleTotal: "4倍合計",
-        doubleDieCount: "2倍ダイス数",
-        doubleDieResult: "2倍ダイス結果",
-        maxDie: "最大ダイス結果",
-        maxPlus: "最大値+生の結果",
+    //     // Crit behavior options
+    //     onePointFiveTotal: "1.5倍合計",
+    //     doubleTotal: "2倍合計",
+    //     tripleTotal: "3倍合計",
+    //     quadrupleTotal: "4倍合計",
+    //     doubleDieCount: "2倍ダイス数",
+    //     doubleDieResult: "2倍ダイス結果",
+    //     maxDie: "最大ダイス結果",
+    //     maxPlus: "最大値+生の結果",
         
-        // Language names
-        langEnglish: "英語",
-        langSpanish: "スペイン語",
-        langGerman: "ドイツ語",
-        langFrench: "フランス語",
-        langItalian: "イタリア語",
-        langPortuguese: "ポルトガル語（ブラジル）",
-        langRussian: "ロシア語",
-        langChinese: "中国語（簡体字）",
-        langJapanese: "日本語"
-    }
+    //     // Language names
+    //     langEnglish: "英語",
+    //     langSpanish: "スペイン語",
+    //     langGerman: "ドイツ語",
+    //     langFrench: "フランス語",
+    //     langItalian: "イタリア語",
+    //     langPortuguese: "ポルトガル語（ブラジル）",
+    //     langRussian: "ロシア語",
+    //     langChinese: "中国語（簡体字）",
+    //     langJapanese: "日本語"
+    // }
 };
 
 /**
@@ -593,6 +608,12 @@ function applyTranslations(lang) {
     if (creatureNameInput) {
         creatureNameInput.placeholder = t.creatureName;
     }
+    
+    // Dice group name inputs
+    const groupNameInputs = document.querySelectorAll('.dice-group-name-input');
+    groupNameInputs.forEach(input => {
+        input.placeholder = t.groupName;
+    });
     
     // Buttons
     const addGroupBtn = document.getElementById('add-group-btn');

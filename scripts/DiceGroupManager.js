@@ -103,12 +103,17 @@ class DiceGroupManager {
         const wrapper = document.createElement("div");
         wrapper.className = "dice-group-wrapper";
 
+        // Get the current translation for group name placeholder
+        const lang = currentLanguage || 'en';
+        const t = translations[lang] || translations.en;
+        const groupNamePlaceholder = t.groupName || "Enter Group Name";
+
         const accordionHeader = document.createElement("div");
         accordionHeader.className = "dice-group-header";
         accordionHeader.innerHTML = `
             <div class="header-content">
                 <input type="text" class="dice-group-name-input header-input" id="group-${groupIndex}-name" 
-                    placeholder="Enter Group Name">
+                    placeholder="${groupNamePlaceholder}">
             </div>
             <span class="accordion-toggle">-</span>
         `;

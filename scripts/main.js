@@ -24,8 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
         diceGroupManager.addDiceGroup();
     }
     
-    // Load language preference and apply translations
-    loadLanguagePreference();
+    // Language preference will be loaded when TaleSpire initializes via loadGlobalSettings()
 });
 
 // Set up save/load button event listeners
