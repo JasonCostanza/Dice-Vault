@@ -22,6 +22,8 @@ With major version releases, it is potential that data structures will change an
 
 # Changelog
 ```
+# 5.5
+- New Feature: Localization support now includes English, Spanish, German, French, Italian, and Portuguese (Brazil).
 # 5.4
 - Improvement: Refactored settings menu to a modal interface with keyboard support (Escape key to close). See the new hamburger menu button at the bottom.
 - Improvement: Moved the Save and Load buttons to the new hamburger menu modal.
