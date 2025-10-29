@@ -35,12 +35,14 @@ The Dice Vault application now supports multiple languages through a comprehensi
    - Added script reference to LanguageManager.js
    - Already had the language selector with `onchange="changeLanguage()"`
 
-3. **scripts/main.js**
-   - Added call to `loadLanguagePreference()` on page load
-
-4. **scripts/SettingsManager.js**
+3. **scripts/SettingsManager.js**
    - Updated to include language in settings save/load operations
    - Added language to default settings
+   - Handles loading and applying language preference via `loadGlobalSettings()`
+
+4. **scripts/taleSpireSubscriptionHandlers.js**
+   - Calls `loadGlobalSettings()` when TaleSpire initializes
+   - This ensures language preference is loaded and applied on startup
 
 ### Key Functions
 
@@ -56,10 +58,10 @@ Applies all translations for the specified language code to the UI elements. Han
 - Modal content
 
 #### `saveLanguagePreference(lang)`
-Saves the selected language to TaleSpire's global localStorage.
+Saves the selected language to TaleSpire's global localStorage. Note: While this function exists in LanguageManager.js, the language preference is primarily saved through the integrated `saveGlobalSettings()` function in SettingsManager.js along with other settings.
 
 #### `loadLanguagePreference()`
-Loads the saved language preference on application startup and applies it to the UI.
+Legacy function in LanguageManager.js for loading language preference. In the current implementation, language loading is handled by `loadGlobalSettings()` in SettingsManager.js, which is called when TaleSpire initializes.
 
 ## Adding New Languages
 
@@ -91,11 +93,12 @@ All UI text elements are organized into categories:
 
 ## Behavior Notes
 
-- Language preference persists across sessions
+- Language preference persists across sessions via TaleSpire's global localStorage
+- Language is loaded when TaleSpire initializes (via `loadGlobalSettings()`)
 - Changing language updates the UI immediately
 - Images and icons are preserved when updating button text
 - If a language file is incomplete, it falls back to English
-- The language setting is stored separately from other settings but saved together
+- The language setting is integrated with other settings and saved/loaded together through SettingsManager
 
 ## Future Enhancements
 
