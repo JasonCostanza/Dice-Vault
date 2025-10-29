@@ -59,16 +59,27 @@ const translations = {
         maxDie: "Max Die Result",
         maxPlus: "Max + Raw Die Result",
         
+        // Counter-related
+        counterPurposePrompt: "Enter counter purpose:",
+        counterPurposePlaceholder: "e.g., persistent fire damage",
+        newCounterTitle: "New Counter",
+        editCounterPrompt: "Enter new counter purpose:",
+        editCounterTitle: "Edit Counter",
+        countersHeader: "Counters",
+        resetAllCountersConfirm: "Are you sure you want to reset all counters to 0?",
+        resetAllCountersTitle: "Reset All Counters",
+        deleteAllCountersConfirm: "Are you sure you want to delete all counters? This action cannot be undone.",
+        deleteAllCountersTitle: "Delete All Counters",
+        overwriteRollMessage: "A saved creature named \"{creatureName}\" with the same roll group names already exists.",
+        overwriteRollQuestion: "Do you want to replace it with your new configuration?",
+        
         // Language names
         langEnglish: "English",
-        langSpanish: "Spanish",
-        langGerman: "German",
-        langFrench: "French",
-        langItalian: "Italian",
-        langPortuguese: "Portuguese (Brazil)",
-        langRussian: "Russian",
-        langChinese: "Chinese (Simplified)",
-        langJapanese: "Japanese"
+        langSpanish: "Espanol",
+        langGerman: "Deutsch",
+        langFrench: "Francais",
+        langItalian: "Italiano",
+        langPortuguese: "Portugues (Brasil)"
     },
     es: {
         // Main UI
@@ -80,57 +91,68 @@ const translations = {
         advantage: "Ventaja",
         disadvantage: "Desventaja",
         bestOf3: "Mejor de 3",
-        critical: "Critico",
+        critical: "Critico", // TODO: Replace with "Crítico" when special characters are supported
         pin: "Fijar",
         reset: "Reiniciar",
         newCounter: "Nuevo Contador",
-        pinnedRolls: "Patas",
+        pinnedRolls: "Fijados",
         creatureSort: "Ordenar criaturas:",
         groupsSort: "Ordenar grupos:",
         
         // Sort options
-        newest: "Mas nuevo",
-        oldest: "Mas antiguo",
+        newest: "Mas nuevo", // TODO: Replace with "Más nuevo" when special characters are supported
+        oldest: "Mas antiguo", // TODO: Replace with "Más antiguo" when special characters are supported
         nameAsc: "A-Z",
         nameDesc: "Z-A",
-        default: "por defecto",
+        default: "Por defecto",
         
         // Mobile menu
-        menu: "Menu",
+        menu: "Menu", // TODO: Replace with "Menú" when special characters are supported
         saveData: "Guardar Datos",
         loadData: "Cargar Datos",
-        settings: "Configuracion",
-        menuQuote: "\"Que las tiradas esten a tu favor\"",
+        settings: "Configuracion", // TODO: Replace with "Configuración" when special characters are supported
+        menuQuote: "\"Que las tiradas esten a tu favor\"", // TODO: Replace with "estén" when special characters are supported
         
         // Settings modal
         language: "Idioma",
-        autoLoad: "Cargar datos automaticamente",
-        autoSave: "Guardar datos automaticamente",
+        autoLoad: "Cargar datos automaticamente", // TODO: Replace with "automáticamente" when special characters are supported
+        autoSave: "Guardar datos automaticamente", // TODO: Replace with "automáticamente" when special characters are supported
         autoReset: "Auto-Reiniciar Dados al Guardar",
-        critBehavior: "Comportamiento Critico",
+        critBehavior: "Comportamiento Critico", // TODO: Replace with "Crítico" when special characters are supported
         copyToClipboard: "Copiar al Portapapeles",
-        version: "Version",
+        version: "Version", // TODO: Replace with "Versión" when special characters are supported
         
         // Crit behavior options
-        onePointFiveTotal: "1.5x Total",
+        onePointFiveTotal: "1,5x Total",
         doubleTotal: "2x Total",
         tripleTotal: "3x Total",
         quadrupleTotal: "4x Total",
         doubleDieCount: "2x Cantidad de Dados",
         doubleDieResult: "2x Resultados de Dados",
-        maxDie: "Resultado Maximo",
-        maxPlus: "Max + Resultado Crudo",
+        maxDie: "Resultado Maximo", // TODO: Replace with "Máximo" when special characters are supported
+        maxPlus: "Max + Resultado Crudo", // TODO: Replace with "Máx" when special characters are supported
+        
+        // Counter-related
+        counterPurposePrompt: "Ingrese el proposito del contador:", // TODO: Replace with "propósito" when special characters are supported
+        counterPurposePlaceholder: "ej., dano de fuego persistente", // TODO: Replace with "daño" when special characters are supported
+        newCounterTitle: "Nuevo Contador",
+        editCounterPrompt: "Ingrese el nuevo proposito del contador:", // TODO: Replace with "propósito" when special characters are supported
+        editCounterTitle: "Editar Contador",
+        countersHeader: "Contadores",
+        resetAllCountersConfirm: "Esta seguro de que desea restablecer todos los contadores a 0?", // TODO: Replace with "¿Está" when special characters are supported
+        resetAllCountersTitle: "Restablecer Todos los Contadores",
+        deleteAllCountersConfirm: "Esta seguro de que desea eliminar todos los contadores? Esta accion no se puede deshacer.", // TODO: Replace with "¿Está" and "acción" when special characters are supported
+        deleteAllCountersTitle: "Eliminar Todos los Contadores",
+        overwriteRollMessage: "Ya existe una criatura guardada llamada \"{creatureName}\" con los mismos nombres de grupos de tiradas.",
+        overwriteRollQuestion: "Quiere reemplazarla con su nueva configuracion?", // TODO: Replace with "¿Quiere" and "configuración" when special characters are supported
         
         // Language names
-        langEnglish: "Ingles",
-        langSpanish: "Espanol",
-        langGerman: "Aleman",
-        langFrench: "Frances",
+        langEnglish: "Ingles", // TODO: Replace with "Inglés" when special characters are supported
+        langSpanish: "Espanol", // TODO: Replace with "Español" when special characters are supported
+        langGerman: "Aleman", // TODO: Replace with "Alemán" when special characters are supported
+        langFrench: "Frances", // TODO: Replace with "Francés" when special characters are supported
         langItalian: "Italiano",
-        langPortuguese: "Portugues (Brasil)",
-        langRussian: "Ruso",
-        langChinese: "Chino (Simplificado)",
-        langJapanese: "Japones"
+        langPortuguese: "Portugues (Brasil)" // TODO: Replace with "Portugues" when special characters are supported
     },
     de: {
         // Main UI
@@ -138,37 +160,37 @@ const translations = {
         groupName: "Gruppennamen eingeben",
         addGroup: "+ Gruppe",
         removeGroup: "- Gruppe",
-        roll: "Wuerfeln",
+        roll: "Wurfeln", // TODO: Replace with "Würfeln" when special characters are supported
         advantage: "Vorteil",
         disadvantage: "Nachteil",
         bestOf3: "Beste von 3",
         critical: "Kritisch",
         pin: "Anheften",
-        reset: "Zuruecksetzen",
-        newCounter: "Neuer Zaehler",
-        pinnedRolls: "Stifte",
+        reset: "Zurucksetzen", // TODO: Replace with "Zurücksetzen" when special characters are supported
+        newCounter: "Neuer Zahler", // TODO: Replace with "Zähler" when special characters are supported
+        pinnedRolls: "Fixierte",
         creatureSort: "Kreatur sortieren:",
         groupsSort: "Gruppen sortieren:",
         
         // Sort options
         newest: "Neueste",
-        oldest: "Aelteste",
+        oldest: "Alteste", // TODO: Replace with "Älteste" when special characters are supported
         nameAsc: "A-Z",
         nameDesc: "Z-A",
         default: "Standard",
         
         // Mobile menu
-        menu: "Menue",
+        menu: "Menu", // TODO: Replace with "Menü" when special characters are supported
         saveData: "Daten speichern",
         loadData: "Daten laden",
         settings: "Einstellungen",
-        menuQuote: "\"Moegen die Wuerfel zu deinen Gunsten fallen\"",
+        menuQuote: "\"Mogen die Wurfel zu deinen Gunsten fallen\"", // TODO: Replace with "Mögen" and "Würfel" when special characters are supported
         
         // Settings modal
         language: "Sprache",
         autoLoad: "Daten automatisch laden",
         autoSave: "Daten automatisch speichern",
-        autoReset: "Wuerfel beim Speichern automatisch zuruecksetzen",
+        autoReset: "Wurfel beim Speichern automatisch zurucksetzen", // TODO: Replace with "Würfel" and "zurücksetzen" when special characters are supported
         critBehavior: "Kritisches Verhalten",
         copyToClipboard: "In Zwischenablage kopieren",
         version: "Version",
@@ -178,59 +200,70 @@ const translations = {
         doubleTotal: "2x Gesamt",
         tripleTotal: "3x Gesamt",
         quadrupleTotal: "4x Gesamt",
-        doubleDieCount: "2x Wuerfelanzahl",
-        doubleDieResult: "2x Wuerfelergebnisse",
-        maxDie: "Max Wuerfelergebnis",
-        maxPlus: "Max + Rohes Wuerfelergebnis",
+        doubleDieCount: "2x Wurfelanzahl", // TODO: Replace with "Würfelanzahl" when special characters are supported
+        doubleDieResult: "2x Wurfelergebnisse", // TODO: Replace with "Würfelergebnisse" when special characters are supported
+        maxDie: "Max Wurfelergebnis", // TODO: Replace with "Würfelergebnis" when special characters are supported
+        maxPlus: "Max + Rohes Wurfelergebnis", // TODO: Replace with "Würfelergebnis" when special characters are supported
+        
+        // Counter-related
+        counterPurposePrompt: "Zweck des Zahlers eingeben:", // TODO: Replace with "Zählers" when special characters are supported
+        counterPurposePlaceholder: "z.B., anhaltender Feuerschaden",
+        newCounterTitle: "Neuer Zahler", // TODO: Replace with "Zähler" when special characters are supported
+        editCounterPrompt: "Neuen Zweck des Zahlers eingeben:", // TODO: Replace with "Zählers" when special characters are supported
+        editCounterTitle: "Zahler bearbeiten", // TODO: Replace with "Zähler" when special characters are supported
+        countersHeader: "Zahler", // TODO: Replace with "Zähler" when special characters are supported
+        resetAllCountersConfirm: "Mochten Sie wirklich alle Zahler auf 0 zurucksetzen?", // TODO: Replace with "Möchten", "Zähler", "zurücksetzen" when special characters are supported
+        resetAllCountersTitle: "Alle Zahler zurucksetzen", // TODO: Replace with "Zähler", "zurücksetzen" when special characters are supported
+        deleteAllCountersConfirm: "Mochten Sie wirklich alle Zahler loschen? Diese Aktion kann nicht ruckgangig gemacht werden.", // TODO: Replace with "Möchten", "Zähler", "löschen", "rückgängig" when special characters are supported
+        deleteAllCountersTitle: "Alle Zahler loschen", // TODO: Replace with "Zähler", "löschen" when special characters are supported
+        overwriteRollMessage: "Eine gespeicherte Kreatur namens \"{creatureName}\" mit denselben Wurfgruppennamen existiert bereits.",
+        overwriteRollQuestion: "Mochten Sie sie durch Ihre neue Konfiguration ersetzen?", // TODO: Replace with "Möchten" when special characters are supported
         
         // Language names
         langEnglish: "Englisch",
         langSpanish: "Spanisch",
         langGerman: "Deutsch",
-        langFrench: "Franzoesisch",
+        langFrench: "Franzosisch", // TODO: Replace with "Französisch" when special characters are supported
         langItalian: "Italienisch",
-        langPortuguese: "Portugiesisch (Brasilien)",
-        langRussian: "Russisch",
-        langChinese: "Chinesisch (Vereinfacht)",
-        langJapanese: "Japanisch"
+        langPortuguese: "Portugiesisch (Brasilien)"
     },
     fr: {
         // Main UI
-        creatureName: "Entrez le nom de la creature",
+        creatureName: "Entrez le nom de la creature", // TODO: Replace with "créature" when special characters are supported
         groupName: "Entrez le nom du groupe",
         addGroup: "+ Groupe",
         removeGroup: "- Groupe",
         roll: "Lancer",
         advantage: "Avantage",
-        disadvantage: "Desavantage",
-        bestOf3: "Meilleur de 3",
+        disadvantage: "Desavantage", // TODO: Replace with "Désavantage" when special characters are supported
+        bestOf3: "Meilleur des 3",
         critical: "Critique",
-        pin: "Epingler",
-        reset: "Reinitialiser",
+        pin: "Epingler", // TODO: Replace with "Épingler" when special characters are supported
+        reset: "Reinitialiser", // TODO: Replace with "Réinitialiser" when special characters are supported
         newCounter: "Nouveau Compteur",
-        pinnedRolls: "Epingles",
-        creatureSort: "Tri par creature:",
+        pinnedRolls: "Epingles", // TODO: Replace with "Épinglés" when special characters are supported
+        creatureSort: "Tri par creature:", // TODO: Replace with "créature" when special characters are supported
         groupsSort: "Tri par groupe:",
         
         // Sort options
-        newest: "Plus recent",
+        newest: "Plus recent", // TODO: Replace with "récent" when special characters are supported
         oldest: "Plus ancien",
         nameAsc: "A-Z",
         nameDesc: "Z-A",
-        default: "defaut",
+        default: "Defaut", // TODO: Replace with "Défaut" when special characters are supported
         
         // Mobile menu
         menu: "Menu",
-        saveData: "Sauvegarder Donnees",
-        loadData: "Charger Donnees",
-        settings: "Parametres",
+        saveData: "Sauvegarder Donnees", // TODO: Replace with "Données" when special characters are supported
+        loadData: "Charger Donnees", // TODO: Replace with "Données" when special characters are supported
+        settings: "Parametres", // TODO: Replace with "Paramètres" when special characters are supported
         menuQuote: "\"Que les lancers soient en votre faveur\"",
         
         // Settings modal
         language: "Langue",
-        autoLoad: "Charger automatiquement les donnees",
-        autoSave: "Sauvegarder automatiquement les donnees",
-        autoReset: "Reinitialiser automatiquement les des lors de la sauvegarde",
+        autoLoad: "Charger automatiquement les donnees", // TODO: Replace with "données" when special characters are supported
+        autoSave: "Sauvegarder automatiquement les donnees", // TODO: Replace with "données" when special characters are supported
+        autoReset: "Reinitialiser automatiquement les des lors de la sauvegarde", // TODO: Replace with "Réinitialiser" and "dés" when special characters are supported
         critBehavior: "Comportement Critique",
         copyToClipboard: "Copier dans le Presse-papiers",
         version: "Version",
@@ -240,10 +273,24 @@ const translations = {
         doubleTotal: "2x Total",
         tripleTotal: "3x Total",
         quadrupleTotal: "4x Total",
-        doubleDieCount: "2x Quantite de Des",
-        doubleDieResult: "2x Resultats des Des",
-        maxDie: "Resultat Maximum",
-        maxPlus: "Max + Resultat Brut",
+        doubleDieCount: "2x Quantite de Des", // TODO: Replace with "Quantité" and "Dés" when special characters are supported
+        doubleDieResult: "2x Resultats des Des", // TODO: Replace with "Résultats" and "Dés" when special characters are supported
+        maxDie: "Resultat Maximum", // TODO: Replace with "Résultat" when special characters are supported
+        maxPlus: "Max + Resultat Brut", // TODO: Replace with "Résultat" when special characters are supported
+        
+        // Counter-related
+        counterPurposePrompt: "Entrez l'objectif du compteur:",
+        counterPurposePlaceholder: "ex., degats de feu persistants", // TODO: Replace with "dégâts" when special characters are supported
+        newCounterTitle: "Nouveau Compteur",
+        editCounterPrompt: "Saisir le but du compteur:",
+        editCounterTitle: "Modifier Compteur",
+        countersHeader: "Compteurs",
+        resetAllCountersConfirm: "Etes-vous sur de vouloir reinitialiser tous les compteurs a 0?", // TODO: Replace with "etes", "sûr", "réinitialiser", "à" when special characters are supported
+        resetAllCountersTitle: "Reinitialiser Tous les Compteurs", // TODO: Replace with "Réinitialiser" when special characters are supported
+        deleteAllCountersConfirm: "Etes-vous sur de vouloir supprimer tous les compteurs? Cette action ne peut pas etre annulee.", // TODO: Replace with "etes", "sûr", "etre", "annulée" when special characters are supported
+        deleteAllCountersTitle: "Supprimer Tous les Compteurs",
+        overwriteRollMessage: "Une creature sauvegardee nommee \"{creatureName}\" avec les memes noms de groupes de jets existe deja.", // TODO: Replace with "créature", "sauvegardée", "nommée", "mêmes", "déjà" when special characters are supported
+        overwriteRollQuestion: "Voulez-vous la remplacer par votre nouvelle configuration?",
         
         // Language names
         langEnglish: "Anglais",
@@ -251,10 +298,7 @@ const translations = {
         langGerman: "Allemand",
         langFrench: "Francais",
         langItalian: "Italien",
-        langPortuguese: "Portugais (Bresil)",
-        langRussian: "Russe",
-        langChinese: "Chinois (Simplifie)",
-        langJapanese: "Japonais"
+        langPortuguese: "Portugais (Bresil)" // TODO: Replace with "Brésil" when special characters are supported
     },
     it: {
         // Main UI
@@ -270,19 +314,19 @@ const translations = {
         pin: "Fissa",
         reset: "Reimposta",
         newCounter: "Nuovo Contatore",
-        pinnedRolls: "Tiri Fissati",
+        pinnedRolls: "Fissati",
         creatureSort: "Ordina creature:",
         groupsSort: "Ordina gruppi:",
         
         // Sort options
-        newest: "Piu recente",
-        oldest: "Piu vecchio",
+        newest: "Più recente",
+        oldest: "Più vecchio",
         nameAsc: "A-Z",
         nameDesc: "Z-A",
         default: "Predefinito",
         
         // Mobile menu
-        menu: "Menu",
+        menu: "Menu", // TODO: Replace with "Menù" when special characters are supported
         saveData: "Salva Dati",
         loadData: "Carica Dati",
         settings: "Impostazioni",
@@ -302,10 +346,24 @@ const translations = {
         doubleTotal: "2x Totale",
         tripleTotal: "3x Totale",
         quadrupleTotal: "4x Totale",
-        doubleDieCount: "2x Quantita Dadi",
+        doubleDieCount: "2x Quantità Dadi",
         doubleDieResult: "2x Risultati Dadi",
         maxDie: "Risultato Massimo",
         maxPlus: "Max + Risultato Grezzo",
+        
+        // Counter-related
+        counterPurposePrompt: "Inserisci lo scopo del contatore:",
+        counterPurposePlaceholder: "es., danno da fuoco persistente",
+        newCounterTitle: "Nuovo Contatore",
+        editCounterPrompt: "Inserisci il nuovo scopo del contatore:",
+        editCounterTitle: "Modifica Contatore",
+        countersHeader: "Contatori",
+        resetAllCountersConfirm: "Sei sicuro di voler reimpostare tutti i contatori a 0?",
+        resetAllCountersTitle: "Reimposta Tutti i Contatori",
+        deleteAllCountersConfirm: "Sei sicuro di voler eliminare tutti i contatori? Questa azione non può essere annullata.",
+        deleteAllCountersTitle: "Elimina Tutti i Contatori",
+        overwriteRollMessage: "Una creatura salvata denominata \"{creatureName}\" con gli stessi nomi di gruppi di tiri esiste gia.", // TODO: Replace with "creatura", "denominata", "già" when special characters are supported
+        overwriteRollQuestion: "Vuoi sostituirla con la tua nuova configurazione?",
         
         // Language names
         langEnglish: "Inglese",
@@ -313,10 +371,7 @@ const translations = {
         langGerman: "Tedesco",
         langFrench: "Francese",
         langItalian: "Italiano",
-        langPortuguese: "Portoghese (Brasile)",
-        langRussian: "Russo",
-        langChinese: "Cinese (Semplificato)",
-        langJapanese: "Giapponese"
+        langPortuguese: "Portoghese (Brasile)"
     },
     "pt-br": {
         // Main UI
@@ -328,11 +383,11 @@ const translations = {
         advantage: "Vantagem",
         disadvantage: "Desvantagem",
         bestOf3: "Melhor de 3",
-        critical: "Critico",
+        critical: "Crítico",
         pin: "Fixar",
         reset: "Resetar",
         newCounter: "Novo Contador",
-        pinnedRolls: "Alfinetes",
+        pinnedRolls: "Fixados",
         creatureSort: "Ordenar criaturas:",
         groupsSort: "Ordenar grupos:",
         
@@ -341,13 +396,13 @@ const translations = {
         oldest: "Antigo",
         nameAsc: "A-Z",
         nameDesc: "Z-A",
-        default: "Padrao",
+        default: "Padrão",
         
         // Mobile menu
         menu: "Menu",
         saveData: "Salvar Dados",
         loadData: "Carregar Dados",
-        settings: "Configuracoes",
+        settings: "Configuracoes", // TODO: Replace with "Configuracões" when special characters are supported
         menuQuote: "\"Que as rolagens estejam a seu favor\"",
         
         // Settings modal
@@ -355,9 +410,9 @@ const translations = {
         autoLoad: "Carregar dados automaticamente",
         autoSave: "Salvar dados automaticamente",
         autoReset: "Auto-Resetar Dados ao Salvar",
-        critBehavior: "Comportamento Critico",
-        copyToClipboard: "Copiar para Area de Transferencia",
-        version: "Versao",
+        critBehavior: "Comportamento Critico", // TODO: Replace with "Crítico" when special characters are supported
+        copyToClipboard: "Copiar para Area de Transferencia", // TODO: Replace with "Área" and "Transferencia" when special characters are supported
+        version: "Versao", // TODO: Replace with "Versão" when special characters are supported
         
         // Crit behavior options
         onePointFiveTotal: "1,5x Total",
@@ -366,218 +421,49 @@ const translations = {
         quadrupleTotal: "4x Total",
         doubleDieCount: "2x Quantidade de Dados",
         doubleDieResult: "2x Resultados dos Dados",
-        maxDie: "Resultado Maximo",
-        maxPlus: "Max + Resultado Bruto",
+        maxDie: "Resultado Maximo", // TODO: Replace with "Máximo" when special characters are supported
+        maxPlus: "Max + Resultado Bruto", // TODO: Replace with "Máx" when special characters are supported
+        
+        // Counter-related
+        counterPurposePrompt: "Digite o objetivo do contador:",
+        counterPurposePlaceholder: "ex., dano de fogo persistente",
+        newCounterTitle: "Novo Contador",
+        editCounterPrompt: "Digite o novo objetivo do contador:",
+        editCounterTitle: "Editar Contador",
+        countersHeader: "Contadores",
+        resetAllCountersConfirm: "Tem certeza de que deseja redefinir todos os contadores para 0?",
+        resetAllCountersTitle: "Redefinir Todos os Contadores",
+        deleteAllCountersConfirm: "Tem certeza de que deseja excluir todos os contadores? Esta acao nao pode ser desfeita.", // TODO: Replace with "acão" and "não" when special characters are supported
+        deleteAllCountersTitle: "Excluir Todos os Contadores",
+        overwriteRollMessage: "Uma criatura salva chamada \"{creatureName}\" com os mesmos nomes de grupos de rolagens ja existe.", // TODO: Replace with "já" when special characters are supported
+        overwriteRollQuestion: "Deseja substitui-la pela sua nova configuracao?", // TODO: Replace with "configuração" when special characters are supported
         
         // Language names
-        langEnglish: "Ingles",
+        langEnglish: "Ingles", // TODO: Replace with "Ingles" when special characters are supported
         langSpanish: "Espanhol",
-        langGerman: "Alemao",
-        langFrench: "Frances",
+        langGerman: "Alemao", // TODO: Replace with "Alemão" when special characters are supported
+        langFrench: "Frances", // TODO: Replace with "Frances" when special characters are supported
         langItalian: "Italiano",
-        langPortuguese: "Portugues (Brasil)",
-        langRussian: "Russo",
-        langChinese: "Chines (Simplificado)",
-        langJapanese: "Japones"
-    },
-    // ru: {
-        // TODO: warning - No substitute character detected. (Claude 4.5)
-        // Cyrillic characters cannot be approximated with ASCII characters
-        // Main UI
-    //     creatureName: "Введите имя существа",
-    //     groupName: "Введите название группы",
-    //     addGroup: "+ Группа",
-    //     removeGroup: "- Группа",
-    //     roll: "Бросок",
-    //     advantage: "Преимущество",
-    //     disadvantage: "Помеха",
-    //     bestOf3: "Лучший из 3",
-    //     critical: "Критический",
-    //     pin: "Закрепить",
-    //     reset: "Сброс",
-    //     newCounter: "Новый Счётчик",
-    //     pinnedRolls: "Закреплённые Броски",
-    //     creatureSort: "Сортировка существ:",
-    //     groupsSort: "Сортировка групп:",
-        
-    //     // Sort options
-    //     newest: "Новейшие",
-    //     oldest: "Старейшие",
-    //     nameAsc: "А-Я",
-    //     nameDesc: "Я-А",
-    //     default: "По умолчанию",
-        
-    //     // Mobile menu
-    //     menu: "Меню",
-    //     saveData: "Сохранить Данные",
-    //     loadData: "Загрузить Данные",
-    //     settings: "Настройки",
-    //     menuQuote: "\"Пусть броски будут в вашу пользу\"",
-        
-    //     // Settings modal
-    //     language: "Язык",
-    //     autoLoad: "Автоматически загружать данные",
-    //     autoSave: "Автоматически сохранять данные",
-    //     autoReset: "Авто-сброс костей при сохранении",
-    //     critBehavior: "Поведение Крита",
-    //     copyToClipboard: "Копировать в Буфер Обмена",
-    //     version: "Версия",
-        
-    //     // Crit behavior options
-    //     onePointFiveTotal: "1.5x Итого",
-    //     doubleTotal: "2x Итого",
-    //     tripleTotal: "3x Итого",
-    //     quadrupleTotal: "4x Итого",
-    //     doubleDieCount: "2x Количество Костей",
-    //     doubleDieResult: "2x Результаты Костей",
-    //     maxDie: "Макс Результат",
-    //     maxPlus: "Макс + Чистый Результат",
-        
-    //     // Language names
-    //     langEnglish: "Английский",
-    //     langSpanish: "Испанский",
-    //     langGerman: "Немецкий",
-    //     langFrench: "Французский",
-    //     langItalian: "Итальянский",
-    //     langPortuguese: "Португальский (Бразилия)",
-    //     langRussian: "Русский",
-    //     langChinese: "Китайский (Упрощённый)",
-    //     langJapanese: "Японский"
-    // },
-    // "zh-cn": {
-        // TODO: warning - No substitute character detected. (Claude 4.5)
-        // Chinese characters cannot be approximated with ASCII characters
-        // Main UI
-    //     creatureName: "输入生物名称",
-    //     groupName: "输入组名称",
-    //     addGroup: "+ 组",
-    //     removeGroup: "- 组",
-    //     roll: "投掷",
-    //     advantage: "优势",
-    //     disadvantage: "劣势",
-    //     bestOf3: "三选一",
-    //     critical: "重击",
-    //     pin: "固定",
-    //     reset: "重置",
-    //     newCounter: "新计数器",
-    //     pinnedRolls: "已固定投掷",
-    //     creatureSort: "生物排序：",
-    //     groupsSort: "组排序：",
-        
-    //     // Sort options
-    //     newest: "最新",
-    //     oldest: "最旧",
-    //     nameAsc: "A-Z",
-    //     nameDesc: "Z-A",
-    //     default: "默认",
-        
-    //     // Mobile menu
-    //     menu: "菜单",
-    //     saveData: "保存数据",
-    //     loadData: "加载数据",
-    //     settings: "设置",
-    //     menuQuote: "\"愿投掷对你有利\"",
-        
-    //     // Settings modal
-    //     language: "语言",
-    //     autoLoad: "自动加载数据",
-    //     autoSave: "自动保存数据",
-    //     autoReset: "保存时自动重置骰子",
-    //     critBehavior: "重击行为",
-    //     copyToClipboard: "复制到剪贴板",
-    //     version: "版本",
-        
-    //     // Crit behavior options
-    //     onePointFiveTotal: "1.5倍总计",
-    //     doubleTotal: "2倍总计",
-    //     tripleTotal: "3倍总计",
-    //     quadrupleTotal: "4倍总计",
-    //     doubleDieCount: "2倍骰子数量",
-    //     doubleDieResult: "2倍骰子结果",
-    //     maxDie: "最大骰子结果",
-    //     maxPlus: "最大值+原始结果",
-        
-    //     // Language names
-    //     langEnglish: "英语",
-    //     langSpanish: "西班牙语",
-    //     langGerman: "德语",
-    //     langFrench: "法语",
-    //     langItalian: "意大利语",
-    //     langPortuguese: "葡萄牙语（巴西）",
-    //     langRussian: "俄语",
-    //     langChinese: "中文（简体）",
-    //     langJapanese: "日语"
-    // },
-    // ja: {
-        // TODO: warning - No substitute character detected. (Claude 4.5)
-        // Japanese characters (Hiragana, Katakana, Kanji) cannot be approximated with ASCII characters
-        // Main UI
-    //     creatureName: "クリーチャー名を入力",
-    //     groupName: "グループ名を入力",
-    //     addGroup: "+ グループ",
-    //     removeGroup: "- グループ",
-    //     roll: "ロール",
-    //     advantage: "有利",
-    //     disadvantage: "不利",
-    //     bestOf3: "3個中最高",
-    //     critical: "クリティカル",
-    //     pin: "ピン留め",
-    //     reset: "リセット",
-    //     newCounter: "新規カウンター",
-    //     pinnedRolls: "ピン留めロール",
-    //     creatureSort: "クリーチャー並び替え：",
-    //     groupsSort: "グループ並び替え：",
-        
-    //     // Sort options
-    //     newest: "新しい順",
-    //     oldest: "古い順",
-    //     nameAsc: "A-Z",
-    //     nameDesc: "Z-A",
-    //     default: "デフォルト",
-        
-    //     // Mobile menu
-    //     menu: "メニュー",
-    //     saveData: "データ保存",
-    //     loadData: "データ読込",
-    //     settings: "設定",
-    //     menuQuote: "\"ロールがあなたに有利でありますように\"",
-        
-    //     // Settings modal
-    //     language: "言語",
-    //     autoLoad: "データを自動的に読み込む",
-    //     autoSave: "データを自動的に保存する",
-    //     autoReset: "保存時にダイスを自動リセット",
-    //     critBehavior: "クリティカル動作",
-    //     copyToClipboard: "クリップボードにコピー",
-    //     version: "バージョン",
-        
-    //     // Crit behavior options
-    //     onePointFiveTotal: "1.5倍合計",
-    //     doubleTotal: "2倍合計",
-    //     tripleTotal: "3倍合計",
-    //     quadrupleTotal: "4倍合計",
-    //     doubleDieCount: "2倍ダイス数",
-    //     doubleDieResult: "2倍ダイス結果",
-    //     maxDie: "最大ダイス結果",
-    //     maxPlus: "最大値+生の結果",
-        
-    //     // Language names
-    //     langEnglish: "英語",
-    //     langSpanish: "スペイン語",
-    //     langGerman: "ドイツ語",
-    //     langFrench: "フランス語",
-    //     langItalian: "イタリア語",
-    //     langPortuguese: "ポルトガル語（ブラジル）",
-    //     langRussian: "ロシア語",
-    //     langChinese: "中国語（簡体字）",
-    //     langJapanese: "日本語"
-    // }
+        langPortuguese: "Portugues (Brasil)" // TODO: Replace with "Portugues" when special characters are supported
+    }
 };
 
 /**
  * Current language code
  */
 let currentLanguage = 'en';
+
+/**
+ * Gets a translation for a specific key in the current language.
+ * Falls back to English if the key is not found.
+ * 
+ * @param {string} key - The translation key to look up
+ * @returns {string} The translated text
+ */
+function getTranslation(key) {
+    const t = translations[currentLanguage] || translations.en;
+    return t[key] || translations.en[key] || key;
+}
 
 /**
  * Changes the UI language based on the selected language in the dropdown.
@@ -630,6 +516,10 @@ function applyTranslations(lang) {
     
     const newCounterBtn = document.getElementById('new-counter');
     if (newCounterBtn) newCounterBtn.textContent = t.newCounter;
+    
+    // Counter accordion header
+    const countersHeader = document.querySelector('.saved-roll-group[data-creature-name="Counters"] .saved-roll-header span:first-child');
+    if (countersHeader) countersHeader.textContent = t.countersHeader;
     
     // Rolling buttons - update only text nodes, preserve images
     updateButtonWithImage('.rolling-button', 0, t.roll);
@@ -704,16 +594,13 @@ function applyTranslations(lang) {
     
     // Language options
     const languageOptions = document.querySelectorAll('#language-select option');
-    if (languageOptions.length >= 9) {
+    if (languageOptions.length >= 6) {
         languageOptions[0].textContent = t.langEnglish;
         languageOptions[1].textContent = t.langSpanish;
         languageOptions[2].textContent = t.langGerman;
         languageOptions[3].textContent = t.langFrench;
         languageOptions[4].textContent = t.langItalian;
         languageOptions[5].textContent = t.langPortuguese;
-        languageOptions[6].textContent = t.langRussian;
-        languageOptions[7].textContent = t.langChinese;
-        languageOptions[8].textContent = t.langJapanese;
     }
     
     // Crit behavior options
@@ -825,3 +712,4 @@ function loadLanguagePreference() {
 window.changeLanguage = changeLanguage;
 window.loadLanguagePreference = loadLanguagePreference;
 window.applyTranslations = applyTranslations;
+window.getTranslation = getTranslation;

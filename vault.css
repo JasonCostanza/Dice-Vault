@@ -22,7 +22,7 @@ html,
 body {
     background-color: var(--ts-background-primary);
     color: var(--ts-color-primary);
-    font-family: 'OptimusPrinceps', sans-serif;
+    font-family: 'Helvetica', sans-serif;
     height: 100%;
     margin: 0;
     display: flex;

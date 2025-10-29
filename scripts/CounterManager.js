@@ -9,9 +9,9 @@ class CounterManager {
      */
     async newCounter() {
         const purpose = await uiManager.showInput(
-            "Enter counter purpose:",
-            "e.g., persistent fire damage",
-            "New Counter",
+            getTranslation('counterPurposePrompt'),
+            getTranslation('counterPurposePlaceholder'),
+            getTranslation('newCounterTitle'),
             ""
         );
         
@@ -111,9 +111,9 @@ class CounterManager {
         if (!counter) return;
 
         const newPurpose = await uiManager.showInput(
-            "Enter new counter purpose:",
-            "e.g., persistent fire damage",
-            "Edit Counter",
+            getTranslation('editCounterPrompt'),
+            getTranslation('counterPurposePlaceholder'),
+            getTranslation('editCounterTitle'),
             counter.purpose
         );
         
@@ -197,7 +197,7 @@ class CounterManager {
             
             countersGroup.innerHTML = `
                 <div class="saved-roll-header" onclick="uiManager.toggleAccordion(this)">
-                    <span>Counters</span> <span class="accordion-icon">-</span>
+                    <span>${getTranslation('countersHeader')}</span> <span class="accordion-icon">-</span>
                 </div>
                 <div class="saved-rolls-content"></div>
             `;
@@ -239,7 +239,7 @@ class CounterManager {
      * Resets all counters to 0
      */
     async resetAllCounters() {
-        const confirmed = await uiManager.showConfirmation("Are you sure you want to reset all counters to 0?", "Reset All Counters");
+        const confirmed = await uiManager.showConfirmation(getTranslation('resetAllCountersConfirm'), getTranslation('resetAllCountersTitle'));
         
         if (confirmed) {
             this.counters.forEach(counter => {
@@ -255,7 +255,7 @@ class CounterManager {
      * Deletes all counters
      */
     async deleteAllCounters() {
-        const confirmed = await uiManager.showConfirmation("Are you sure you want to delete all counters? This action cannot be undone.", "Delete All Counters");
+        const confirmed = await uiManager.showConfirmation(getTranslation('deleteAllCountersConfirm'), getTranslation('deleteAllCountersTitle'));
         
         if (confirmed) {
             this.counters = [];

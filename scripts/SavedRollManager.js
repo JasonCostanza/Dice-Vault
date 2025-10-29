@@ -276,12 +276,15 @@ class SavedRollManager {
         modal.style.textAlign = 'center';
         modal.style.minWidth = '300px';
 
+        const overwriteMessage = getTranslation('overwriteRollMessage').replace('{creatureName}', creatureName);
+        const overwriteQuestion = getTranslation('overwriteRollQuestion');
+
         modal.innerHTML = `
-            <p>A saved creature named "${creatureName}" with the same roll group names already exists.</p>
-            <p>Do you want to replace it with your new configuration?</p>
+            <p>${overwriteMessage}</p>
+            <p>${overwriteQuestion}</p>
             <div style="display: flex; justify-content: space-around; margin-top: 20px;">
-                <button id="overwrite-yes" class="black-button">Yes</button>
-                <button id="overwrite-no" class="black-button">No</button>
+                <button id="overwrite-yes" class="black-button"><i class="ts-icon-check ts-icon-xsmall"></i></button>
+                <button id="overwrite-no" class="black-button"><i class="ts-icon-remove ts-icon-xsmall"></i></button>
             </div>
         `;
 

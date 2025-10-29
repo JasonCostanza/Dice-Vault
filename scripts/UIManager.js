@@ -190,8 +190,8 @@ class UIManager {
                               border-radius: 4px; background-color: var(--ts-background-tertiary);
                               color: var(--ts-color-primary); font-size: 14px;">
                 <div style="display: flex; justify-content: space-around; margin-top: 20px;">
-                    <button id="modal-ok" class="black-button">OK</button>
-                    <button id="modal-cancel" class="black-button">Cancel</button>
+                    <button id="modal-ok" class="black-button"><i class="ts-icon-check ts-icon-xsmall"></i></button>
+                    <button id="modal-cancel" class="black-button"><i class="ts-icon-remove ts-icon-xsmall"></i></button>
                 </div>
             `;
 
