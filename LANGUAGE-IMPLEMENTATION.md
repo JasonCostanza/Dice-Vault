@@ -14,7 +14,7 @@ The Dice Vault application now supports multiple languages through a comprehensi
 ## How It Works
 
 ### User Experience
-1. Open the **Settings** modal (gear icon in mobile menu)
+1. Open the **Settings** menu
 2. Select your preferred language from the "Language" dropdown
 3. The UI will immediately update to the selected language
 4. Your language preference is automatically saved
