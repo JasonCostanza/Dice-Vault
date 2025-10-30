@@ -10,9 +10,6 @@ The Dice Vault application now supports multiple languages through a comprehensi
 - **French** (fr)
 - **Italian** (it)
 - **Portuguese (Brazil)** (pt-br)
-- **Russian** (ru)
-- **Chinese (Simplified)** (zh-cn)
-- **Japanese** (ja)
 
 ## How It Works
 
@@ -58,10 +55,13 @@ Applies all translations for the specified language code to the UI elements. Han
 - Modal content
 
 #### `saveLanguagePreference(lang)`
-Saves the selected language to TaleSpire's global localStorage. Note: While this function exists in LanguageManager.js, the language preference is primarily saved through the integrated `saveGlobalSettings()` function in SettingsManager.js along with other settings.
+Saves the selected language to TaleSpire's global localStorage. This function is called by `changeLanguage()` to update the language setting in the global settings blob. It reads the existing settings, updates the language property, and saves the updated settings back.
 
 #### `loadLanguagePreference()`
-Legacy function in LanguageManager.js for loading language preference. In the current implementation, language loading is handled by `loadGlobalSettings()` in SettingsManager.js, which is called when TaleSpire initializes.
+Legacy function in LanguageManager.js for loading language preference. In the current implementation, language loading is primarily handled by `loadGlobalSettings()` in SettingsManager.js, which is called when TaleSpire initializes. The `loadGlobalSettings()` function retrieves all settings (including language) and then calls `applyTranslations()` to update the UI.
+
+#### `getTranslation(key)`
+Utility function that retrieves a translation for a specific key in the current language. Falls back to English if the key is not found. This function is useful for dynamically translating text that may not be present in the initial HTML.
 
 ## Adding New Languages
 
