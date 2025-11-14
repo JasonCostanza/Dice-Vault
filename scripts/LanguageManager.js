@@ -562,7 +562,7 @@ function applyTranslations(lang) {
         groupsSortOptions[4].textContent = t.nameDesc;
     }
     
-    // Mobile menu
+    // Settings modal menu
     const mobileMenuHeader = document.querySelector('#mobile-menu-modal .modal-header h2');
     if (mobileMenuHeader) mobileMenuHeader.textContent = t.menu;
     
@@ -595,7 +595,8 @@ function applyTranslations(lang) {
         settingsLabels[1].textContent = t.autoLoad;
         settingsLabels[2].textContent = t.autoSave;
         settingsLabels[3].textContent = t.autoReset;
-        settingsLabels[4].textContent = t.critBehavior;
+        settingsLabels[4].textContent = t.dualitySetting;
+        settingsLabels[5].textContent = t.critBehavior;
     }
     
     // Language options
