@@ -174,6 +174,83 @@ class DiceGroupManager {
         this.updateDiceGroupsData();
     }
 
+    addDualityGroup() {
+        const diceGroupsContainer = document.querySelector(".content-col-dice");
+        const groupIndex = diceGroupsContainer.children.length;
+
+        const wrapper = document.createElement("div");
+        wrapper.className = "dice-group-wrapper";
+
+        // Get the current translation for group name placeholder
+        const lang = currentLanguage || 'en';
+        const t = translations[lang] || translations.en;
+        const groupNamePlaceholder = t.groupName || "Enter Duality Name";
+
+        const accordionHeader = document.createElement("div");
+        accordionHeader.className = "dice-group-header";
+        accordionHeader.innerHTML = `
+            <div class="header-content">
+                <input type="text" class="dice-group-name-input header-input" id="group-${groupIndex}-name" 
+                    placeholder="${groupNamePlaceholder}">
+            </div>
+            <span class="accordion-toggle">-</span>
+        `;
+
+        accordionHeader.addEventListener('click', (event) => {
+            // Skip if we're clicking on the input
+            if (event.target.classList.contains('header-input') || 
+                event.target.classList.contains('dice-group-name-input')) {
+                return;
+            }
+            this.toggleDiceGroupAccordion(event);
+        });
+
+        const content = document.createElement("div");
+        content.className = "dice-selection";
+        content.id = `${groupIndex}`;
+
+        let diceHTML = `
+            <div class="dice-group-container">
+                <div class="dice-row">
+        `;
+
+        // Only add d12, set initial value to 2
+        diceHTML += `
+            <div class="dice-counter unselectable" id="group-${groupIndex}-d12-counter">
+                <i class="ts-icon-d12 ts-icon-size55" onclick="diceGroupManager.incrementDice('group-${groupIndex}-d12')" 
+                oncontextmenu="diceGroupManager.decrementDice('group-${groupIndex}-d12'); return false;"></i>
+                <div class="counter-overlay" id="group-${groupIndex}-d12-counter-value">2</div>
+                <div class="dice-label">D12</div>
+            </div>
+        `;
+
+        diceHTML += `
+            <div class="plus-sign"><span>+</span></div>
+            <div class="dice-counter unselectable" id="group-${groupIndex}-mod-counter">
+                <i class="ts-icon-circle-dotted ts-icon-size55 mod-holder"></i>
+                <input type="number" class="counter-overlay mod-counter-overlay" 
+                id="group-${groupIndex}-mod-counter-value" value="0" min="-999" max="999" onfocus="this.select()" />
+                <div class="dice-label">MOD</div>
+            </div>
+        `;
+
+        content.innerHTML = diceHTML;
+
+        wrapper.appendChild(accordionHeader);
+        wrapper.appendChild(content);
+        diceGroupsContainer.appendChild(wrapper);
+        wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        // Make sure the content is fully visible immediately
+        content.classList.remove('collapsed');
+        content.style.display = 'flex';
+        content.style.maxHeight = 'none'; // Allow natural height
+
+        accordionHeader.querySelector('.accordion-toggle').textContent = '-';
+        
+        this.updateDiceGroupsData();
+    }
+
     /**
      * Updates the internal dice groups data array
      */
