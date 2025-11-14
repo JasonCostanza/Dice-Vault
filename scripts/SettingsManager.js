@@ -22,6 +22,7 @@ function defaultSettings(settingName){
         autoLoadRolls: false,
         autoSaveRolls: false,
         autoResetEdit: false,
+        enableDualityGroups: false,
         critBehavior: 'double-total',
         language: 'en'
     }
@@ -39,6 +40,7 @@ function saveGlobalSettings(){
         autoLoadRolls: document.getElementById('auto-load').checked,
         autoSaveRolls: document.getElementById('auto-save').checked,
         autoResetEdit: document.getElementById('auto-reset').checked,
+        enableDualityGroups: document.getElementById('enable-duality-groups').checked,
         critBehavior: document.getElementById('crit-behavior').value,
         language: document.getElementById('language-select').value
     }
@@ -62,6 +64,7 @@ function loadGlobalSettings(){
         document.getElementById('auto-load').checked = settings.autoLoadRolls || defaultSettings('autoLoadRolls');
         document.getElementById('auto-save').checked = settings.autoSaveRolls || defaultSettings('autoSaveRolls');
         document.getElementById('auto-reset').checked = settings.autoResetEdit || defaultSettings('autoResetEdit');
+        document.getElementById('enable-duality-groups').checked = settings.enableDualityGroups || defaultSettings('enableDualityGroups');
         document.getElementById('crit-behavior').value = settings.critBehavior || defaultSettings('critBehavior');
         const language = settings.language || defaultSettings('language');
         document.getElementById('language-select').value = language;
