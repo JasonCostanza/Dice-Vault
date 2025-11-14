@@ -45,6 +45,7 @@ const translations = {
         autoLoad: "Automatically load data",
         autoSave: "Automatically save data",
         autoReset: "Auto-Reset Dice on Save",
+        dualitySetting: "Enable Daggerheart Duality groups",
         critBehavior: "Crit Behavior",
         copyToClipboard: "Copy to Clipboard",
         version: "Version",
@@ -118,6 +119,7 @@ const translations = {
         autoLoad: "Cargar datos automaticamente", // TODO: Replace with "automáticamente" when special characters are supported
         autoSave: "Guardar datos automaticamente", // TODO: Replace with "automáticamente" when special characters are supported
         autoReset: "Auto-Reiniciar Dados al Guardar",
+        dualitySetting: "Habilitar grupos de Dualidad Daggerheart",
         critBehavior: "Comportamiento Critico", // TODO: Replace with "Crítico" when special characters are supported
         copyToClipboard: "Copiar al Portapapeles",
         version: "Version", // TODO: Replace with "Versión" when special characters are supported
@@ -191,6 +193,7 @@ const translations = {
         autoLoad: "Daten automatisch laden",
         autoSave: "Daten automatisch speichern",
         autoReset: "Wurfel beim Speichern automatisch zurucksetzen", // TODO: Replace with "Würfel" and "zurücksetzen" when special characters are supported
+        dualitySetting: "Daggerheart Dualitatsgruppen aktivieren", // TODO: Replace with "Dualitätsgruppen" when special characters are supported
         critBehavior: "Kritisches Verhalten",
         copyToClipboard: "In Zwischenablage kopieren",
         version: "Version",
@@ -264,6 +267,7 @@ const translations = {
         autoLoad: "Charger automatiquement les donnees", // TODO: Replace with "données" when special characters are supported
         autoSave: "Sauvegarder automatiquement les donnees", // TODO: Replace with "données" when special characters are supported
         autoReset: "Reinitialiser automatiquement les des lors de la sauvegarde", // TODO: Replace with "Réinitialiser" and "dés" when special characters are supported
+        dualitySetting: "Activer les groupes de Dualite Daggerheart", // TODO: Replace with "Dualité" when special characters are supported
         critBehavior: "Comportement Critique",
         copyToClipboard: "Copier dans le Presse-papiers",
         version: "Version",
@@ -337,6 +341,7 @@ const translations = {
         autoLoad: "Carica automaticamente i dati",
         autoSave: "Salva automaticamente i dati",
         autoReset: "Auto-Reimposta Dadi al Salvataggio",
+        dualitySetting: "Abilita gruppi Dualità Daggerheart",
         critBehavior: "Comportamento Critico",
         copyToClipboard: "Copia negli Appunti",
         version: "Versione",
@@ -410,6 +415,7 @@ const translations = {
         autoLoad: "Carregar dados automaticamente",
         autoSave: "Salvar dados automaticamente",
         autoReset: "Auto-Resetar Dados ao Salvar",
+        dualitySetting: "Ativar grupos de Dualidade Daggerheart",
         critBehavior: "Comportamento Critico", // TODO: Replace with "Crítico" when special characters are supported
         copyToClipboard: "Copiar para Area de Transferencia", // TODO: Replace with "Área" and "Transferencia" when special characters are supported
         version: "Versao", // TODO: Replace with "Versão" when special characters are supported
