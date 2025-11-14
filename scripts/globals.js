@@ -53,6 +53,7 @@ const rollTypes = Object.freeze({
     disadvantage: "disadvantage",
     bestofThree: "best-of-three",
     critical: "crit-dice",
+    duality: "duality",
 });
 
 /**
