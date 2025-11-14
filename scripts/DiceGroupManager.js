@@ -102,6 +102,7 @@ class DiceGroupManager {
 
         const wrapper = document.createElement("div");
         wrapper.className = "dice-group-wrapper";
+        wrapper.setAttribute('data-group-type', 'dice');
 
         // Get the current translation for group name placeholder
         const lang = currentLanguage || 'en';
@@ -174,12 +175,16 @@ class DiceGroupManager {
         this.updateDiceGroupsData();
     }
 
+    /**
+     * Adds a new duality group to the interface
+     */
     addDualityGroup() {
         const diceGroupsContainer = document.querySelector(".content-col-dice");
         const groupIndex = diceGroupsContainer.children.length;
 
         const wrapper = document.createElement("div");
         wrapper.className = "dice-group-wrapper";
+        wrapper.setAttribute('data-group-type', 'duality');
 
         // Get the current translation for group name placeholder
         const lang = currentLanguage || 'en';
@@ -261,12 +266,12 @@ class DiceGroupManager {
         diceGroupElements.forEach((groupElement) => {
             const groupId = groupElement.id;
             const groupDiceCounts = {};
-            
             // Find the wrapper and header for this group
             const wrapper = groupElement.closest('.dice-group-wrapper');
             const header = wrapper ? wrapper.querySelector('.dice-group-header') : null;
             const groupNameInput = header ? header.querySelector('.dice-group-name-input') : null;
             const groupName = groupNameInput && groupNameInput.value.trim() ? groupNameInput.value.trim() : `Group ${parseInt(groupId) + 1}`;
+            const groupType = wrapper ? wrapper.getAttribute('data-group-type') || 'dice' : 'dice';
 
             this.diceTypes.forEach((diceType) => {
                 const countElement = document.getElementById(`group-${groupId}-${diceType}-counter-value`);
@@ -278,7 +283,8 @@ class DiceGroupManager {
 
             this.diceGroupsData.push({
                 name: groupName,
-                diceCounts: groupDiceCounts
+                diceCounts: groupDiceCounts,
+                groupType: groupType
             });
         });
 
@@ -292,14 +298,29 @@ class DiceGroupManager {
      * Removes the last dice group
      */
     removeDiceGroup() {
-        const wrappers = document.querySelectorAll('.dice-group-wrapper');
-        if (wrappers.length > 1) {
-            wrappers[wrappers.length - 1].remove();
-            this.diceGroupsData.pop();
+        // Only remove the last group of type 'dice'
+        const wrappers = Array.from(document.querySelectorAll('.dice-group-wrapper'));
+        const diceWrappers = wrappers.filter(w => w.getAttribute('data-group-type') === 'dice');
+        if (diceWrappers.length > 0) {
+            diceWrappers[diceWrappers.length - 1].remove();
         } else {
-            console.warn("Can't remove the last group.");
+            console.warn("No dice group to remove.");
         }
+        this.updateDiceGroupsData();
+    }
 
+    /**
+     * Removes the last duality group
+     * */
+    removeDualityGroup() {
+        // Only remove the last group of type 'duality'
+        const wrappers = Array.from(document.querySelectorAll('.dice-group-wrapper'));
+        const dualityWrappers = wrappers.filter(w => w.getAttribute('data-group-type') === 'duality');
+        if (dualityWrappers.length > 0) {
+            dualityWrappers[dualityWrappers.length - 1].remove();
+        } else {
+            console.warn("No duality group to remove.");
+        }
         this.updateDiceGroupsData();
     }
 
