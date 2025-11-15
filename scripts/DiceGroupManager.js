@@ -222,8 +222,7 @@ class DiceGroupManager {
         // Only add d12, set initial value to 2
         diceHTML += `
             <div class="dice-counter unselectable" id="group-${groupIndex}-d12-counter">
-                <i class="ts-icon-d12 ts-icon-size55" onclick="diceGroupManager.incrementDice('group-${groupIndex}-d12')" 
-                oncontextmenu="diceGroupManager.decrementDice('group-${groupIndex}-d12'); return false;"></i>
+                <i class="ts-icon-d12 ts-icon-size55"></i>
                 <div class="counter-overlay" id="group-${groupIndex}-d12-counter-value">2</div>
                 <div class="dice-label">D12</div>
             </div>
