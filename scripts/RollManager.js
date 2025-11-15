@@ -20,6 +20,9 @@ const rollManager = (function () {
             return;
         }
     
+        /**
+         * If no groupsData provided, extract current UI state to build diceGroupsData
+         */
         if (updatedDiceGroupsData.length === 0) {
             // If no groupsData provided, use the current UI state
             const diceGroupElements = document.querySelectorAll(".dice-selection");
@@ -224,7 +227,9 @@ const rollManager = (function () {
                     groupRollString += modPart;
                 }
     
-                // Additional safety check: only create roll objects if there are actual dice
+                /**
+                 * Only add the group if it has dice to roll
+                 */
                 if (hasDice && groupRollString) {
                     // Remove leading '+' if present
                     groupRollString = groupRollString.startsWith('+') ? groupRollString.slice(1) : groupRollString;
@@ -374,6 +379,11 @@ const rollManager = (function () {
         let roll = rollEvent.payload;
         let resultGroups = [];
     
+        /**
+         * Ensure the roll contains result groups and retrieve roll info
+         * If roll info found, process results based on roll type and crit behavior.
+         * Otherwise, log a warning and exit
+         */
         if (roll.resultsGroups != undefined) {
             let rollInfo = trackedRollIds[roll.rollId];
             if (rollInfo) {
@@ -649,6 +659,10 @@ const rollManager = (function () {
             let modifiedResult;
             console.log('Processing group for crit behavior:', critBehavior, 'Group:', group);
             
+            /**
+             * Apply the specified critical hit behavior to the group's result
+             * and return the modified result.
+             */
             switch (critBehavior) {
                 case "double-total":
                     modifiedResult = doubleTotal(group.result);
@@ -713,7 +727,10 @@ const rollManager = (function () {
                 // Preserve the group name if it exists
                 let groupName = group.name || `Group ${index + 1}`;
                 
-                // Add suffix based on roll type if not already present
+                /**
+                 * Add suffix based on roll type
+                 * (advantage, disadvantage, best-of-three, critical)
+                 */
                 switch (rollType) {
                     case rollTypes.advantage:
                         if (!groupName.endsWith(' (adv.)')) {
