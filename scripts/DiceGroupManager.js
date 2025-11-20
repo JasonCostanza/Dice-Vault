@@ -18,7 +18,7 @@ class DiceGroupManager {
         if (!diceGroup || !diceGroup.diceCounts) {
             return true; // Consider it empty if there's no data
         }
-        
+
         // Check if any dice type has a non-zero count
         // A group is considered empty for rolling purposes if it has no dice,
         // regardless of whether it has modifiers (since you can't roll modifiers alone)
@@ -37,15 +37,15 @@ class DiceGroupManager {
         if (!diceGroup || !diceGroup.diceCounts) {
             return false;
         }
-        
+
         // Check if group has no dice but has a non-zero modifier
         const hasDice = this.diceTypes.some(diceType => {
             const count = diceGroup.diceCounts[diceType] || 0;
             return count > 0;
         });
-        
+
         const hasModifier = diceGroup.diceCounts.mod && diceGroup.diceCounts.mod !== 0;
-        
+
         return !hasDice && hasModifier;
     }
 
@@ -114,14 +114,14 @@ class DiceGroupManager {
         accordionHeader.innerHTML = `
             <div class="header-content">
                 <input type="text" class="dice-group-name-input header-input" id="group-${groupIndex}-name" 
-                    placeholder="${groupNamePlaceholder}">
+                    placeholder="${groupNamePlaceholder}" oninput="diceGroupManager.updateDiceGroupsData()">
             </div>
             <span class="accordion-toggle">-</span>
         `;
 
         accordionHeader.addEventListener('click', (event) => {
             // Skip if we're clicking on the input
-            if (event.target.classList.contains('header-input') || 
+            if (event.target.classList.contains('header-input') ||
                 event.target.classList.contains('dice-group-name-input')) {
                 return;
             }
@@ -153,7 +153,7 @@ class DiceGroupManager {
             <div class="dice-counter unselectable" id="group-${groupIndex}-mod-counter">
                 <i class="ts-icon-circle-dotted ts-icon-size55 mod-holder"></i>
                 <input type="number" class="counter-overlay mod-counter-overlay" 
-                id="group-${groupIndex}-mod-counter-value" value="0" min="-999" max="999" onfocus="this.select()" />
+                id="group-${groupIndex}-mod-counter-value" value="0" min="-999" max="999" onfocus="this.select()" oninput="diceGroupManager.updateDiceGroupsData()" />
                 <div class="dice-label">MOD</div>
             </div>
         `;
@@ -196,14 +196,14 @@ class DiceGroupManager {
         accordionHeader.innerHTML = `
             <div class="header-content">
                 <input type="text" class="dice-group-name-input header-input" id="group-${groupIndex}-name" 
-                    placeholder="${groupNamePlaceholder}">
+                    placeholder="${groupNamePlaceholder}" oninput="diceGroupManager.updateDiceGroupsData()">
             </div>
             <span class="accordion-toggle">-</span>
         `;
 
         accordionHeader.addEventListener('click', (event) => {
             // Skip if we're clicking on the input
-            if (event.target.classList.contains('header-input') || 
+            if (event.target.classList.contains('header-input') ||
                 event.target.classList.contains('dice-group-name-input')) {
                 return;
             }
@@ -220,6 +220,7 @@ class DiceGroupManager {
         `;
 
         // Only add d12, set initial value to 2
+        // TODO: Make this not show a hand while hovering
         diceHTML += `
             <div class="dice-counter unselectable" id="group-${groupIndex}-d12-counter">
                 <i class="ts-icon-d12 ts-icon-size55"></i>
@@ -233,7 +234,7 @@ class DiceGroupManager {
             <div class="dice-counter unselectable" id="group-${groupIndex}-mod-counter">
                 <i class="ts-icon-circle-dotted ts-icon-size55 mod-holder"></i>
                 <input type="number" class="counter-overlay mod-counter-overlay" 
-                id="group-${groupIndex}-mod-counter-value" value="0" min="-999" max="999" onfocus="this.select()" />
+                id="group-${groupIndex}-mod-counter-value" value="0" min="-999" max="999" onfocus="this.select()" oninput="diceGroupManager.updateDiceGroupsData()" />
                 <div class="dice-label">MOD</div>
             </div>
         `;
@@ -251,7 +252,7 @@ class DiceGroupManager {
         content.style.maxHeight = 'none'; // Allow natural height
 
         accordionHeader.querySelector('.accordion-toggle').textContent = '-';
-        
+
         this.updateDiceGroupsData();
     }
 
@@ -280,11 +281,22 @@ class DiceGroupManager {
             const modElement = document.getElementById(`group-${groupId}-mod-counter-value`);
             groupDiceCounts.mod = modElement ? parseInt(modElement.value, 10) : 0;
 
-            this.diceGroupsData.push({
-                name: groupName,
-                diceCounts: groupDiceCounts,
-                groupType: groupType
-            });
+            if (groupType === 'duality') {
+                // Split duality group into two separate groups
+                for (let i = 0; i < 2; i++) {
+                    this.diceGroupsData.push({
+                        name: `${groupName} - ${i === 0 ? 'A' : 'B'}`,
+                        diceCounts: { d12: 1, mod: groupDiceCounts.mod },
+                        groupType: 'duality'
+                    });
+                }
+            } else {
+                this.diceGroupsData.push({
+                    name: groupName,
+                    diceCounts: groupDiceCounts,
+                    groupType: groupType
+                });
+            }
         });
 
         // Update global diceGroupsData if it exists
@@ -364,17 +376,17 @@ class DiceGroupManager {
     toggleDiceGroupAccordion(event) {
         // Stop propagation to prevent parent handlers from firing
         event.stopPropagation();
-        
+
         // Find the closest header, content and icon elements
         const header = event.target.closest('.dice-group-header');
         if (!header) {
             console.error(".dice-group-header not found");
             return;
-        } 
-        
+        }
+
         const content = header.nextElementSibling;
         const icon = header.querySelector('.accordion-toggle');
-        
+
         if (!content || !icon) {
             console.error("Content or icon not found for toggleDiceGroupAccordion");
             return;

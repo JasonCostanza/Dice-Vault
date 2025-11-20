@@ -54,16 +54,24 @@ function onePointFiveResultsRecursive(result) {
  * Doubles the dice counts in roll groups.
  * 
  * This function creates a copy of each roll group and doubles the count
- * of each die type present in the diceCounts object.
+ * of each die type present in the diceCounts object. Duality groups are
+ * excluded from this behavior.
  *
  * @param {Array<Object>} rollGroups - An array of roll group objects with diceCounts.
  * @returns {Array<Object>} A new array of roll groups with doubled dice counts.
  */
 function doubleDiceCounts(rollGroups) {
     return rollGroups.map(group => {
+        // Skip duality groups - they should not be affected by critical behaviors
+        if (group.groupType === 'duality' || group.groupType === 'duality-part') {
+            console.log(`Skipping duality group: ${group.name}, groupType: ${group.groupType}`);
+            return group;
+        }
+
+        console.log(`Doubling dice counts for group: ${group.name}, groupType: ${group.groupType}`);
         let doubledGroup = { ...group };
         doubledGroup.diceCounts = { ...group.diceCounts };
-        
+
         // Handle all dice types, even those that are missing from diceCounts
         diceTypes.forEach(diceType => {
             const count = group.diceCounts[diceType] || 0;
@@ -71,7 +79,7 @@ function doubleDiceCounts(rollGroups) {
                 doubledGroup.diceCounts[diceType] = count * 2;
             }
         });
-        
+
         return doubledGroup;
     });
 }

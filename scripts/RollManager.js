@@ -14,59 +14,37 @@ const rollManager = (function () {
     function roll(rollTypeParam, groupsData) {
         let selectedType = rollTypeParam || rollTypes.normal;
         let updatedDiceGroupsData = groupsData || [];
-    
+
         if (!Array.isArray(updatedDiceGroupsData)) {
             console.error('Invalid dice groups data:', updatedDiceGroupsData);
             return;
         }
-    
+
         /**
          * If no groupsData provided, extract current UI state to build diceGroupsData
          */
         if (updatedDiceGroupsData.length === 0) {
-            // If no groupsData provided, use the current UI state
-            const diceGroupElements = document.querySelectorAll(".dice-selection");
-            diceGroupElements.forEach((groupElement) => {
-                const groupId = groupElement.id;
-                const groupDiceCounts = {};
-                
-                // Get the wrapper that contains the header with the group name
-                const wrapper = groupElement.closest('.dice-group-wrapper');
-                const header = wrapper ? wrapper.querySelector('.dice-group-header') : null;
-                const groupNameInput = header ? header.querySelector('.dice-group-name-input') : null;
-                const groupName = groupNameInput && groupNameInput.value.trim() ? groupNameInput.value.trim() : `Group ${parseInt(groupId) + 1}`;
-    
-                diceTypes.forEach((diceType) => {
-                    const countElement = document.getElementById(`group-${groupId}-${diceType}-counter-value`);
-                    groupDiceCounts[diceType] = countElement ? parseInt(countElement.textContent, 10) : 0;
-                });
-    
-                const modElement = document.getElementById(`group-${groupId}-mod-counter-value`);
-                groupDiceCounts.mod = modElement ? parseInt(modElement.value, 10) : 0;
-    
-                updatedDiceGroupsData.push({
-                    name: groupName,
-                    diceCounts: groupDiceCounts
-                });
-            });
+            // If no groupsData provided, use the current UI state from diceGroupManager
+            // This ensures we get all properties including groupType (important for duality)
+            updatedDiceGroupsData = diceGroupManager.getDiceGroupsData();
         }
-    
+
         diceGroupsData = updatedDiceGroupsData;
-    
+
         // Check for groups with only modifiers (error case)
         const modifierOnlyGroups = diceGroupsData.filter(group => {
             if (!group || !group.diceCounts) return false;
-            
+
             const hasDice = diceTypes.some(diceType => {
                 const count = group.diceCounts[diceType] || 0;
                 return count > 0;
             });
-            
+
             const hasModifier = group.diceCounts.mod && group.diceCounts.mod !== 0;
-            
+
             return !hasDice && hasModifier;
         });
-    
+
         if (modifierOnlyGroups.length > 0) {
             const groupNames = modifierOnlyGroups.map(group => group.name || 'Unnamed Group').join(', ');
             console.error(`Cannot roll groups with only modifiers and no dice: ${groupNames}`);
@@ -80,16 +58,72 @@ const rollManager = (function () {
             return;
         }
         let critBehavior = fetchSetting("crit-behavior");
-    
+
+        console.log("=== START OF ROLL FUNCTION ===");
+        console.log("Initial diceGroupsData:", JSON.stringify(diceGroupsData, null, 2));
+        console.log("Roll type:", selectedType);
+        console.log("Crit behavior:", critBehavior);
+
+        // Handle Duality Logic BEFORE applying critical behavior
+        // This ensures duality groups are not affected by critical behaviors
+        let dualityData = { isDuality: false, modifier: 0 };
+        // Note: DiceGroupManager already splits duality groups into two entries (A and B)
+        // We need to find all duality groups and replace them with Hope and Fear
+        const dualityGroups = diceGroupsData.filter(g => g.groupType === 'duality');
+
+        if (dualityGroups.length > 0) {
+            // Get the first duality group to extract metadata
+            const firstDualityGroup = dualityGroups[0];
+            dualityData.isDuality = true;
+            dualityData.modifier = firstDualityGroup.diceCounts.mod || 0;
+
+            // Extract base name (remove " - A" or " - B" suffix if present)
+            let baseName = firstDualityGroup.name || "Duality";
+            baseName = baseName.replace(/ - [AB]$/, '');
+            dualityData.name = baseName;
+
+            // Create Hope and Fear groups
+            const hopeGroup = {
+                name: "Hope",
+                diceCounts: { d12: 1, mod: 0 },
+                groupType: "duality-part",
+                isHope: true
+            };
+
+            const fearGroup = {
+                name: "Fear",
+                diceCounts: { d12: 1, mod: 0 },
+                groupType: "duality-part",
+                isHope: false
+            };
+
+            // Filter out ALL duality groups and add Hope and Fear
+            // This handles the fact that DiceGroupManager creates two duality entries (A and B)
+            const nonDualityGroups = diceGroupsData.filter(g => g.groupType !== 'duality');
+            diceGroupsData = [
+                ...nonDualityGroups,
+                hopeGroup,
+                fearGroup
+            ];
+        }
+
+        console.log("After duality processing, diceGroupsData:", JSON.stringify(diceGroupsData, null, 2));
+        console.log("Number of groups:", diceGroupsData.length);
+
+        // Apply critical behavior AFTER duality processing
+        // This ensures only non-duality groups are affected by critical behaviors
         if (selectedType === rollTypes.critical) {
             if (critBehavior === "double-die-count") {
+                console.log("Before applying critical behavior:", JSON.stringify(diceGroupsData, null, 2));
+                // doubleDiceCounts already has logic to skip duality groups
                 diceGroupsData = doubleDiceCounts(diceGroupsData);
+                console.log("After applying critical behavior:", JSON.stringify(diceGroupsData, null, 2));
             }
         } else {
             critBehavior = "none";
         }
-    
-        putDiceToRollIntoDiceTray(selectedType, critBehavior);
+
+        putDiceToRollIntoDiceTray(selectedType, critBehavior, dualityData);
     }
 
     /**
@@ -100,24 +134,26 @@ const rollManager = (function () {
      *
      * @param {string} selectedType - The type of roll being performed
      * @param {string} critBehavior - The critical hit behavior to apply
+     * @param {Object} dualityData - Data specific to duality rolls
      */
-    function putDiceToRollIntoDiceTray(selectedType, critBehavior) {
+    function putDiceToRollIntoDiceTray(selectedType, critBehavior, dualityData = { isDuality: false }) {
         try {
             let baseDiceDescriptors = constructDiceRollDescriptors(selectedType);
-            
+
             if (baseDiceDescriptors.length === 0) {
                 console.warn("No dice to roll after filtering empty groups");
                 alert("Error: No valid dice groups found for rolling. Please ensure at least one group has dice selected.");
                 return;
             }
-    
+
             let trayConfiguration = buildDiceTrayConfiguration(baseDiceDescriptors, selectedType);
-    
+
             TS.dice.putDiceInTray(trayConfiguration, true).then((rollId) => {
                 trackedRollIds[rollId] = {
                     type: selectedType,
                     critBehavior: critBehavior,
-                    createdByDiceVault: true
+                    createdByDiceVault: true,
+                    dualityData: dualityData
                 };
             });
         } catch (error) {
@@ -205,12 +241,12 @@ const rollManager = (function () {
      */
     function constructDiceRollDescriptors(rollType) {
         let diceRollObjects = [];
-    
+
         diceGroupsData.forEach((group, index) => {
             if (!diceGroupManager.isDiceGroupEmpty(group)) {
                 let groupRollString = "";
                 let hasDice = false;
-    
+
                 // Handle all dice types, including those that might be missing
                 diceTypes.forEach(diceType => {
                     const count = group.diceCounts[diceType] || 0;
@@ -219,24 +255,29 @@ const rollManager = (function () {
                         hasDice = true;
                     }
                 });
-    
+
                 // Handle modifier which might be missing
                 let modValue = group.diceCounts.mod || 0;
                 if (modValue !== 0) {
                     let modPart = modValue > 0 ? `+${modValue}` : `${modValue}`;
                     groupRollString += modPart;
                 }
-    
+
                 /**
                  * Only add the group if it has dice to roll
                  */
                 if (hasDice && groupRollString) {
                     // Remove leading '+' if present
                     groupRollString = groupRollString.startsWith('+') ? groupRollString.slice(1) : groupRollString;
-                    
+
                     let groupName = group.name && group.name.trim() ? group.name.trim() : `Group ${index + 1}`;
-                    
+
                     // Add suffix based on roll type
+                    // Skip adding suffix for duality groups as they have their own special handling
+                    const isDualityGroup = group.groupType === 'duality' || group.groupType === 'duality-part';
+
+                    console.log(`Processing group in constructDiceRollDescriptors: name="${groupName}", groupType="${group.groupType}", isDualityGroup=${isDualityGroup}, rollType="${rollType}"`);
+
                     switch (rollType) {
                         case rollTypes.advantage:
                             groupName += " (adv.)";
@@ -248,15 +289,20 @@ const rollManager = (function () {
                             groupName += " (Bo3)";
                             break;
                         case rollTypes.critical:
-                            groupName += " (Crit)";
+                            if (!isDualityGroup) {
+                                console.log(`Adding (Crit) suffix to non-duality group: ${groupName}`);
+                                groupName += " (Crit)";
+                            } else {
+                                console.log(`Skipping (Crit) suffix for duality group: ${groupName}`);
+                            }
                             break;
                         default:
                             break;
                     }
-                    
-                    let rollObject = { 
-                        name: groupName, 
-                        roll: groupRollString 
+
+                    let rollObject = {
+                        name: groupName,
+                        roll: groupRollString
                     };
                     diceRollObjects.push(rollObject);
                 } else if (!hasDice && modValue !== 0) {
@@ -265,10 +311,10 @@ const rollManager = (function () {
                 }
             }
         });
-    
+
         return diceRollObjects;
     }
-    
+
 
     /**
      * Handles the processing of roll events, including roll results and roll removals.
@@ -296,7 +342,7 @@ const rollManager = (function () {
             // Optionally process or log TaleSpire roll data
             return;
         }
-    
+
         if (trackedRollIds[rollId].createdByDiceVault === true) {
             // Process createdByDiceVault roll
             console.log(`Processing Dice Vault roll: ${rollId}`);
@@ -341,7 +387,6 @@ const rollManager = (function () {
 
         return false;
     }
-
     /**
      * Processes a roll removed event and removes a roll from the tracked
      * rolls collection.
@@ -378,7 +423,7 @@ const rollManager = (function () {
     async function handleRollResultsEvent(rollEvent) {
         let roll = rollEvent.payload;
         let resultGroups = [];
-    
+
         /**
          * Ensure the roll contains result groups and retrieve roll info
          * If roll info found, process results based on roll type and crit behavior.
@@ -388,16 +433,100 @@ const rollManager = (function () {
             let rollInfo = trackedRollIds[roll.rollId];
             if (rollInfo) {
                 try {
-                    resultGroups = await getReportableRollResultsGroup(
-                        roll,
-                        rollInfo.type
-                    );
-    
-                    resultGroups = applyCritBehaviorToRollResultsGroup(
-                        resultGroups,
-                        rollInfo.critBehavior
-                    );
-    
+                    // Handle Duality Results
+                    if (rollInfo.dualityData && rollInfo.dualityData.isDuality) {
+                        console.log("Processing Duality Roll Results");
+
+                        // Find Hope and Fear groups by name, not position
+                        // This is important when there are also regular dice groups in the roll
+                        let hopeGroup = null;
+                        let fearGroup = null;
+                        let otherGroups = [];
+
+                        for (let group of roll.resultsGroups) {
+                            // Check if name starts with "Hope" or "Fear" to handle cases where
+                            // suffixes like "(Crit)" might have been added
+                            if (group.name.startsWith("Hope")) {
+                                hopeGroup = { ...group };
+                            } else if (group.name.startsWith("Fear")) {
+                                fearGroup = { ...group };
+                            } else {
+                                // This is a regular dice group, not part of duality
+                                otherGroups.push(group);
+                            }
+                        }
+
+                        if (hopeGroup && fearGroup) {
+                            let hopeValue = await TS.dice.evaluateDiceResultsGroup(hopeGroup);
+                            let fearValue = await TS.dice.evaluateDiceResultsGroup(fearGroup);
+                            let modifier = rollInfo.dualityData.modifier;
+                            let total = hopeValue + fearValue + modifier;
+
+                            let outcome = hopeValue >= fearValue ? "with Hope" : "with Fear";
+
+                            let resultDescription = `${total} ${rollInfo.dualityData.name} (${outcome})`;
+
+                            if (hopeValue === fearValue) {
+                                resultDescription = `Critical Success: ${resultDescription}`;
+                            }
+
+                            let winningGroup;
+                            let otherValue;
+
+                            if (hopeValue >= fearValue) {
+                                winningGroup = hopeGroup;
+                                otherValue = fearValue;
+                            } else {
+                                winningGroup = fearGroup;
+                                otherValue = hopeValue;
+                            }
+
+                            // Update the result to include the other group's value and modifier
+                            // This ensures the displayed dice bubble shows the full total
+                            let operands = [winningGroup.result];
+
+                            // Add the other die's value
+                            operands.push({ value: otherValue });
+
+                            // Add modifier if present
+                            if (modifier !== 0) {
+                                operands.push({ value: modifier });
+                            }
+
+                            winningGroup.result = {
+                                operator: "+",
+                                operands: operands,
+                                total: total
+                            };
+
+                            winningGroup.name = resultDescription;
+
+                            // Apply critical behavior to other (non-duality) groups
+                            // This ensures regular dice groups get critical behavior even in duality rolls
+                            if (otherGroups.length > 0 && rollInfo.critBehavior && rollInfo.critBehavior !== "none") {
+                                console.log("Applying critical behavior to non-duality groups in duality roll");
+                                otherGroups = applyCritBehaviorToRollResultsGroup(otherGroups, rollInfo.critBehavior);
+                            }
+
+                            // Include both the duality result AND any other dice groups
+                            // The duality groups are totalled together, but other groups remain separate
+                            resultGroups = [winningGroup, ...otherGroups];
+                        } else {
+                            console.error("Duality roll missing groups");
+                            resultGroups = roll.resultsGroups;
+                        }
+                    } else {
+                        resultGroups = await getReportableRollResultsGroup(
+                            roll,
+                            rollInfo.type
+                        );
+
+                        resultGroups = applyCritBehaviorToRollResultsGroup(
+                            resultGroups,
+                            rollInfo.critBehavior
+                        );
+                    }
+
                     await displayResults(resultGroups, roll.rollId);
                     console.log('Results displayed successfully');
                 } catch (error) {
@@ -424,27 +553,27 @@ const rollManager = (function () {
      */
     async function getReportableRollResultsGroup(roll, rollType) {
         let resultGroups;
-    
+
         switch (rollType) {
             case rollTypes.advantage:
                 resultGroups = await handleAdvantageRoll(roll);
                 // Remove the prefix addition
                 break;
-    
+
             case rollTypes.disadvantage:
                 resultGroups = await handleDisadvantageRoll(roll);
                 // Remove the prefix addition
                 break;
-    
+
             case rollTypes.bestofThree:
                 resultGroups = await handleBestOfThreeRoll(roll);
                 // Remove the prefix addition
                 break;
-    
+
             default:
                 resultGroups = roll.resultsGroups;
         }
-    
+
         // Ensure we always return an array, even if it's a single group
         return Array.isArray(resultGroups) ? resultGroups : [resultGroups];
     }
@@ -518,25 +647,25 @@ const rollManager = (function () {
         ) {
             return roll.resultsGroups;
         }
-    
+
         let startingIndexOfSecondSetOfGroups = roll.resultsGroups.length / 2;
-    
+
         let firstSetOfGroups = roll.resultsGroups.slice(
             0,
             startingIndexOfSecondSetOfGroups
         );
-    
+
         let secondSetOfGroups = roll.resultsGroups.slice(
             startingIndexOfSecondSetOfGroups
         );
-    
+
         let sumOfFirstSet = await getSumOfRollResultsGroups(firstSetOfGroups);
         let sumOfSecondSet = await getSumOfRollResultsGroups(secondSetOfGroups);
-    
-        let chosenSet = (isAdvantage ? 
+
+        let chosenSet = (isAdvantage ?
             (sumOfFirstSet >= sumOfSecondSet ? firstSetOfGroups : secondSetOfGroups) :
             (sumOfFirstSet <= sumOfSecondSet ? firstSetOfGroups : secondSetOfGroups));
-    
+
         return chosenSet;
     }
 
@@ -649,16 +778,23 @@ const rollManager = (function () {
      */
     function applyCritBehaviorToRollResultsGroup(resultGroups, critBehavior) {
         console.log('Applying crit behavior:', critBehavior);
-    
+
         if (!Array.isArray(resultGroups)) {
             console.warn('applyCritBehaviorToRollResultsGroup received non-array input, converting to array');
             resultGroups = [resultGroups];
         }
-    
+
         return resultGroups.map(group => {
+            // Skip duality groups - they should not be affected by critical behaviors
+            if (group.name === 'Hope' || group.name === 'Fear' ||
+                (group.groupType && (group.groupType === 'duality' || group.groupType === 'duality-part'))) {
+                console.log('Skipping critical behavior for duality group:', group.name);
+                return group;
+            }
+
             let modifiedResult;
             console.log('Processing group for crit behavior:', critBehavior, 'Group:', group);
-            
+
             /**
              * Apply the specified critical hit behavior to the group's result
              * and return the modified result.
@@ -690,12 +826,12 @@ const rollManager = (function () {
                 default:
                     modifiedResult = group.result;
             }
-    
+
             // Update the group name to include "Critical" if it's a crit behavior
             // if (critBehavior !== "none") {
             //     group.name = group.name ? `${group.name}` : "Critical Roll";
             // }
-    
+
             return {
                 ...group,
                 result: modifiedResult
@@ -717,16 +853,16 @@ const rollManager = (function () {
     async function displayResults(resultGroups, rollId) {
         try {
             console.log(`Displaying results for roll ID: ${rollId}`);
-            
+
             // Get roll info to know the roll type
             const rollInfo = trackedRollIds[rollId];
             const rollType = rollInfo ? rollInfo.type : null;
-            
+
             // Ensure each result group has a name and description
             const namedResultGroups = resultGroups.map((group, index) => {
                 // Preserve the group name if it exists
                 let groupName = group.name || `Group ${index + 1}`;
-                
+
                 /**
                  * Add suffix based on roll type
                  * (advantage, disadvantage, best-of-three, critical)
@@ -748,23 +884,26 @@ const rollManager = (function () {
                         }
                         break;
                     case rollTypes.critical:
-                        if (!groupName.endsWith(' (Crit)')) {
+                        // Skip adding (Crit) to duality groups
+                        // Duality groups have names like "10 dua (with Hope)" or "Critical Success: 10 dua (with Fear)"
+                        const isDualityResult = groupName.includes('(with Hope)') || groupName.includes('(with Fear)');
+                        if (!groupName.endsWith(' (Crit)') && !isDualityResult) {
                             groupName += ' (Crit)';
                         }
                         break;
                     default:
                         break;
                 }
-                
+
                 return {
                     ...group,
                     name: groupName,
                     description: group.description || group.result.description || ''
                 };
             });
-            
+
             console.log('Named Result Groups:', JSON.stringify(namedResultGroups, null, 2));
-            
+
             // Send the results to TaleSpire
             await TS.dice.sendDiceResult(namedResultGroups, rollId);
             console.log(`Results sent successfully for roll ${rollId}`);
