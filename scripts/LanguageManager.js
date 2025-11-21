@@ -339,8 +339,8 @@ const translations = {
         groupsSort: "Ordina gruppi:",
 
         // Sort options
-        newest: "Più recente",
-        oldest: "Più vecchio",
+        newest: "Piu recente", // TODO: Replace with "più" when special characters are supported
+        oldest: "Piu vecchio", // TODO: Replace with "più" when special characters are supported
         nameAsc: "A-Z",
         nameDesc: "Z-A",
         default: "Predefinito",
