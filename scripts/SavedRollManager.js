@@ -92,12 +92,13 @@ class SavedRollManager {
         diceGroupElements.forEach((groupElement, index) => {
             const groupId = groupElement.id;
             const groupDiceCounts = {};
-            
+
             // Find the wrapper and header for this group
             const wrapper = groupElement.closest('.dice-group-wrapper');
             const header = wrapper ? wrapper.querySelector('.dice-group-header') : null;
             const groupNameInput = header ? header.querySelector('.dice-group-name-input') : null;
             const groupName = groupNameInput && groupNameInput.value.trim() ? groupNameInput.value.trim() : `Group ${index + 1}`;
+            const groupType = wrapper ? wrapper.getAttribute('data-group-type') || 'dice' : 'dice';
 
             diceTypes.forEach((diceType) => {
                 const countElement = groupElement.querySelector(
@@ -117,21 +118,22 @@ class SavedRollManager {
 
             savedDiceGroups.push({
                 name: groupName,
-                diceCounts: groupDiceCounts
+                diceCounts: groupDiceCounts,
+                groupType: groupType,
             });
         });
 
         // Check for groups with only modifiers (error case)
         const modifierOnlyGroups = savedDiceGroups.filter(group => {
             if (!group || !group.diceCounts) return false;
-            
+
             const hasDice = diceTypes.some(diceType => {
                 const count = group.diceCounts[diceType] || 0;
                 return count > 0;
             });
-            
+
             const hasModifier = group.diceCounts.mod && group.diceCounts.mod !== 0;
-            
+
             return !hasDice && hasModifier;
         });
 
@@ -160,23 +162,23 @@ class SavedRollManager {
         } else {
             // Check if a similar roll already exists
             const existingRoll = this.findExistingRoll(creatureName, savedDiceGroups);
-            
+
             if (existingRoll && !overwriteConfirmed) {
                 // Show the overwrite modal to confirm
                 this.showOverwriteModal(creatureName);
                 return; // Stop execution here until user makes a choice
             }
-            
+
             // Reset the flag after using it
             if (overwriteConfirmed) {
                 overwriteConfirmed = false;
-                
+
                 // If there was an existing roll, delete it before adding the new one
                 if (existingRoll) {
                     existingRoll.remove();
                 }
             }
-            
+
             // Add the new roll
             this.addSavedRoll(rollData.name, savedDiceGroups);
         }
@@ -206,24 +208,24 @@ class SavedRollManager {
      */
     findExistingRoll(creatureName, groupsData) {
         const savedRollEntries = document.querySelectorAll('.saved-roll-entry');
-        
+
         for (const entry of savedRollEntries) {
             // Skip the roll that's currently being edited if any
             if (document.body.dataset.editingRollId && entry.dataset.rollId === document.body.dataset.editingRollId) {
                 continue;
             }
-            
+
             // Check if creature name matches
             if (entry.dataset.creatureName !== creatureName) {
                 continue;
             }
-            
+
             // Check if group count matches
             const groupCount = parseInt(entry.dataset.groupCount || 0, 10);
             if (groupCount !== groupsData.length) {
                 continue;
             }
-            
+
             // Check each group's name only
             let groupsMatch = true;
             for (let i = 0; i < groupCount; i++) {
@@ -232,24 +234,24 @@ class SavedRollManager {
                     groupsMatch = false;
                     break;
                 }
-                
+
                 // Get group name from the entry
                 const groupNameText = groupElement.querySelector('.dice-group-name-text');
                 const savedGroupName = groupNameText ? groupNameText.textContent.trim() : `Group ${i + 1}`;
-                
+
                 // Check if group name matches
                 if (savedGroupName !== groupsData[i].name) {
                     groupsMatch = false;
                     break;
                 }
             }
-            
+
             // If all group names match, we found a match - dice counts are intentionally ignored
             if (groupsMatch) {
                 return entry;
             }
         }
-        
+
         return null;
     }
 
@@ -340,7 +342,7 @@ class SavedRollManager {
         if (rollEntryLabel) {
             rollEntryLabel.textContent = rollData.groups[0].name || "Unnamed Roll";
         }
-        
+
         rollEntry.dataset.creatureName = newCreatureName;
 
         // Update dice display
@@ -350,7 +352,8 @@ class SavedRollManager {
         // Convert the groups to savedRoll format
         const savedRoll = rollData.groups.map(group => ({
             name: group.name,
-            diceCounts: group.diceCounts
+            diceCounts: group.diceCounts,
+            groupType: group.groupType
         }));
 
         savedRoll.forEach((group, index) => {
@@ -358,12 +361,13 @@ class SavedRollManager {
             groupDiv.className = 'dice-group';
             groupDiv.dataset.groupIndex = index;
             groupDiv.dataset.diceCounts = JSON.stringify(group.diceCounts);
+            groupDiv.dataset.groupType = group.groupType || 'dice';
 
             const diceGroupText = Object.entries(group.diceCounts)
-            .filter(([diceType, count]) => count > 0 && diceType !== "mod")
-            .map(([diceType, count]) => `${count}${diceType}`)
-            .join(" + ");
-        
+                .filter(([diceType, count]) => count > 0 && diceType !== "mod")
+                .map(([diceType, count]) => `${count}${diceType}`)
+                .join(" + ");
+
             const modifier = group.diceCounts.mod || 0;
             const modifierText = modifier !== 0 ? `${modifier >= 0 ? "+ " : ""}${modifier}` : "";
 
@@ -404,12 +408,12 @@ class SavedRollManager {
                 newCreatureGroup.className = "saved-roll-group";
                 newCreatureGroup.dataset.creatureName = newCreatureName;
 
-            newCreatureGroup.innerHTML = `
+                newCreatureGroup.innerHTML = `
                 <div class="saved-roll-header" onclick="uiManager.toggleAccordion(this)">
                     <span>${newCreatureName}</span> <span class="accordion-icon">-</span>
                 </div>
                 <div class="saved-rolls-content"></div>
-            `;                const savedRollsContainer = document.querySelector(".saved-rolls-container");
+            `; const savedRollsContainer = document.querySelector(".saved-rolls-container");
                 savedRollsContainer.appendChild(newCreatureGroup);
             }
 
@@ -452,14 +456,14 @@ class SavedRollManager {
         // Defensive validation: Check for groups with only modifiers (mainly for legacy data)
         const modifierOnlyGroups = savedRoll.filter(group => {
             if (!group || !group.diceCounts) return false;
-            
+
             const hasDice = diceTypes.some(diceType => {
                 const count = group.diceCounts[diceType] || 0;
                 return count > 0;
             });
-            
+
             const hasModifier = group.diceCounts.mod && group.diceCounts.mod !== 0;
-            
+
             return !hasDice && hasModifier;
         });
 
@@ -477,13 +481,13 @@ class SavedRollManager {
             creatureGroup.className = "saved-roll-group";
             creatureGroup.dataset.creatureName = creatureName;
 
-        // Create collapsible header for the creature
-        creatureGroup.innerHTML = `
+            // Create collapsible header for the creature
+            creatureGroup.innerHTML = `
             <div class="saved-roll-header" onclick="uiManager.toggleAccordion(this)">
                 <span>${creatureName}</span> <span class="accordion-icon">-</span>
             </div>
             <div class="saved-rolls-content"></div>
-        `;            savedRollsContainer.appendChild(creatureGroup);
+        `; savedRollsContainer.appendChild(creatureGroup);
         }
 
         const rollsContent = creatureGroup.querySelector(".saved-rolls-content");
@@ -512,10 +516,10 @@ class SavedRollManager {
 
             const groupName = group.name && group.name.trim() ? group.name.trim() : `Group ${index + 1}`;
             const diceGroupText = Object.entries(group.diceCounts)
-            .filter(([diceType, count]) => count > 0 && diceType !== "mod")
-            .map(([diceType, count]) => `${count}${diceType}`)
-            .join(" + ");
-        
+                .filter(([diceType, count]) => count > 0 && diceType !== "mod")
+                .map(([diceType, count]) => `${count}${diceType}`)
+                .join(" + ");
+
             const modifier = group.diceCounts.mod || 0;
             const modifierText = modifier !== 0 ? `${modifier >= 0 ? "+ " : ""}${modifier}` : "";
 
@@ -581,11 +585,12 @@ class SavedRollManager {
 
         rowOfButtons.innerHTML = '';
 
-        this.createRollButton("rolling", "normal", rollData.groups, "roll-button row-button", rowOfButtons);
-        this.createRollButton("advantage", "advantage", rollData.groups, "roll-button row-button", rowOfButtons);
-        this.createRollButton("disadvantage", "disadvantage", rollData.groups, "roll-button row-button", rowOfButtons);
-        this.createRollButton("best-of-three", "best-of-three", rollData.groups, "roll-button row-button", rowOfButtons);
-        this.createRollButton("crit", "crit-dice", rollData.groups, "roll-button row-button", rowOfButtons);
+        this.createRollButton("rolling", "normal", rollData.groups, "roll-button row-button", rowOfButtons, rollEntry);
+        this.createRollButton("advantage", "advantage", rollData.groups, "roll-button row-button", rowOfButtons, rollEntry);
+        this.createRollButton("disadvantage", "disadvantage", rollData.groups, "roll-button row-button", rowOfButtons, rollEntry);
+        this.createRollButton("best-of-three", "best-of-three", rollData.groups, "roll-button row-button", rowOfButtons, rollEntry);
+        this.createRollButton("crit", "crit-dice", rollData.groups, "roll-button row-button", rowOfButtons, rollEntry);
+
     }
 
     /**
@@ -597,7 +602,7 @@ class SavedRollManager {
      * @param {Element} parent - Parent element to append to
      * @returns {Element} The created button element
      */
-    createRollButton(imageName, rollType, rollGroups, cssClasses, parent) {
+    createRollButton(imageName, rollType, rollGroups, cssClasses, parent, rollEntry = null) {
         const rollButton = document.createElement("div");
         rollButton.className = cssClasses;
         rollButton.onclick = function () {
@@ -606,34 +611,48 @@ class SavedRollManager {
                 alert('Error: This saved roll has no valid dice groups.');
                 return;
             }
-            
+
             // Check for groups with only modifiers
             const modifierOnlyGroups = rollGroups.filter(group => {
                 if (!group || !group.diceCounts) return false;
-                
+
                 const hasDice = diceTypes.some(diceType => {
                     const count = group.diceCounts[diceType] || 0;
                     return count > 0;
                 });
-                
+
                 const hasModifier = group.diceCounts.mod && group.diceCounts.mod !== 0;
-                
+
                 return !hasDice && hasModifier;
             });
-            
+
             if (modifierOnlyGroups.length > 0) {
                 const groupNames = modifierOnlyGroups.map(group => group.name || 'Unnamed Group').join(', ');
                 console.error(`Cannot roll saved roll with groups that have only modifiers: ${groupNames}`);
                 alert(`Error: Cannot roll groups with only modifiers and no dice.\n\nGroups with this issue: ${groupNames}\n\nPlease edit this saved roll to add dice or remove the modifiers.`);
                 return;
             }
-            
+
             if (rollGroups.every(diceGroupManager.isDiceGroupEmpty.bind(diceGroupManager))) {
                 console.error('Attempted to roll an empty or invalid saved roll');
                 alert('Error: This saved roll has no dice selected. Please edit the saved roll to add at least one die.');
                 return;
             }
-            
+
+            // If rollEntry is provided, read groupType from the DOM and add it to rollGroups
+            let rollGroupsWithType = rollGroups;
+            if (rollEntry) {
+                const diceGroups = rollEntry.querySelectorAll('.dice-group');
+                rollGroupsWithType = rollGroups.map((group, index) => {
+                    const groupDiv = diceGroups[index];
+                    const groupType = groupDiv ? groupDiv.dataset.groupType || 'dice' : 'dice';
+                    return {
+                        ...group,
+                        groupType: groupType
+                    };
+                });
+            }
+
             rollsModule.roll(rollType, rollGroups);
         };
 
@@ -722,11 +741,11 @@ class SavedRollManager {
             const groupDiv = rollEntry.querySelector(`.dice-group[data-group-index="${i}"]`);
             const groupData = JSON.parse(groupDiv.dataset.diceCounts);
             const groupName = groupDiv.querySelector('.dice-group-name-text').textContent.trim();
-        
+
             // Apply editing class to all dice group wrappers
             const diceGroupWrapper = document.querySelectorAll('.dice-group-wrapper')[i];
             diceGroupWrapper.classList.add('editing');
-            
+
             const groupNameInput = diceGroupWrapper.querySelector('.dice-group-name-input');
             if (groupNameInput) {
                 groupNameInput.value = groupName;
@@ -767,5 +786,6 @@ class SavedRollManager {
         }];
 
         this.diceGroupManager.updateDiceGroupsData();
+
     }
 }
