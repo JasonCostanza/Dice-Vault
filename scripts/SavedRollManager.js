@@ -513,6 +513,7 @@ class SavedRollManager {
             groupDiv.className = "dice-group";
             groupDiv.dataset.groupIndex = index;
             groupDiv.dataset.diceCounts = JSON.stringify(group.diceCounts);
+            groupDiv.dataset.groupType = group.groupType || 'dice';
 
             const groupName = group.name && group.name.trim() ? group.name.trim() : `Group ${index + 1}`;
             const diceGroupText = Object.entries(group.diceCounts)
@@ -653,7 +654,7 @@ class SavedRollManager {
                 });
             }
 
-            rollsModule.roll(rollType, rollGroups);
+            rollsModule.roll(rollType, rollGroupsWithType);
         };
 
         // Creating the image icon for the roll button and adding the css class then appending it to the roll button
