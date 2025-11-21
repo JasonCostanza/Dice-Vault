@@ -108,7 +108,7 @@ class DiceGroupManager {
         // Get the current translation for group name placeholder
         const lang = currentLanguage || 'en';
         const t = translations[lang] || translations.en;
-        const groupNamePlaceholder = t.groupName || "Enter Group Name";
+        const groupNamePlaceholder = `${t.defaultGroupName || 'Group'} ${groupIndex + 1}`;
 
         const accordionHeader = document.createElement("div");
         accordionHeader.className = "dice-group-header";
@@ -191,7 +191,7 @@ class DiceGroupManager {
         // Get the current translation for group name placeholder
         const lang = currentLanguage || 'en';
         const t = translations[lang] || translations.en;
-        const groupNamePlaceholder = t.groupName || "Enter Duality Name";
+        const groupNamePlaceholder = `${t.defaultGroupName || 'Group'} ${groupIndex + 1}`;
 
         const accordionHeader = document.createElement("div");
         accordionHeader.className = "dice-group-header";

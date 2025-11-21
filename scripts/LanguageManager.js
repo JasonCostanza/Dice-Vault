@@ -12,6 +12,7 @@ const translations = {
         // Main UI
         creatureName: "Enter creature name",
         groupName: "Enter Group Name",
+        defaultGroupName: "Group",
         addGroup: "+ Group",
         removeGroup: "- Group",
         roll: "Roll",
@@ -90,6 +91,7 @@ const translations = {
         // Main UI
         creatureName: "Ingrese nombre de criatura",
         groupName: "Ingrese Nombre del Grupo",
+        defaultGroupName: "Grupo",
         addGroup: "+ Grupo",
         removeGroup: "- Grupo",
         roll: "Tirar",
@@ -168,6 +170,7 @@ const translations = {
         // Main UI
         creatureName: "Kreaturnamen eingeben",
         groupName: "Gruppennamen eingeben",
+        defaultGroupName: "Gruppe",
         addGroup: "+ Gruppe",
         removeGroup: "- Gruppe",
         roll: "Wurfeln", // TODO: Replace with "Würfeln" when special characters are supported
@@ -246,6 +249,7 @@ const translations = {
         // Main UI
         creatureName: "Entrez le nom de la creature", // TODO: Replace with "créature" when special characters are supported
         groupName: "Entrez le nom du groupe",
+        defaultGroupName: "Groupe",
         addGroup: "+ Groupe",
         removeGroup: "- Groupe",
         roll: "Lancer",
@@ -324,6 +328,7 @@ const translations = {
         // Main UI
         creatureName: "Inserisci nome creatura",
         groupName: "Inserisci Nome del Gruppo",
+        defaultGroupName: "Gruppo",
         addGroup: "+ Gruppo",
         removeGroup: "- Gruppo",
         roll: "Tira",
@@ -402,6 +407,7 @@ const translations = {
         // Main UI
         creatureName: "Digite o nome da criatura",
         groupName: "Digite o Nome do Grupo",
+        defaultGroupName: "Grupo",
         addGroup: "+ Grupo",
         removeGroup: "- Grupo",
         roll: "Rolar",
@@ -528,7 +534,13 @@ function applyTranslations(lang) {
     // Dice group name inputs
     const groupNameInputs = document.querySelectorAll('.dice-group-name-input');
     groupNameInputs.forEach(input => {
-        input.placeholder = t.groupName;
+        const match = input.id.match(/group-(\d+)-name/);
+        if (match) {
+            const index = parseInt(match[1]);
+            input.placeholder = `${t.defaultGroupName || 'Group'} ${index + 1}`;
+        } else {
+            input.placeholder = t.groupName;
+        }
     });
 
     // Buttons
