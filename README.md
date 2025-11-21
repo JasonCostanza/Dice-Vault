@@ -16,12 +16,15 @@ Check it out on [Mod.io](https://mod.io/g/talespire/m/dice-vault).
   - Create counters to track persistent effects like damage over time, spell durations, or any numerical values you need to monitor.
   - Save your dice vault collection to local storage so you never lose your carefully crafted dice vault.
   - Campaign-specific vaults. Have a preset collection for each campaign you're participating in!
+  - Daggerheart support with duality groups!
 
 # A Note about Updating and Locally Saved Rolls
-With major version releases, it is potential that data structures will change and this will render old data unusable. The amount of effort it is to write updater code is a lot of work and maintenance. I strongly recommend you copy your rolls down before updating so you can recreate them in the new version(s).
+Updating the symbiote may clear your saved rolls. You may want to backup your saved rolls before updating. To do this, copy from the "Retrieve Local Backup" button in the settings menu.
 
 # Changelog
 ```
+# 5.6
+- New Feature: Daggerheart support with duality groups!
 # 5.5
 - New Feature: Localization support now includes English, Spanish, German, French, Italian, and Portuguese (Brazil).
 # 5.4
@@ -94,6 +97,13 @@ With major version releases, it is potential that data structures will change an
 5. Enter a modifier into the text box if you need one, example, "5" or "-5".
 6. Roll right away by selecting the style of roll you need, standard, advantage, disadvantage, etc., or pin it for later.
 
+## Daggerheart Support
+1. If you are playing Daggerheart, open the Menu bar.
+2. Select `Settings`.
+3. Toggle `Daggerheart Support` on.
+4. Close the `Settings` menu.
+5. Use +/- Duality buttons to add a 2d12 dice group that represents `Hope` and `Fear`.
+
 ## Counters
 1. Click the "New Counter" button to create a new counter.
 2. Enter a purpose for the counter (e.g., "persistent fire damage", "spell duration", "hit points").
@@ -107,6 +117,8 @@ With major version releases, it is potential that data structures will change an
 Create an issue in the github page on the [Issues Tab](https://github.com/JasonCostanza/Dice-Vault/issues).
 
 Any information you can provide to reproducing your issue is appreciated including reproduction steps, screenshots or video, and anything else you think is important.
+
+1. Using the "Reroll from Chat" button will not work in many user-cases of Dice Vault. This is a known issue and only partially a bug, it's more accurate to say it's unsupported rather than a bug. Dice Vault does a fair bit of work secretly to pass the correct groups to Talespire for rolling. If we skip that processing by using "Reroll from Chat", that magic never occurs and there is no way to enforce it from the symbiote's perspective.
 
 # Roadmap
 See the github issues tab for bugs and enhancements on the roadmap. This project is purely a hobby project and I cannot guarantee timelines of anything depending on my life priorities and free time.
