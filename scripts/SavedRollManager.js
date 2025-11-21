@@ -738,7 +738,7 @@ class SavedRollManager {
         diceSelectionContainer.innerHTML = '';
 
         for (let i = 0; i < groupCount; i++) {
-            this.diceGroupManager.addDiceGroup();
+            const newGroupId = this.diceGroupManager.addDiceGroup();
             const groupDiv = rollEntry.querySelector(`.dice-group[data-group-index="${i}"]`);
             const groupData = JSON.parse(groupDiv.dataset.diceCounts);
             const groupName = groupDiv.querySelector('.dice-group-name-text').textContent.trim();
@@ -754,13 +754,13 @@ class SavedRollManager {
             }
 
             diceTypes.forEach(diceType => {
-                const countElement = document.getElementById(`group-${i}-${diceType}-counter-value`);
+                const countElement = document.getElementById(`group-${newGroupId}-${diceType}-counter-value`);
                 if (countElement) {
                     countElement.textContent = groupData[diceType] || '0';
                 }
             });
 
-            const modElement = document.getElementById(`group-${i}-mod-counter-value`);
+            const modElement = document.getElementById(`group-${newGroupId}-mod-counter-value`);
             if (modElement) {
                 modElement.value = groupData.mod || '0';
             }

@@ -7,6 +7,7 @@ class DiceGroupManager {
         this.diceGroupsData = [];
         // Use global diceTypes variable from globals.js
         this.diceTypes = diceTypes || ['d4', 'd6', 'd8', 'd10', 'd12', 'd20'];
+        this.nextGroupId = 0;
     }
 
     /**
@@ -98,7 +99,7 @@ class DiceGroupManager {
      */
     addDiceGroup() {
         const diceGroupsContainer = document.querySelector(".content-col-dice");
-        const groupIndex = diceGroupsContainer.children.length;
+        const groupIndex = this.nextGroupId++;
 
         const wrapper = document.createElement("div");
         wrapper.className = "dice-group-wrapper";
@@ -173,6 +174,7 @@ class DiceGroupManager {
         accordionHeader.querySelector('.accordion-toggle').textContent = '-';
 
         this.updateDiceGroupsData();
+        return groupIndex;
     }
 
     /**
@@ -180,7 +182,7 @@ class DiceGroupManager {
      */
     addDualityGroup() {
         const diceGroupsContainer = document.querySelector(".content-col-dice");
-        const groupIndex = diceGroupsContainer.children.length;
+        const groupIndex = this.nextGroupId++;
 
         const wrapper = document.createElement("div");
         wrapper.className = "dice-group-wrapper";
@@ -254,6 +256,7 @@ class DiceGroupManager {
         accordionHeader.querySelector('.accordion-toggle').textContent = '-';
 
         this.updateDiceGroupsData();
+        return groupIndex;
     }
 
     /**
