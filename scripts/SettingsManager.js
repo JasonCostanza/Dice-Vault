@@ -17,7 +17,7 @@ function toggleSettingsDisplay() {
  * @param {string} settingName - The name of the setting to get the default value for
  * @returns {*} The default value for the specified setting
  */
-function defaultSettings(settingName){
+function defaultSettings(settingName) {
     const settings = {
         autoLoadRolls: false,
         autoSaveRolls: false,
@@ -35,7 +35,7 @@ function defaultSettings(settingName){
  * This function collects all current setting values from the UI and saves them
  * to TaleSpire's global local storage for persistence across sessions.
  */
-function saveGlobalSettings(){
+function saveGlobalSettings() {
     const settings = {
         autoLoadRolls: document.getElementById('auto-load').checked,
         autoSaveRolls: document.getElementById('auto-save').checked,
@@ -50,15 +50,16 @@ function saveGlobalSettings(){
         console.error('Failed to save settings:', error);
     });
     updateAutoButtons();
+    updateDualityVisibility();
 }
 
 /**
  * Loads global settings from TaleSpire's local storage.
  * 
  * This function retrieves previously saved settings from TaleSpire's global local storage
- * and applies them to the UI. If no settings are found, it uses default values.
+    * and applies them to the UI.If no settings are found, it uses default values.
  */
-function loadGlobalSettings(){
+function loadGlobalSettings() {
     TS.localStorage.global.getBlob().then(settingsJson => {
         const settings = JSON.parse(settingsJson || '{}');
         document.getElementById('auto-load').checked = settings.autoLoadRolls || defaultSettings('autoLoadRolls');
@@ -68,13 +69,14 @@ function loadGlobalSettings(){
         document.getElementById('crit-behavior').value = settings.critBehavior || defaultSettings('critBehavior');
         const language = settings.language || defaultSettings('language');
         document.getElementById('language-select').value = language;
-        
+
         // Apply translations after loading language preference
         if (typeof applyTranslations === 'function') {
             applyTranslations(language);
         }
-        
+
         performAutoLoads();
+        updateDualityVisibility();
     }).catch(error => {
         console.error('Failed to load settings:', error);
         // Apply default language (English) if loading fails
@@ -93,18 +95,18 @@ function loadGlobalSettings(){
  * @param {string} settingName - The ID of the setting element to fetch
  * @returns {boolean|string|undefined} The current value of the setting, or undefined if not found
  */
-function fetchSetting(settingName){
+function fetchSetting(settingName) {
     const setting = document.getElementById(settingName)
-    if (setting === null){
+    if (setting === null) {
         console.error('Setting not found:', settingName);
         return;
     }
 
-    if (setting.type === 'checkbox'){
+    if (setting.type === 'checkbox') {
         return setting.checked;
     }
 
-    if (setting.type === 'select-one'){
+    if (setting.type === 'select-one') {
         return setting.value;
     }
 }
@@ -119,13 +121,13 @@ async function handleCopyToClipboard() {
     const button = document.getElementById('copy-backup-button');
     const originalText = button.textContent;
     const originalStyle = button.style.cssText;
-    
+
     try {
         const backupData = await getDataBackup();
         if (backupData) {
             // Convert the backup data to a formatted JSON string
             const backupString = JSON.stringify(backupData, null, 2);
-            
+
             // Use the modern clipboard API to copy the data
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 await navigator.clipboard.writeText(backupString);
@@ -159,7 +161,7 @@ function showCopySuccess(button, originalText, originalStyle) {
     button.style.backgroundColor = '#4CAF50';
     button.style.color = 'white';
     button.disabled = true;
-    
+
     setTimeout(() => {
         button.textContent = originalText;
         button.style.cssText = originalStyle;
@@ -175,13 +177,13 @@ function showCopyError(button, originalText, originalStyle, message) {
     button.style.backgroundColor = '#f44336';
     button.style.color = 'white';
     button.disabled = true;
-    
+
     setTimeout(() => {
         button.textContent = originalText;
         button.style.cssText = originalStyle;
         button.disabled = false;
     }, 2000);
-    
+
     alert(message);
 }
 
@@ -197,7 +199,7 @@ async function handleRetrieveBackup() {
         if (backupData) {
             // Convert the backup data to a string for easy copying
             const backupString = JSON.stringify(backupData, null, 2);
-            
+
             // Create a textarea element to hold the backup data
             const textArea = document.createElement('textarea');
             textArea.value = backupString;
@@ -220,7 +222,7 @@ async function handleRetrieveBackup() {
 
             const heading = document.createElement('h2');
             heading.textContent = 'Backup Data';
-            
+
             const closeButton = document.createElement('button');
             closeButton.textContent = 'Close';
             closeButton.classList.add('wide-button');
@@ -254,13 +256,13 @@ async function handleRetrieveBackup() {
  * Handles keyboard events for the settings modal.
  * Closes the modal when the Escape key is pressed.
  */
-document.addEventListener('keydown', function(event) {
+document.addEventListener('keydown', function (event) {
     if (event.key === 'Escape') {
         const settingsModal = document.getElementById('settings-modal');
         if (settingsModal && !settingsModal.classList.contains('hidden')) {
             settingsModal.classList.add('hidden');
         }
-        
+
         const mobileMenuModal = document.getElementById('mobile-menu-modal');
         if (mobileMenuModal && !mobileMenuModal.classList.contains('hidden')) {
             mobileMenuModal.classList.add('hidden');
@@ -280,3 +282,19 @@ function toggleMobileMenu() {
 
 // Export to global scope
 window.fetchSetting = fetchSetting;
+window.updateDualityVisibility = updateDualityVisibility;
+
+/**
+ * Updates the visibility of the Duality buttons based on the setting.
+ */
+function updateDualityVisibility() {
+    const enableDuality = document.getElementById('enable-duality-groups').checked;
+    const dualityActionBar = document.getElementById('duality-action-bar');
+    if (dualityActionBar) {
+        if (enableDuality) {
+            dualityActionBar.classList.remove('hidden');
+        } else {
+            dualityActionBar.classList.add('hidden');
+        }
+    }
+}

@@ -21,18 +21,16 @@
                 Group</button>
         </div>
 
-        <div class="button-container unselectable group-action-bar">
-            <button id="add-group-btn" class="wide-button" onclick="diceGroupManager.addDualityGroup()">+
+        <div id="duality-action-bar" class="button-container unselectable group-action-bar">
+            <button id="add-duality-btn" class="wide-button" onclick="diceGroupManager.addDualityGroup()">+
                 Duality</button>
-            <button id="remove-group-btn" class="wide-button" onclick="diceGroupManager.removeDualityGroup()">-
+            <button id="remove-duality-btn" class="wide-button" onclick="diceGroupManager.removeDualityGroup()">-
                 Duality</button>
         </div>
 
         <div class="content-scroll-wrapper">
             <div class="content-col-dice"></div>
         </div>
-
-
 
         <div class="button-container unselectable floating-roll-buttons">
             <button class="rolling-button" onclick="rollManager.roll('normal')"><img class="roll-type-image"
