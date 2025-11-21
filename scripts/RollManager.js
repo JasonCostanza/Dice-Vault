@@ -26,7 +26,9 @@ const rollManager = (function () {
         if (updatedDiceGroupsData.length === 0) {
             // If no groupsData provided, use the current UI state from diceGroupManager
             // This ensures we get all properties including groupType (important for duality)
-            updatedDiceGroupsData = diceGroupManager.getDiceGroupsData();
+            // IMPORTANT: Create a deep copy to prevent mutations from affecting the original data
+            const originalData = diceGroupManager.getDiceGroupsData();
+            updatedDiceGroupsData = JSON.parse(JSON.stringify(originalData));
         }
 
         diceGroupsData = updatedDiceGroupsData;

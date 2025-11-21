@@ -273,12 +273,14 @@ class DiceGroupManager {
             const groupName = groupNameInput && groupNameInput.value.trim() ? groupNameInput.value.trim() : `Group ${parseInt(groupId) + 1}`;
             const groupType = wrapper ? wrapper.getAttribute('data-group-type') || 'dice' : 'dice';
 
+            // Use scoped queries within the wrapper to avoid ID collisions
+            // This prevents duality groups and regular dice groups from reading each other's counters
             this.diceTypes.forEach((diceType) => {
-                const countElement = document.getElementById(`group-${groupId}-${diceType}-counter-value`);
+                const countElement = wrapper ? wrapper.querySelector(`#group-${groupId}-${diceType}-counter-value`) : null;
                 groupDiceCounts[diceType] = countElement ? parseInt(countElement.textContent, 10) : 0;
             });
 
-            const modElement = document.getElementById(`group-${groupId}-mod-counter-value`);
+            const modElement = wrapper ? wrapper.querySelector(`#group-${groupId}-mod-counter-value`) : null;
             groupDiceCounts.mod = modElement ? parseInt(modElement.value, 10) : 0;
 
             if (groupType === 'duality') {
