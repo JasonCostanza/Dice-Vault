@@ -464,7 +464,7 @@ const rollManager = (function () {
                             let modifier = rollInfo.dualityData.modifier;
                             let total = hopeValue + fearValue + modifier;
 
-                            let outcome = hopeValue >= fearValue ? "with Hope" : "with Fear";
+                            let outcome = hopeValue >= fearValue ? getTranslation("withHope") : getTranslation("withFear");
 
                             let resultDescription = `${total} ${rollInfo.dualityData.name} (${outcome})`;
 
