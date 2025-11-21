@@ -121,7 +121,7 @@ Any information you can provide to reproducing your issue is appreciated includi
 ## Known Issues / Design Decisions (Currently)
 1. Using the `Reroll from Chat` buttons will not work as expected in many user-cases of Dice Vault. This is a limitation of the communication between Dice Vault and Talespire, it's more accurate to say it's unsupported rather than a bug. Dice Vault does a fair bit of secret work preparing a roll before it is sent to Talespire's dice tray. If we skip that processing by using `Reroll from Chat`, that magic never occurs and there is no way to enforce it from the symbiote's perspective. You will almost certainly get unexpected roll results and I recommend against using it in most cases.
 2. Creating more than one `Duality group` in a single roll currently discards every `Duality group` after the first. There's no reason to do this so I recommend against it and split up your duality rolls to multiple rolls.
-3. Rolling `Duality` with special roll types like `Advantage`, `Disadvantage`, or `Critical Hit` is currently unsupported. I recommend against doing this.
+3. Rolling `Duality` with special roll types like `Advantage`, `Disadvantage`, or `Best of 3` is currently unsupported. I recommend against doing this. `Critical` should mostly handle it and only do modifications to the results of non-Duality groups, like **2x Total** should only apply to non-Duality groups.
 
 # Roadmap
 See the github issues tab for bugs and enhancements on the roadmap. This project is purely a hobby project and I cannot guarantee timelines of anything depending on my life priorities and free time.
