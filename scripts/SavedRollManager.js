@@ -738,8 +738,16 @@ class SavedRollManager {
         diceSelectionContainer.innerHTML = '';
 
         for (let i = 0; i < groupCount; i++) {
-            const newGroupId = this.diceGroupManager.addDiceGroup();
             const groupDiv = rollEntry.querySelector(`.dice-group[data-group-index="${i}"]`);
+            const groupType = groupDiv.dataset.groupType || 'dice';
+
+            let newGroupId;
+            if (groupType === 'duality') {
+                newGroupId = this.diceGroupManager.addDualityGroup();
+            } else {
+                newGroupId = this.diceGroupManager.addDiceGroup();
+            }
+
             const groupData = JSON.parse(groupDiv.dataset.diceCounts);
             const groupName = groupDiv.querySelector('.dice-group-name-text').textContent.trim();
 
@@ -765,6 +773,8 @@ class SavedRollManager {
                 modElement.value = groupData.mod || '0';
             }
         }
+
+        this.diceGroupManager.updateDiceGroupsData();
     }
 
     /**
