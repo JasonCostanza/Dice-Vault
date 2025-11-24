@@ -16,14 +16,14 @@ function performAutoLoads() {
  * This function checks the current auto-load and auto-save settings and updates
  * the button text and disabled state accordingly.
  */
-function updateAutoButtons(){
+function updateAutoButtons() {
     const loadButton = document.getElementById('load-rolls-button');
     const saveButton = document.getElementById('save-rolls-button');
-    
+
     if (fetchSetting('auto-load')) {
         loadButton.innerHTML = '<i class="ts-icon-paste menu-button-icon"></i>Auto-Loading';
         disableButtonById('load-rolls-button');
-    }else{
+    } else {
         loadButton.innerHTML = '<i class="ts-icon-paste menu-button-icon"></i>Load Data';
         disableButtonById('load-rolls-button', false);
     }
@@ -61,9 +61,10 @@ function saveRollsToLocalStorage() {
                 if (groupElement) {
                     let groupName = groupElement.textContent.split(':')[0].trim();
                     let diceCountsData = groupElement.dataset.diceCounts;
+                    let groupType = groupElement.dataset.groupType || 'dice';
                     try {
                         let diceCounts = JSON.parse(diceCountsData);
-                        
+
                         // Filter out zero values
                         let filteredDiceCounts = {};
                         Object.entries(diceCounts).forEach(([diceType, count]) => {
@@ -71,10 +72,11 @@ function saveRollsToLocalStorage() {
                                 filteredDiceCounts[diceType] = count;
                             }
                         });
-                        
+
                         savedRoll.push({
                             name: groupName,
-                            diceCounts: filteredDiceCounts
+                            diceCounts: filteredDiceCounts,
+                            groupType: groupType
                         });
                     } catch (e) {
                         console.error(`Error parsing dice counts for group ${i}:`, e);
@@ -132,7 +134,7 @@ async function loadRollsFromLocalStorage() {
         // Now load the data
         const saveJson = await TS.localStorage.campaign.getBlob();
         let saveData;
-        
+
         try {
             saveData = JSON.parse(saveJson || '{}');
         } catch (e) {
@@ -145,7 +147,7 @@ async function loadRollsFromLocalStorage() {
         if (saveData.rollsData) {
             // New format with counters
             rollsData = saveData.rollsData;
-            
+
             // Load counters if they exist
             if (saveData.counters && Array.isArray(saveData.counters)) {
                 saveData.counters.forEach(counter => {
@@ -162,14 +164,14 @@ async function loadRollsFromLocalStorage() {
 
         // Load rolls data
         rollsData.forEach(({ creatureName, allCreatureRolls }) => { // Iterate over each saved creature
-            allCreatureRolls.forEach(({ savedRoll }) => { 
+            allCreatureRolls.forEach(({ savedRoll }) => {
                 // Add each saved roll to the creature's group using the SavedRollManager instance
                 savedRollManager.addSavedRoll(creatureName, savedRoll);
             });
         });
-        
+
         disableButtonById('load-rolls-button');
-        if (!fetchSetting('auto-save')){
+        if (!fetchSetting('auto-save')) {
             disableButtonById('save-rolls-button', false);
         }
     } catch (error) {

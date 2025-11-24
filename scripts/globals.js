@@ -46,6 +46,7 @@ const diceTypes = ["d4", "d6", "d8", "d10", "d100", "d12", "d20"];
  * - disadvantage: Roll multiple dice and take the lowest result.
  * - bestofThree: Roll three dice and take the best result.
  * - critical: A critical roll, often leading to enhanced effects or outcomes.
+ * - duality: 2d12 roll where one is Hope, other is Fear. Dice are totalled and the higher repesents the "with hope" or "with fear" result.
  */
 const rollTypes = Object.freeze({
     normal: "normal",
@@ -53,6 +54,7 @@ const rollTypes = Object.freeze({
     disadvantage: "disadvantage",
     bestofThree: "best-of-three",
     critical: "crit-dice",
+    duality: "duality",
 });
 
 /**

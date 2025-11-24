@@ -2,7 +2,7 @@
   "manifestVersion": 1,
   "name": "Dice Vault",
   "summary": "A Symbiote to roll dice in many ways",
-  "version": "5.5",
+  "version": "5.6",
   "about": {
     "website": "https://github.com/JasonCostanza/Dice-Vault",
     "authors": [
@@ -26,7 +26,6 @@
       }
     }
   },
-  
   "environment": {
     "webViewBackgroundColor": "#000000",
     "capabilities": [

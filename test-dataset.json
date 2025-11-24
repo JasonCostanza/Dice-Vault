@@ -896,6 +896,274 @@
           ]
         }
       ]
+    },
+    {
+      "creatureName": "Duality System Tests",
+      "allCreatureRolls": [
+        {
+          "savedRoll": [
+            {
+              "name": "Basic Duality - A",
+              "diceCounts": {
+                "d4": 0,
+                "d6": 0,
+                "d8": 0,
+                "d10": 0,
+                "d100": 0,
+                "d12": 1,
+                "d20": 0,
+                "mod": 0
+              },
+              "groupType": "duality"
+            },
+            {
+              "name": "Basic Duality - B",
+              "diceCounts": {
+                "d4": 0,
+                "d6": 0,
+                "d8": 0,
+                "d10": 0,
+                "d100": 0,
+                "d12": 1,
+                "d20": 0,
+                "mod": 0
+              },
+              "groupType": "duality"
+            }
+          ]
+        },
+        {
+          "savedRoll": [
+            {
+              "name": "Duality with Modifier - A",
+              "diceCounts": {
+                "d4": 0,
+                "d6": 0,
+                "d8": 0,
+                "d10": 0,
+                "d100": 0,
+                "d12": 1,
+                "d20": 0,
+                "mod": 5
+              },
+              "groupType": "duality"
+            },
+            {
+              "name": "Duality with Modifier - B",
+              "diceCounts": {
+                "d4": 0,
+                "d6": 0,
+                "d8": 0,
+                "d10": 0,
+                "d100": 0,
+                "d12": 1,
+                "d20": 0,
+                "mod": 5
+              },
+              "groupType": "duality"
+            }
+          ]
+        },
+        {
+          "savedRoll": [
+            {
+              "name": "Duality with Negative Mod - A",
+              "diceCounts": {
+                "d4": 0,
+                "d6": 0,
+                "d8": 0,
+                "d10": 0,
+                "d100": 0,
+                "d12": 1,
+                "d20": 0,
+                "mod": -3
+              },
+              "groupType": "duality"
+            },
+            {
+              "name": "Duality with Negative Mod - B",
+              "diceCounts": {
+                "d4": 0,
+                "d6": 0,
+                "d8": 0,
+                "d10": 0,
+                "d100": 0,
+                "d12": 1,
+                "d20": 0,
+                "mod": -3
+              },
+              "groupType": "duality"
+            }
+          ]
+        },
+        {
+          "savedRoll": [
+            {
+              "name": "Mixed: Duality - A",
+              "diceCounts": {
+                "d4": 0,
+                "d6": 0,
+                "d8": 0,
+                "d10": 0,
+                "d100": 0,
+                "d12": 1,
+                "d20": 0,
+                "mod": 0
+              },
+              "groupType": "duality"
+            },
+            {
+              "name": "Mixed: Duality - B",
+              "diceCounts": {
+                "d4": 0,
+                "d6": 0,
+                "d8": 0,
+                "d10": 0,
+                "d100": 0,
+                "d12": 1,
+                "d20": 0,
+                "mod": 0
+              },
+              "groupType": "duality"
+            },
+            {
+              "name": "Attack Roll",
+              "diceCounts": {
+                "d4": 0,
+                "d6": 0,
+                "d8": 0,
+                "d10": 0,
+                "d100": 0,
+                "d12": 0,
+                "d20": 1,
+                "mod": 7
+              }
+            }
+          ]
+        },
+        {
+          "savedRoll": [
+            {
+              "name": "Mixed: Duality + Damage - A",
+              "diceCounts": {
+                "d4": 0,
+                "d6": 0,
+                "d8": 0,
+                "d10": 0,
+                "d100": 0,
+                "d12": 1,
+                "d20": 0,
+                "mod": 2
+              },
+              "groupType": "duality"
+            },
+            {
+              "name": "Mixed: Duality + Damage - B",
+              "diceCounts": {
+                "d4": 0,
+                "d6": 0,
+                "d8": 0,
+                "d10": 0,
+                "d100": 0,
+                "d12": 1,
+                "d20": 0,
+                "mod": 2
+              },
+              "groupType": "duality"
+            },
+            {
+              "name": "Weapon Damage",
+              "diceCounts": {
+                "d4": 0,
+                "d6": 0,
+                "d8": 2,
+                "d10": 0,
+                "d100": 0,
+                "d12": 0,
+                "d20": 0,
+                "mod": 4
+              }
+            },
+            {
+              "name": "Fire Damage",
+              "diceCounts": {
+                "d4": 0,
+                "d6": 3,
+                "d8": 0,
+                "d10": 0,
+                "d100": 0,
+                "d12": 0,
+                "d20": 0,
+                "mod": 0
+              }
+            }
+          ]
+        },
+        {
+          "savedRoll": [
+            {
+              "name": "Character Action - A",
+              "diceCounts": {
+                "d4": 0,
+                "d6": 0,
+                "d8": 0,
+                "d10": 0,
+                "d100": 0,
+                "d12": 1,
+                "d20": 0,
+                "mod": 0
+              },
+              "groupType": "duality"
+            },
+            {
+              "name": "Character Action - B",
+              "diceCounts": {
+                "d4": 0,
+                "d6": 0,
+                "d8": 0,
+                "d10": 0,
+                "d100": 0,
+                "d12": 1,
+                "d20": 0,
+                "mod": 0
+              },
+              "groupType": "duality"
+            }
+          ]
+        },
+        {
+          "savedRoll": [
+            {
+              "name": "Risky Spell - A",
+              "diceCounts": {
+                "d4": 0,
+                "d6": 0,
+                "d8": 0,
+                "d10": 0,
+                "d100": 0,
+                "d12": 1,
+                "d20": 0,
+                "mod": 3
+              },
+              "groupType": "duality"
+            },
+            {
+              "name": "Risky Spell - B",
+              "diceCounts": {
+                "d4": 0,
+                "d6": 0,
+                "d8": 0,
+                "d10": 0,
+                "d100": 0,
+                "d12": 1,
+                "d20": 0,
+                "mod": 3
+              },
+              "groupType": "duality"
+            }
+          ]
+        }
+      ]
     }
   ],
   "counters": [
