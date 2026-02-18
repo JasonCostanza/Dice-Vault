@@ -51,10 +51,11 @@ class DiceGroupManager {
     }
 
     /**
-     * Increments the dice counter value for a given dice type
+     * Adjusts the dice counter value for a given dice type by the specified delta
      * @param {string} type - The type in format "groupId-diceType"
+     * @param {number} delta - The amount to change the counter by (1 to increment, -1 to decrement)
      */
-    incrementDice(type) {
+    adjustDice(type, delta) {
         const lastDashIndex = type.lastIndexOf("-");
         const groupId = type.substring(0, lastDashIndex);
         const diceType = type.substring(lastDashIndex + 1);
@@ -62,31 +63,10 @@ class DiceGroupManager {
         const counter = document.getElementById(counterId);
 
         if (counter) {
-            let currentValue = parseInt(counter.textContent, 10);
-            if (currentValue < 50) {
-                counter.textContent = currentValue + 1;
-                this.updateDiceGroupsData();
-            }
-        } else {
-            console.error("Counter element not found:", counterId);
-        }
-    }
-
-    /**
-     * Decrements the dice counter value for a given dice type
-     * @param {string} type - The type in format "groupId-diceType"
-     */
-    decrementDice(type) {
-        const lastDashIndex = type.lastIndexOf("-");
-        const groupId = type.substring(0, lastDashIndex);
-        const diceType = type.substring(lastDashIndex + 1);
-        const counterId = `${groupId}-${diceType}-counter-value`;
-        const counter = document.getElementById(counterId);
-
-        if (counter) {
-            let currentValue = parseInt(counter.textContent, 10);
-            if (currentValue > 0) {
-                counter.textContent = currentValue - 1;
+            const currentValue = parseInt(counter.textContent, 10);
+            const newValue = currentValue + delta;
+            if (newValue >= 0 && newValue <= 40) {
+                counter.textContent = newValue;
                 this.updateDiceGroupsData();
             }
         } else {
@@ -141,8 +121,8 @@ class DiceGroupManager {
         this.diceTypes.forEach((type) => {
             diceHTML += `
                 <div class="dice-counter unselectable" id="group-${groupIndex}-${type}-counter">
-                    <i class="ts-icon-${type} ts-icon-size55" onclick="diceGroupManager.incrementDice('group-${groupIndex}-${type}')" 
-                    oncontextmenu="diceGroupManager.decrementDice('group-${groupIndex}-${type}'); return false;"></i>
+                    <i class="ts-icon-${type} ts-icon-size55" onclick="diceGroupManager.adjustDice('group-${groupIndex}-${type}', 1)"
+                    oncontextmenu="diceGroupManager.adjustDice('group-${groupIndex}-${type}', -1); return false;"></i>
                     <div class="counter-overlay" id="group-${groupIndex}-${type}-counter-value">0</div>
                     <div class="dice-label">${type.toUpperCase()}</div>
                 </div>
