@@ -65,7 +65,7 @@ class DiceGroupManager {
         if (counter) {
             const currentValue = parseInt(counter.textContent, 10);
             const newValue = currentValue + delta;
-            if (newValue >= 0 && newValue <= 50) {
+            if (newValue >= 0 && newValue <= 40) {
                 counter.textContent = newValue;
                 this.updateDiceGroupsData();
             }
