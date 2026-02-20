@@ -196,7 +196,7 @@ class CounterManager {
             countersGroup.dataset.creatureName = "Counters";
             
             countersGroup.innerHTML = `
-                <div class="saved-roll-header" onclick="uiManager.toggleAccordion(this)">
+                <div class="saved-roll-header" tabindex="0" role="button" onclick="uiManager.toggleAccordion(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();uiManager.toggleAccordion(this);}">
                     <span>${getTranslation('countersHeader')}</span> <span class="accordion-icon">-</span>
                 </div>
                 <div class="saved-rolls-content"></div>
@@ -226,8 +226,8 @@ class CounterManager {
                     <input type="number" class="counter-value" value="${counter.value}" onchange="counterManager.updateCounterValue('${counter.id}', this.value)">
                 </div>
                 <div class="buttons-container">
-                    <div class="edit-counter" onclick="counterManager.startEditingCounter(this)">${editIcon}</div>
-                    <div class="delete-counter" onclick="counterManager.deleteCounter(this)">${deleteIcon}</div>
+                    <button type="button" class="edit-counter" onclick="counterManager.startEditingCounter(this)">${editIcon}</button>
+                    <button type="button" class="delete-counter" onclick="counterManager.deleteCounter(this)">${deleteIcon}</button>
                 </div>
             </div>
         `;

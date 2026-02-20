@@ -148,8 +148,6 @@ class DiceGroupManager {
 
         // Make sure the content is fully visible immediately
         content.classList.remove('collapsed');
-        content.style.display = 'flex';
-        content.style.maxHeight = 'none'; // Allow natural height
 
         accordionHeader.querySelector('.accordion-toggle').textContent = '-';
 
@@ -230,8 +228,6 @@ class DiceGroupManager {
 
         // Make sure the content is fully visible immediately
         content.classList.remove('collapsed');
-        content.style.display = 'flex';
-        content.style.maxHeight = 'none'; // Allow natural height
 
         accordionHeader.querySelector('.accordion-toggle').textContent = '-';
 
@@ -377,17 +373,13 @@ class DiceGroupManager {
             return;
         }
 
-        // Check if collapsed based on display style
-        const isCollapsed = content.style.display === 'none';
+        const isCollapsed = content.classList.contains('collapsed');
 
         if (isCollapsed) {
-            // Expand
-            content.style.display = 'flex';
-            content.style.maxHeight = 'none'; // Allow natural height
+            content.classList.remove('collapsed');
             icon.textContent = '-';
         } else {
-            // Collapse
-            content.style.display = 'none';
+            content.classList.add('collapsed');
             icon.textContent = '+';
         }
     }

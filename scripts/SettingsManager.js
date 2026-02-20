@@ -158,7 +158,7 @@ async function handleCopyToClipboard() {
  */
 function showCopySuccess(button, originalText, originalStyle) {
     button.textContent = 'Copied!';
-    button.style.backgroundColor = '#4CAF50';
+    button.style.backgroundColor = 'var(--ts-color-success, #4caf50)';
     button.style.color = 'white';
     button.disabled = true;
 
@@ -174,7 +174,7 @@ function showCopySuccess(button, originalText, originalStyle) {
  */
 function showCopyError(button, originalText, originalStyle, message) {
     button.textContent = '✗ Error';
-    button.style.backgroundColor = '#f44336';
+    button.style.backgroundColor = 'var(--ts-color-danger, #f44336)';
     button.style.color = 'white';
     button.disabled = true;
 
@@ -215,9 +215,9 @@ async function handleRetrieveBackup() {
             modal.style.transform = 'translate(-50%, -50%)';
             modal.style.width = '80%';
             modal.style.height = '50%';
-            modal.style.backgroundColor = 'white';
+            modal.style.backgroundColor = 'var(--ts-background-primary)';
             modal.style.padding = '20px';
-            modal.style.border = '1px solid black';
+            modal.style.border = '1px solid var(--ts-accessibility-border)';
             modal.style.zIndex = '1000';
 
             const heading = document.createElement('h2');
@@ -265,7 +265,7 @@ document.addEventListener('keydown', function (event) {
 
         const mobileMenuModal = document.getElementById('mobile-menu-modal');
         if (mobileMenuModal && !mobileMenuModal.classList.contains('hidden')) {
-            mobileMenuModal.classList.add('hidden');
+            toggleMobileMenu();
         }
     }
 });
@@ -277,7 +277,18 @@ document.addEventListener('keydown', function (event) {
  */
 function toggleMobileMenu() {
     const mobileMenuModal = document.getElementById('mobile-menu-modal');
-    mobileMenuModal.classList.toggle('hidden');
+    if (mobileMenuModal.classList.contains('hidden')) {
+        // Open
+        mobileMenuModal.classList.remove('hidden');
+        mobileMenuModal.classList.remove('closing');
+    } else {
+        // Close with animation
+        mobileMenuModal.classList.add('closing');
+        setTimeout(() => {
+            mobileMenuModal.classList.remove('closing');
+            mobileMenuModal.classList.add('hidden');
+        }, 300);
+    }
 }
 
 // Export to global scope

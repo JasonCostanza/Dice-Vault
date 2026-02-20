@@ -96,21 +96,21 @@ body {
 
 /* Scrolling Content Scrollbars */
 .scrolling-content::-webkit-scrollbar {
-    width: 10px;
+    width: 8px;
 }
 
 .scrolling-content::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: var(--ts-background-secondary);
     border-radius: 5px;
 }
 
 .scrolling-content::-webkit-scrollbar-thumb {
-    background: #888;
+    background: var(--ts-color-secondary);
     border-radius: 5px;
 }
 
 .scrolling-content::-webkit-scrollbar-thumb:hover {
-    background: #555;
+    background: var(--ts-color-primary);
 }
 
 /* Hide Scrollbars on Dropdown Selects */
@@ -148,6 +148,12 @@ body {
 
 .spacer {
     flex-grow: 1;
+}
+
+.highlight {
+    outline: 2px solid var(--ts-accessibility-focus);
+    outline-offset: 2px;
+    transition: outline 0.2s ease;
 }
 
 .field-title {
@@ -378,25 +384,33 @@ button:focus-visible {
 
 .row-buttons-container {
     display: flex;
-    margin-top: 5px;
-    justify-content: space-around;
+    margin-top: 10px;
+    justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .row-button {
     flex: 1;
-    margin: 0 5px;
-    height: 40px;
+    height: 50px;
+    margin: 0 3px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .row-button img {
-    height: 40px;
+    height: 28px;
+    width: 28px;
+    margin: 0;
 }
 
 /* Specialized Button Types */
 .black-button {
     padding: 5px 15px;
     margin: 5px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--ts-accessibility-border);
     border-radius: 4px;
     background-color: var(--ts-background-primary);
     color: var(--ts-color-primary);
@@ -405,12 +419,12 @@ button:focus-visible {
 
 .black-button:hover {
     background-color: var(--ts-button-hover);
-    color: #000000;
+    color: var(--ts-color-primary);
 }
 
 .black-button:active {
     background-color: var(--ts-button-background);
-    color: #000000;
+    color: var(--ts-color-primary);
 }
 
 .black-button:disabled,
@@ -473,8 +487,8 @@ button:focus-visible {
     }
 }
 
-#mobile-menu-modal.hidden .mobile-menu-content {
-    animation: slideDownToBottom 0.3s ease-in;
+#mobile-menu-modal.closing .mobile-menu-content {
+    animation: slideDownToBottom 0.3s ease-in forwards;
 }
 
 @keyframes slideDownToBottom {
@@ -540,7 +554,7 @@ button:focus-visible {
 
 .quote-text {
     font-family: 'Enchanted Land', cursive;
-    color: #dddddd;
+    color: var(--ts-color-secondary);
     font-size: 0.8em;
     font-style: italic;
 }
@@ -573,16 +587,11 @@ button:focus-visible {
     }
 }
 
-.unsaved-changes {
-    background-color: var(--ts-background-tertiary) !important;
-    color: var(--ts-accent-hover) !important;
-}
-
 /* Rolling Buttons */
 .rolling-button {
-    font-size: 0.75em;
-    padding: 4px 6px;
-    width: 66px;
+    font-size: 0.8em;
+    padding: 6px 6px;
+    width: 72px;
     height: auto;
     text-align: center;
     line-height: 1.2em;
@@ -603,9 +612,7 @@ button:focus-visible {
 }
 
 .roll-button {
-    display: block;
     padding: 5px 10px;
-    margin-top: 10px;
     background-color: var(--ts-button-background);
     color: var(--ts-color-primary);
     text-align: center;
@@ -624,8 +631,8 @@ button:focus-visible {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 22px;
-    height: 22px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     font-size: 18px;
     font-weight: bold;
@@ -702,10 +709,17 @@ button:focus-visible {
     padding-bottom: 0px;
     font-size: 0.85em;
     background-color: var(--ts-background-tertiary);
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out, opacity 0.2s ease;
+    max-height: 300px;
+    opacity: 1;
 }
 
 .dice-selection.collapsed {
-    display: none;
+    max-height: 0;
+    opacity: 0;
+    padding: 0;
+    margin: 0;
 }
 
 /* Dice Group Structure */
@@ -761,10 +775,6 @@ button:focus-visible {
 }
 
 /* Dice Group Names & Inputs */
-.dice-group-name {
-    margin-bottom: 10px;
-}
-
 .dice-group-name-input {
     width: 100%;
     padding: 5px;
@@ -918,6 +928,14 @@ button:focus-visible {
     font-size: 0.8em;
 }
 
+.dice-counter .ts-icon-size55 {
+    transition: transform 0.15s ease;
+}
+
+.dice-counter .ts-icon-size55:hover {
+    transform: scale(1.12);
+}
+
 i.ts-icon-size55 {
     padding-right: 55px;
     padding-bottom: 55px;
@@ -962,18 +980,6 @@ i.ts-icon-size55::before {
     margin-right: 2px;
 }
 
-/* Debug Icons (for development mode) */
-.debug-icons16 {
-    height: 16px;
-    width: 16px;
-}
-
-.debug-icons48 {
-    height: 48px;
-    width: 48px;
-}
-
-
 
 /* ====================================================================
    8. SAVED ROLLS SECTION
@@ -984,6 +990,9 @@ i.ts-icon-size55::before {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border-top: 2px solid var(--ts-accessibility-border);
+    padding-top: 10px;
+    margin-top: 6px;
 }
 
 /* Saved Rolls Container */
@@ -995,12 +1004,6 @@ i.ts-icon-size55::before {
     border: 1px solid var(--ts-accessibility-border);
     padding: 5px;
     margin-top: 10px;
-}
-
-.saved-rolls-container::after {
-    content: '';
-    display: block;
-    height: 60px; /* Matches or slightly exceeds footer height */
 }
 
 /* Saved Roll Entries */
@@ -1016,6 +1019,11 @@ i.ts-icon-size55::before {
     padding: 10px;
     border-radius: 3px;
     cursor: default;
+    transition: background-color 0.15s ease;
+}
+
+.saved-roll-entry:hover {
+    background-color: var(--ts-background-secondary);
 }
 
 .roll-entry-container {
@@ -1031,15 +1039,6 @@ i.ts-icon-size55::before {
     align-items: center;
     width: 100%;
     margin-bottom: 8px;
-}
-
-.roll-entry-label {
-    font-weight: bold;
-    min-width: 120px;
-    max-width: 150px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
 }
 
 .roll-entry-display {
@@ -1094,8 +1093,16 @@ i.ts-icon-size55::before {
 .saved-rolls-content {
     padding: 5px;
     background-color: var(--ts-background-primary);
-    /* Initially expanded */
-    display: block;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out, opacity 0.2s ease;
+    max-height: 2000px;
+    opacity: 1;
+}
+
+.saved-rolls-content.collapsed {
+    max-height: 0;
+    opacity: 0;
+    padding: 0;
 }
 
 /* Saved Rolls Button Container */
@@ -1138,7 +1145,7 @@ i.ts-icon-size55::before {
     border-radius: 4px;
     background-color: var(--ts-button-background);
     color: var(--ts-color-primary);
-    font-family: 'Gill Sans', sans-serif;
+    font-family: 'OptimusPrinceps', sans-serif;
     font-weight: bold;
     box-shadow: 0 2px 4px var(--ts-button-background);
     appearance: none;
@@ -1214,28 +1221,6 @@ i.ts-icon-size55::before {
     gap: 5px;
 }
 
-.counter-decrement,
-.counter-increment {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    border: 1px solid var(--ts-color-primary);
-    background-color: var(--ts-button-background);
-    color: var(--ts-color-primary);
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.2s;
-}
-
-.counter-decrement:hover,
-.counter-increment:hover {
-    background-color: var(--ts-button-hover);
-}
-
 .counter-value {
     width: 50px;
     height: 24px;
@@ -1266,10 +1251,29 @@ i.ts-icon-size55::before {
    11. MODALS & OVERLAYS
    ==================================================================== */
 
-#modal-overlay {
-    pointer-events: auto;
+/* Settings Layout */
+.settings-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
-.overwrite-modal {
-    pointer-events: auto;
+.settings-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--ts-accessibility-border);
+}
+
+.settings-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.settings-input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    flex-grow: 0;
+    flex-shrink: 0;
 }

@@ -19,9 +19,14 @@ class UIManager {
      */
     toggleAccordion(header) {
         const content = header.nextElementSibling;
-        const isHidden = content.style.display === "none";
-        content.style.display = isHidden ? "block" : "none";
-        header.querySelector(".accordion-icon").textContent = isHidden ? "-" : "+";
+        const isCollapsed = content.classList.contains('collapsed');
+        if (isCollapsed) {
+            content.classList.remove('collapsed');
+            header.querySelector(".accordion-icon").textContent = "-";
+        } else {
+            content.classList.add('collapsed');
+            header.querySelector(".accordion-icon").textContent = "+";
+        }
     }
 
     /**
@@ -257,7 +262,7 @@ class UIManager {
             overlay.style.left = '0';
             overlay.style.width = '100%';
             overlay.style.height = '100%';
-            overlay.style.backgroundColor = 'var(--ts-background-primary)';
+            overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
             overlay.style.zIndex = '999';
             overlay.style.pointerEvents = 'auto';
             document.body.appendChild(overlay);

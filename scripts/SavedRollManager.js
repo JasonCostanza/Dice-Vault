@@ -483,7 +483,7 @@ class SavedRollManager {
 
             // Create collapsible header for the creature
             creatureGroup.innerHTML = `
-            <div class="saved-roll-header" onclick="uiManager.toggleAccordion(this)">
+            <div class="saved-roll-header" tabindex="0" role="button" onclick="uiManager.toggleAccordion(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();uiManager.toggleAccordion(this);}">
                 <span>${creatureName}</span> <span class="accordion-icon">-</span>
             </div>
             <div class="saved-rolls-content"></div>
@@ -547,8 +547,8 @@ class SavedRollManager {
                 
                 <div class="roll-entry-dice-container"></div>
                 <div class="buttons-container">
-                    <div class="edit-roll" onclick="savedRollManager.startEditingSavedRoll(this)">${editIcon}</div>
-                    <div class="delete-roll" onclick="savedRollManager.deleteSavedRoll(this)">${deleteIcon}</div>
+                    <button type="button" class="edit-roll" onclick="savedRollManager.startEditingSavedRoll(this)">${editIcon}</button>
+                    <button type="button" class="delete-roll" onclick="savedRollManager.deleteSavedRoll(this)">${deleteIcon}</button>
                 </div>
             </div>
             <div class="row-buttons-container"></div>
@@ -604,7 +604,8 @@ class SavedRollManager {
      * @returns {Element} The created button element
      */
     createRollButton(imageName, rollType, rollGroups, cssClasses, parent, rollEntry = null) {
-        const rollButton = document.createElement("div");
+        const rollButton = document.createElement("button");
+        rollButton.type = "button";
         rollButton.className = cssClasses;
         rollButton.onclick = function () {
             if (!Array.isArray(rollGroups) || rollGroups.length === 0) {
