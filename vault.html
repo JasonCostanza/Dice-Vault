@@ -155,7 +155,7 @@
                 <div class="settings-body">
                     <div class="settings-row">
                         <label class="field-title">Language</label>
-                        <select id="language-select" onchange="changeLanguage()">
+                        <select id="language-select" class="hidden" onchange="changeLanguage()">
                             <option value="en">English</option>
                             <option value="es">Spanish</option>
                             <option value="de">German</option>
@@ -163,30 +163,53 @@
                             <option value="it">Italian</option>
                             <option value="pt-br">Portuguese (Brazil)</option>
                         </select>
+                        <div class="custom-dropdown" data-select="language-select">
+                            <button type="button" class="custom-dropdown-toggle">English<span class="dropdown-arrow">&#x25BE;</span></button>
+                            <div class="custom-dropdown-menu hidden">
+                                <div class="custom-dropdown-item selected" data-value="en">English</div>
+                                <div class="custom-dropdown-item" data-value="es">Spanish</div>
+                                <div class="custom-dropdown-item" data-value="de">German</div>
+                                <div class="custom-dropdown-item" data-value="fr">French</div>
+                                <div class="custom-dropdown-item" data-value="it">Italian</div>
+                                <div class="custom-dropdown-item" data-value="pt-br">Portuguese (Brazil)</div>
+                            </div>
+                        </div>
                     </div>
                     <div class="settings-row">
                         <label class="field-title">Automatically load data</label>
-                        <input type="checkbox" id="auto-load" class="settings-input" onchange="saveGlobalSettings()"
-                                unchecked>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="auto-load" class="settings-input" onchange="saveGlobalSettings()"
+                                    unchecked>
+                            <span class="toggle-slider"></span>
+                        </label>
                     </div>
                     <div class="settings-row">
                         <label class="field-title">Automatically save data</label>
-                        <input type="checkbox" id="auto-save" class="settings-input" onchange="saveGlobalSettings()"
-                                unchecked>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="auto-save" class="settings-input" onchange="saveGlobalSettings()"
+                                    unchecked>
+                            <span class="toggle-slider"></span>
+                        </label>
                     </div>
                     <div class="settings-row">
                         <label class="field-title">Auto-Reset Dice on Save</label>
-                        <input type="checkbox" id="auto-reset" class="settings-input"
-                                onchange="saveGlobalSettings()" unchecked>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="auto-reset" class="settings-input"
+                                    onchange="saveGlobalSettings()" unchecked>
+                            <span class="toggle-slider"></span>
+                        </label>
                     </div>
                     <div class="settings-row">
                         <label class="field-title">Enable Daggerheart Duality</label>
-                        <input type="checkbox" id="enable-duality-groups" class="settings-input"
-                                onchange="saveGlobalSettings()" unchecked>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="enable-duality-groups" class="settings-input"
+                                    onchange="saveGlobalSettings()" unchecked>
+                            <span class="toggle-slider"></span>
+                        </label>
                     </div>
                     <div class="settings-row">
                         <label class="field-title">Crit Behavior</label>
-                        <select id="crit-behavior">
+                        <select id="crit-behavior" class="hidden">
                             <option value="one-point-five-total">1.5x Total</option>
                             <option value="double-total">2x Total</option>
                             <option value="triple-total">3x Total</option>
@@ -196,6 +219,19 @@
                             <option value="max-die">Max Die Result</option>
                             <option value="max-plus">Max + Raw Die Result</option>
                         </select>
+                        <div class="custom-dropdown" data-select="crit-behavior">
+                            <button type="button" class="custom-dropdown-toggle">1.5x Total<span class="dropdown-arrow">&#x25BE;</span></button>
+                            <div class="custom-dropdown-menu hidden">
+                                <div class="custom-dropdown-item selected" data-value="one-point-five-total">1.5x Total</div>
+                                <div class="custom-dropdown-item" data-value="double-total">2x Total</div>
+                                <div class="custom-dropdown-item" data-value="triple-total">3x Total</div>
+                                <div class="custom-dropdown-item" data-value="quadruple-total">4x Total</div>
+                                <div class="custom-dropdown-item" data-value="double-die-count">2x Die Quantity</div>
+                                <div class="custom-dropdown-item" data-value="double-die-result">2x the Die Results</div>
+                                <div class="custom-dropdown-item" data-value="max-die">Max Die Result</div>
+                                <div class="custom-dropdown-item" data-value="max-plus">Max + Raw Die Result</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <hr />

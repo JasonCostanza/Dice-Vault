@@ -47,6 +47,7 @@ body {
     margin-top: 5px;
     max-height: 90%;
     overflow-y: auto;
+    scrollbar-gutter: stable;
 }
 
 /* Content Columns */
@@ -255,6 +256,7 @@ button,
     padding: 20px;
     overflow-y: auto;
     max-height: calc(100vh - 120px);
+    scrollbar-gutter: stable;
 }
 
 /* Responsive modal styles */
@@ -1288,14 +1290,87 @@ i.ts-icon-size55::before {
     border-bottom: 1px solid var(--ts-accessibility-border);
 }
 
+.settings-row .field-title {
+    font-size: 1.3em;
+}
+
 .settings-row:last-child {
     border-bottom: none;
     padding-bottom: 0;
 }
 
-.settings-input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
-    flex-grow: 0;
+/* Settings Dropdown Overrides */
+.settings-row .custom-dropdown-toggle {
+    font-size: 1.1em;
+}
+
+.settings-row .custom-dropdown-menu {
+    z-index: 1100;
+}
+
+.settings-row .custom-dropdown-item {
+    font-size: 1em;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
     flex-shrink: 0;
+    cursor: pointer;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+.toggle-slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--ts-background-tertiary);
+    border: 1px solid var(--ts-accessibility-border);
+    border-radius: 12px;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.toggle-slider::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 18px;
+    height: 18px;
+    background-color: var(--ts-color-secondary);
+    border-radius: 50%;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+    background-color: var(--ts-accent-primary);
+    border-color: var(--ts-accent-primary);
+}
+
+.toggle-switch input:checked + .toggle-slider::after {
+    transform: translateX(20px);
+    background-color: var(--ts-color-primary);
+}
+
+.toggle-switch input:focus-visible + .toggle-slider {
+    outline: 2px solid var(--ts-accessibility-focus);
+    outline-offset: 2px;
+}
+
+/* Settings HR Divider */
+.modal-body hr {
+    border: none;
+    border-top: 1px solid var(--ts-accessibility-border);
+    margin: 16px 0;
 }
