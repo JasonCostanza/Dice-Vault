@@ -158,7 +158,6 @@ button,
 .edit-roll,
 .edit-counter,
 .delete-roll,
-.accordion-toggle,
 .saved-roll-header,
 .dice-counter {
     cursor: pointer;
@@ -745,7 +744,6 @@ button:focus-visible {
     color: var(--ts-color-primary);
     font-size: 1em;
     border-bottom: 1px solid var(--ts-accessibility-border);
-    cursor: pointer;
 }
 
 .header-content {
@@ -789,32 +787,31 @@ button:focus-visible {
     background-color: var(--ts-background-primary);
 }
 
-/* Group Reset Button */
-.group-reset-btn {
+/* Header Action Buttons (reset, accordion toggle) */
+.header-action-btn {
     margin-left: 8px;
     color: var(--ts-color-secondary);
     cursor: pointer;
-    display: flex;
     align-items: center;
-    justify-content: left;
-    transition: color 0.2s ease;
-}
-
-.group-reset-btn:hover {
-    color: var(--ts-color-primary);
-}
-
-/* Accordion Toggle */
-.accordion-toggle {
-    font-size: 1.3em;
-    margin-left: 10px;
-    width: 1em;
-    text-align: center;
-    color: var(--ts-color-secondary);
-    display: flex;
-    align-items: center !important;
-    justify-content: center !important;
+    justify-content: center;
     flex-shrink: 0;
+    transition: color 0.2s ease;
+    /* Override TaleSpire icon padding-based sizing so clickable area matches the visual icon */
+    padding: 0 !important;
+    width:  20px;
+    height: 20px;
+    display: inline-block;
+    box-sizing: content-box;
+}
+
+.header-action-btn::before {
+    width:  20px !important;
+    height: 20px !important;
+    background-size: 16px !important;
+}
+
+.header-action-btn:hover {
+    color: var(--ts-color-primary);
 }
 
 /* Group Action Bar */

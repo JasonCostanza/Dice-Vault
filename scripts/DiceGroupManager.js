@@ -97,22 +97,18 @@ class DiceGroupManager {
                 <input type="text" class="dice-group-name-input header-input" id="group-${groupIndex}-name"
                     placeholder="${groupNamePlaceholder}" oninput="diceGroupManager.updateDiceGroupsData()">
             </div>
-            <i class="ts-icon-refresh group-reset-btn" title="Reset group" data-group-index="${groupIndex}"></i>
-            <span class="accordion-toggle">-</span>
+            <i class="ts-icon-refresh header-action-btn" title="Reset group" data-group-index="${groupIndex}"></i>
+            <i class="ts-icon-minus ts-icon-xsmall header-action-btn accordion-toggle" title="Collapse group"></i>
         `;
 
-        accordionHeader.addEventListener('click', (event) => {
-            // Skip if we're clicking on the input or reset button
-            if (event.target.classList.contains('header-input') ||
-                event.target.classList.contains('dice-group-name-input') ||
-                event.target.classList.contains('group-reset-btn')) {
-                return;
-            }
+        // Accordion toggle click handler
+        accordionHeader.querySelector('.accordion-toggle').addEventListener('click', (event) => {
+            event.stopPropagation();
             this.toggleDiceGroupAccordion(event);
         });
 
         // Reset button click handler
-        accordionHeader.querySelector('.group-reset-btn').addEventListener('click', (event) => {
+        accordionHeader.querySelector('.ts-icon-refresh').addEventListener('click', (event) => {
             event.stopPropagation();
             this.resetDiceGroup(groupIndex, 'dice');
         });
@@ -141,7 +137,7 @@ class DiceGroupManager {
             <div class="plus-sign"><span>+</span></div>
             <div class="dice-counter unselectable" id="group-${groupIndex}-mod-counter">
                 <i class="ts-icon-circle-dotted ts-icon-size55 mod-holder"></i>
-                <input type="number" class="counter-overlay mod-counter-overlay" 
+                <input type="number" class="counter-overlay mod-counter-overlay"
                 id="group-${groupIndex}-mod-counter-value" value="0" min="-999" max="999" onfocus="this.select()" oninput="diceGroupManager.updateDiceGroupsData()" />
                 <div class="dice-label">MOD</div>
             </div>
@@ -156,8 +152,6 @@ class DiceGroupManager {
 
         // Make sure the content is fully visible immediately
         content.classList.remove('collapsed');
-
-        accordionHeader.querySelector('.accordion-toggle').textContent = '-';
 
         this.updateDiceGroupsData();
         return groupIndex;
@@ -186,22 +180,18 @@ class DiceGroupManager {
                 <input type="text" class="dice-group-name-input header-input" id="group-${groupIndex}-name"
                     placeholder="${groupNamePlaceholder}" oninput="diceGroupManager.updateDiceGroupsData()">
             </div>
-            <i class="ts-icon-refresh group-reset-btn" title="Reset group" data-group-index="${groupIndex}"></i>
-            <span class="accordion-toggle">-</span>
+            <i class="ts-icon-refresh header-action-btn" title="Reset group" data-group-index="${groupIndex}"></i>
+            <i class="ts-icon-minus ts-icon-xsmall header-action-btn accordion-toggle" title="Collapse group"></i>
         `;
 
-        accordionHeader.addEventListener('click', (event) => {
-            // Skip if we're clicking on the input or reset button
-            if (event.target.classList.contains('header-input') ||
-                event.target.classList.contains('dice-group-name-input') ||
-                event.target.classList.contains('group-reset-btn')) {
-                return;
-            }
+        // Accordion toggle click handler
+        accordionHeader.querySelector('.accordion-toggle').addEventListener('click', (event) => {
+            event.stopPropagation();
             this.toggleDiceGroupAccordion(event);
         });
 
         // Reset button click handler
-        accordionHeader.querySelector('.group-reset-btn').addEventListener('click', (event) => {
+        accordionHeader.querySelector('.ts-icon-refresh').addEventListener('click', (event) => {
             event.stopPropagation();
             this.resetDiceGroup(groupIndex, 'duality');
         });
@@ -244,8 +234,6 @@ class DiceGroupManager {
 
         // Make sure the content is fully visible immediately
         content.classList.remove('collapsed');
-
-        accordionHeader.querySelector('.accordion-toggle').textContent = '-';
 
         this.updateDiceGroupsData();
         return groupIndex;
@@ -393,10 +381,14 @@ class DiceGroupManager {
 
         if (isCollapsed) {
             content.classList.remove('collapsed');
-            icon.textContent = '-';
+            icon.classList.remove('ts-icon-plus');
+            icon.classList.add('ts-icon-minus');
+            icon.title = 'Collapse group';
         } else {
             content.classList.add('collapsed');
-            icon.textContent = '+';
+            icon.classList.remove('ts-icon-minus');
+            icon.classList.add('ts-icon-plus');
+            icon.title = 'Expand group';
         }
     }
 
