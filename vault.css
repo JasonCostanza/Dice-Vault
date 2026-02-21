@@ -1374,3 +1374,71 @@ i.ts-icon-size55::before {
     border-top: 1px solid var(--ts-accessibility-border);
     margin: 16px 0;
 }
+
+/* Debug Options Section */
+.debug-section {
+    border: 1px solid var(--ts-accessibility-border);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+
+.debug-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 10px;
+    background-color: var(--ts-background-tertiary);
+    cursor: pointer;
+    font-size: 0.85em;
+    color: var(--ts-color-secondary);
+    user-select: none;
+}
+
+.debug-section-header:hover {
+    background-color: var(--ts-background-secondary);
+}
+
+.debug-section-content {
+    padding: 12px;
+    background-color: var(--ts-background-primary);
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out, opacity 0.2s ease;
+    max-height: 200px;
+    opacity: 1;
+}
+
+.debug-section-content.collapsed {
+    max-height: 0;
+    opacity: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.debug-copy-btn {
+    background: none;
+    border: 1px solid var(--ts-color-secondary);
+    color: var(--ts-color-secondary);
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+.debug-copy-btn:hover {
+    background-color: var(--ts-background-secondary);
+    color: var(--ts-color-primary);
+}
+
+.debug-copy-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.debug-hint {
+    margin: 0;
+    font-size: 0.75em;
+    color: var(--ts-color-secondary);
+    opacity: 0.8;
+}

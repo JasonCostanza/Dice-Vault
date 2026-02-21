@@ -235,10 +235,22 @@
                     </div>
                 </div>
                 <hr />
-                <button id="copy-backup-button" class="wide-button" onclick="handleCopyToClipboard()">Copy to
-                    Clipboard</button>
-                <br>
-                <br>
+                <div class="debug-section">
+                    <div class="debug-section-header" tabindex="0" role="button"
+                        onclick="uiManager.toggleAccordion(this)"
+                        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();uiManager.toggleAccordion(this);}">
+                        <span>Debug Options</span>
+                        <span class="accordion-icon">+</span>
+                    </div>
+                    <div class="debug-section-content collapsed">
+                        <div class="debug-copy-row">
+                            <button id="copy-backup-button" class="debug-copy-btn" onclick="handleCopyToClipboard()" type="button">
+                                &#x1F4CB; Copy Data to Clipboard
+                            </button>
+                            <span class="debug-hint">Exports all vault data as JSON. Useful for backup or bug reporting.</span>
+                        </div>
+                    </div>
+                </div>
                 <div class="version">Version: 5.6</div>
             </div>
         </div>
