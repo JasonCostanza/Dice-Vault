@@ -313,13 +313,13 @@ input {
 }
 
 button:hover,
-input:hover {
+input:hover:not(.mod-counter-overlay) {
     background-color: var(--ts-background-primary);
     transition: ease-in-out 0.2s;
 }
 
 button:focus-visible,
-input:focus-visible {
+input:focus-visible:not(.mod-counter-overlay) {
     outline: 3px solid var(--ts-accessibility-focus);
     outline-offset: -1px;
     background-color: var(--ts-background-primary);
@@ -892,8 +892,7 @@ button:focus-visible {
     height: 1.6em;
     width: 40px;
     text-align: center;
-    border: 1px solid transparent;
-    border-radius: 4px;
+    border: none;
     left: 50%;
     pointer-events: auto;
     background: transparent;
@@ -906,22 +905,12 @@ button:focus-visible {
     appearance: none;
     -moz-appearance: textfield;
     cursor: text;
-    transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
 .mod-counter-overlay::-webkit-inner-spin-button,
 .mod-counter-overlay::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
-}
-
-.mod-counter-overlay:focus-visible {
-    background-color: var(--ts-background-secondary);
-    border-color: var(--ts-color-primary);
-}
-
-.mod-counter-overlay:hover {
-    background-color: var(--ts-background-secondary);
 }
 
 /* Dice Labels & Icons */

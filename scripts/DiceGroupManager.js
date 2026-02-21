@@ -138,7 +138,7 @@ class DiceGroupManager {
             <div class="dice-counter unselectable" id="group-${groupIndex}-mod-counter">
                 <i class="ts-icon-circle-dotted ts-icon-size55 mod-holder"></i>
                 <input type="number" class="counter-overlay mod-counter-overlay"
-                id="group-${groupIndex}-mod-counter-value" value="0" min="-999" max="999" onfocus="this.select()" oninput="diceGroupManager.updateDiceGroupsData()" />
+                id="group-${groupIndex}-mod-counter-value" value="0" min="-999" max="999" onfocus="this.select()" oninput="diceGroupManager.updateDiceGroupsData()" onblur="if(this.value==='')this.value='0';diceGroupManager.updateDiceGroupsData()" />
                 <div class="dice-label">MOD</div>
             </div>
         `;
@@ -219,8 +219,8 @@ class DiceGroupManager {
             <div class="plus-sign"><span>+</span></div>
             <div class="dice-counter unselectable" id="group-${groupIndex}-mod-counter">
                 <i class="ts-icon-circle-dotted ts-icon-size55 mod-holder"></i>
-                <input type="number" class="counter-overlay mod-counter-overlay" 
-                id="group-${groupIndex}-mod-counter-value" value="0" min="-999" max="999" onfocus="this.select()" oninput="diceGroupManager.updateDiceGroupsData()" />
+                <input type="number" class="counter-overlay mod-counter-overlay"
+                id="group-${groupIndex}-mod-counter-value" value="0" min="-999" max="999" onfocus="this.select()" oninput="diceGroupManager.updateDiceGroupsData()" onblur="if(this.value==='')this.value='0';diceGroupManager.updateDiceGroupsData()" />
                 <div class="dice-label">MOD</div>
             </div>
         `;
