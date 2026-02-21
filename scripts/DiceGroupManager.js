@@ -94,19 +94,27 @@ class DiceGroupManager {
         accordionHeader.className = "dice-group-header";
         accordionHeader.innerHTML = `
             <div class="header-content">
-                <input type="text" class="dice-group-name-input header-input" id="group-${groupIndex}-name" 
+                <input type="text" class="dice-group-name-input header-input" id="group-${groupIndex}-name"
                     placeholder="${groupNamePlaceholder}" oninput="diceGroupManager.updateDiceGroupsData()">
             </div>
+            <i class="ts-icon-refresh group-reset-btn" title="Reset group" data-group-index="${groupIndex}"></i>
             <span class="accordion-toggle">-</span>
         `;
 
         accordionHeader.addEventListener('click', (event) => {
-            // Skip if we're clicking on the input
+            // Skip if we're clicking on the input or reset button
             if (event.target.classList.contains('header-input') ||
-                event.target.classList.contains('dice-group-name-input')) {
+                event.target.classList.contains('dice-group-name-input') ||
+                event.target.classList.contains('group-reset-btn')) {
                 return;
             }
             this.toggleDiceGroupAccordion(event);
+        });
+
+        // Reset button click handler
+        accordionHeader.querySelector('.group-reset-btn').addEventListener('click', (event) => {
+            event.stopPropagation();
+            this.resetDiceGroup(groupIndex, 'dice');
         });
 
         const content = document.createElement("div");
@@ -175,19 +183,27 @@ class DiceGroupManager {
         accordionHeader.className = "dice-group-header";
         accordionHeader.innerHTML = `
             <div class="header-content">
-                <input type="text" class="dice-group-name-input header-input" id="group-${groupIndex}-name" 
+                <input type="text" class="dice-group-name-input header-input" id="group-${groupIndex}-name"
                     placeholder="${groupNamePlaceholder}" oninput="diceGroupManager.updateDiceGroupsData()">
             </div>
+            <i class="ts-icon-refresh group-reset-btn" title="Reset group" data-group-index="${groupIndex}"></i>
             <span class="accordion-toggle">-</span>
         `;
 
         accordionHeader.addEventListener('click', (event) => {
-            // Skip if we're clicking on the input
+            // Skip if we're clicking on the input or reset button
             if (event.target.classList.contains('header-input') ||
-                event.target.classList.contains('dice-group-name-input')) {
+                event.target.classList.contains('dice-group-name-input') ||
+                event.target.classList.contains('group-reset-btn')) {
                 return;
             }
             this.toggleDiceGroupAccordion(event);
+        });
+
+        // Reset button click handler
+        accordionHeader.querySelector('.group-reset-btn').addEventListener('click', (event) => {
+            event.stopPropagation();
+            this.resetDiceGroup(groupIndex, 'duality');
         });
 
         const content = document.createElement("div");
@@ -382,6 +398,32 @@ class DiceGroupManager {
             content.classList.add('collapsed');
             icon.textContent = '+';
         }
+    }
+
+    /**
+     * Resets all dice counters and modifier for a specific dice group.
+     * Standard groups reset all dice to 0. Duality groups reset d12 to 2.
+     * Modifier is always reset to 0.
+     * @param {number} groupIndex - The group index to reset
+     * @param {string} groupType - The group type ('dice' or 'duality')
+     */
+    resetDiceGroup(groupIndex, groupType) {
+        const diceTypesToReset = groupType === 'duality' ? ['d12'] : this.diceTypes;
+
+        diceTypesToReset.forEach(type => {
+            const counter = document.getElementById(`group-${groupIndex}-${type}-counter-value`);
+            if (counter) {
+                counter.textContent = (groupType === 'duality' && type === 'd12') ? '2' : '0';
+            }
+        });
+
+        // Reset modifier to 0
+        const modCounter = document.getElementById(`group-${groupIndex}-mod-counter-value`);
+        if (modCounter) {
+            modCounter.value = '0';
+        }
+
+        this.updateDiceGroupsData();
     }
 
     /**

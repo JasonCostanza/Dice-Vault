@@ -808,14 +808,32 @@ button:focus-visible {
     background-color: var(--ts-background-primary);
 }
 
+/* Group Reset Button */
+.group-reset-btn {
+    margin-left: 8px;
+    color: var(--ts-color-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    transition: color 0.2s ease;
+}
+
+.group-reset-btn:hover {
+    color: var(--ts-color-primary);
+}
+
 /* Accordion Toggle */
 .accordion-toggle {
     font-size: 1.3em;
     margin-left: 10px;
+    width: 1em;
+    text-align: center;
     color: var(--ts-color-secondary);
     display: flex;
     align-items: center !important;
     justify-content: center !important;
+    flex-shrink: 0;
 }
 
 /* Group Action Bar */
