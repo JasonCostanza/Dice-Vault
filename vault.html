@@ -56,16 +56,25 @@
             <div class="sort-options-container">
                 <div id="sort-options-container" class="sort-wrapper">
                     <label class="sort-label">Creature sort:</label>
-                    <select id="sort-options" class='creature-sort-list' onchange="rollSorter.sortSavedRolls()">
+                    <select id="sort-options" class="creature-sort-list hidden" onchange="rollSorter.sortSavedRolls()">
                         <option value="newest">Newest</option>
                         <option value="oldest">Oldest</option>
                         <option value="nameAsc">A-Z</option>
                         <option value="nameDesc">Z-A</option>
                     </select>
+                    <div class="custom-dropdown" data-select="sort-options">
+                        <button type="button" class="custom-dropdown-toggle">Newest<span class="dropdown-arrow">&#x25BE;</span></button>
+                        <div class="custom-dropdown-menu hidden">
+                            <div class="custom-dropdown-item selected" data-value="newest">Newest</div>
+                            <div class="custom-dropdown-item" data-value="oldest">Oldest</div>
+                            <div class="custom-dropdown-item" data-value="nameAsc">A-Z</div>
+                            <div class="custom-dropdown-item" data-value="nameDesc">Z-A</div>
+                        </div>
+                    </div>
                 </div>
                 <div id="sort-rolls-options-container" class="sort-wrapper">
                     <label class="sort-label">Groups sort:</label>
-                    <select id="sort-rolls-options" class='roll-groups-sort-list'
+                    <select id="sort-rolls-options" class="roll-groups-sort-list hidden"
                         onchange="rollSorter.sortRollsWithinGroups()">
                         <option value="default">Default</option>
                         <option value="newest">Newest</option>
@@ -73,6 +82,16 @@
                         <option value="nameAsc">A-Z</option>
                         <option value="nameDesc">Z-A</option>
                     </select>
+                    <div class="custom-dropdown" data-select="sort-rolls-options">
+                        <button type="button" class="custom-dropdown-toggle">Default<span class="dropdown-arrow">&#x25BE;</span></button>
+                        <div class="custom-dropdown-menu hidden">
+                            <div class="custom-dropdown-item selected" data-value="default">Default</div>
+                            <div class="custom-dropdown-item" data-value="newest">Newest</div>
+                            <div class="custom-dropdown-item" data-value="oldest">Oldest</div>
+                            <div class="custom-dropdown-item" data-value="nameAsc">A-Z</div>
+                            <div class="custom-dropdown-item" data-value="nameDesc">Z-A</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

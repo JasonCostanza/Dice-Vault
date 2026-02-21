@@ -17,13 +17,16 @@ const rollsModule = rollManager;
 document.addEventListener("DOMContentLoaded", () => {
     // Initialize dice groups data
     diceGroupManager.updateDiceGroupsData();
-    
+
     // Add initial dice group if container is empty
     const diceGroupsContainer = document.querySelector(".content-col-dice");
     if (diceGroupsContainer && diceGroupsContainer.children.length === 0) {
         diceGroupManager.addDiceGroup();
     }
-    
+
+    // Initialize custom sort dropdowns
+    uiManager.initCustomDropdowns();
+
     // Language preference will be loaded when TaleSpire initializes via loadGlobalSettings()
 });
 

@@ -485,6 +485,100 @@ class UIManager {
     }
 
     /**
+     * Initializes all custom dropdown elements on the page.
+     * Each custom dropdown is linked to a hidden <select> element via the
+     * data-select attribute. Selecting an item updates the hidden select
+     * and triggers its change event so existing sort logic works unchanged.
+     */
+    initCustomDropdowns() {
+        document.querySelectorAll('.custom-dropdown').forEach(dropdown => {
+            const toggle = dropdown.querySelector('.custom-dropdown-toggle');
+            const menu = dropdown.querySelector('.custom-dropdown-menu');
+            const selectId = dropdown.dataset.select;
+            const hiddenSelect = selectId ? document.getElementById(selectId) : null;
+
+            toggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isOpen = !menu.classList.contains('hidden');
+                this.closeAllCustomDropdowns();
+                if (!isOpen) {
+                    menu.classList.remove('hidden');
+                    dropdown.classList.add('open');
+                }
+            });
+
+            dropdown.querySelectorAll('.custom-dropdown-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const value = item.dataset.value;
+                    const text = item.textContent;
+
+                    // Update visual state
+                    dropdown.querySelectorAll('.custom-dropdown-item').forEach(i => i.classList.remove('selected'));
+                    item.classList.add('selected');
+
+                    // Update toggle text (preserve the arrow span)
+                    const arrow = toggle.querySelector('.dropdown-arrow');
+                    toggle.textContent = text;
+                    if (arrow) toggle.appendChild(arrow);
+
+                    // Sync with hidden select and fire change event
+                    if (hiddenSelect) {
+                        hiddenSelect.value = value;
+                        hiddenSelect.dispatchEvent(new Event('change'));
+                    }
+
+                    // Close menu
+                    menu.classList.add('hidden');
+                    dropdown.classList.remove('open');
+                });
+            });
+        });
+
+        // Close dropdowns when clicking anywhere else
+        document.addEventListener('click', () => {
+            this.closeAllCustomDropdowns();
+        });
+    }
+
+    /**
+     * Closes all open custom dropdown menus.
+     */
+    closeAllCustomDropdowns() {
+        document.querySelectorAll('.custom-dropdown').forEach(d => {
+            d.querySelector('.custom-dropdown-menu').classList.add('hidden');
+            d.classList.remove('open');
+        });
+    }
+
+    /**
+     * Syncs custom dropdown display text with the options in the hidden <select>.
+     * Call this after language changes to keep labels in sync.
+     */
+    syncCustomDropdowns() {
+        document.querySelectorAll('.custom-dropdown').forEach(dropdown => {
+            const selectId = dropdown.dataset.select;
+            const hiddenSelect = selectId ? document.getElementById(selectId) : null;
+            if (!hiddenSelect) return;
+
+            const items = dropdown.querySelectorAll('.custom-dropdown-item');
+            const options = hiddenSelect.querySelectorAll('option');
+            const toggle = dropdown.querySelector('.custom-dropdown-toggle');
+            const arrow = toggle.querySelector('.dropdown-arrow');
+
+            options.forEach((opt, i) => {
+                if (items[i]) {
+                    items[i].textContent = opt.textContent;
+                    if (opt.value === hiddenSelect.value && items[i].classList.contains('selected')) {
+                        toggle.textContent = opt.textContent;
+                        if (arrow) toggle.appendChild(arrow);
+                    }
+                }
+            });
+        });
+    }
+
+    /**
      * Creates a simple progress bar
      * @param {number} percentage - Progress percentage (0-100)
      * @param {Element|string} containerOrSelector - Container element or selector

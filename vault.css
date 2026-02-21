@@ -113,26 +113,7 @@ body {
     background: var(--ts-color-primary);
 }
 
-/* Hide Scrollbars on Dropdown Selects */
-.creature-sort-list::-webkit-scrollbar,
-.roll-groups-sort-list::-webkit-scrollbar {
-    display: none !important;
-    width: 0 !important;
-    height: 0 !important;
-}
-
-.creature-sort-list::-webkit-scrollbar-track,
-.roll-groups-sort-list::-webkit-scrollbar-track,
-.creature-sort-list::-webkit-scrollbar-thumb,
-.roll-groups-sort-list::-webkit-scrollbar-thumb {
-    display: none !important;
-}
-
-.creature-sort-list,
-.roll-groups-sort-list {
-    scrollbar-width: none !important; /* Firefox */
-    -ms-overflow-style: none !important; /* Internet Explorer 10+ */
-}
+/* Native selects are hidden; custom dropdowns used instead */
 
 /* ====================================================================
    4. UTILITY CLASSES
@@ -158,7 +139,7 @@ body {
 
 .field-title {
     flex-shrink: 0;
-    font-size: 1.6em;
+    font-size: 1.8em;
     color: var(--ts-color-primary);
     margin-right: 8px;
 }
@@ -1006,7 +987,7 @@ i.ts-icon-size55::before {
 /* Saved Rolls Header */
 .saved-rolls-header {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: space-between;
     border-top: 2px solid var(--ts-accessibility-border);
     padding-top: 10px;
@@ -1136,71 +1117,102 @@ i.ts-icon-size55::before {
 /* Sort Options */
 .sort-wrapper {
     display: flex;
-    align-items: center;
-    margin-right: 5px;
+    flex-direction: column;
+    gap: 2px;
+    width: 110px;
 }
 
 .sort-label {
-    font-size: 0.85em;
+    font-size: 0.7em;
     color: var(--ts-color-secondary);
-    margin-right: 5px;
-    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .sort-options-container {
     display: flex;
-    gap: 15px;
-    align-items: center;
-    /* flex-wrap: wrap; */
+    gap: 10px;
+    align-items: flex-end;
 }
 
-/* Sort Dropdown Styles */
-.creature-sort-list,
-.roll-groups-sort-list {
-    padding: 8px 16px;
-    margin-left: 10px;
-    border: 1px solid var(--ts-color-primary);
+/* Custom Dropdown */
+.custom-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.custom-dropdown-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    padding: 4px 10px;
+    border: 1px solid var(--ts-accessibility-border);
     border-radius: 4px;
-    background-color: var(--ts-button-background);
+    background-color: var(--ts-background-secondary);
     color: var(--ts-color-primary);
     font-family: 'OptimusPrinceps', sans-serif;
-    font-weight: bold;
-    box-shadow: 0 2px 4px var(--ts-button-background);
-    appearance: none;
+    font-size: 0.85em;
     cursor: pointer;
-    transition: background-color 0.3s, border-color 0.3s;
+    transition: background-color 0.2s, border-color 0.2s;
+    width: 100%;
+    white-space: nowrap;
     height: auto;
-    max-height: none;
-    overflow: visible;
+    line-height: 1.4;
+    box-sizing: border-box;
 }
 
-.creature-sort-list:hover,
-.roll-groups-sort-list:hover {
-    background-color: var(--ts-button-hover);
+.custom-dropdown-toggle:hover {
+    background-color: var(--ts-background-tertiary);
     border-color: var(--ts-color-secondary);
 }
 
-.creature-sort-list::-ms-expand,
-.roll-groups-sort-list::-ms-expand {
-    display: none;
+.custom-dropdown-toggle:focus-visible {
+    outline: 2px solid var(--ts-accessibility-focus);
+    outline-offset: -1px;
+    background-color: var(--ts-background-tertiary);
 }
 
-/* Dropdown Arrow Indicators */
-#sort-options-container, 
-#sort-rolls-options-container {
-    position: relative;
+.dropdown-arrow {
+    font-size: 11px;
+    color: var(--ts-color-secondary);
+    transition: transform 0.2s ease;
 }
 
-#sort-options-container:after, 
-#sort-rolls-options-container:after {
-    content: '\2193';
-    font-size: 15px;
-    color: var(--ts-color-primary);
+.custom-dropdown.open .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.custom-dropdown-menu {
     position: absolute;
-    right: 5px;
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
+    top: calc(100% + 4px);
+    right: 0;
+    min-width: 100%;
+    background-color: var(--ts-background-secondary);
+    border: 1px solid var(--ts-accessibility-border);
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    z-index: 100;
+    overflow: hidden;
+}
+
+.custom-dropdown-item {
+    padding: 6px 12px;
+    color: var(--ts-color-primary);
+    font-family: 'OptimusPrinceps', sans-serif;
+    font-size: 0.85em;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.15s;
+}
+
+.custom-dropdown-item:hover {
+    background-color: var(--ts-background-tertiary);
+}
+
+.custom-dropdown-item.selected {
+    background-color: var(--ts-button-background);
+    color: var(--ts-color-primary);
 }
 
 /* ====================================================================
