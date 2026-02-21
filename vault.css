@@ -892,16 +892,21 @@ button:focus-visible {
     height: 1.6em;
     width: 40px;
     text-align: center;
-    border: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
     left: 50%;
     pointer-events: auto;
     background: transparent;
+    color: var(--ts-color-primary);
+    caret-color: var(--ts-color-primary);
     font-size: 1.5em;
     padding: 0;
     outline: none;
+    text-shadow: none;
     appearance: none;
     -moz-appearance: textfield;
     cursor: text;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
 .mod-counter-overlay::-webkit-inner-spin-button,
@@ -912,6 +917,7 @@ button:focus-visible {
 
 .mod-counter-overlay:focus-visible {
     background-color: var(--ts-background-secondary);
+    border-color: var(--ts-color-primary);
 }
 
 .mod-counter-overlay:hover {
