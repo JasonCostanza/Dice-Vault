@@ -60,3 +60,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Save/load functions are implemented in SaveLoadManager.js
 // No need to redefine them here
+
+// === GLOBAL INPUT BEHAVIOR ===
+// Pressing Enter in any text or number input blurs it, confirming the entry
+// without requiring a click outside the field.
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && (e.target.tagName === "INPUT")) {
+        e.target.blur();
+    }
+});
