@@ -504,6 +504,24 @@ class UIManager {
                 if (!isOpen) {
                     menu.classList.remove('hidden');
                     dropdown.classList.add('open');
+
+                    // Position the menu with fixed coordinates so it escapes
+                    // any overflow:hidden/auto ancestor (e.g. modal-body scroll container).
+                    const rect = toggle.getBoundingClientRect();
+                    menu.style.position = 'fixed';
+                    menu.style.top = (rect.bottom + 4) + 'px';
+                    menu.style.left = rect.left + 'px';
+                    menu.style.right = 'auto';
+                    menu.style.minWidth = rect.width + 'px';
+
+                    // After the browser renders the menu, clamp it if it bleeds
+                    // past the right edge of the viewport.
+                    requestAnimationFrame(() => {
+                        const menuRect = menu.getBoundingClientRect();
+                        if (menuRect.right > window.innerWidth) {
+                            menu.style.left = Math.max(0, rect.right - menu.offsetWidth) + 'px';
+                        }
+                    });
                 }
             });
 
@@ -542,11 +560,18 @@ class UIManager {
     }
 
     /**
-     * Closes all open custom dropdown menus.
+     * Closes all open custom dropdown menus and clears any fixed positioning
+     * applied during open to escape overflow-clipping ancestors.
      */
     closeAllCustomDropdowns() {
         document.querySelectorAll('.custom-dropdown').forEach(d => {
-            d.querySelector('.custom-dropdown-menu').classList.add('hidden');
+            const menu = d.querySelector('.custom-dropdown-menu');
+            menu.classList.add('hidden');
+            menu.style.position = '';
+            menu.style.top = '';
+            menu.style.left = '';
+            menu.style.right = '';
+            menu.style.minWidth = '';
             d.classList.remove('open');
         });
     }
