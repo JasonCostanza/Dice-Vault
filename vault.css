@@ -661,11 +661,12 @@ button:focus-visible {
 }
 
 #creature-name:hover {
-    background-color: var(--ts-background-tertiary);
+    background-color: var(--ts-background-primary);
 }
 
 #creature-name:focus {
-    background-color: var(--ts-background-tertiary);
+    background-color: var(--ts-background-primary);
+    border-bottom-color: var(--ts-accent-primary);
 }
 
 #creature-name.editing {
