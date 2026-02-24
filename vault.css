@@ -315,13 +315,13 @@ input {
 }
 
 button:hover,
-input:hover:not(.mod-counter-overlay) {
+input:hover:not(.mod-counter-overlay):not(.dice-group-name-input) {
     background-color: var(--ts-background-primary);
     transition: ease-in-out 0.2s;
 }
 
 button:focus-visible,
-input:focus-visible:not(.mod-counter-overlay) {
+input:focus-visible:not(.mod-counter-overlay):not(.dice-group-name-input) {
     outline: 3px solid var(--ts-accessibility-focus);
     outline-offset: -1px;
     background-color: var(--ts-background-primary);
@@ -771,8 +771,9 @@ button:focus-visible {
 }
 
 .dice-group-name-input.header-input {
-    background-color: var(--ts-background-tertiary);
-    border: 1px solid transparent;
+    background: transparent;
+    border: none;
+    outline: none;
     font-size: 1em;
     padding: 2px 4px;
     margin: 0;
@@ -781,12 +782,6 @@ button:focus-visible {
     min-width: 120px;
     font-weight: bold;
     color: var(--ts-color-primary);
-}
-
-.dice-group-name-input.header-input:hover,
-.dice-group-name-input.header-input:focus {
-    border-color: var(--ts-accessibility-border);
-    background-color: var(--ts-background-primary);
 }
 
 /* Header Action Buttons (reset, accordion toggle) */
