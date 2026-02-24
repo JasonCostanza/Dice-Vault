@@ -655,7 +655,7 @@ button:focus-visible {
 #creature-name {
     flex-grow: 1;
     padding: 5px;
-    font-size: 1em;
+    font-size: 1.15em;
     cursor: text;
     border: 3px solid transparent;
 }
