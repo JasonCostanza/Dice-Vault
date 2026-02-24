@@ -557,6 +557,68 @@ class UIManager {
         document.addEventListener('click', () => {
             this.closeAllCustomDropdowns();
         });
+
+        this.lockSettingsDropdownWidths();
+    }
+
+    /**
+     * Locks the min-width of each settings-row custom dropdown toggle to the
+     * width it would need to display its longest option. This prevents the
+     * toggle from resizing when the selected value changes.
+     *
+     * Because the settings modal is hidden at init time (display:none blocks
+     * layout), the modal is temporarily made invisible-but-renderable so that
+     * offsetWidth measurements return real values, then restored immediately.
+     */
+    lockSettingsDropdownWidths() {
+        const settingsModal = document.getElementById('settings-modal');
+        if (!settingsModal) return;
+
+        const wasHidden = settingsModal.classList.contains('hidden');
+        if (wasHidden) {
+            settingsModal.style.visibility = 'hidden';
+            settingsModal.style.pointerEvents = 'none';
+            settingsModal.classList.remove('hidden');
+        }
+
+        document.querySelectorAll('.settings-row .custom-dropdown').forEach(dropdown => {
+            const toggle = dropdown.querySelector('.custom-dropdown-toggle');
+            const arrow = toggle.querySelector('.dropdown-arrow');
+            const items = dropdown.querySelectorAll('.custom-dropdown-item');
+
+            // Save the current toggle text (without the arrow span)
+            const currentText = Array.from(toggle.childNodes)
+                .filter(n => n.nodeType === Node.TEXT_NODE)
+                .map(n => n.textContent)
+                .join('');
+
+            // Find the longest option text
+            let longestText = '';
+            items.forEach(item => {
+                if (item.textContent.trim().length > longestText.length) {
+                    longestText = item.textContent.trim();
+                }
+            });
+
+            // Temporarily render the toggle with the longest text and measure
+            toggle.textContent = longestText;
+            if (arrow) toggle.appendChild(arrow);
+            const maxWidth = toggle.offsetWidth;
+
+            // Restore original text
+            toggle.textContent = currentText;
+            if (arrow) toggle.appendChild(arrow);
+
+            if (maxWidth > 0) {
+                toggle.style.minWidth = maxWidth + 'px';
+            }
+        });
+
+        if (wasHidden) {
+            settingsModal.classList.add('hidden');
+            settingsModal.style.visibility = '';
+            settingsModal.style.pointerEvents = '';
+        }
     }
 
     /**
