@@ -23,6 +23,16 @@ Updating the symbiote may clear your saved rolls. You may want to backup your sa
 
 # Changelog
 ```
+# 5.7
+- Improvement: Major UI redesign with improved theming, animations, layout polish, and accessibility.
+- Improvement: Settings modal polished with toggle switches, custom dropdowns, and stable scrollbar.
+- Improvement: Modifier and group name inputs restyled for a cleaner look.
+- Improvement: Per-group reset button.
+- Improvement: Enter key now confirms all input fields.
+- Improvement: Creature name input improved with better hover/focus states and larger font size.
+- Improvement: Settings dropdown widths locked to prevent resizing on selection.
+- Refactor: Unified adjustDice function replaces separate increment/decrement functions.
+- Refactor: Syncronized dice count limit with Talespire's dice tray to 40.
 # 5.6
 - New Feature: Daggerheart support with duality groups!
 # 5.5
