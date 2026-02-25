@@ -586,6 +586,12 @@ button:focus-visible {
     cursor: pointer;
 }
 
+.wide-button:disabled,
+.wide-button:disabled:hover {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 /* Force consistent size across all roll-type images */
 .rolling-button img.roll-type-image {
     height: 32px !important;

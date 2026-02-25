@@ -154,6 +154,7 @@ class DiceGroupManager {
         content.classList.remove('collapsed');
 
         this.updateDiceGroupsData();
+        this.updateGroupButtonState();
         return groupIndex;
     }
 
@@ -161,6 +162,9 @@ class DiceGroupManager {
      * Adds a new duality group to the interface
      */
     addDualityGroup() {
+        const existingDuality = document.querySelectorAll('[data-group-type="duality"]');
+        if (existingDuality.length >= 1) return;
+
         const diceGroupsContainer = document.querySelector(".content-col-dice");
         const groupIndex = this.nextGroupId++;
 
@@ -236,6 +240,7 @@ class DiceGroupManager {
         content.classList.remove('collapsed');
 
         this.updateDiceGroupsData();
+        this.updateDualityButtonState();
         return groupIndex;
     }
 
@@ -288,6 +293,30 @@ class DiceGroupManager {
         if (typeof diceGroupsData !== 'undefined') {
             diceGroupsData = this.diceGroupsData;
         }
+
+        this.updateDualityButtonState();
+        this.updateGroupButtonState();
+    }
+
+    /**
+     * Enables or disables the duality button based on whether a duality group already exists.
+     * Only one duality group is allowed per roll.
+     */
+    updateDualityButtonState() {
+        const hasDuality = document.querySelectorAll('[data-group-type="duality"]').length >= 1;
+        const addBtn = document.getElementById('add-duality-btn');
+        const removeBtn = document.getElementById('remove-duality-btn');
+        if (addBtn) addBtn.disabled = hasDuality;
+        if (removeBtn) removeBtn.disabled = !hasDuality;
+    }
+
+    /**
+     * Enables or disables the remove group button based on whether any dice groups exist.
+     */
+    updateGroupButtonState() {
+        const hasGroups = document.querySelectorAll('[data-group-type="dice"]').length >= 1;
+        const removeBtn = document.getElementById('remove-group-btn');
+        if (removeBtn) removeBtn.disabled = !hasGroups;
     }
 
     /**
@@ -303,6 +332,7 @@ class DiceGroupManager {
             console.warn("No dice group to remove.");
         }
         this.updateDiceGroupsData();
+        this.updateGroupButtonState();
     }
 
     /**
@@ -318,6 +348,7 @@ class DiceGroupManager {
             console.warn("No duality group to remove.");
         }
         this.updateDiceGroupsData();
+        this.updateDualityButtonState();
     }
 
     /**
