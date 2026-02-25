@@ -1301,6 +1301,17 @@ i.ts-icon-size55::before {
     padding-bottom: 0;
 }
 
+/* Child Settings (indented sub-options) */
+.settings-child-options {
+    padding-left: 20px;
+    border-left: 2px solid var(--ts-accessibility-border);
+    margin-left: 10px;
+}
+
+.settings-child-row .field-title {
+    font-size: 0.9em;
+}
+
 /* Settings Dropdown Overrides */
 .settings-row .custom-dropdown-toggle {
     font-size: 1.1em;

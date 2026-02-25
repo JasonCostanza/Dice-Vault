@@ -391,7 +391,8 @@ const rollManager = (function () {
     }
     /**
      * Processes a roll removed event and removes a roll from the tracked
-     * rolls collection.
+     * rolls collection. If the removed roll is part of an explosion chain,
+     * cleans up the entire chain.
      *
      * [rollRemoved event](https://symbiote-docs.talespire.com/api_doc_v0_1.md.html#types/rollremoved)
      *
@@ -400,7 +401,22 @@ const rollManager = (function () {
      *                             roll ID to be removed.
      */
     function handleRollRemovedEvent(rollEvent) {
-        delete trackedRollIds[rollEvent.payload.rollId];
+        const removedId = rollEvent.payload.rollId;
+
+        // Check if this is a child explosion roll
+        if (explosionChildToParent[removedId]) {
+            const parentId = explosionChildToParent[removedId];
+            console.log(`Explosion child roll ${removedId} removed, cleaning up chain for parent ${parentId}`);
+            cleanupExplosionChain(parentId);
+        }
+
+        // Check if this is a parent with an active explosion chain
+        if (activeExplosionChains[removedId]) {
+            console.log(`Parent roll ${removedId} removed, cleaning up explosion chain`);
+            cleanupExplosionChain(removedId);
+        }
+
+        delete trackedRollIds[removedId];
     }
 
     /**
@@ -434,9 +450,16 @@ const rollManager = (function () {
         if (roll.resultsGroups != undefined) {
             let rollInfo = trackedRollIds[roll.rollId];
             if (rollInfo) {
+                // Early return: if this is an explosion child roll, delegate to explosion handler
+                if (rollInfo.isExplosionRoll) {
+                    await handleExplosionRollResult(roll, rollInfo);
+                    return;
+                }
+
                 try {
                     // Handle Duality Results
-                    if (rollInfo.dualityData && rollInfo.dualityData.isDuality) {
+                    let isDualityRoll = rollInfo.dualityData && rollInfo.dualityData.isDuality;
+                    if (isDualityRoll) {
                         console.log("Processing Duality Roll Results");
 
                         // Find Hope and Fear groups by name, not position
@@ -522,6 +545,18 @@ const rollManager = (function () {
                             roll,
                             rollInfo.type
                         );
+
+                        // Check for exploding dice BEFORE applying crit behavior
+                        const explodingEnabled = fetchSetting('enable-exploding-dice');
+                        if (explodingEnabled && !isDualityRoll) {
+                            const increaseSize = fetchSetting('increase-exploded-die-size');
+                            const explosionData = checkForExplosions(resultGroups, increaseSize);
+                            if (explosionData.hasExplosions) {
+                                console.log("Explosions detected, starting explosion chain");
+                                startExplosionChain(roll.rollId, rollInfo, resultGroups, explosionData);
+                                return;
+                            }
+                        }
 
                         resultGroups = applyCritBehaviorToRollResultsGroup(
                             resultGroups,
@@ -913,6 +948,310 @@ const rollManager = (function () {
             console.error(`Error sending results for roll ${rollId}:`, error);
             throw error;
         }
+    }
+
+    // ========== EXPLODING DICE FUNCTIONS ==========
+
+    /**
+     * Returns the maximum value for a given die type string (e.g., "d6" -> 6).
+     *
+     * @param {string} dieKind - The die type string (e.g., "d4", "d6", "d20")
+     * @returns {number} The maximum face value of the die
+     */
+    function getDieMaxValue(dieKind) {
+        return parseInt(dieKind.substring(1), 10);
+    }
+
+    /**
+     * Returns the stepped-up die type for the "Escalating Explosions" setting.
+     *
+     * @param {string} dieType - The current die type (e.g., "d6")
+     * @returns {string} The next larger die type, or the same type if at max (d20)
+     */
+    function getSteppedUpDieType(dieType) {
+        return dieStepUpMap[dieType] || dieType;
+    }
+
+    /**
+     * Inspects result groups for dice that rolled their maximum value (explosions).
+     * Recursively walks TaleSpire result trees to find dice nodes where any
+     * individual result equals the die's max face value.
+     *
+     * d100 (percentile) dice are excluded from explosion detection.
+     *
+     * @param {Array<Object>} resultGroups - The TaleSpire result groups to inspect
+     * @param {boolean} increaseSize - Whether to step up die size for re-rolls
+     * @returns {Object} { hasExplosions: bool, explosionDescriptors: [{groupIndex, groupName, diceToReroll: {d6: 2, ...}}] }
+     */
+    function checkForExplosions(resultGroups, increaseSize) {
+        const explosionDescriptors = [];
+
+        resultGroups.forEach((group, groupIndex) => {
+            const diceToReroll = {};
+
+            /**
+             * Recursively walk a result node looking for die-kind nodes
+             * where individual results equal the die's max value.
+             */
+            function walkResult(node) {
+                if (node.kind && Array.isArray(node.results)) {
+                    // Skip d100 -- percentile dice don't explode
+                    if (node.kind === "d100") return;
+
+                    const maxVal = getDieMaxValue(node.kind);
+                    const explodedCount = node.results.filter(r => r === maxVal).length;
+
+                    if (explodedCount > 0) {
+                        const rerollDie = increaseSize ? getSteppedUpDieType(node.kind) : node.kind;
+                        diceToReroll[rerollDie] = (diceToReroll[rerollDie] || 0) + explodedCount;
+                    }
+                } else if (node.operator && Array.isArray(node.operands)) {
+                    node.operands.forEach(walkResult);
+                }
+                // Plain value nodes (modifiers) are ignored
+            }
+
+            if (group.result) {
+                walkResult(group.result);
+            }
+
+            if (Object.keys(diceToReroll).length > 0) {
+                explosionDescriptors.push({
+                    groupIndex: groupIndex,
+                    groupName: group.name || `Group ${groupIndex + 1}`,
+                    diceToReroll: diceToReroll
+                });
+            }
+        });
+
+        return {
+            hasExplosions: explosionDescriptors.length > 0,
+            explosionDescriptors: explosionDescriptors
+        };
+    }
+
+    /**
+     * Converts explosion data into TaleSpire tray config format for re-rolling.
+     * No modifiers are included in explosion re-rolls. The group name includes
+     * the explosion round number for clarity.
+     *
+     * @param {Object} explosionData - Output from checkForExplosions()
+     * @param {number} explosionRound - The current explosion round number
+     * @returns {Array<Object>} TaleSpire dice tray descriptors [{name, roll}]
+     */
+    function buildExplosionDiceDescriptors(explosionData, explosionRound) {
+        const descriptors = [];
+
+        explosionData.explosionDescriptors.forEach(desc => {
+            let rollString = "";
+            for (const [dieType, count] of Object.entries(desc.diceToReroll)) {
+                if (rollString.length > 0) rollString += "+";
+                rollString += `${count}${dieType}`;
+            }
+
+            descriptors.push({
+                name: `${desc.groupName} (Explode #${explosionRound})`,
+                roll: rollString
+            });
+        });
+
+        return descriptors;
+    }
+
+    /**
+     * Creates a new explosion chain entry and initiates the first re-roll.
+     * The chain stores all metadata needed to accumulate results across
+     * multiple explosion rounds and finalize the combined result.
+     *
+     * @param {string} parentRollId - The rollId of the original (parent) roll
+     * @param {Object} rollInfo - The tracked roll info for the parent roll
+     * @param {Array<Object>} resultGroups - The result groups from the parent roll
+     * @param {Object} explosionData - Output from checkForExplosions()
+     */
+    function startExplosionChain(parentRollId, rollInfo, resultGroups, explosionData) {
+        activeExplosionChains[parentRollId] = {
+            parentRollId: parentRollId,
+            rollType: rollInfo.type,
+            critBehavior: rollInfo.critBehavior,
+            dualityData: rollInfo.dualityData,
+            explosionRound: 1,
+            maxExplosionDepth: 100,
+            accumulatedResultGroups: [resultGroups],
+            pendingExplosionData: explosionData,
+            increaseSize: fetchSetting('increase-exploded-die-size')
+        };
+
+        console.log(`Starting explosion chain for parent roll ${parentRollId}, round 1`);
+        initiateExplosionReroll(parentRollId);
+    }
+
+    /**
+     * Sends the explosion re-roll dice to TaleSpire's tray and tracks
+     * the child rollId so its results can be routed back to the chain.
+     *
+     * @param {string} parentRollId - The parent rollId that owns this chain
+     */
+    function initiateExplosionReroll(parentRollId) {
+        const chain = activeExplosionChains[parentRollId];
+        if (!chain) {
+            console.error(`No explosion chain found for parent ${parentRollId}`);
+            return;
+        }
+
+        const descriptors = buildExplosionDiceDescriptors(
+            chain.pendingExplosionData,
+            chain.explosionRound
+        );
+
+        console.log(`Explosion round ${chain.explosionRound}: putting dice in tray`, descriptors);
+
+        TS.dice.putDiceInTray(descriptors, true).then((childRollId) => {
+            trackedRollIds[childRollId] = {
+                type: chain.rollType,
+                critBehavior: chain.critBehavior,
+                createdByDiceVault: true,
+                dualityData: chain.dualityData,
+                isExplosionRoll: true,
+                parentRollId: parentRollId
+            };
+            explosionChildToParent[childRollId] = parentRollId;
+            console.log(`Explosion child roll ${childRollId} mapped to parent ${parentRollId}`);
+        });
+    }
+
+    /**
+     * Handles the result of an explosion child roll. Accumulates results,
+     * checks for further explosions, and either continues the chain or
+     * finalizes it.
+     *
+     * @param {Object} roll - The roll payload from TaleSpire
+     * @param {Object} rollInfo - The tracked roll info for this child roll
+     */
+    async function handleExplosionRollResult(roll, rollInfo) {
+        const parentRollId = rollInfo.parentRollId;
+        const chain = activeExplosionChains[parentRollId];
+
+        if (!chain) {
+            console.error(`Explosion chain not found for parent ${parentRollId}`);
+            return;
+        }
+
+        // Clean up the child mapping
+        delete explosionChildToParent[roll.rollId];
+
+        // Accumulate this round's results
+        chain.accumulatedResultGroups.push(roll.resultsGroups);
+        chain.explosionRound++;
+
+        console.log(`Explosion round ${chain.explosionRound - 1} results received. Checking for more explosions...`);
+
+        // Check for further explosions in this round's results
+        const explosionData = checkForExplosions(roll.resultsGroups, chain.increaseSize);
+
+        if (explosionData.hasExplosions && chain.explosionRound <= chain.maxExplosionDepth) {
+            // More explosions -- continue the chain
+            chain.pendingExplosionData = explosionData;
+            console.log(`More explosions detected, continuing chain (round ${chain.explosionRound})`);
+            initiateExplosionReroll(parentRollId);
+        } else {
+            // No more explosions or safety cap hit
+            if (chain.explosionRound > chain.maxExplosionDepth) {
+                console.warn(`Explosion chain hit safety cap of ${chain.maxExplosionDepth} rounds`);
+            }
+            console.log(`Explosion chain complete after ${chain.explosionRound - 1} rounds, finalizing...`);
+            await finalizeExplosionChain(parentRollId);
+        }
+    }
+
+    /**
+     * Combines all accumulated explosion round results into a single set of
+     * result groups, applies critical behavior, and sends the final result
+     * to TaleSpire for display.
+     *
+     * @param {string} parentRollId - The parent rollId that owns this chain
+     */
+    async function finalizeExplosionChain(parentRollId) {
+        const chain = activeExplosionChains[parentRollId];
+        if (!chain) {
+            console.error(`Cannot finalize: no chain found for ${parentRollId}`);
+            return;
+        }
+
+        try {
+            const combinedResults = combineExplosionResults(chain.accumulatedResultGroups);
+
+            // Apply critical behavior after all explosions resolve
+            const finalResults = applyCritBehaviorToRollResultsGroup(
+                combinedResults,
+                chain.critBehavior
+            );
+
+            await displayResults(finalResults, parentRollId);
+            console.log(`Explosion chain finalized for parent roll ${parentRollId}`);
+        } catch (error) {
+            console.error(`Error finalizing explosion chain for ${parentRollId}:`, error);
+        } finally {
+            // Clean up the chain
+            delete activeExplosionChains[parentRollId];
+        }
+    }
+
+    /**
+     * Merges result groups from all explosion rounds into a single array.
+     * Round 1 (the base roll) provides the groups with modifiers. Subsequent
+     * rounds' results are appended as additional operands to the matching
+     * group's result tree using the {operator: "+", operands: [...]} structure.
+     *
+     * If explosion rounds have fewer groups (e.g., only some groups exploded),
+     * unmatched explosion groups are appended to the first base group.
+     *
+     * @param {Array<Array<Object>>} allRounds - Array of result group arrays, one per round
+     * @returns {Array<Object>} Merged result groups with all rounds combined
+     */
+    function combineExplosionResults(allRounds) {
+        if (allRounds.length === 0) return [];
+        if (allRounds.length === 1) return allRounds[0];
+
+        // Deep clone round 1 as the base
+        const baseGroups = JSON.parse(JSON.stringify(allRounds[0]));
+
+        // For each subsequent round, merge results into base groups
+        for (let roundIdx = 1; roundIdx < allRounds.length; roundIdx++) {
+            const roundGroups = allRounds[roundIdx];
+
+            roundGroups.forEach((explosionGroup, i) => {
+                // Try to match to the corresponding base group by index
+                const targetGroup = i < baseGroups.length ? baseGroups[i] : baseGroups[0];
+
+                if (targetGroup && targetGroup.result && explosionGroup.result) {
+                    // Wrap in an addition node to combine base + explosion results
+                    targetGroup.result = {
+                        operator: "+",
+                        operands: [targetGroup.result, explosionGroup.result]
+                    };
+                }
+            });
+        }
+
+        return baseGroups;
+    }
+
+    /**
+     * Cleans up an entire explosion chain, removing all tracked child rolls
+     * and the chain entry itself.
+     *
+     * @param {string} parentRollId - The parent rollId of the chain to clean up
+     */
+    function cleanupExplosionChain(parentRollId) {
+        // Remove any child->parent mappings that point to this chain
+        for (const [childId, pId] of Object.entries(explosionChildToParent)) {
+            if (pId === parentRollId) {
+                delete trackedRollIds[childId];
+                delete explosionChildToParent[childId];
+            }
+        }
+        delete activeExplosionChains[parentRollId];
+        console.log(`Explosion chain cleaned up for parent ${parentRollId}`);
     }
 
     // PUBLIC API //

@@ -33,6 +33,32 @@ let savedDiceGroups = [];
 let trackedRollIds = {};
 
 /**
+ * Tracks active explosion chains, keyed by the parent (original) rollId.
+ * Each entry stores accumulated results, explosion round, and chain metadata.
+ */
+let activeExplosionChains = {};
+
+/**
+ * Maps a child (explosion re-roll) rollId back to the parent rollId
+ * that started the explosion chain.
+ */
+let explosionChildToParent = {};
+
+/**
+ * Die size step-up progression for the "Escalating Explosions" setting.
+ * When enabled, each explosion re-rolls with the next larger die type.
+ * d20 stays d20 (already at max size).
+ */
+const dieStepUpMap = Object.freeze({
+    d4: "d6",
+    d6: "d8",
+    d8: "d10",
+    d10: "d12",
+    d12: "d20",
+    d20: "d20"
+});
+
+/**
  * Array containing all dice denominations that exist.
  */
 const diceTypes = ["d4", "d6", "d8", "d10", "d100", "d12", "d20"];

@@ -207,6 +207,26 @@
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
+                    <!-- Exploding Dice toggle -->
+                    <div class="settings-row">
+                        <label class="field-title">Enable Exploding Dice</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="enable-exploding-dice" class="settings-input"
+                                    onchange="saveGlobalSettings(); updateExplodingDiceVisibility()" unchecked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <!-- Child setting: Increase Die Size (indented, hidden when parent is off) -->
+                    <div id="exploding-dice-options" class="settings-child-options hidden">
+                        <div class="settings-row settings-child-row">
+                            <label class="field-title">Escalating Explosions</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="increase-exploded-die-size" class="settings-input"
+                                        onchange="saveGlobalSettings()" unchecked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
                     <div class="settings-row">
                         <label class="field-title">Crit Behavior</label>
                         <select id="crit-behavior" class="hidden">

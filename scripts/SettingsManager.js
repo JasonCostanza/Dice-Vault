@@ -23,6 +23,8 @@ function defaultSettings(settingName) {
         autoSaveRolls: false,
         autoResetEdit: false,
         enableDualityGroups: false,
+        enableExplodingDice: false,
+        increaseExplodedDieSize: false,
         critBehavior: 'double-total',
         language: 'en'
     }
@@ -41,6 +43,8 @@ function saveGlobalSettings() {
         autoSaveRolls: document.getElementById('auto-save').checked,
         autoResetEdit: document.getElementById('auto-reset').checked,
         enableDualityGroups: document.getElementById('enable-duality-groups').checked,
+        enableExplodingDice: document.getElementById('enable-exploding-dice').checked,
+        increaseExplodedDieSize: document.getElementById('increase-exploded-die-size').checked,
         critBehavior: document.getElementById('crit-behavior').value,
         language: document.getElementById('language-select').value
     }
@@ -66,6 +70,8 @@ function loadGlobalSettings() {
         document.getElementById('auto-save').checked = settings.autoSaveRolls || defaultSettings('autoSaveRolls');
         document.getElementById('auto-reset').checked = settings.autoResetEdit || defaultSettings('autoResetEdit');
         document.getElementById('enable-duality-groups').checked = settings.enableDualityGroups || defaultSettings('enableDualityGroups');
+        document.getElementById('enable-exploding-dice').checked = settings.enableExplodingDice || defaultSettings('enableExplodingDice');
+        document.getElementById('increase-exploded-die-size').checked = settings.increaseExplodedDieSize || defaultSettings('increaseExplodedDieSize');
         document.getElementById('crit-behavior').value = settings.critBehavior || defaultSettings('critBehavior');
         const language = settings.language || defaultSettings('language');
         document.getElementById('language-select').value = language;
@@ -77,6 +83,7 @@ function loadGlobalSettings() {
 
         performAutoLoads();
         updateDualityVisibility();
+        updateExplodingDiceVisibility();
     }).catch(error => {
         console.error('Failed to load settings:', error);
         // Apply default language (English) if loading fails
@@ -294,6 +301,30 @@ function toggleMobileMenu() {
 // Export to global scope
 window.fetchSetting = fetchSetting;
 window.updateDualityVisibility = updateDualityVisibility;
+window.updateExplodingDiceVisibility = updateExplodingDiceVisibility;
+
+/**
+ * Updates the visibility of the "Escalating Explosions" child option
+ * based on the "Enable Exploding Dice" parent toggle. When the parent is
+ * disabled, the child checkbox is also forced unchecked and settings are saved.
+ */
+function updateExplodingDiceVisibility() {
+    const enableExploding = document.getElementById('enable-exploding-dice').checked;
+    const explodingOptions = document.getElementById('exploding-dice-options');
+    if (explodingOptions) {
+        if (enableExploding) {
+            explodingOptions.classList.remove('hidden');
+        } else {
+            explodingOptions.classList.add('hidden');
+            // Force child setting off when parent is disabled
+            const childCheckbox = document.getElementById('increase-exploded-die-size');
+            if (childCheckbox && childCheckbox.checked) {
+                childCheckbox.checked = false;
+                saveGlobalSettings();
+            }
+        }
+    }
+}
 
 /**
  * Updates the visibility of the Duality buttons based on the setting.

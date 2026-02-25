@@ -47,6 +47,8 @@ const translations = {
         autoSave: "Automatically save data",
         autoReset: "Auto-Reset Dice on Save",
         dualitySetting: "Enable Daggerheart Duality groups",
+        explodingDiceSetting: "Enable Exploding Dice",
+        increaseExplodedDieSizeSetting: "Escalating Explosions",
         critBehavior: "Crit Behavior",
         copyToClipboard: "Copy to Clipboard",
         version: "Version",
@@ -126,6 +128,8 @@ const translations = {
         autoSave: "Guardar datos automaticamente", // TODO: Replace with "automáticamente" when special characters are supported
         autoReset: "Auto-Reiniciar Dados al Guardar",
         dualitySetting: "Habilitar grupos de Dualidad Daggerheart",
+        explodingDiceSetting: "Habilitar Dados Explosivos",
+        increaseExplodedDieSizeSetting: "Aumentar Tamano del Dado Explotado", // TODO: Replace with "Tamaño" when special characters are supported
         critBehavior: "Comportamiento Critico", // TODO: Replace with "Crítico" when special characters are supported
         copyToClipboard: "Copiar al Portapapeles",
         version: "Version", // TODO: Replace with "Versión" when special characters are supported
@@ -205,6 +209,8 @@ const translations = {
         autoSave: "Daten automatisch speichern",
         autoReset: "Wurfel beim Speichern automatisch zurucksetzen", // TODO: Replace with "Würfel" and "zurücksetzen" when special characters are supported
         dualitySetting: "Daggerheart Dualitatsgruppen aktivieren", // TODO: Replace with "Dualitätsgruppen" when special characters are supported
+        explodingDiceSetting: "Explodierende Wurfel aktivieren", // TODO: Replace with "Würfel" when special characters are supported
+        increaseExplodedDieSizeSetting: "Explodierte Wurfelgrosse erhohen", // TODO: Replace with "Würfelgröße erhöhen" when special characters are supported
         critBehavior: "Kritisches Verhalten",
         copyToClipboard: "In Zwischenablage kopieren",
         version: "Version",
@@ -284,6 +290,8 @@ const translations = {
         autoSave: "Sauvegarder automatiquement les donnees", // TODO: Replace with "données" when special characters are supported
         autoReset: "Reinitialiser automatiquement les des lors de la sauvegarde", // TODO: Replace with "Réinitialiser" and "dés" when special characters are supported
         dualitySetting: "Activer les groupes de Dualite Daggerheart", // TODO: Replace with "Dualité" when special characters are supported
+        explodingDiceSetting: "Activer les Des Explosifs", // TODO: Replace with "Dés" when special characters are supported
+        increaseExplodedDieSizeSetting: "Augmenter la Taille du De Explose", // TODO: Replace with "Dé Explosé" when special characters are supported
         critBehavior: "Comportement Critique",
         copyToClipboard: "Copier dans le Presse-papiers",
         version: "Version",
@@ -363,6 +371,8 @@ const translations = {
         autoSave: "Salva automaticamente i dati",
         autoReset: "Auto-Reimposta Dadi al Salvataggio",
         dualitySetting: "Abilita gruppi Dualità Daggerheart",
+        explodingDiceSetting: "Abilita Dadi Esplosivi",
+        increaseExplodedDieSizeSetting: "Aumenta Dimensione Dado Esploso",
         critBehavior: "Comportamento Critico",
         copyToClipboard: "Copia negli Appunti",
         version: "Versione",
@@ -442,6 +452,8 @@ const translations = {
         autoSave: "Salvar dados automaticamente",
         autoReset: "Auto-Resetar Dados ao Salvar",
         dualitySetting: "Ativar grupos de Dualidade Daggerheart",
+        explodingDiceSetting: "Ativar Dados Explosivos",
+        increaseExplodedDieSizeSetting: "Aumentar Tamanho do Dado Explodido",
         critBehavior: "Comportamento Critico", // TODO: Replace with "Crítico" when special characters are supported
         copyToClipboard: "Copiar para Area de Transferencia", // TODO: Replace with "Área" and "Transferencia" when special characters are supported
         version: "Versao", // TODO: Replace with "Versão" when special characters are supported
@@ -631,13 +643,15 @@ function applyTranslations(lang) {
 
     // Settings labels
     const settingsLabels = document.querySelectorAll('#settings-modal .field-title');
-    if (settingsLabels.length >= 5) {
+    if (settingsLabels.length >= 8) {
         settingsLabels[0].textContent = t.language;
         settingsLabels[1].textContent = t.autoLoad;
         settingsLabels[2].textContent = t.autoSave;
         settingsLabels[3].textContent = t.autoReset;
         settingsLabels[4].textContent = t.dualitySetting;
-        settingsLabels[5].textContent = t.critBehavior;
+        settingsLabels[5].textContent = t.explodingDiceSetting;
+        settingsLabels[6].textContent = t.increaseExplodedDieSizeSetting;
+        settingsLabels[7].textContent = t.critBehavior;
     }
 
     // Language options
