@@ -1076,9 +1076,7 @@ i.reorder-icon-down {
 /* Saved Rolls Container */
 .saved-rolls-container {
     flex-grow: 1;
-    overflow-y: auto;
     margin-bottom: 10px;
-    max-height: calc(100vh - 250px);
     border: 1px solid var(--ts-accessibility-border);
     padding: 5px;
     margin-top: 10px;
