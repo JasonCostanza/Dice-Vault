@@ -50,13 +50,13 @@ const rollManager = (function () {
         if (modifierOnlyGroups.length > 0) {
             const groupNames = modifierOnlyGroups.map(group => group.name || 'Unnamed Group').join(', ');
             console.error(`Cannot roll groups with only modifiers and no dice: ${groupNames}`);
-            alert(`Error: Cannot roll groups with only modifiers and no dice.\n\nGroups with this issue: ${groupNames}\n\nPlease add at least one die to these groups or set their modifier to 0.`);
+            uiManager.showError(`Cannot roll groups with only modifiers and no dice.\n\nGroups with this issue: ${groupNames}\n\nPlease add at least one die to these groups or set their modifier to 0.`, "Invalid Roll");
             return;
         }
 
         if (diceGroupsData.every(diceGroupManager.isDiceGroupEmpty.bind(diceGroupManager))) {
             console.warn("Attempted to roll with empty dice groups");
-            alert("Error: No dice selected for rolling. Please add at least one die to a group before rolling.");
+            uiManager.showError("No dice selected for rolling. Please add at least one die to a group before rolling.", "Invalid Roll");
             return;
         }
         let critBehavior = fetchSetting("crit-behavior");
@@ -144,7 +144,7 @@ const rollManager = (function () {
 
             if (baseDiceDescriptors.length === 0) {
                 console.warn("No dice to roll after filtering empty groups");
-                alert("Error: No valid dice groups found for rolling. Please ensure at least one group has dice selected.");
+                uiManager.showError("No valid dice groups found for rolling. Please ensure at least one group has dice selected.", "Invalid Roll");
                 return;
             }
 
