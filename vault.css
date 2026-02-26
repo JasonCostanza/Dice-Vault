@@ -975,6 +975,89 @@ i.ts-icon-size55::before {
     margin-right: 2px;
 }
 
+/* Reorder Buttons */
+
+/* Reorder buttons for pinned rolls - match edit/delete circular button style */
+.reorder-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    margin: 0 2px;
+    cursor: pointer;
+    border: 1px solid var(--ts-color-primary);
+    background-color: var(--ts-button-background);
+    transition: background-color 0.2s;
+}
+
+.reorder-btn:hover {
+    background-color: var(--ts-button-hover);
+}
+
+.reorder-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* Flip chevron-up to create down arrow */
+i.reorder-icon-down {
+    transform: rotate(180deg);
+}
+
+/* Drag Handle for Dice Group Reordering */
+.drag-handle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+    color: var(--ts-color-secondary);
+    padding: 0 4px;
+    flex-shrink: 0;
+    font-size: 1.2em;
+    line-height: 1;
+    transition: color 0.2s ease;
+}
+
+.drag-handle::before {
+    content: '\283F';
+}
+
+.drag-handle:hover {
+    color: var(--ts-color-primary);
+}
+
+.drag-handle:active {
+    cursor: grabbing;
+}
+
+/* Dragging state */
+.dice-group-wrapper.dragging {
+    opacity: 0.4;
+}
+
+/* Drop indicator lines */
+.dice-group-wrapper.drag-over-top {
+    border-top: 3px solid var(--ts-accent-primary);
+}
+
+.dice-group-wrapper.drag-over-bottom {
+    border-bottom: 3px solid var(--ts-accent-primary);
+}
+
+/* Drag state for saved roll entries */
+.saved-roll-entry.dragging {
+    opacity: 0.4;
+}
+
+.saved-roll-entry.drag-over-top {
+    border-top: 3px solid var(--ts-accent-primary);
+}
+
+.saved-roll-entry.drag-over-bottom {
+    border-bottom: 3px solid var(--ts-accent-primary);
+}
 
 /* ====================================================================
    8. SAVED ROLLS SECTION

@@ -170,12 +170,15 @@ class RollSorter {
                         // Use the first group's name as the roll name for sorting
                         const aGroupDiv = a.querySelector('.dice-group[data-group-index="0"]');
                         const bGroupDiv = b.querySelector('.dice-group[data-group-index="0"]');
-                        
+
                         const aName = aGroupDiv ? aGroupDiv.querySelector('.dice-group-name-text')?.textContent || "" : "";
                         const bName = bGroupDiv ? bGroupDiv.querySelector('.dice-group-name-text')?.textContent || "" : "";
-                        
+
                         return bName.localeCompare(aName); // Z-A
                     });
+                    break;
+                case "custom":
+                    // Preserve current manual order — do nothing
                     break;
             }
 
@@ -296,6 +299,21 @@ class RollSorter {
             
             if (rollsSortOptions) {
                 rollsSortOptions.addEventListener("change", () => {
+                    // Remove the Custom option if a non-custom sort is selected
+                    if (rollsSortOptions.value !== 'custom') {
+                        const customOption = rollsSortOptions.querySelector('option[value="custom"]');
+                        if (customOption) {
+                            customOption.remove();
+                        }
+                        // Also remove from the custom dropdown menu
+                        const customDropdown = document.querySelector('.custom-dropdown[data-select="sort-rolls-options"]');
+                        if (customDropdown) {
+                            const customItem = customDropdown.querySelector('.custom-dropdown-item[data-value="custom"]');
+                            if (customItem) {
+                                customItem.remove();
+                            }
+                        }
+                    }
                     this.sortRollsWithinGroups(); // This will also call sortGroupsWithinRolls with the appropriate option
                 });
             } else {

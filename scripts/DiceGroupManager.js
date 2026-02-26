@@ -93,6 +93,7 @@ class DiceGroupManager {
         const accordionHeader = document.createElement("div");
         accordionHeader.className = "dice-group-header";
         accordionHeader.innerHTML = `
+            <span class="drag-handle" title="Drag to reorder"></span>
             <div class="header-content">
                 <input type="text" class="dice-group-name-input header-input" id="group-${groupIndex}-name"
                     placeholder="${groupNamePlaceholder}" oninput="diceGroupManager.updateDiceGroupsData()">
@@ -155,6 +156,12 @@ class DiceGroupManager {
 
         this.updateDiceGroupsData();
         this.updateGroupButtonState();
+
+        // Initialize drag-and-drop for the new group
+        if (typeof reorderManager !== 'undefined') {
+            reorderManager.initDragForGroup(wrapper);
+        }
+
         return groupIndex;
     }
 
@@ -180,6 +187,7 @@ class DiceGroupManager {
         const accordionHeader = document.createElement("div");
         accordionHeader.className = "dice-group-header";
         accordionHeader.innerHTML = `
+            <span class="drag-handle" title="Drag to reorder"></span>
             <div class="header-content">
                 <input type="text" class="dice-group-name-input header-input" id="group-${groupIndex}-name"
                     placeholder="${groupNamePlaceholder}" oninput="diceGroupManager.updateDiceGroupsData()">
@@ -241,6 +249,12 @@ class DiceGroupManager {
 
         this.updateDiceGroupsData();
         this.updateDualityButtonState();
+
+        // Initialize drag-and-drop for the new group
+        if (typeof reorderManager !== 'undefined') {
+            reorderManager.initDragForGroup(wrapper);
+        }
+
         return groupIndex;
     }
 

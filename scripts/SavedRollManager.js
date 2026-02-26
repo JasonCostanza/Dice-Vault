@@ -544,7 +544,7 @@ class SavedRollManager {
 
         creatureEntry.innerHTML = `
             <div class="roll-entry-container">
-                
+                <span class="drag-handle" title="Drag to reorder"></span>
                 <div class="roll-entry-dice-container"></div>
                 <div class="buttons-container">
                     <button type="button" class="edit-roll" onclick="savedRollManager.startEditingSavedRoll(this)">${editIcon}</button>
@@ -570,6 +570,11 @@ class SavedRollManager {
 
         // Ensure rolls remain sorted
         this.rollSorter.sortSavedRolls();
+
+        // Initialize drag-and-drop for the new roll entry
+        if (typeof reorderManager !== 'undefined') {
+            reorderManager.initDragForRoll(creatureEntry);
+        }
     }
 
     /**
