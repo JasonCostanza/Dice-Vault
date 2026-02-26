@@ -23,6 +23,12 @@ Updating the symbiote may clear your saved rolls. You may want to backup your sa
 
 # Changelog
 ```
+# 6.0
+- New Feature: Exploding dice! Dice that roll their maximum value trigger an additional die roll. Optional "Escalating Explosions" setting increases the die size on each explosion.
+- New Feature: Drag-and-drop reordering for dice groups and pinned rolls. Grab the grip handle on the left to drag items into any order.
+- Improvement: Pinned roll sort mode "Custom" is now persistent — switching to another sort and back restores your last manually-arranged order.
+- Improvement: Invalid roll errors now display in a themed modal instead of a browser alert.
+- Improvement: Duality groups are limited to one per roll; Add/Remove Duality buttons now enable and disable based on state.
 # 5.7
 - Improvement: Major UI redesign with improved theming, animations, layout polish, and accessibility.
 - Improvement: Settings modal polished with toggle switches, custom dropdowns, and stable scrollbar.
