@@ -214,6 +214,7 @@ class ReorderManager {
 
         rollEntry.classList.remove('drag-over-top', 'drag-over-bottom');
         this._setCustomSortMode();
+        if (this.rollSorter) this.rollSorter.captureCustomOrder();
         handleDataChange();
     }
 

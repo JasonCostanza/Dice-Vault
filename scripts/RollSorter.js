@@ -4,8 +4,27 @@
  */
 class RollSorter {
     constructor() {
+        /**
+         * Stores the last manually-set custom roll order per creature group.
+         * Keyed by creature name, value is an ordered array of rollId strings.
+         * @type {Object.<string, string[]>}
+         */
+        this._customRollOrder = {};
         // Initialize event listeners for sorting functionality
         this.initializeSortingFunctionality();
+    }
+
+    /**
+     * Captures the current DOM order of roll entries within each creature group
+     * and stores it as the active custom order. Call this after a drag-drop reorder.
+     */
+    captureCustomOrder() {
+        this._customRollOrder = {};
+        document.querySelectorAll('.saved-roll-group').forEach(group => {
+            const creatureName = group.dataset.creatureName;
+            const rollEntries = Array.from(group.querySelectorAll('.saved-roll-entry'));
+            this._customRollOrder[creatureName] = rollEntries.map(e => e.dataset.rollId);
+        });
     }
 
     /**
@@ -177,9 +196,19 @@ class RollSorter {
                         return bName.localeCompare(aName); // Z-A
                     });
                     break;
-                case "custom":
-                    // Preserve current manual order — do nothing
+                case "custom": {
+                    // Restore the last saved custom order for this creature group
+                    const savedOrder = this._customRollOrder[group.dataset.creatureName];
+                    if (savedOrder && savedOrder.length > 0) {
+                        rollEntries.sort((a, b) => {
+                            const aPos = savedOrder.indexOf(a.dataset.rollId);
+                            const bPos = savedOrder.indexOf(b.dataset.rollId);
+                            // Entries not in saved order (e.g. newly added) go to the end
+                            return (aPos === -1 ? Infinity : aPos) - (bPos === -1 ? Infinity : bPos);
+                        });
+                    }
                     break;
+                }
             }
 
             // Clear and re-append the sorted roll entries
@@ -299,21 +328,6 @@ class RollSorter {
             
             if (rollsSortOptions) {
                 rollsSortOptions.addEventListener("change", () => {
-                    // Remove the Custom option if a non-custom sort is selected
-                    if (rollsSortOptions.value !== 'custom') {
-                        const customOption = rollsSortOptions.querySelector('option[value="custom"]');
-                        if (customOption) {
-                            customOption.remove();
-                        }
-                        // Also remove from the custom dropdown menu
-                        const customDropdown = document.querySelector('.custom-dropdown[data-select="sort-rolls-options"]');
-                        if (customDropdown) {
-                            const customItem = customDropdown.querySelector('.custom-dropdown-item[data-value="custom"]');
-                            if (customItem) {
-                                customItem.remove();
-                            }
-                        }
-                    }
                     this.sortRollsWithinGroups(); // This will also call sortGroupsWithinRolls with the appropriate option
                 });
             } else {
