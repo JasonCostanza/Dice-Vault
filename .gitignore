@@ -1,7 +1,6 @@
 .localStorage/
 .vs/
 .claude/
-test-dataset.json
 CLAUDE.md
 ARCHITECTURE.md
 /.docs/
