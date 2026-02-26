@@ -140,14 +140,14 @@ class SavedRollManager {
         if (modifierOnlyGroups.length > 0) {
             const groupNames = modifierOnlyGroups.map(group => group.name || 'Unnamed Group').join(', ');
             console.error(`Cannot pin/save groups with only modifiers and no dice: ${groupNames}`);
-            alert(`Error: Cannot pin groups with only modifiers and no dice.\n\nGroups with this issue: ${groupNames}\n\nPlease add at least one die to these groups or set their modifier to 0 before pinning.`);
+            uiManager.showError(`Cannot pin groups with only modifiers and no dice.\n\nGroups with this issue: ${groupNames}\n\nPlease add at least one die to these groups or set their modifier to 0 before pinning.`, "Invalid Pin");
             return;
         }
 
         // Check if all groups are empty
         if (savedDiceGroups.every(this.diceGroupManager.isDiceGroupEmpty.bind(this.diceGroupManager))) {
             console.warn("Attempted to pin/save empty dice groups");
-            alert("Error: No dice selected for pinning. Please add at least one die to a group before pinning.");
+            uiManager.showError("No dice selected for pinning. Please add at least one die to a group before pinning.", "Invalid Pin");
             return;
         }
 
@@ -615,7 +615,7 @@ class SavedRollManager {
         rollButton.onclick = function () {
             if (!Array.isArray(rollGroups) || rollGroups.length === 0) {
                 console.error('Attempted to roll an empty or invalid saved roll');
-                alert('Error: This saved roll has no valid dice groups.');
+                uiManager.showError('This saved roll has no valid dice groups.', 'Invalid Roll');
                 return;
             }
 
@@ -636,13 +636,13 @@ class SavedRollManager {
             if (modifierOnlyGroups.length > 0) {
                 const groupNames = modifierOnlyGroups.map(group => group.name || 'Unnamed Group').join(', ');
                 console.error(`Cannot roll saved roll with groups that have only modifiers: ${groupNames}`);
-                alert(`Error: Cannot roll groups with only modifiers and no dice.\n\nGroups with this issue: ${groupNames}\n\nPlease edit this saved roll to add dice or remove the modifiers.`);
+                uiManager.showError(`Cannot roll groups with only modifiers and no dice.\n\nGroups with this issue: ${groupNames}\n\nPlease edit this saved roll to add dice or remove the modifiers.`, 'Invalid Roll');
                 return;
             }
 
             if (rollGroups.every(diceGroupManager.isDiceGroupEmpty.bind(diceGroupManager))) {
                 console.error('Attempted to roll an empty or invalid saved roll');
-                alert('Error: This saved roll has no dice selected. Please edit the saved roll to add at least one die.');
+                uiManager.showError('This saved roll has no dice selected. Please edit the saved roll to add at least one die.', 'Invalid Roll');
                 return;
             }
 
