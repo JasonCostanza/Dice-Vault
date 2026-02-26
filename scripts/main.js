@@ -4,6 +4,7 @@
 // Initialize all class instances
 const diceGroupManager = new DiceGroupManager();
 const rollSorter = new RollSorter();
+const reorderManager = new ReorderManager(diceGroupManager, rollSorter);
 const savedRollManager = new SavedRollManager(diceGroupManager, rollSorter);
 const uiManager = new UIManager();
 const counterManager = new CounterManager();
