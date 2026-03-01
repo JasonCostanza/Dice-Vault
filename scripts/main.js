@@ -70,3 +70,13 @@ document.addEventListener("keydown", (e) => {
         e.target.blur();
     }
 });
+
+// === CTRL KEY STATE TRACKING ===
+// TaleSpire's Electron environment may strip modifier key info from mouse events,
+// so we track Ctrl state manually via keydown/keyup and store it in isCtrlHeld.
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Control") isCtrlHeld = true;
+});
+document.addEventListener("keyup", (e) => {
+    if (e.key === "Control") isCtrlHeld = false;
+});

@@ -4,6 +4,13 @@
 let debugMode = true; // Set to false to disable console logging
 
 /**
+ * Tracks whether the Ctrl key is currently held down.
+ * Used as a fallback because TaleSpire's Electron environment
+ * may strip modifier key info from mouse events (e.g., event.ctrlKey).
+ */
+let isCtrlHeld = false;
+
+/**
  * Flag used to confirm overwriting of existing saved rolls.
  * This is set to true when the user confirms they want to overwrite
  * an existing roll with the same name and group structure.

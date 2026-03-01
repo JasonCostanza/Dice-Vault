@@ -75,6 +75,23 @@ class DiceGroupManager {
     }
 
     /**
+     * Resets a single die counter to 0.
+     * @param {string} type - The combined group-die identifier (e.g., "group-0-d6").
+     */
+    resetSingleDie(type) {
+        const lastDashIndex = type.lastIndexOf("-");
+        const groupId = type.substring(0, lastDashIndex);
+        const diceType = type.substring(lastDashIndex + 1);
+        const counterId = `${groupId}-${diceType}-counter-value`;
+        const counter = document.getElementById(counterId);
+
+        if (counter) {
+            counter.textContent = 0;
+            this.updateDiceGroupsData();
+        }
+    }
+
+    /**
      * Adds a new dice group to the interface
      */
     addDiceGroup() {
@@ -127,7 +144,7 @@ class DiceGroupManager {
             diceHTML += `
                 <div class="dice-counter unselectable" id="group-${groupIndex}-${type}-counter">
                     <i class="ts-icon-${type} ts-icon-size55" onclick="diceGroupManager.adjustDice('group-${groupIndex}-${type}', 1)"
-                    oncontextmenu="diceGroupManager.adjustDice('group-${groupIndex}-${type}', -1); return false;"></i>
+                    oncontextmenu="isCtrlHeld ? diceGroupManager.resetSingleDie('group-${groupIndex}-${type}') : diceGroupManager.adjustDice('group-${groupIndex}-${type}', -1); return false;"></i>
                     <div class="counter-overlay" id="group-${groupIndex}-${type}-counter-value">0</div>
                     <div class="dice-label">${type.toUpperCase()}</div>
                 </div>
