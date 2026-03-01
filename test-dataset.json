@@ -208,11 +208,6 @@
               "name": "Basic Duality - A",
               "diceCounts": { "d12": 1 },
               "groupType": "duality"
-            },
-            {
-              "name": "Basic Duality - B",
-              "diceCounts": { "d12": 1 },
-              "groupType": "duality"
             }
           ]
         },
@@ -222,11 +217,6 @@
               "name": "Duality with Modifier - A",
               "diceCounts": { "d12": 1, "mod": 5 },
               "groupType": "duality"
-            },
-            {
-              "name": "Duality with Modifier - B",
-              "diceCounts": { "d12": 1, "mod": 5 },
-              "groupType": "duality"
             }
           ]
         },
@@ -234,11 +224,6 @@
           "savedRoll": [
             {
               "name": "Mixed: Duality - A",
-              "diceCounts": { "d12": 1 },
-              "groupType": "duality"
-            },
-            {
-              "name": "Mixed: Duality - B",
               "diceCounts": { "d12": 1 },
               "groupType": "duality"
             },
