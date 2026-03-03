@@ -533,6 +533,19 @@ const rollManager = (function () {
                                 otherGroups = applyCritBehaviorToRollResultsGroup(otherGroups, rollInfo.critBehavior);
                             }
 
+                            // Check for exploding dice in non-duality groups only
+                            // Duality dice (Hope/Fear) should never explode, but other dice in the roll can
+                            const explodingEnabled = fetchSetting('enable-exploding-dice');
+                            if (explodingEnabled && otherGroups.length > 0) {
+                                const increaseSize = fetchSetting('increase-exploded-die-size');
+                                const explosionData = checkForExplosions(otherGroups, increaseSize);
+                                if (explosionData.hasExplosions) {
+                                    console.log("Explosions detected in non-duality groups, starting explosion chain");
+                                    startExplosionChain(roll.rollId, rollInfo, otherGroups, explosionData, [winningGroup]);
+                                    return;
+                                }
+                            }
+
                             // Include both the duality result AND any other dice groups
                             // The duality groups are totalled together, but other groups remain separate
                             resultGroups = [winningGroup, ...otherGroups];
@@ -548,7 +561,7 @@ const rollManager = (function () {
 
                         // Check for exploding dice BEFORE applying crit behavior
                         const explodingEnabled = fetchSetting('enable-exploding-dice');
-                        if (explodingEnabled && !isDualityRoll) {
+                        if (explodingEnabled) {
                             const increaseSize = fetchSetting('increase-exploded-die-size');
                             const explosionData = checkForExplosions(resultGroups, increaseSize);
                             if (explosionData.hasExplosions) {
@@ -1068,7 +1081,7 @@ const rollManager = (function () {
      * @param {Array<Object>} resultGroups - The result groups from the parent roll
      * @param {Object} explosionData - Output from checkForExplosions()
      */
-    function startExplosionChain(parentRollId, rollInfo, resultGroups, explosionData) {
+    function startExplosionChain(parentRollId, rollInfo, resultGroups, explosionData, prependedGroups = []) {
         activeExplosionChains[parentRollId] = {
             parentRollId: parentRollId,
             rollType: rollInfo.type,
@@ -1078,7 +1091,8 @@ const rollManager = (function () {
             maxExplosionDepth: 100,
             accumulatedResultGroups: [resultGroups],
             pendingExplosionData: explosionData,
-            increaseSize: fetchSetting('increase-exploded-die-size')
+            increaseSize: fetchSetting('increase-exploded-die-size'),
+            prependedGroups: prependedGroups
         };
 
         console.log(`Starting explosion chain for parent roll ${parentRollId}, round 1`);
@@ -1186,7 +1200,9 @@ const rollManager = (function () {
                 chain.critBehavior
             );
 
-            await displayResults(finalResults, parentRollId);
+            // Prepend pre-processed groups (e.g., duality result) before displaying
+            const displayGroups = [...(chain.prependedGroups || []), ...finalResults];
+            await displayResults(displayGroups, parentRollId);
             console.log(`Explosion chain finalized for parent roll ${parentRollId}`);
         } catch (error) {
             console.error(`Error finalizing explosion chain for ${parentRollId}:`, error);
