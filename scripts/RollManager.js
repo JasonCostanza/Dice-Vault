@@ -663,19 +663,23 @@ const rollManager = (function () {
      *
      * This function takes a roll object and a boolean indicating whether the roll is
      * under advantage or disadvantage conditions. It divides the roll's results into
-     * two equal sets. If the number of results groups is less than 2 or not even, it
-     * returns the original results groups. It then calculates the sum of each set.
-     * Under advantage conditions, it returns the set with the higher sum; under disadvantage
-     * conditions, it returns the set with the lower sum.
+     * two equal sets and evaluates each group position independently. For each position,
+     * it compares the corresponding group from set 1 vs set 2 and picks the winner
+     * individually — meaning the final result may mix groups from both rolls. Under
+     * advantage conditions, it picks the group with the higher sum at each position;
+     * under disadvantage conditions, it picks the group with the lower sum.
+     *
+     * If the number of results groups is less than 2 or not even, it returns the
+     * original results groups unchanged.
      *
      * @param {Object} roll             - An object representing a roll, which contains an array of
      *                                    results groups.
      * @param {boolean} isAdvantage     - A boolean indicating if the roll is under advantage (true)
      *                                    or disadvantage (false) conditions.
      *
-     * @returns {Promise<Array>} A promise that resolves to an array representing the
-     *                           set of roll results with either the highest sum (advantage)
-     *                           or the lowest sum (disadvantage).
+     * @returns {Promise<Array>} A promise that resolves to an array of per-position winning
+     *                           groups, each independently chosen for the highest sum (advantage)
+     *                           or lowest sum (disadvantage).
      */
     async function handleAdvantageDisadvantageRoll(roll, isAdvantage) {
         if (
@@ -685,25 +689,21 @@ const rollManager = (function () {
             return roll.resultsGroups;
         }
 
-        let startingIndexOfSecondSetOfGroups = roll.resultsGroups.length / 2;
+        let half = roll.resultsGroups.length / 2;
+        let firstSetOfGroups = roll.resultsGroups.slice(0, half);
+        let secondSetOfGroups = roll.resultsGroups.slice(half);
 
-        let firstSetOfGroups = roll.resultsGroups.slice(
-            0,
-            startingIndexOfSecondSetOfGroups
-        );
+        let chosenGroups = [];
 
-        let secondSetOfGroups = roll.resultsGroups.slice(
-            startingIndexOfSecondSetOfGroups
-        );
+        for (let i = 0; i < half; i++) {
+            let sumA = await TS.dice.evaluateDiceResultsGroup(firstSetOfGroups[i]);
+            let sumB = await TS.dice.evaluateDiceResultsGroup(secondSetOfGroups[i]);
 
-        let sumOfFirstSet = await getSumOfRollResultsGroups(firstSetOfGroups);
-        let sumOfSecondSet = await getSumOfRollResultsGroups(secondSetOfGroups);
+            let pickFirst = isAdvantage ? (sumA >= sumB) : (sumA <= sumB);
+            chosenGroups.push(pickFirst ? firstSetOfGroups[i] : secondSetOfGroups[i]);
+        }
 
-        let chosenSet = (isAdvantage ?
-            (sumOfFirstSet >= sumOfSecondSet ? firstSetOfGroups : secondSetOfGroups) :
-            (sumOfFirstSet <= sumOfSecondSet ? firstSetOfGroups : secondSetOfGroups));
-
-        return chosenSet;
+        return chosenGroups;
     }
 
     /**
