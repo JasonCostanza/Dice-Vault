@@ -1105,7 +1105,7 @@ const rollManager = (function () {
      *
      * @param {string} parentRollId - The parent rollId that owns this chain
      */
-    function initiateExplosionReroll(parentRollId) {
+    async function initiateExplosionReroll(parentRollId) {
         const chain = activeExplosionChains[parentRollId];
         if (!chain) {
             console.error(`No explosion chain found for parent ${parentRollId}`);
@@ -1119,18 +1119,108 @@ const rollManager = (function () {
 
         console.log(`Explosion round ${chain.explosionRound}: putting dice in tray`, descriptors);
 
-        TS.dice.putDiceInTray(descriptors, true).then((childRollId) => {
-            trackedRollIds[childRollId] = {
-                type: chain.rollType,
-                critBehavior: chain.critBehavior,
-                createdByDiceVault: true,
-                dualityData: chain.dualityData,
-                isExplosionRoll: true,
-                parentRollId: parentRollId
-            };
-            explosionChildToParent[childRollId] = parentRollId;
-            console.log(`Explosion child roll ${childRollId} mapped to parent ${parentRollId}`);
+        const childRollId = await TS.dice.putDiceInTray(descriptors, true);
+        trackedRollIds[childRollId] = {
+            type: chain.rollType,
+            critBehavior: chain.critBehavior,
+            createdByDiceVault: true,
+            dualityData: chain.dualityData,
+            isExplosionRoll: true,
+            parentRollId: parentRollId
+        };
+        explosionChildToParent[childRollId] = parentRollId;
+        console.log(`Explosion child roll ${childRollId} mapped to parent ${parentRollId}`);
+
+        await showExplosionWaitingModal(parentRollId);
+    }
+
+    /**
+     * Shows a modal while the user is resolving explosion dice in TaleSpire.
+     * Displays the current accumulated total and an Abort button.
+     *
+     * @param {string} parentRollId - The parent rollId that owns this chain
+     */
+    async function showExplosionWaitingModal(parentRollId) {
+        hideExplosionWaitingModal();
+
+        const chain = activeExplosionChains[parentRollId];
+        if (!chain) return;
+
+        let total = '—';
+        try {
+            const combined = combineExplosionResults(chain.accumulatedResultGroups);
+            const allGroups = [...(chain.prependedGroups || []), ...combined];
+            total = await getSumOfRollResultsGroups(allGroups);
+        } catch (e) {
+            console.warn('Could not calculate explosion running total:', e);
+        }
+
+        uiManager.showOverlay(true);
+
+        const modal = document.createElement('div');
+        modal.id = 'explosion-waiting-modal';
+        modal.style.position = 'fixed';
+        modal.style.left = '50%';
+        modal.style.top = '50%';
+        modal.style.transform = 'translate(-50%, -50%)';
+        modal.style.backgroundColor = 'var(--ts-background-primary)';
+        modal.style.padding = '20px';
+        modal.style.border = '4px solid var(--ts-accessibility-border)';
+        modal.style.zIndex = '1000';
+        modal.style.boxShadow = '0 4px 8px var(--ts-background-primary)';
+        modal.style.borderRadius = '4px';
+        modal.style.color = 'var(--ts-color-primary)';
+        modal.style.textAlign = 'center';
+        modal.style.minWidth = '240px';
+        modal.innerHTML = `
+            <h3 style="margin-top:0">Explosion!</h3>
+            <p style="margin:8px 0">Roll the exploded dice in the tray to continue.</p>
+            <p style="margin:8px 0;font-size:1.1em">Running Total: <strong>${total}</strong></p>
+            <div style="margin-top:16px">
+                <button id="abort-explosion-btn" class="black-button">Abort</button>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        explosionWaitingModal = modal;
+
+        document.getElementById('abort-explosion-btn').addEventListener('click', () => {
+            abortExplosionChain(parentRollId);
         });
+    }
+
+    /**
+     * Removes the explosion waiting modal and its overlay.
+     */
+    function hideExplosionWaitingModal() {
+        if (explosionWaitingModal) {
+            explosionWaitingModal.remove();
+            explosionWaitingModal = null;
+            uiManager.showOverlay(false);
+        }
+    }
+
+    /**
+     * Aborts the explosion chain, discarding any pending explosion round and
+     * reporting results based on what has been accumulated so far.
+     *
+     * @param {string} parentRollId - The parent rollId of the chain to abort
+     */
+    async function abortExplosionChain(parentRollId) {
+        hideExplosionWaitingModal();
+
+        const chain = activeExplosionChains[parentRollId];
+        if (!chain) return;
+
+        // Remove child roll tracking so incoming results (if any) are ignored
+        for (const [childId, pId] of Object.entries(explosionChildToParent)) {
+            if (pId === parentRollId) {
+                delete trackedRollIds[childId];
+                delete explosionChildToParent[childId];
+            }
+        }
+
+        console.log(`Explosion chain aborted for parent ${parentRollId}, finalizing with accumulated results`);
+        await finalizeExplosionChain(parentRollId);
     }
 
     /**
@@ -1142,6 +1232,9 @@ const rollManager = (function () {
      * @param {Object} rollInfo - The tracked roll info for this child roll
      */
     async function handleExplosionRollResult(roll, rollInfo) {
+        // Dismiss the waiting modal now that results have arrived
+        hideExplosionWaitingModal();
+
         const parentRollId = rollInfo.parentRollId;
         const chain = activeExplosionChains[parentRollId];
 
@@ -1267,6 +1360,7 @@ const rollManager = (function () {
             }
         }
         delete activeExplosionChains[parentRollId];
+        hideExplosionWaitingModal();
         console.log(`Explosion chain cleaned up for parent ${parentRollId}`);
     }
 

@@ -52,6 +52,12 @@ let activeExplosionChains = {};
 let explosionChildToParent = {};
 
 /**
+ * Tracks the currently visible explosion waiting modal DOM element.
+ * Null when no modal is displayed.
+ */
+let explosionWaitingModal = null;
+
+/**
  * Die size step-up progression for the "Escalating Explosions" setting.
  * When enabled, each explosion re-rolls with the next larger die type.
  * d20 stays d20 (already at max size).
