@@ -1537,3 +1537,64 @@ i.reorder-icon-down {
     color: var(--ts-color-secondary);
     opacity: 0.8;
 }
+
+/* Controls Button */
+.controls-btn {
+    width: 100%;
+    background: none;
+    border: 1px solid var(--ts-color-secondary);
+    color: var(--ts-color-secondary);
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+.controls-btn:hover {
+    background-color: var(--ts-background-secondary);
+    color: var(--ts-color-primary);
+}
+
+/* Controls Modal */
+#controls-modal {
+    z-index: 1100;
+}
+
+.controls-section {
+    margin-bottom: 16px;
+}
+
+.controls-section:last-child {
+    margin-bottom: 0;
+}
+
+.controls-section-title {
+    font-size: 0.7em;
+    color: var(--ts-color-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+}
+
+.control-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 4px 0;
+}
+
+.control-key {
+    background-color: var(--ts-background-tertiary);
+    color: var(--ts-color-primary);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    white-space: nowrap;
+    min-width: 120px;
+    text-align: center;
+}
+
+.control-desc {
+    font-size: 0.85em;
+    color: var(--ts-color-secondary);
+}

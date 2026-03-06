@@ -6,6 +6,21 @@
 function toggleSettingsDisplay() {
     const settingsModal = document.getElementById('settings-modal');
     settingsModal.classList.toggle('hidden');
+    // Close controls modal when settings closes
+    if (settingsModal.classList.contains('hidden')) {
+        const controlsModal = document.getElementById('controls-modal');
+        if (controlsModal && !controlsModal.classList.contains('hidden')) {
+            controlsModal.classList.add('hidden');
+        }
+    }
+}
+
+/**
+ * Toggles the visibility of the controls/help modal.
+ */
+function toggleControlsDisplay() {
+    const controlsModal = document.getElementById('controls-modal');
+    controlsModal.classList.toggle('hidden');
 }
 
 /**
@@ -265,6 +280,13 @@ async function handleRetrieveBackup() {
  */
 document.addEventListener('keydown', function (event) {
     if (event.key === 'Escape') {
+        // Close controls modal first if open (it sits on top of settings)
+        const controlsModal = document.getElementById('controls-modal');
+        if (controlsModal && !controlsModal.classList.contains('hidden')) {
+            controlsModal.classList.add('hidden');
+            return;
+        }
+
         const settingsModal = document.getElementById('settings-modal');
         if (settingsModal && !settingsModal.classList.contains('hidden')) {
             settingsModal.classList.add('hidden');

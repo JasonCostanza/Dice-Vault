@@ -255,6 +255,8 @@
                     </div>
                 </div>
                 <hr />
+                <button class="controls-btn" onclick="toggleControlsDisplay()" type="button">&#x2328; Controls</button>
+                <hr />
                 <div class="debug-section">
                     <div class="debug-section-header" tabindex="0" role="button"
                         onclick="uiManager.toggleAccordion(this)"
@@ -272,6 +274,49 @@
                     </div>
                 </div>
                 <div class="version">Version: 6.0</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Controls Modal -->
+    <div id="controls-modal" class="modal hidden">
+        <div class="modal-overlay" onclick="toggleControlsDisplay()"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Controls</h2>
+                <span class="modal-close" onclick="toggleControlsDisplay()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="controls-section">
+                    <div class="controls-section-title">Dice Icons</div>
+                    <div class="control-item"><span class="control-key">Click</span><span class="control-desc">Add one die</span></div>
+                    <div class="control-item"><span class="control-key">Right-click</span><span class="control-desc">Remove one die</span></div>
+                    <div class="control-item"><span class="control-key">Ctrl + Right-click</span><span class="control-desc">Reset die count to zero</span></div>
+                </div>
+                <div class="controls-section">
+                    <div class="controls-section-title">Dice Groups</div>
+                    <div class="control-item"><span class="control-key">Drag handle &#x2195;</span><span class="control-desc">Reorder groups</span></div>
+                    <div class="control-item"><span class="control-key">Reset icon</span><span class="control-desc">Clear all dice in group</span></div>
+                    <div class="control-item"><span class="control-key">Collapse icon &minus;/+</span><span class="control-desc">Toggle group visibility</span></div>
+                </div>
+                <div class="controls-section">
+                    <div class="controls-section-title">Text Fields</div>
+                    <div class="control-item"><span class="control-key">Enter</span><span class="control-desc">Confirms input</span></div>
+                </div>
+                <div class="controls-section">
+                    <div class="controls-section-title">Pinned Rolls</div>
+                    <div class="control-item"><span class="control-key">Edit icon</span><span class="control-desc">Rename the roll</span></div>
+                    <div class="control-item"><span class="control-key">Delete icon</span><span class="control-desc">Remove the roll</span></div>
+                </div>
+                <div class="controls-section">
+                    <div class="controls-section-title">Counters</div>
+                    <div class="control-item"><span class="control-key">Edit icon</span><span class="control-desc">Rename counter</span></div>
+                    <div class="control-item"><span class="control-key">Delete icon</span><span class="control-desc">Remove counter</span></div>
+                </div>
+                <div class="controls-section">
+                    <div class="controls-section-title">General</div>
+                    <div class="control-item"><span class="control-key">Escape</span><span class="control-desc">Close any open window</span></div>
+                </div>
             </div>
         </div>
     </div>
