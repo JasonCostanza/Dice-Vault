@@ -17,6 +17,7 @@ Check it out on [Mod.io](https://mod.io/g/talespire/m/dice-vault).
   - Save your dice vault collection to local storage so you never lose your carefully crafted dice vault.
   - Campaign-specific vaults. Have a preset collection for each campaign you're participating in!
   - Daggerheart support with duality groups!
+  - Access a built-in controls reference from the Settings menu for a quick reminder of keyboard shortcuts and mouse interactions.
 
 # A Note about Updating and Locally Saved Rolls
 Updating the symbiote may clear your saved rolls. You may want to backup your saved rolls before updating. To do this, copy from the "Retrieve Local Backup" button in the settings menu.
@@ -26,9 +27,12 @@ Updating the symbiote may clear your saved rolls. You may want to backup your sa
 # 6.0
 - New Feature: Exploding dice! Dice that roll their maximum value trigger an additional die roll. Optional "Escalating Explosions" setting increases the die size on each explosion.
 - New Feature: Drag-and-drop reordering for dice groups and pinned rolls. Grab the grip handle on the left to drag items into any order.
+- New Feature: Controls/Help modal accessible from the Settings menu — documents keyboard shortcuts (Escape, Enter), Ctrl+Right-click to reset dice, drag handle behavior, and icon actions.
 - Improvement: Pinned roll sort mode "Custom" is now persistent — switching to another sort and back restores your last manually-arranged order.
 - Improvement: Invalid roll errors now display in a themed modal instead of a browser alert.
 - Improvement: Duality groups are limited to one per roll; Add/Remove Duality buttons now enable and disable based on state.
+- Improvement: Explosion waiting modal now shows a running total and an Abort button to finalize the chain early.
+- Improvement: Non-duality dice groups are eligible for exploding dice during a duality roll; Hope/Fear d12s do not explode.
 # 5.7
 - Improvement: Major UI redesign with improved theming, animations, layout polish, and accessibility.
 - Improvement: Settings modal polished with toggle switches, custom dropdowns, and stable scrollbar.
@@ -109,7 +113,7 @@ Updating the symbiote may clear your saved rolls. You may want to backup your sa
 1. If you want, enter a name for the creature
 2. If you want, enter a name for the roll group
 3. If you want, add additional roll groups. Example, a flaming longsword deals one group of slashing damage and another group of fire damage.
-4. Left click to increment and right click to decrement the dice that you wish.
+4. Left click to add a die, right click to remove one, or Ctrl+Right-click to reset that die type to zero.
 5. Enter a modifier into the text box if you need one, example, "5" or "-5".
 6. Roll right away by selecting the style of roll you need, standard, advantage, disadvantage, etc., or pin it for later.
 
@@ -119,6 +123,14 @@ Updating the symbiote may clear your saved rolls. You may want to backup your sa
 3. Toggle `Daggerheart Support` on.
 4. Close the `Settings` menu.
 5. Use +/- Duality buttons to add a 2d12 dice group that represents `Hope` and `Fear`.
+
+## Controls Reference
+Open the Settings menu (hamburger icon) and click the **Controls** button for a full list of:
+- Dice icon interactions (click, right-click, Ctrl+Right-click)
+- Dice group actions (drag to reorder, reset, collapse)
+- Text field shortcuts (Enter to confirm)
+- Pinned roll and counter icon actions
+- General shortcuts (Escape closes any open modal)
 
 ## Counters
 1. Click the "New Counter" button to create a new counter.
