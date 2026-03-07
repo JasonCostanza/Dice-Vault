@@ -33,6 +33,8 @@ Updating the symbiote may clear your saved rolls. You may want to backup your sa
 - Improvement: Duality groups are limited to one per roll; Add/Remove Duality buttons now enable and disable based on state.
 - Improvement: Explosion waiting modal now shows a running total and an Abort button to finalize the chain early.
 - Improvement: Non-duality dice groups are eligible for exploding dice during a duality roll; Hope/Fear d12s do not explode.
+- Improvement: Controls modal and explosion modal strings are now fully localized.
+- Bug fix: Crit behavior setting now persists correctly across reloads.
 # 5.7
 - Improvement: Major UI redesign with improved theming, animations, layout polish, and accessibility.
 - Improvement: Settings modal polished with toggle switches, custom dropdowns, and stable scrollbar.
