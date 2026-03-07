@@ -74,6 +74,7 @@ const translations = {
         resetAllCountersTitle: "Reset All Counters",
         deleteAllCountersConfirm: "Are you sure you want to delete all counters? This action cannot be undone.",
         deleteAllCountersTitle: "Delete All Counters",
+        overwriteRollTitle: "Overwrite Roll",
         overwriteRollMessage: "A saved creature named \"{creatureName}\" with the same roll group names already exists.",
         overwriteRollQuestion: "Do you want to replace it with your new configuration?",
 
@@ -190,6 +191,7 @@ const translations = {
         resetAllCountersTitle: "Restablecer Todos los Contadores",
         deleteAllCountersConfirm: "Esta seguro de que desea eliminar todos los contadores? Esta accion no se puede deshacer.", // TODO: Replace with "¿Está" and "acción" when special characters are supported
         deleteAllCountersTitle: "Eliminar Todos los Contadores",
+        overwriteRollTitle: "Sobrescribir Tirada",
         overwriteRollMessage: "Ya existe una criatura guardada llamada \"{creatureName}\" con los mismos nombres de grupos de tiradas.",
         overwriteRollQuestion: "Quiere reemplazarla con su nueva configuracion?", // TODO: Replace with "¿Quiere" and "configuración" when special characters are supported
 
@@ -306,6 +308,7 @@ const translations = {
         resetAllCountersTitle: "Alle Zahler zurucksetzen", // TODO: Replace with "Zähler", "zurücksetzen" when special characters are supported
         deleteAllCountersConfirm: "Mochten Sie wirklich alle Zahler loschen? Diese Aktion kann nicht ruckgangig gemacht werden.", // TODO: Replace with "Möchten", "Zähler", "löschen", "rückgängig" when special characters are supported
         deleteAllCountersTitle: "Alle Zahler loschen", // TODO: Replace with "Zähler", "löschen" when special characters are supported
+        overwriteRollTitle: "Wurf uberschreiben", // TODO: Replace with "überschreiben" when special characters are supported
         overwriteRollMessage: "Eine gespeicherte Kreatur namens \"{creatureName}\" mit denselben Wurfgruppennamen existiert bereits.",
         overwriteRollQuestion: "Mochten Sie sie durch Ihre neue Konfiguration ersetzen?", // TODO: Replace with "Möchten" when special characters are supported
 
@@ -422,6 +425,7 @@ const translations = {
         resetAllCountersTitle: "Reinitialiser Tous les Compteurs", // TODO: Replace with "Réinitialiser" when special characters are supported
         deleteAllCountersConfirm: "Etes-vous sur de vouloir supprimer tous les compteurs? Cette action ne peut pas etre annulee.", // TODO: Replace with "etes", "sûr", "etre", "annulée" when special characters are supported
         deleteAllCountersTitle: "Supprimer Tous les Compteurs",
+        overwriteRollTitle: "Ecraser le Jet", // TODO: Replace with "Écraser" when special characters are supported
         overwriteRollMessage: "Une creature sauvegardee nommee \"{creatureName}\" avec les memes noms de groupes de jets existe deja.", // TODO: Replace with "créature", "sauvegardée", "nommée", "mêmes", "déjà" when special characters are supported
         overwriteRollQuestion: "Voulez-vous la remplacer par votre nouvelle configuration?",
 
@@ -538,6 +542,7 @@ const translations = {
         resetAllCountersTitle: "Reimposta Tutti i Contatori",
         deleteAllCountersConfirm: "Sei sicuro di voler eliminare tutti i contatori? Questa azione non può essere annullata.",
         deleteAllCountersTitle: "Elimina Tutti i Contatori",
+        overwriteRollTitle: "Sovrascrivi Tiro",
         overwriteRollMessage: "Una creatura salvata denominata \"{creatureName}\" con gli stessi nomi di gruppi di tiri esiste gia.", // TODO: Replace with "creatura", "denominata", "già" when special characters are supported
         overwriteRollQuestion: "Vuoi sostituirla con la tua nuova configurazione?",
 
@@ -654,6 +659,7 @@ const translations = {
         resetAllCountersTitle: "Redefinir Todos os Contadores",
         deleteAllCountersConfirm: "Tem certeza de que deseja excluir todos os contadores? Esta acao nao pode ser desfeita.", // TODO: Replace with "acão" and "não" when special characters are supported
         deleteAllCountersTitle: "Excluir Todos os Contadores",
+        overwriteRollTitle: "Sobrescrever Rolagem",
         overwriteRollMessage: "Uma criatura salva chamada \"{creatureName}\" com os mesmos nomes de grupos de rolagens ja existe.", // TODO: Replace with "já" when special characters are supported
         overwriteRollQuestion: "Deseja substitui-la pela sua nova configuracao?", // TODO: Replace with "configuração" when special characters are supported
 

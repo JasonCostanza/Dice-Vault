@@ -263,30 +263,21 @@ class SavedRollManager {
         uiManager.showOverlay(true);
 
         const modal = document.createElement('div');
-        modal.className = 'overwrite-modal';
-        modal.style.position = 'fixed';
-        modal.style.left = '50%';
-        modal.style.top = '50%';
-        modal.style.transform = 'translate(-50%, -50%)';
-        modal.style.backgroundColor = 'var(--ts-background-primary)';
-        modal.style.padding = '20px';
-        modal.style.border = '4px solid var(--ts-accessibility-border)';
-        modal.style.zIndex = '1000';
-        modal.style.boxShadow = '0 4px 8px var(--ts-background-primary)';
-        modal.style.borderRadius = '4px';
-        modal.style.color = 'var(--ts-color-primary)';
-        modal.style.textAlign = 'center';
-        modal.style.minWidth = '300px';
+        modal.className = 'ui-modal';
 
         const overwriteMessage = getTranslation('overwriteRollMessage').replace('{creatureName}', creatureName);
         const overwriteQuestion = getTranslation('overwriteRollQuestion');
+        const overwriteTitle = getTranslation('overwriteRollTitle');
 
         modal.innerHTML = `
-            <p>${overwriteMessage}</p>
-            <p>${overwriteQuestion}</p>
-            <div style="display: flex; justify-content: space-around; margin-top: 20px;">
-                <button id="overwrite-yes" class="black-button"><i class="ts-icon-check ts-icon-xsmall"></i></button>
-                <button id="overwrite-no" class="black-button"><i class="ts-icon-remove ts-icon-xsmall"></i></button>
+            <div class="modal-header"><h3>${overwriteTitle}</h3></div>
+            <div class="modal-body">
+                <p>${overwriteMessage}</p>
+                <p>${overwriteQuestion}</p>
+                <div class="modal-buttons">
+                    <button id="overwrite-yes" class="black-button"><i class="ts-icon-check ts-icon-xsmall"></i></button>
+                    <button id="overwrite-no" class="black-button"><i class="ts-icon-remove ts-icon-xsmall"></i></button>
+                </div>
             </div>
         `;
 

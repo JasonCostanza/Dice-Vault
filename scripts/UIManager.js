@@ -41,36 +41,26 @@ class UIManager {
 
             const modal = document.createElement('div');
             modal.className = 'ui-modal';
-            modal.style.position = 'fixed';
-            modal.style.left = '50%';
-            modal.style.top = '50%';
-            modal.style.transform = 'translate(-50%, -50%)';
-            modal.style.backgroundColor = 'var(--ts-background-primary)';
-            modal.style.padding = '20px';
-            modal.style.border = '4px solid var(--ts-accessibility-border)';
-            modal.style.zIndex = '1000';
-            modal.style.boxShadow = '0 4px 8px var(--ts-background-primary)';
-            modal.style.borderRadius = '4px';
-            modal.style.color = 'var(--ts-color-primary)';
-            modal.style.textAlign = 'center';
-            modal.style.minWidth = '300px';
 
-            // Add title if provided
             let modalHTML = '';
+
+            // Add header if title provided
             if (options.title) {
-                modalHTML += `<h3>${options.title}</h3>`;
+                modalHTML += `<div class="modal-header"><h3>${options.title}</h3></div>`;
             }
-            
-            modalHTML += content;
+
+            modalHTML += `<div class="modal-body">${content}`;
 
             // Add buttons if provided
             if (options.buttons && options.buttons.length > 0) {
-                modalHTML += '<div style="display: flex; justify-content: space-around; margin-top: 20px;">';
+                modalHTML += '<div class="modal-buttons">';
                 options.buttons.forEach((button, index) => {
                     modalHTML += `<button id="modal-btn-${index}" class="black-button">${button.text}</button>`;
                 });
                 modalHTML += '</div>';
             }
+
+            modalHTML += '</div>';
 
             modal.innerHTML = modalHTML;
             document.body.appendChild(modal);
@@ -170,33 +160,18 @@ class UIManager {
 
             const modal = document.createElement('div');
             modal.className = 'ui-modal';
-            modal.style.position = 'fixed';
-            modal.style.left = '50%';
-            modal.style.top = '50%';
-            modal.style.transform = 'translate(-50%, -50%)';
-            modal.style.backgroundColor = 'var(--ts-background-primary)';
-            modal.style.padding = '20px';
-            modal.style.border = '4px solid var(--ts-accessibility-border)';
-            modal.style.zIndex = '1000';
-            modal.style.boxShadow = '0 4px 8px var(--ts-background-primary)';
-            modal.style.borderRadius = '4px';
-            modal.style.color = 'var(--ts-color-primary)';
-            modal.style.textAlign = 'center';
-            modal.style.minWidth = '300px';
 
             modal.innerHTML = `
-                <h3>${title}</h3>
-                <p style="margin-bottom: 15px;">${message}</p>
-                <input type="text" id="modal-input" 
-                       placeholder="${placeholder}" 
-                       value="${defaultValue}"
-                       style="width: 100%; padding: 8px; margin-bottom: 15px; 
-                              border: 1px solid var(--ts-accessibility-border); 
-                              border-radius: 4px; background-color: var(--ts-background-tertiary);
-                              color: var(--ts-color-primary); font-size: 14px;">
-                <div style="display: flex; justify-content: space-around; margin-top: 20px;">
-                    <button id="modal-ok" class="black-button"><i class="ts-icon-check ts-icon-xsmall"></i></button>
-                    <button id="modal-cancel" class="black-button"><i class="ts-icon-remove ts-icon-xsmall"></i></button>
+                <div class="modal-header"><h3>${title}</h3></div>
+                <div class="modal-body">
+                    <p>${message}</p>
+                    <input type="text" id="modal-input" class="modal-input"
+                           placeholder="${placeholder}"
+                           value="${defaultValue}">
+                    <div class="modal-buttons">
+                        <button id="modal-ok" class="black-button"><i class="ts-icon-check ts-icon-xsmall"></i></button>
+                        <button id="modal-cancel" class="black-button"><i class="ts-icon-remove ts-icon-xsmall"></i></button>
+                    </div>
                 </div>
             `;
 
@@ -257,14 +232,6 @@ class UIManager {
 
             const overlay = document.createElement('div');
             overlay.id = 'ui-overlay';
-            overlay.style.position = 'fixed';
-            overlay.style.top = '0';
-            overlay.style.left = '0';
-            overlay.style.width = '100%';
-            overlay.style.height = '100%';
-            overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
-            overlay.style.zIndex = '999';
-            overlay.style.pointerEvents = 'auto';
             document.body.appendChild(overlay);
         } else {
             const overlay = document.getElementById('ui-overlay');
@@ -290,28 +257,19 @@ class UIManager {
 
         const loadingDiv = document.createElement('div');
         loadingDiv.id = 'loading-indicator';
-        loadingDiv.style.position = 'fixed';
-        loadingDiv.style.left = '50%';
-        loadingDiv.style.top = '50%';
-        loadingDiv.style.transform = 'translate(-50%, -50%)';
-        loadingDiv.style.backgroundColor = 'var(--ts-background-primary)';
-        loadingDiv.style.padding = '20px';
-        loadingDiv.style.border = '2px solid var(--ts-accessibility-border)';
-        loadingDiv.style.borderRadius = '4px';
-        loadingDiv.style.zIndex = '1001';
-        loadingDiv.style.color = 'var(--ts-color-primary)';
-        loadingDiv.style.textAlign = 'center';
+        loadingDiv.className = 'ui-modal';
 
-        // Simple text-based spinner
         loadingDiv.innerHTML = `
-            <div style="font-size: 24px; margin-bottom: 10px;">⟳</div>
-            <div>${message}</div>
+            <div class="modal-body" style="text-align: center;">
+                <div class="loading-spinner" style="font-size: 24px; margin-bottom: 10px;">⟳</div>
+                <div>${message}</div>
+            </div>
         `;
 
         document.body.appendChild(loadingDiv);
 
         // Animate the spinner
-        const spinner = loadingDiv.querySelector('div');
+        const spinner = loadingDiv.querySelector('.loading-spinner');
         let rotation = 0;
         const rotateSpinner = () => {
             rotation += 10;
