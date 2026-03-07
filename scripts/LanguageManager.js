@@ -874,11 +874,6 @@ function applyTranslations(lang) {
         groupsSortOptions[4].textContent = t.nameDesc;
     }
 
-    // Sync custom dropdown display text with updated option labels
-    if (typeof uiManager !== 'undefined') {
-        uiManager.syncCustomDropdowns();
-    }
-
     // Settings modal menu
     const mobileMenuHeader = document.querySelector('#mobile-menu-modal .modal-header h2');
     if (mobileMenuHeader) mobileMenuHeader.textContent = t.menu;
@@ -1008,6 +1003,11 @@ function applyTranslations(lang) {
         if (versionNumber) {
             versionDiv.textContent = `${t.version}: ${versionNumber[0]}`;
         }
+    }
+
+    // Sync custom dropdown display text with updated option labels
+    if (typeof uiManager !== 'undefined') {
+        uiManager.syncCustomDropdowns();
     }
 }
 
