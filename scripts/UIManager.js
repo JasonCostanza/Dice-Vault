@@ -656,9 +656,12 @@ class UIManager {
             options.forEach((opt, i) => {
                 if (items[i]) {
                     items[i].textContent = opt.textContent;
-                    if (opt.value === hiddenSelect.value && items[i].classList.contains('selected')) {
+                    if (opt.value === hiddenSelect.value) {
+                        items[i].classList.add('selected');
                         toggle.textContent = opt.textContent;
                         if (arrow) toggle.appendChild(arrow);
+                    } else {
+                        items[i].classList.remove('selected');
                     }
                 }
             });

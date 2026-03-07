@@ -91,6 +91,11 @@ function loadGlobalSettings() {
         const language = settings.language || defaultSettings('language');
         document.getElementById('language-select').value = language;
 
+        // Sync custom dropdown visuals to match the hidden select values loaded from storage
+        if (typeof uiManager !== 'undefined') {
+            uiManager.syncCustomDropdowns();
+        }
+
         // Apply translations after loading language preference
         if (typeof applyTranslations === 'function') {
             applyTranslations(language);
