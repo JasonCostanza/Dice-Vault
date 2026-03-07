@@ -1375,6 +1375,8 @@ i.reorder-icon-down {
 
 .settings-row .field-title {
     font-size: 1.3em;
+    flex-shrink: 1;
+    margin-right: 8px;
 }
 
 .settings-row:last-child {

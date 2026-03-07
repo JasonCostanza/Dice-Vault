@@ -39,6 +39,9 @@ const translations = {
         saveData: "Save Data",
         loadData: "Load Data",
         settings: "Settings",
+        reloadSymbiote: "Reload Symbiote",
+        autoLoading: "Auto-Loading",
+        autoSaving: "Auto-Saving",
         menuQuote: "\"May the rolls be in your favor\"",
 
         // Settings modal
@@ -77,6 +80,11 @@ const translations = {
         overwriteRollTitle: "Overwrite Roll",
         overwriteRollMessage: "A saved creature named \"{creatureName}\" with the same roll group names already exists.",
         overwriteRollQuestion: "Do you want to replace it with your new configuration?",
+
+        // Modal buttons
+        yes: "Yes",
+        no: "No",
+        ok: "OK",
 
         // Language names
         langEnglish: "English",
@@ -156,6 +164,9 @@ const translations = {
         saveData: "Guardar Datos",
         loadData: "Cargar Datos",
         settings: "Configuracion", // TODO: Replace with "Configuración" when special characters are supported
+        reloadSymbiote: "Recargar Simbionte",
+        autoLoading: "Cargando...",
+        autoSaving: "Guardando...",
         menuQuote: "\"Que las tiradas esten a tu favor\"", // TODO: Replace with "estén" when special characters are supported
 
         // Settings modal
@@ -194,6 +205,11 @@ const translations = {
         overwriteRollTitle: "Sobrescribir Tirada",
         overwriteRollMessage: "Ya existe una criatura guardada llamada \"{creatureName}\" con los mismos nombres de grupos de tiradas.",
         overwriteRollQuestion: "Quiere reemplazarla con su nueva configuracion?", // TODO: Replace with "¿Quiere" and "configuración" when special characters are supported
+
+        // Modal buttons
+        yes: "Si", // TODO: Replace with "Sí" when special characters are supported
+        no: "No",
+        ok: "Aceptar",
 
         // Language names
         langEnglish: "Ingles", // TODO: Replace with "Inglés" when special characters are supported
@@ -273,6 +289,9 @@ const translations = {
         saveData: "Daten speichern",
         loadData: "Daten laden",
         settings: "Einstellungen",
+        reloadSymbiote: "Symbiot neu laden",
+        autoLoading: "Automatisch laden",
+        autoSaving: "Automatisch speichern",
         menuQuote: "\"Mogen die Wurfel zu deinen Gunsten fallen\"", // TODO: Replace with "Mögen" and "Würfel" when special characters are supported
 
         // Settings modal
@@ -311,6 +330,11 @@ const translations = {
         overwriteRollTitle: "Wurf uberschreiben", // TODO: Replace with "überschreiben" when special characters are supported
         overwriteRollMessage: "Eine gespeicherte Kreatur namens \"{creatureName}\" mit denselben Wurfgruppennamen existiert bereits.",
         overwriteRollQuestion: "Mochten Sie sie durch Ihre neue Konfiguration ersetzen?", // TODO: Replace with "Möchten" when special characters are supported
+
+        // Modal buttons
+        yes: "Ja",
+        no: "Nein",
+        ok: "OK",
 
         // Language names
         langEnglish: "Englisch",
@@ -390,6 +414,9 @@ const translations = {
         saveData: "Sauvegarder Donnees", // TODO: Replace with "Données" when special characters are supported
         loadData: "Charger Donnees", // TODO: Replace with "Données" when special characters are supported
         settings: "Parametres", // TODO: Replace with "Paramètres" when special characters are supported
+        reloadSymbiote: "Recharger le Symbiote",
+        autoLoading: "Chargement auto",
+        autoSaving: "Sauvegarde auto",
         menuQuote: "\"Que les lancers soient en votre faveur\"",
 
         // Settings modal
@@ -428,6 +455,11 @@ const translations = {
         overwriteRollTitle: "Ecraser le Jet", // TODO: Replace with "Écraser" when special characters are supported
         overwriteRollMessage: "Une creature sauvegardee nommee \"{creatureName}\" avec les memes noms de groupes de jets existe deja.", // TODO: Replace with "créature", "sauvegardée", "nommée", "mêmes", "déjà" when special characters are supported
         overwriteRollQuestion: "Voulez-vous la remplacer par votre nouvelle configuration?",
+
+        // Modal buttons
+        yes: "Oui",
+        no: "Non",
+        ok: "OK",
 
         // Language names
         langEnglish: "Anglais",
@@ -507,6 +539,9 @@ const translations = {
         saveData: "Salva Dati",
         loadData: "Carica Dati",
         settings: "Impostazioni",
+        reloadSymbiote: "Ricarica Simbiote",
+        autoLoading: "Caricamento auto",
+        autoSaving: "Salvataggio auto",
         menuQuote: "\"Che i tiri siano a tuo favore\"",
 
         // Settings modal
@@ -545,6 +580,11 @@ const translations = {
         overwriteRollTitle: "Sovrascrivi Tiro",
         overwriteRollMessage: "Una creatura salvata denominata \"{creatureName}\" con gli stessi nomi di gruppi di tiri esiste gia.", // TODO: Replace with "creatura", "denominata", "già" when special characters are supported
         overwriteRollQuestion: "Vuoi sostituirla con la tua nuova configurazione?",
+
+        // Modal buttons
+        yes: "Si", // TODO: Replace with "Sì" when special characters are supported
+        no: "No",
+        ok: "OK",
 
         // Language names
         langEnglish: "Inglese",
@@ -624,6 +664,9 @@ const translations = {
         saveData: "Salvar Dados",
         loadData: "Carregar Dados",
         settings: "Configuracoes", // TODO: Replace with "Configuracões" when special characters are supported
+        reloadSymbiote: "Recarregar Simbionte",
+        autoLoading: "Carregando auto",
+        autoSaving: "Salvando auto",
         menuQuote: "\"Que as rolagens estejam a seu favor\"",
 
         // Settings modal
@@ -662,6 +705,11 @@ const translations = {
         overwriteRollTitle: "Sobrescrever Rolagem",
         overwriteRollMessage: "Uma criatura salva chamada \"{creatureName}\" com os mesmos nomes de grupos de rolagens ja existe.", // TODO: Replace with "já" when special characters are supported
         overwriteRollQuestion: "Deseja substitui-la pela sua nova configuracao?", // TODO: Replace with "configuração" when special characters are supported
+
+        // Modal buttons
+        yes: "Sim",
+        no: "Nao", // TODO: Replace with "Não" when special characters are supported
+        ok: "OK",
 
         // Language names
         langEnglish: "Ingles", // TODO: Replace with "Ingles" when special characters are supported
@@ -848,6 +896,11 @@ function applyTranslations(lang) {
     const settingsButton = document.querySelector('.mobile-menu-button[onclick*="toggleSettingsDisplay"]');
     if (settingsButton) {
         updateButtonWithIcon(settingsButton, t.settings);
+    }
+
+    const reloadButton = document.querySelector('.mobile-menu-button[onclick*="location.reload"]');
+    if (reloadButton) {
+        updateButtonWithIcon(reloadButton, t.reloadSymbiote);
     }
 
     const quoteText = document.querySelector('.quote-text');

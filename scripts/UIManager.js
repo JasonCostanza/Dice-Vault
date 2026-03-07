@@ -103,8 +103,8 @@ class UIManager {
             {
                 title,
                 buttons: [
-                    { text: 'Yes', value: true },
-                    { text: 'No', value: false }
+                    { text: getTranslation('yes'), value: true },
+                    { text: getTranslation('no'), value: false }
                 ]
             }
         );
@@ -122,7 +122,7 @@ class UIManager {
             {
                 title,
                 buttons: [
-                    { text: 'OK', value: true }
+                    { text: getTranslation('ok'), value: true }
                 ]
             }
         );
@@ -140,7 +140,7 @@ class UIManager {
             {
                 title,
                 buttons: [
-                    { text: 'OK', value: true }
+                    { text: getTranslation('ok'), value: true }
                 ]
             }
         );
