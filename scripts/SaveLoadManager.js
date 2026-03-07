@@ -50,6 +50,7 @@ function saveRollsToLocalStorage() {
     // Iterate over each creature group and save its rolls
     document.querySelectorAll('.saved-roll-group').forEach(group => {
         let creatureName = group.dataset.creatureName; // Get creature name
+        if (creatureName === 'Counters') return; // Counters are saved separately
         let allCreatureRolls = [];
 
         group.querySelectorAll('.saved-roll-entry').forEach(entry => {
