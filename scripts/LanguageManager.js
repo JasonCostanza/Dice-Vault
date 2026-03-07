@@ -87,7 +87,42 @@ const translations = {
 
         // Duality
         withHope: "with Hope",
-        withFear: "with Fear"
+        withFear: "with Fear",
+
+        // Controls button & modal
+        controls: "Controls",
+        controlsSectionDiceIcons: "Dice Icons",
+        controlsSectionDiceGroups: "Dice Groups",
+        controlsSectionTextFields: "Text Fields",
+        controlsSectionGeneral: "General",
+        controlKeyClick: "Click",
+        controlKeyRightClick: "Right-click",
+        controlKeyCtrlRightClick: "Ctrl + Right-click",
+        controlKeyDragHandle: "Drag handle \u2195",
+        controlKeyResetIcon: "Reset icon",
+        controlKeyCollapseIcon: "Collapse icon \u2212/+",
+        controlKeyEnter: "Enter",
+        controlKeyEditIcon: "Edit icon",
+        controlKeyDeleteIcon: "Delete icon",
+        controlKeyEscape: "Escape",
+        controlDescAddDie: "Add one die",
+        controlDescRemoveDie: "Remove one die",
+        controlDescResetDie: "Reset die count to zero",
+        controlDescReorder: "Reorder groups",
+        controlDescClearGroup: "Clear all dice in group",
+        controlDescToggleGroup: "Toggle group visibility",
+        controlDescConfirmInput: "Confirms input",
+        controlDescRenameRoll: "Rename the roll",
+        controlDescRemoveRoll: "Remove the roll",
+        controlDescRenameCounter: "Rename counter",
+        controlDescRemoveCounter: "Remove counter",
+        controlDescCloseWindow: "Close any open window",
+
+        // Explosion modal
+        explosionTitle: "Explosion!",
+        explosionInstruction: "Roll the exploded dice in the tray to continue.",
+        explosionRunningTotal: "Running Total:",
+        explosionAbort: "Abort"
     },
     es: {
         // Main UI
@@ -168,7 +203,42 @@ const translations = {
 
         // Duality
         withHope: "con Esperanza",
-        withFear: "con Miedo"
+        withFear: "con Miedo",
+
+        // Controls button & modal
+        controls: "Controles",
+        controlsSectionDiceIcons: "Iconos de Dados",
+        controlsSectionDiceGroups: "Grupos de Dados",
+        controlsSectionTextFields: "Campos de Texto",
+        controlsSectionGeneral: "General",
+        controlKeyClick: "Clic",
+        controlKeyRightClick: "Clic derecho",
+        controlKeyCtrlRightClick: "Ctrl + Clic derecho",
+        controlKeyDragHandle: "Asa de arrastre \u2195",
+        controlKeyResetIcon: "Icono de reinicio",
+        controlKeyCollapseIcon: "Icono contraer \u2212/+",
+        controlKeyEnter: "Enter",
+        controlKeyEditIcon: "Icono de edicion", // TODO: Replace with "edición" when special characters are supported
+        controlKeyDeleteIcon: "Icono de eliminar",
+        controlKeyEscape: "Escape",
+        controlDescAddDie: "Anadir un dado", // TODO: Replace with "Añadir" when special characters are supported
+        controlDescRemoveDie: "Quitar un dado",
+        controlDescResetDie: "Reiniciar contador de dados a cero",
+        controlDescReorder: "Reordenar grupos",
+        controlDescClearGroup: "Limpiar todos los dados del grupo",
+        controlDescToggleGroup: "Alternar visibilidad del grupo",
+        controlDescConfirmInput: "Confirmar entrada",
+        controlDescRenameRoll: "Renombrar la tirada",
+        controlDescRemoveRoll: "Eliminar la tirada",
+        controlDescRenameCounter: "Renombrar contador",
+        controlDescRemoveCounter: "Eliminar contador",
+        controlDescCloseWindow: "Cerrar cualquier ventana abierta",
+
+        // Explosion modal
+        explosionTitle: "Explosion!",
+        explosionInstruction: "Tira los dados explosivos en la bandeja para continuar.",
+        explosionRunningTotal: "Total parcial:",
+        explosionAbort: "Cancelar"
     },
     de: {
         // Main UI
@@ -249,7 +319,42 @@ const translations = {
 
         // Duality
         withHope: "mit Hoffnung",
-        withFear: "mit Furcht"
+        withFear: "mit Furcht",
+
+        // Controls button & modal
+        controls: "Steuerung",
+        controlsSectionDiceIcons: "Wurfel-Symbole", // TODO: Replace with "Würfel" when special characters are supported
+        controlsSectionDiceGroups: "Wurfelgruppen", // TODO: Replace with "Würfelgruppen" when special characters are supported
+        controlsSectionTextFields: "Textfelder",
+        controlsSectionGeneral: "Allgemein",
+        controlKeyClick: "Klick",
+        controlKeyRightClick: "Rechtsklick",
+        controlKeyCtrlRightClick: "Strg + Rechtsklick",
+        controlKeyDragHandle: "Ziehpunkt \u2195",
+        controlKeyResetIcon: "Zurucksetzen-Symbol", // TODO: Replace with "Zurücksetzen" when special characters are supported
+        controlKeyCollapseIcon: "Einklappen-Symbol \u2212/+",
+        controlKeyEnter: "Enter",
+        controlKeyEditIcon: "Bearbeiten-Symbol",
+        controlKeyDeleteIcon: "Loschen-Symbol", // TODO: Replace with "Löschen" when special characters are supported
+        controlKeyEscape: "Escape",
+        controlDescAddDie: "Einen Wurfel hinzufugen", // TODO: Replace with "Würfel hinzufügen" when special characters are supported
+        controlDescRemoveDie: "Einen Wurfel entfernen", // TODO: Replace with "Würfel" when special characters are supported
+        controlDescResetDie: "Wurfelanzahl auf null zurucksetzen", // TODO: Replace with "Würfelanzahl zurücksetzen" when special characters are supported
+        controlDescReorder: "Gruppen neu anordnen",
+        controlDescClearGroup: "Alle Wurfel in der Gruppe loschen", // TODO: Replace with "Würfel löschen" when special characters are supported
+        controlDescToggleGroup: "Gruppensichtbarkeit umschalten",
+        controlDescConfirmInput: "Eingabe bestatigen", // TODO: Replace with "bestätigen" when special characters are supported
+        controlDescRenameRoll: "Wurf umbenennen",
+        controlDescRemoveRoll: "Wurf entfernen",
+        controlDescRenameCounter: "Zahler umbenennen", // TODO: Replace with "Zähler" when special characters are supported
+        controlDescRemoveCounter: "Zahler entfernen", // TODO: Replace with "Zähler" when special characters are supported
+        controlDescCloseWindow: "Beliebiges offenes Fenster schliessen", // TODO: Replace with "schließen" when special characters are supported
+
+        // Explosion modal
+        explosionTitle: "Explosion!",
+        explosionInstruction: "Wirf die explodierten Wurfel in die Schale, um fortzufahren.", // TODO: Replace with "Würfel" when special characters are supported
+        explosionRunningTotal: "Laufendes Gesamt:",
+        explosionAbort: "Abbrechen"
     },
     fr: {
         // Main UI
@@ -330,7 +435,42 @@ const translations = {
 
         // Duality
         withHope: "avec Espoir",
-        withFear: "avec Peur"
+        withFear: "avec Peur",
+
+        // Controls button & modal
+        controls: "Controles", // TODO: Replace with "Contrôles" when special characters are supported
+        controlsSectionDiceIcons: "Icones de Des", // TODO: Replace with "Icônes de Dés" when special characters are supported
+        controlsSectionDiceGroups: "Groupes de Des", // TODO: Replace with "Dés" when special characters are supported
+        controlsSectionTextFields: "Champs de Texte",
+        controlsSectionGeneral: "General", // TODO: Replace with "Général" when special characters are supported
+        controlKeyClick: "Clic",
+        controlKeyRightClick: "Clic droit",
+        controlKeyCtrlRightClick: "Ctrl + Clic droit",
+        controlKeyDragHandle: "Poignee de glissement \u2195", // TODO: Replace with "Poignée" when special characters are supported
+        controlKeyResetIcon: "Icone de reinitialisation", // TODO: Replace with "Icône, réinitialisation" when special characters are supported
+        controlKeyCollapseIcon: "Icone reduire \u2212/+", // TODO: Replace with "Icône, réduire" when special characters are supported
+        controlKeyEnter: "Entree", // TODO: Replace with "Entrée" when special characters are supported
+        controlKeyEditIcon: "Icone d'edition", // TODO: Replace with "Icône, édition" when special characters are supported
+        controlKeyDeleteIcon: "Icone de suppression", // TODO: Replace with "Icône" when special characters are supported
+        controlKeyEscape: "Echap", // TODO: Replace with "Échap" when special characters are supported
+        controlDescAddDie: "Ajouter un de", // TODO: Replace with "dé" when special characters are supported
+        controlDescRemoveDie: "Retirer un de", // TODO: Replace with "dé" when special characters are supported
+        controlDescResetDie: "Reinitialiser le nombre de des a zero", // TODO: Replace with "Réinitialiser, dés, à" when special characters are supported
+        controlDescReorder: "Reordonner les groupes",
+        controlDescClearGroup: "Effacer tous les des du groupe", // TODO: Replace with "dés" when special characters are supported
+        controlDescToggleGroup: "Basculer la visibilite du groupe", // TODO: Replace with "visibilité" when special characters are supported
+        controlDescConfirmInput: "Confirmer la saisie",
+        controlDescRenameRoll: "Renommer le jet",
+        controlDescRemoveRoll: "Supprimer le jet",
+        controlDescRenameCounter: "Renommer le compteur",
+        controlDescRemoveCounter: "Supprimer le compteur",
+        controlDescCloseWindow: "Fermer toute fenetre ouverte", // TODO: Replace with "fenêtre" when special characters are supported
+
+        // Explosion modal
+        explosionTitle: "Explosion !",
+        explosionInstruction: "Lancez les des explosifs dans le plateau pour continuer.", // TODO: Replace with "dés" when special characters are supported
+        explosionRunningTotal: "Total en cours:",
+        explosionAbort: "Annuler"
     },
     it: {
         // Main UI
@@ -411,7 +551,42 @@ const translations = {
 
         // Duality
         withHope: "con Speranza",
-        withFear: "con Paura"
+        withFear: "con Paura",
+
+        // Controls button & modal
+        controls: "Controlli",
+        controlsSectionDiceIcons: "Icone Dadi",
+        controlsSectionDiceGroups: "Gruppi di Dadi",
+        controlsSectionTextFields: "Campi di Testo",
+        controlsSectionGeneral: "Generale",
+        controlKeyClick: "Clic",
+        controlKeyRightClick: "Clic destro",
+        controlKeyCtrlRightClick: "Ctrl + Clic destro",
+        controlKeyDragHandle: "Maniglia di trascinamento \u2195",
+        controlKeyResetIcon: "Icona di ripristino",
+        controlKeyCollapseIcon: "Icona comprimi \u2212/+",
+        controlKeyEnter: "Invio",
+        controlKeyEditIcon: "Icona modifica",
+        controlKeyDeleteIcon: "Icona elimina",
+        controlKeyEscape: "Esc",
+        controlDescAddDie: "Aggiungi un dado",
+        controlDescRemoveDie: "Rimuovi un dado",
+        controlDescResetDie: "Azzera il conteggio del dado",
+        controlDescReorder: "Riordina i gruppi",
+        controlDescClearGroup: "Cancella tutti i dadi nel gruppo",
+        controlDescToggleGroup: "Attiva/disattiva visibilita gruppo", // TODO: Replace with "visibilità" when special characters are supported
+        controlDescConfirmInput: "Conferma l'inserimento",
+        controlDescRenameRoll: "Rinomina il tiro",
+        controlDescRemoveRoll: "Rimuovi il tiro",
+        controlDescRenameCounter: "Rinomina contatore",
+        controlDescRemoveCounter: "Rimuovi contatore",
+        controlDescCloseWindow: "Chiudi qualsiasi finestra aperta",
+
+        // Explosion modal
+        explosionTitle: "Esplosione!",
+        explosionInstruction: "Lancia i dadi esplosi nel vassoio per continuare.",
+        explosionRunningTotal: "Totale parziale:",
+        explosionAbort: "Interrompi"
     },
     "pt-br": {
         // Main UI
@@ -492,7 +667,42 @@ const translations = {
 
         // Duality
         withHope: "com Esperanca", // TODO: Replace with "Esperança" when special characters are supported
-        withFear: "com Medo"
+        withFear: "com Medo",
+
+        // Controls button & modal
+        controls: "Controles",
+        controlsSectionDiceIcons: "Icones de Dados", // TODO: Replace with "Ícones" when special characters are supported
+        controlsSectionDiceGroups: "Grupos de Dados",
+        controlsSectionTextFields: "Campos de Texto",
+        controlsSectionGeneral: "Geral",
+        controlKeyClick: "Clique",
+        controlKeyRightClick: "Clique com botao direito", // TODO: Replace with "botão" when special characters are supported
+        controlKeyCtrlRightClick: "Ctrl + Clique direito",
+        controlKeyDragHandle: "Alca de arraste \u2195", // TODO: Replace with "Alça" when special characters are supported
+        controlKeyResetIcon: "Icone de reiniciar", // TODO: Replace with "Ícone" when special characters are supported
+        controlKeyCollapseIcon: "Icone recolher \u2212/+", // TODO: Replace with "Ícone" when special characters are supported
+        controlKeyEnter: "Enter",
+        controlKeyEditIcon: "Icone de edicao", // TODO: Replace with "Ícone, edição" when special characters are supported
+        controlKeyDeleteIcon: "Icone de exclusao", // TODO: Replace with "Ícone, exclusão" when special characters are supported
+        controlKeyEscape: "Escape",
+        controlDescAddDie: "Adicionar um dado",
+        controlDescRemoveDie: "Remover um dado",
+        controlDescResetDie: "Zerar a contagem de dados",
+        controlDescReorder: "Reordenar grupos",
+        controlDescClearGroup: "Limpar todos os dados do grupo",
+        controlDescToggleGroup: "Alternar visibilidade do grupo",
+        controlDescConfirmInput: "Confirma a entrada",
+        controlDescRenameRoll: "Renomear a rolagem",
+        controlDescRemoveRoll: "Remover a rolagem",
+        controlDescRenameCounter: "Renomear contador",
+        controlDescRemoveCounter: "Remover contador",
+        controlDescCloseWindow: "Fechar qualquer janela aberta",
+
+        // Explosion modal
+        explosionTitle: "Explosao!", // TODO: Replace with "Explosão!" when special characters are supported
+        explosionInstruction: "Role os dados explodidos na bandeja para continuar.",
+        explosionRunningTotal: "Total parcial:",
+        explosionAbort: "Cancelar"
     }
 };
 
@@ -681,6 +891,56 @@ function applyTranslations(lang) {
     // Copy to clipboard button
     const copyButton = document.getElementById('copy-backup-button');
     if (copyButton) copyButton.textContent = t.copyToClipboard;
+
+    // Controls button
+    const controlsBtn = document.querySelector('.controls-btn');
+    if (controlsBtn) controlsBtn.textContent = '\u2328 ' + t.controls;
+
+    // Controls modal
+    const controlsModalHeader = document.querySelector('#controls-modal .modal-header h2');
+    if (controlsModalHeader) controlsModalHeader.textContent = t.controls;
+
+    const controlsSectionTitles = document.querySelectorAll('#controls-modal .controls-section-title');
+    if (controlsSectionTitles.length >= 6) {
+        controlsSectionTitles[0].textContent = t.controlsSectionDiceIcons;
+        controlsSectionTitles[1].textContent = t.controlsSectionDiceGroups;
+        controlsSectionTitles[2].textContent = t.controlsSectionTextFields;
+        controlsSectionTitles[3].textContent = t.pinnedRolls;
+        controlsSectionTitles[4].textContent = t.countersHeader;
+        controlsSectionTitles[5].textContent = t.controlsSectionGeneral;
+    }
+
+    const controlKeys = document.querySelectorAll('#controls-modal .control-key');
+    if (controlKeys.length >= 12) {
+        controlKeys[0].textContent = t.controlKeyClick;
+        controlKeys[1].textContent = t.controlKeyRightClick;
+        controlKeys[2].textContent = t.controlKeyCtrlRightClick;
+        controlKeys[3].textContent = t.controlKeyDragHandle;
+        controlKeys[4].textContent = t.controlKeyResetIcon;
+        controlKeys[5].textContent = t.controlKeyCollapseIcon;
+        controlKeys[6].textContent = t.controlKeyEnter;
+        controlKeys[7].textContent = t.controlKeyEditIcon;
+        controlKeys[8].textContent = t.controlKeyDeleteIcon;
+        controlKeys[9].textContent = t.controlKeyEditIcon;
+        controlKeys[10].textContent = t.controlKeyDeleteIcon;
+        controlKeys[11].textContent = t.controlKeyEscape;
+    }
+
+    const controlDescs = document.querySelectorAll('#controls-modal .control-desc');
+    if (controlDescs.length >= 12) {
+        controlDescs[0].textContent = t.controlDescAddDie;
+        controlDescs[1].textContent = t.controlDescRemoveDie;
+        controlDescs[2].textContent = t.controlDescResetDie;
+        controlDescs[3].textContent = t.controlDescReorder;
+        controlDescs[4].textContent = t.controlDescClearGroup;
+        controlDescs[5].textContent = t.controlDescToggleGroup;
+        controlDescs[6].textContent = t.controlDescConfirmInput;
+        controlDescs[7].textContent = t.controlDescRenameRoll;
+        controlDescs[8].textContent = t.controlDescRemoveRoll;
+        controlDescs[9].textContent = t.controlDescRenameCounter;
+        controlDescs[10].textContent = t.controlDescRemoveCounter;
+        controlDescs[11].textContent = t.controlDescCloseWindow;
+    }
 
     // Version text
     const versionDiv = document.querySelector('.version');

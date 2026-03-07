@@ -1173,11 +1173,11 @@ const rollManager = (function () {
         modal.style.textAlign = 'center';
         modal.style.minWidth = '240px';
         modal.innerHTML = `
-            <h3 style="margin-top:0">Explosion!</h3>
-            <p style="margin:8px 0">Roll the exploded dice in the tray to continue.</p>
-            <p style="margin:8px 0;font-size:1.1em">Running Total: <strong>${total}</strong></p>
+            <h3 style="margin-top:0">${getTranslation('explosionTitle')}</h3>
+            <p style="margin:8px 0">${getTranslation('explosionInstruction')}</p>
+            <p style="margin:8px 0;font-size:1.1em">${getTranslation('explosionRunningTotal')} <strong>${total}</strong></p>
             <div style="margin-top:16px">
-                <button id="abort-explosion-btn" class="black-button">Abort</button>
+                <button id="abort-explosion-btn" class="black-button">${getTranslation('explosionAbort')}</button>
             </div>
         `;
         document.body.appendChild(modal);
