@@ -1089,8 +1089,9 @@ const rollManager = (function () {
             dualityData: rollInfo.dualityData,
             explosionRound: 1,
             maxExplosionDepth: 100,
-            accumulatedResultGroups: [resultGroups],
+            accumulatedResultGroups: [{ groups: resultGroups, groupIndexMap: null }],
             pendingExplosionData: explosionData,
+            pendingGroupIndexMap: explosionData.explosionDescriptors.map(d => d.groupIndex),
             increaseSize: fetchSetting('increase-exploded-die-size'),
             prependedGroups: prependedGroups
         };
@@ -1246,8 +1247,11 @@ const rollManager = (function () {
         // Clean up the child mapping
         delete explosionChildToParent[roll.rollId];
 
-        // Accumulate this round's results
-        chain.accumulatedResultGroups.push(roll.resultsGroups);
+        // Capture the index map for this round before potentially updating it
+        const groupIndexMap = chain.pendingGroupIndexMap;
+
+        // Accumulate this round's results with its index map
+        chain.accumulatedResultGroups.push({ groups: roll.resultsGroups, groupIndexMap });
         chain.explosionRound++;
 
         console.log(`Explosion round ${chain.explosionRound - 1} results received. Checking for more explosions...`);
@@ -1258,6 +1262,10 @@ const rollManager = (function () {
         if (explosionData.hasExplosions && chain.explosionRound <= chain.maxExplosionDepth) {
             // More explosions -- continue the chain
             chain.pendingExplosionData = explosionData;
+            // Compose maps: next round's positions map through this round's map to the base group
+            chain.pendingGroupIndexMap = explosionData.explosionDescriptors.map(
+                d => groupIndexMap[d.groupIndex] ?? groupIndexMap[0]
+            );
             console.log(`More explosions detected, continuing chain (round ${chain.explosionRound})`);
             initiateExplosionReroll(parentRollId);
         } else {
@@ -1314,23 +1322,26 @@ const rollManager = (function () {
      * If explosion rounds have fewer groups (e.g., only some groups exploded),
      * unmatched explosion groups are appended to the first base group.
      *
-     * @param {Array<Array<Object>>} allRounds - Array of result group arrays, one per round
+     * @param {Array<{groups: Array<Object>, groupIndexMap: Array<number>|null}>} allRounds - Structured array of rounds, each with groups and an index map routing explosion positions back to base group indices
      * @returns {Array<Object>} Merged result groups with all rounds combined
      */
     function combineExplosionResults(allRounds) {
         if (allRounds.length === 0) return [];
-        if (allRounds.length === 1) return allRounds[0];
+        if (allRounds.length === 1) return allRounds[0].groups;
 
         // Deep clone round 1 as the base
-        const baseGroups = JSON.parse(JSON.stringify(allRounds[0]));
+        const baseGroups = JSON.parse(JSON.stringify(allRounds[0].groups));
 
-        // For each subsequent round, merge results into base groups
+        // For each subsequent round, merge results into the correct base group
         for (let roundIdx = 1; roundIdx < allRounds.length; roundIdx++) {
-            const roundGroups = allRounds[roundIdx];
+            const { groups: roundGroups, groupIndexMap } = allRounds[roundIdx];
 
             roundGroups.forEach((explosionGroup, i) => {
-                // Try to match to the corresponding base group by index
-                const targetGroup = i < baseGroups.length ? baseGroups[i] : baseGroups[0];
+                // Use stored map to route to the correct base group
+                const targetIndex = groupIndexMap && groupIndexMap[i] !== undefined
+                    ? groupIndexMap[i]
+                    : (i < baseGroups.length ? i : 0);
+                const targetGroup = targetIndex < baseGroups.length ? baseGroups[targetIndex] : baseGroups[0];
 
                 if (targetGroup && targetGroup.result && explosionGroup.result) {
                     // Wrap in an addition node to combine base + explosion results
