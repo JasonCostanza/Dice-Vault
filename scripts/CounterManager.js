@@ -1,7 +1,6 @@
 class CounterManager {
     constructor() {
         this.counters = [];
-        this.loadCounters();
     }
 
     /**
@@ -27,7 +26,6 @@ class CounterManager {
         };
 
         this.addCounter(counter);
-        this.saveCounters();
         handleDataChange();
     }
 
@@ -49,7 +47,6 @@ class CounterManager {
         if (counter) {
             counter.value++;
             this.updateCounterDisplay(counterId, counter.value);
-            this.saveCounters();
             handleDataChange();
         }
     }
@@ -63,7 +60,6 @@ class CounterManager {
         if (counter) {
             counter.value--;
             this.updateCounterDisplay(counterId, counter.value);
-            this.saveCounters();
             handleDataChange();
         }
     }
@@ -78,7 +74,6 @@ class CounterManager {
         if (counter) {
             counter.value = parseInt(value) || 0;
             this.updateCounterDisplay(counterId, counter.value);
-            this.saveCounters();
             handleDataChange();
         }
     }
@@ -126,7 +121,6 @@ class CounterManager {
                 purposeSpan.textContent = counter.purpose;
             }
             
-            this.saveCounters();
             handleDataChange();
         }
     }
@@ -154,29 +148,7 @@ class CounterManager {
             }
         }
         
-        this.saveCounters();
         handleDataChange();
-    }
-
-    /**
-     * Saves counters to localStorage
-     */
-    saveCounters() {
-        localStorage.setItem('diceVaultCounters', JSON.stringify(this.counters));
-    }
-
-    /**
-     * Loads counters from localStorage
-     */
-    loadCounters() {
-        const savedCounters = localStorage.getItem('diceVaultCounters');
-        if (savedCounters) {
-            this.counters = JSON.parse(savedCounters);
-            // Recreate counter entries in UI without adding to array again
-            this.counters.forEach(counter => {
-                this.addCounterToUI(counter);
-            });
-        }
     }
 
     /**
@@ -196,7 +168,7 @@ class CounterManager {
             countersGroup.dataset.creatureName = "Counters";
             
             countersGroup.innerHTML = `
-                <div class="saved-roll-header" onclick="uiManager.toggleAccordion(this)">
+                <div class="saved-roll-header" tabindex="0" role="button" onclick="uiManager.toggleAccordion(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();uiManager.toggleAccordion(this);}">
                     <span>${getTranslation('countersHeader')}</span> <span class="accordion-icon">-</span>
                 </div>
                 <div class="saved-rolls-content"></div>
@@ -226,8 +198,8 @@ class CounterManager {
                     <input type="number" class="counter-value" value="${counter.value}" onchange="counterManager.updateCounterValue('${counter.id}', this.value)">
                 </div>
                 <div class="buttons-container">
-                    <div class="edit-counter" onclick="counterManager.startEditingCounter(this)">${editIcon}</div>
-                    <div class="delete-counter" onclick="counterManager.deleteCounter(this)">${deleteIcon}</div>
+                    <button type="button" class="edit-counter" onclick="counterManager.startEditingCounter(this)">${editIcon}</button>
+                    <button type="button" class="delete-counter" onclick="counterManager.deleteCounter(this)">${deleteIcon}</button>
                 </div>
             </div>
         `;
@@ -246,7 +218,6 @@ class CounterManager {
                 counter.value = 0;
                 this.updateCounterDisplay(counter.id, 0);
             });
-            this.saveCounters();
             handleDataChange();
         }
     }
@@ -263,7 +234,6 @@ class CounterManager {
             if (countersGroup) {
                 countersGroup.remove();
             }
-            this.saveCounters();
             handleDataChange();
         }
     }

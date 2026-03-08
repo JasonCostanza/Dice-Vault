@@ -1,4 +1,7 @@
 .localStorage/
 .vs/
-test-dataset.json
+.claude/
 CLAUDE.md
+ARCHITECTURE.md
+/.docs/
+/.releases

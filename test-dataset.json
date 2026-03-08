@@ -1,108 +1,17 @@
 {
   "rollsData": [
     {
-      "creatureName": "Ancient Red Dragon",
-      "allCreatureRolls": [
-        {
-          "savedRoll": [
-            {
-              "name": "Claw Attack",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 2,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 1,
-                "mod": 17
-              }
-            }
-          ]
-        },
-        {
-          "savedRoll": [
-            {
-              "name": "Bite Attack",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 4,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 1,
-                "mod": 17
-              }
-            }
-          ]
-        },
-        {
-          "savedRoll": [
-            {
-              "name": "Fire Breath",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 26,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 0,
-                "mod": 0
-              }
-            }
-          ]
-        },
-        {
-          "savedRoll": [
-            {
-              "name": "Initiative",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 1,
-                "mod": 0
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
       "creatureName": "Paladin",
       "allCreatureRolls": [
         {
           "savedRoll": [
             {
               "name": "Longsword Attack",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 1,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 1,
-                "mod": 8
-              }
+              "diceCounts": { "d8": 1, "d20": 1, "mod": 8 }
             },
             {
               "name": "Divine Smite",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 4,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 0,
-                "mod": 0
-              }
+              "diceCounts": { "d8": 4 }
             }
           ]
         },
@@ -110,119 +19,15 @@
           "savedRoll": [
             {
               "name": "Lay on Hands",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 0,
-                "mod": 50
-              }
+              "diceCounts": { "mod": 50 }
             }
           ]
         },
         {
           "savedRoll": [
             {
-              "name": "Saving Throws",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 1,
-                "mod": 5
-              }
-            },
-            {
-              "name": "Wisdom Save",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 1,
-                "mod": 8
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "creatureName": "Wizard",
-      "allCreatureRolls": [
-        {
-          "savedRoll": [
-            {
-              "name": "Fireball",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 8,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 0,
-                "mod": 0
-              }
-            }
-          ]
-        },
-        {
-          "savedRoll": [
-            {
-              "name": "Magic Missile",
-              "diceCounts": {
-                "d4": 3,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 0,
-                "mod": 3
-              }
-            }
-          ]
-        },
-        {
-          "savedRoll": [
-            {
-              "name": "Lightning Bolt",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 8,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 0,
-                "mod": 0
-              }
-            }
-          ]
-        },
-        {
-          "savedRoll": [
-            {
-              "name": "Counterspell Check",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 1,
-                "mod": 12
-              }
+              "name": "Saving Throw",
+              "diceCounts": { "d20": 1, "mod": 5 }
             }
           ]
         }
@@ -235,16 +40,7 @@
           "savedRoll": [
             {
               "name": "Sneak Attack",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 10,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 1,
-                "mod": 5
-              }
+              "diceCounts": { "d6": 10, "d20": 1, "mod": 5 }
             }
           ]
         },
@@ -252,29 +48,11 @@
           "savedRoll": [
             {
               "name": "Lockpicking",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 1,
-                "mod": 12
-              }
+              "diceCounts": { "d20": 1, "mod": 12 }
             },
             {
               "name": "Stealth",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 1,
-                "mod": 11
-              }
+              "diceCounts": { "d20": 1, "mod": 11 }
             }
           ]
         }
@@ -287,16 +65,7 @@
           "savedRoll": [
             {
               "name": "Rage Greataxe",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 1,
-                "d20": 1,
-                "mod": 10
-              }
+              "diceCounts": { "d12": 1, "d20": 1, "mod": 10 }
             }
           ]
         },
@@ -304,206 +73,7 @@
           "savedRoll": [
             {
               "name": "Brutal Critical",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 3,
-                "d20": 0,
-                "mod": 10
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "creatureName": "Bard",
-      "allCreatureRolls": [
-        {
-          "savedRoll": [
-            {
-              "name": "Vicious Mockery",
-              "diceCounts": {
-                "d4": 4,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 0,
-                "mod": 0
-              }
-            }
-          ]
-        },
-        {
-          "savedRoll": [
-            {
-              "name": "Bardic Inspiration",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 1,
-                "d100": 0,
-                "d12": 0,
-                "d20": 0,
-                "mod": 0
-              }
-            }
-          ]
-        },
-        {
-          "savedRoll": [
-            {
-              "name": "Performance",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 1,
-                "mod": 8
-              }
-            },
-            {
-              "name": "Persuasion",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 1,
-                "mod": 9
-              }
-            },
-            {
-              "name": "Deception",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 1,
-                "mod": 9
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "creatureName": "Cleric",
-      "allCreatureRolls": [
-        {
-          "savedRoll": [
-            {
-              "name": "Cure Wounds",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 3,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 0,
-                "mod": 4
-              }
-            }
-          ]
-        },
-        {
-          "savedRoll": [
-            {
-              "name": "Turn Undead",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 1,
-                "mod": 7
-              }
-            }
-          ]
-        },
-        {
-          "savedRoll": [
-            {
-              "name": "Spiritual Weapon",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 1,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 1,
-                "mod": 7
-              }
-            },
-            {
-              "name": "Damage",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 1,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 0,
-                "mod": 4
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "creatureName": "Warlock",
-      "allCreatureRolls": [
-        {
-          "savedRoll": [
-            {
-              "name": "Eldritch Blast",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 3,
-                "d100": 0,
-                "d12": 0,
-                "d20": 3,
-                "mod": 15
-              }
-            }
-          ]
-        },
-        {
-          "savedRoll": [
-            {
-              "name": "Hex Damage",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 1,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 0,
-                "mod": 0
-              }
+              "diceCounts": { "d12": 3, "mod": 10 }
             }
           ]
         }
@@ -515,142 +85,33 @@
         {
           "savedRoll": [
             {
-              "name": "Twinned Spell",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 16,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 0,
-                "mod": 0
-              }
-            }
-          ]
-        },
-        {
-          "savedRoll": [
-            {
               "name": "Wild Magic Surge",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 1,
-                "d12": 0,
-                "d20": 0,
-                "mod": 0
-              }
+              "diceCounts": { "d100": 1 }
             }
           ]
         },
         {
           "savedRoll": [
             {
-              "name": "Chaos Bolt",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 2,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 1,
-                "mod": 8
-              }
+              "name": "Chaos Bolt Attack",
+              "diceCounts": { "d20": 1, "mod": 8 }
             },
             {
-              "name": "Damage Roll",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 2,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 0,
-                "mod": 0
-              }
+              "name": "Chaos Bolt Damage",
+              "diceCounts": { "d8": 2 }
             }
           ]
         }
       ]
     },
     {
-      "creatureName": "Goblin Horde",
+      "creatureName": "Stat Generation (Best of 3)",
       "allCreatureRolls": [
         {
           "savedRoll": [
             {
-              "name": "Scimitar Attacks",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 5,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 5,
-                "mod": 20
-              }
-            }
-          ]
-        },
-        {
-          "savedRoll": [
-            {
-              "name": "Shortbow Volley",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 5,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 5,
-                "mod": 20
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "creatureName": "NPC Merchant",
-      "allCreatureRolls": [
-        {
-          "savedRoll": [
-            {
-              "name": "Insight",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 1,
-                "mod": 3
-              }
-            }
-          ]
-        },
-        {
-          "savedRoll": [
-            {
-              "name": "Random Inventory",
-              "diceCounts": {
-                "d4": 1,
-                "d6": 1,
-                "d8": 1,
-                "d10": 1,
-                "d100": 1,
-                "d12": 1,
-                "d20": 1,
-                "mod": 0
-              }
+              "name": "Ability Score Roll",
+              "diceCounts": { "d6": 4 }
             }
           ]
         }
@@ -663,16 +124,7 @@
           "savedRoll": [
             {
               "name": "Zero Dice with Modifier",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 0,
-                "mod": 15
-              }
+              "diceCounts": { "mod": 15 }
             }
           ]
         },
@@ -680,16 +132,7 @@
           "savedRoll": [
             {
               "name": "Negative Modifier",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 1,
-                "mod": -5
-              }
+              "diceCounts": { "d20": 1, "mod": -5 }
             }
           ]
         },
@@ -697,16 +140,7 @@
           "savedRoll": [
             {
               "name": "Maximum Dice",
-              "diceCounts": {
-                "d4": 99,
-                "d6": 99,
-                "d8": 99,
-                "d10": 99,
-                "d100": 99,
-                "d12": 99,
-                "d20": 99,
-                "mod": 999
-              }
+              "diceCounts": { "d4": 5, "d6": 5, "d8": 5, "d10": 5, "d100": 5, "d12": 5, "d20": 10, "mod": 99 }
             }
           ]
         },
@@ -714,111 +148,15 @@
           "savedRoll": [
             {
               "name": "Single d100",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 1,
-                "d12": 0,
-                "d20": 0,
-                "mod": 0
-              }
+              "diceCounts": { "d100": 1 }
             }
           ]
         },
         {
           "savedRoll": [
             {
-              "name": "Group A",
-              "diceCounts": {
-                "d4": 1,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 0,
-                "mod": 0
-              }
-            },
-            {
-              "name": "Group B",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 1,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 0,
-                "mod": 0
-              }
-            },
-            {
-              "name": "Group C",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 1,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 0,
-                "mod": 0
-              }
-            },
-            {
-              "name": "Group D",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 1,
-                "d100": 0,
-                "d12": 0,
-                "d20": 0,
-                "mod": 0
-              }
-            },
-            {
-              "name": "Group E",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 1,
-                "d12": 0,
-                "d20": 0,
-                "mod": 0
-              }
-            },
-            {
-              "name": "Group F",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 1,
-                "d20": 0,
-                "mod": 0
-              }
-            },
-            {
-              "name": "Group G",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 1,
-                "mod": 0
-              }
+              "name": "All Dice Types",
+              "diceCounts": { "d4": 1, "d6": 1, "d8": 1, "d10": 1, "d100": 1, "d12": 1, "d20": 1 }
             }
           ]
         }
@@ -831,16 +169,7 @@
           "savedRoll": [
             {
               "name": "Émile's Spéll",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 2,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 0,
-                "mod": 0
-              }
+              "diceCounts": { "d8": 2 }
             }
           ]
         },
@@ -848,16 +177,7 @@
           "savedRoll": [
             {
               "name": "Björn's Âttäck",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 1,
-                "mod": 5
-              }
+              "diceCounts": { "d20": 1, "mod": 5 }
             }
           ]
         },
@@ -865,16 +185,7 @@
           "savedRoll": [
             {
               "name": "漢字 Test",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 1,
-                "mod": 0
-              }
+              "diceCounts": { "d20": 1 }
             }
           ]
         },
@@ -882,16 +193,7 @@
           "savedRoll": [
             {
               "name": "🎲 Emoji Roll 🎯",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 1,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 0,
-                "mod": 0
-              }
+              "diceCounts": { "d6": 1 }
             }
           ]
         }
@@ -904,30 +206,7 @@
           "savedRoll": [
             {
               "name": "Basic Duality - A",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 1,
-                "d20": 0,
-                "mod": 0
-              },
-              "groupType": "duality"
-            },
-            {
-              "name": "Basic Duality - B",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 1,
-                "d20": 0,
-                "mod": 0
-              },
+              "diceCounts": { "d12": 1 },
               "groupType": "duality"
             }
           ]
@@ -936,62 +215,7 @@
           "savedRoll": [
             {
               "name": "Duality with Modifier - A",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 1,
-                "d20": 0,
-                "mod": 5
-              },
-              "groupType": "duality"
-            },
-            {
-              "name": "Duality with Modifier - B",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 1,
-                "d20": 0,
-                "mod": 5
-              },
-              "groupType": "duality"
-            }
-          ]
-        },
-        {
-          "savedRoll": [
-            {
-              "name": "Duality with Negative Mod - A",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 1,
-                "d20": 0,
-                "mod": -3
-              },
-              "groupType": "duality"
-            },
-            {
-              "name": "Duality with Negative Mod - B",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 1,
-                "d20": 0,
-                "mod": -3
-              },
+              "diceCounts": { "d12": 1, "mod": 5 },
               "groupType": "duality"
             }
           ]
@@ -1000,166 +224,16 @@
           "savedRoll": [
             {
               "name": "Mixed: Duality - A",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 1,
-                "d20": 0,
-                "mod": 0
-              },
-              "groupType": "duality"
-            },
-            {
-              "name": "Mixed: Duality - B",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 1,
-                "d20": 0,
-                "mod": 0
-              },
+              "diceCounts": { "d12": 1 },
               "groupType": "duality"
             },
             {
               "name": "Attack Roll",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 1,
-                "mod": 7
-              }
-            }
-          ]
-        },
-        {
-          "savedRoll": [
-            {
-              "name": "Mixed: Duality + Damage - A",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 1,
-                "d20": 0,
-                "mod": 2
-              },
-              "groupType": "duality"
-            },
-            {
-              "name": "Mixed: Duality + Damage - B",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 1,
-                "d20": 0,
-                "mod": 2
-              },
-              "groupType": "duality"
+              "diceCounts": { "d20": 1, "mod": 7 }
             },
             {
               "name": "Weapon Damage",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 2,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 0,
-                "mod": 4
-              }
-            },
-            {
-              "name": "Fire Damage",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 3,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 0,
-                "d20": 0,
-                "mod": 0
-              }
-            }
-          ]
-        },
-        {
-          "savedRoll": [
-            {
-              "name": "Character Action - A",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 1,
-                "d20": 0,
-                "mod": 0
-              },
-              "groupType": "duality"
-            },
-            {
-              "name": "Character Action - B",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 1,
-                "d20": 0,
-                "mod": 0
-              },
-              "groupType": "duality"
-            }
-          ]
-        },
-        {
-          "savedRoll": [
-            {
-              "name": "Risky Spell - A",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 1,
-                "d20": 0,
-                "mod": 3
-              },
-              "groupType": "duality"
-            },
-            {
-              "name": "Risky Spell - B",
-              "diceCounts": {
-                "d4": 0,
-                "d6": 0,
-                "d8": 0,
-                "d10": 0,
-                "d100": 0,
-                "d12": 1,
-                "d20": 0,
-                "mod": 3
-              },
-              "groupType": "duality"
+              "diceCounts": { "d8": 2, "mod": 4 }
             }
           ]
         }
@@ -1180,58 +254,16 @@
       "timestamp": 1692841260000
     },
     {
-      "id": "counter_1692841320000_ghi789jkl",
-      "purpose": "Hit Points Lost",
-      "value": 45,
-      "timestamp": 1692841320000
-    },
-    {
       "id": "counter_1692841380000_jkl012mno",
       "purpose": "Bardic Inspiration Uses",
       "value": 3,
       "timestamp": 1692841380000
     },
     {
-      "id": "counter_1692841440000_mno345pqr",
-      "purpose": "Sorcery Points",
-      "value": 7,
-      "timestamp": 1692841440000
-    },
-    {
-      "id": "counter_1692841500000_pqr678stu",
-      "purpose": "Ki Points",
-      "value": 15,
-      "timestamp": 1692841500000
-    },
-    {
-      "id": "counter_1692841560000_stu901vwx",
-      "purpose": "Rage Uses",
-      "value": 2,
-      "timestamp": 1692841560000
-    },
-    {
       "id": "counter_1692841620000_vwx234yza",
       "purpose": "Death Saving Throws",
       "value": 1,
       "timestamp": 1692841620000
-    },
-    {
-      "id": "counter_1692841680000_yza567bcd",
-      "purpose": "Initiative Tracker",
-      "value": 18,
-      "timestamp": 1692841680000
-    },
-    {
-      "id": "counter_1692841740000_bcd890efg",
-      "purpose": "Legendary Actions",
-      "value": 3,
-      "timestamp": 1692841740000
-    },
-    {
-      "id": "counter_1692841800000_efg123hij",
-      "purpose": "Lair Action Round",
-      "value": 20,
-      "timestamp": 1692841800000
     },
     {
       "id": "counter_1692841860000_hij456klm",

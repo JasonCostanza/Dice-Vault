@@ -47,6 +47,7 @@ body {
     margin-top: 5px;
     max-height: 90%;
     overflow-y: auto;
+    scrollbar-gutter: stable;
 }
 
 /* Content Columns */
@@ -96,43 +97,24 @@ body {
 
 /* Scrolling Content Scrollbars */
 .scrolling-content::-webkit-scrollbar {
-    width: 10px;
+    width: 8px;
 }
 
 .scrolling-content::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: var(--ts-background-secondary);
     border-radius: 5px;
 }
 
 .scrolling-content::-webkit-scrollbar-thumb {
-    background: #888;
+    background: var(--ts-color-secondary);
     border-radius: 5px;
 }
 
 .scrolling-content::-webkit-scrollbar-thumb:hover {
-    background: #555;
+    background: var(--ts-color-primary);
 }
 
-/* Hide Scrollbars on Dropdown Selects */
-.creature-sort-list::-webkit-scrollbar,
-.roll-groups-sort-list::-webkit-scrollbar {
-    display: none !important;
-    width: 0 !important;
-    height: 0 !important;
-}
-
-.creature-sort-list::-webkit-scrollbar-track,
-.roll-groups-sort-list::-webkit-scrollbar-track,
-.creature-sort-list::-webkit-scrollbar-thumb,
-.roll-groups-sort-list::-webkit-scrollbar-thumb {
-    display: none !important;
-}
-
-.creature-sort-list,
-.roll-groups-sort-list {
-    scrollbar-width: none !important; /* Firefox */
-    -ms-overflow-style: none !important; /* Internet Explorer 10+ */
-}
+/* Native selects are hidden; custom dropdowns used instead */
 
 /* ====================================================================
    4. UTILITY CLASSES
@@ -150,9 +132,15 @@ body {
     flex-grow: 1;
 }
 
+.highlight {
+    outline: 2px solid var(--ts-accessibility-focus);
+    outline-offset: 2px;
+    transition: outline 0.2s ease;
+}
+
 .field-title {
     flex-shrink: 0;
-    font-size: 1.6em;
+    font-size: 1.8em;
     color: var(--ts-color-primary);
     margin-right: 8px;
 }
@@ -171,7 +159,6 @@ button,
 .edit-roll,
 .edit-counter,
 .delete-roll,
-.accordion-toggle,
 .saved-roll-header,
 .dice-counter {
     cursor: pointer;
@@ -224,7 +211,7 @@ button,
 
 .modal-content {
     position: relative;
-    background-color: var(--ts-background-primary);
+    background-color: #1e2d3d;
     border: 1px solid var(--ts-accessibility-border);
     border-radius: 8px;
     width: 100vw;
@@ -232,7 +219,7 @@ button,
     max-width: 100vw;
     max-height: 100vh;
     min-width: 100vw;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
     z-index: 1001;
 }
 
@@ -269,6 +256,7 @@ button,
     padding: 20px;
     overflow-y: auto;
     max-height: calc(100vh - 120px);
+    scrollbar-gutter: stable;
 }
 
 /* Responsive modal styles */
@@ -327,13 +315,13 @@ input {
 }
 
 button:hover,
-input:hover {
+input:hover:not(.mod-counter-overlay):not(.dice-group-name-input) {
     background-color: var(--ts-background-primary);
     transition: ease-in-out 0.2s;
 }
 
 button:focus-visible,
-input:focus-visible {
+input:focus-visible:not(.mod-counter-overlay):not(.dice-group-name-input) {
     outline: 3px solid var(--ts-accessibility-focus);
     outline-offset: -1px;
     background-color: var(--ts-background-primary);
@@ -378,25 +366,33 @@ button:focus-visible {
 
 .row-buttons-container {
     display: flex;
-    margin-top: 5px;
-    justify-content: space-around;
+    margin-top: 10px;
+    justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .row-button {
     flex: 1;
-    margin: 0 5px;
-    height: 40px;
+    height: 50px;
+    margin: 0 3px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .row-button img {
-    height: 40px;
+    height: 28px;
+    width: 28px;
+    margin: 0;
 }
 
 /* Specialized Button Types */
 .black-button {
     padding: 5px 15px;
     margin: 5px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--ts-accessibility-border);
     border-radius: 4px;
     background-color: var(--ts-background-primary);
     color: var(--ts-color-primary);
@@ -405,12 +401,12 @@ button:focus-visible {
 
 .black-button:hover {
     background-color: var(--ts-button-hover);
-    color: #000000;
+    color: var(--ts-color-primary);
 }
 
 .black-button:active {
     background-color: var(--ts-button-background);
-    color: #000000;
+    color: var(--ts-color-primary);
 }
 
 .black-button:disabled,
@@ -473,8 +469,8 @@ button:focus-visible {
     }
 }
 
-#mobile-menu-modal.hidden .mobile-menu-content {
-    animation: slideDownToBottom 0.3s ease-in;
+#mobile-menu-modal.closing .mobile-menu-content {
+    animation: slideDownToBottom 0.3s ease-in forwards;
 }
 
 @keyframes slideDownToBottom {
@@ -540,7 +536,7 @@ button:focus-visible {
 
 .quote-text {
     font-family: 'Enchanted Land', cursive;
-    color: #dddddd;
+    color: var(--ts-color-secondary);
     font-size: 0.8em;
     font-style: italic;
 }
@@ -573,16 +569,11 @@ button:focus-visible {
     }
 }
 
-.unsaved-changes {
-    background-color: var(--ts-background-tertiary) !important;
-    color: var(--ts-accent-hover) !important;
-}
-
 /* Rolling Buttons */
 .rolling-button {
-    font-size: 0.75em;
-    padding: 4px 6px;
-    width: 66px;
+    font-size: 0.8em;
+    padding: 6px 6px;
+    width: 72px;
     height: auto;
     text-align: center;
     line-height: 1.2em;
@@ -595,6 +586,12 @@ button:focus-visible {
     cursor: pointer;
 }
 
+.wide-button:disabled,
+.wide-button:disabled:hover {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 /* Force consistent size across all roll-type images */
 .rolling-button img.roll-type-image {
     height: 32px !important;
@@ -603,9 +600,7 @@ button:focus-visible {
 }
 
 .roll-button {
-    display: block;
     padding: 5px 10px;
-    margin-top: 10px;
     background-color: var(--ts-button-background);
     color: var(--ts-color-primary);
     text-align: center;
@@ -624,8 +619,8 @@ button:focus-visible {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 22px;
-    height: 22px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     font-size: 18px;
     font-weight: bold;
@@ -666,17 +661,18 @@ button:focus-visible {
 #creature-name {
     flex-grow: 1;
     padding: 5px;
-    font-size: 1em;
+    font-size: 1.15em;
     cursor: text;
     border: 3px solid transparent;
 }
 
 #creature-name:hover {
-    background-color: var(--ts-background-tertiary);
+    background-color: var(--ts-background-primary);
 }
 
 #creature-name:focus {
-    background-color: var(--ts-background-tertiary);
+    background-color: var(--ts-background-primary);
+    border-bottom-color: var(--ts-accent-primary);
 }
 
 #creature-name.editing {
@@ -702,10 +698,17 @@ button:focus-visible {
     padding-bottom: 0px;
     font-size: 0.85em;
     background-color: var(--ts-background-tertiary);
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out, opacity 0.2s ease;
+    max-height: 300px;
+    opacity: 1;
 }
 
 .dice-selection.collapsed {
-    display: none;
+    max-height: 0;
+    opacity: 0;
+    padding: 0;
+    margin: 0;
 }
 
 /* Dice Group Structure */
@@ -750,7 +753,6 @@ button:focus-visible {
     color: var(--ts-color-primary);
     font-size: 1em;
     border-bottom: 1px solid var(--ts-accessibility-border);
-    cursor: pointer;
 }
 
 .header-content {
@@ -761,10 +763,6 @@ button:focus-visible {
 }
 
 /* Dice Group Names & Inputs */
-.dice-group-name {
-    margin-bottom: 10px;
-}
-
 .dice-group-name-input {
     width: 100%;
     padding: 5px;
@@ -780,8 +778,9 @@ button:focus-visible {
 }
 
 .dice-group-name-input.header-input {
-    background-color: var(--ts-background-tertiary);
-    border: 1px solid transparent;
+    background: transparent;
+    border: none;
+    outline: none;
     font-size: 1em;
     padding: 2px 4px;
     margin: 0;
@@ -792,20 +791,31 @@ button:focus-visible {
     color: var(--ts-color-primary);
 }
 
-.dice-group-name-input.header-input:hover,
-.dice-group-name-input.header-input:focus {
-    border-color: var(--ts-accessibility-border);
-    background-color: var(--ts-background-primary);
+/* Header Action Buttons (reset, accordion toggle) */
+.header-action-btn {
+    margin-left: 8px;
+    color: var(--ts-color-secondary);
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: color 0.2s ease;
+    /* Override TaleSpire icon padding-based sizing so clickable area matches the visual icon */
+    padding: 0 !important;
+    width:  20px;
+    height: 20px;
+    display: inline-block;
+    box-sizing: content-box;
 }
 
-/* Accordion Toggle */
-.accordion-toggle {
-    font-size: 1.3em;
-    margin-left: 10px;
-    color: var(--ts-color-secondary);
-    display: flex;
-    align-items: center !important;
-    justify-content: center !important;
+.header-action-btn::before {
+    width:  20px !important;
+    height: 20px !important;
+    background-size: 16px !important;
+}
+
+.header-action-btn:hover {
+    color: var(--ts-color-primary);
 }
 
 /* Group Action Bar */
@@ -890,9 +900,12 @@ button:focus-visible {
     left: 50%;
     pointer-events: auto;
     background: transparent;
+    color: var(--ts-color-primary);
+    caret-color: var(--ts-color-primary);
     font-size: 1.5em;
     padding: 0;
     outline: none;
+    text-shadow: none;
     appearance: none;
     -moz-appearance: textfield;
     cursor: text;
@@ -904,18 +917,18 @@ button:focus-visible {
     margin: 0;
 }
 
-.mod-counter-overlay:focus-visible {
-    background-color: var(--ts-background-secondary);
-}
-
-.mod-counter-overlay:hover {
-    background-color: var(--ts-background-secondary);
-}
-
 /* Dice Labels & Icons */
 .dice-label {
     margin-top: 5px;
     font-size: 0.8em;
+}
+
+.dice-counter .ts-icon-size55 {
+    transition: transform 0.15s ease;
+}
+
+.dice-counter .ts-icon-size55:hover {
+    transform: scale(1.12);
 }
 
 i.ts-icon-size55 {
@@ -962,18 +975,89 @@ i.ts-icon-size55::before {
     margin-right: 2px;
 }
 
-/* Debug Icons (for development mode) */
-.debug-icons16 {
-    height: 16px;
-    width: 16px;
+/* Reorder Buttons */
+
+/* Reorder buttons for pinned rolls - match edit/delete circular button style */
+.reorder-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    margin: 0 2px;
+    cursor: pointer;
+    border: 1px solid var(--ts-color-primary);
+    background-color: var(--ts-button-background);
+    transition: background-color 0.2s;
 }
 
-.debug-icons48 {
-    height: 48px;
-    width: 48px;
+.reorder-btn:hover {
+    background-color: var(--ts-button-hover);
 }
 
+.reorder-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
 
+/* Flip chevron-up to create down arrow */
+i.reorder-icon-down {
+    transform: rotate(180deg);
+}
+
+/* Drag Handle for Dice Group Reordering */
+.drag-handle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+    color: var(--ts-color-secondary);
+    padding: 0 4px;
+    flex-shrink: 0;
+    font-size: 1.2em;
+    line-height: 1;
+    transition: color 0.2s ease;
+}
+
+.drag-handle::before {
+    content: '\283F';
+}
+
+.drag-handle:hover {
+    color: var(--ts-color-primary);
+}
+
+.drag-handle:active {
+    cursor: grabbing;
+}
+
+/* Dragging state */
+.dice-group-wrapper.dragging {
+    opacity: 0.4;
+}
+
+/* Drop indicator lines */
+.dice-group-wrapper.drag-over-top {
+    border-top: 3px solid var(--ts-accent-primary);
+}
+
+.dice-group-wrapper.drag-over-bottom {
+    border-bottom: 3px solid var(--ts-accent-primary);
+}
+
+/* Drag state for saved roll entries */
+.saved-roll-entry.dragging {
+    opacity: 0.4;
+}
+
+.saved-roll-entry.drag-over-top {
+    border-top: 3px solid var(--ts-accent-primary);
+}
+
+.saved-roll-entry.drag-over-bottom {
+    border-bottom: 3px solid var(--ts-accent-primary);
+}
 
 /* ====================================================================
    8. SAVED ROLLS SECTION
@@ -982,25 +1066,20 @@ i.ts-icon-size55::before {
 /* Saved Rolls Header */
 .saved-rolls-header {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: space-between;
+    border-top: 2px solid var(--ts-accessibility-border);
+    padding-top: 10px;
+    margin-top: 6px;
 }
 
 /* Saved Rolls Container */
 .saved-rolls-container {
     flex-grow: 1;
-    overflow-y: auto;
     margin-bottom: 10px;
-    max-height: calc(100vh - 250px);
     border: 1px solid var(--ts-accessibility-border);
     padding: 5px;
     margin-top: 10px;
-}
-
-.saved-rolls-container::after {
-    content: '';
-    display: block;
-    height: 60px; /* Matches or slightly exceeds footer height */
 }
 
 /* Saved Roll Entries */
@@ -1016,6 +1095,11 @@ i.ts-icon-size55::before {
     padding: 10px;
     border-radius: 3px;
     cursor: default;
+    transition: background-color 0.15s ease;
+}
+
+.saved-roll-entry:hover {
+    background-color: var(--ts-background-secondary);
 }
 
 .roll-entry-container {
@@ -1031,15 +1115,6 @@ i.ts-icon-size55::before {
     align-items: center;
     width: 100%;
     margin-bottom: 8px;
-}
-
-.roll-entry-label {
-    font-weight: bold;
-    min-width: 120px;
-    max-width: 150px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
 }
 
 .roll-entry-display {
@@ -1094,8 +1169,16 @@ i.ts-icon-size55::before {
 .saved-rolls-content {
     padding: 5px;
     background-color: var(--ts-background-primary);
-    /* Initially expanded */
-    display: block;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out, opacity 0.2s ease;
+    max-height: 2000px;
+    opacity: 1;
+}
+
+.saved-rolls-content.collapsed {
+    max-height: 0;
+    opacity: 0;
+    padding: 0;
 }
 
 /* Saved Rolls Button Container */
@@ -1111,71 +1194,102 @@ i.ts-icon-size55::before {
 /* Sort Options */
 .sort-wrapper {
     display: flex;
-    align-items: center;
-    margin-right: 5px;
+    flex-direction: column;
+    gap: 2px;
+    width: 110px;
 }
 
 .sort-label {
-    font-size: 0.85em;
+    font-size: 0.7em;
     color: var(--ts-color-secondary);
-    margin-right: 5px;
-    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .sort-options-container {
     display: flex;
-    gap: 15px;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+/* Custom Dropdown */
+.custom-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.custom-dropdown-toggle {
+    display: flex;
     align-items: center;
-    /* flex-wrap: wrap; */
-}
-
-/* Sort Dropdown Styles */
-.creature-sort-list,
-.roll-groups-sort-list {
-    padding: 8px 16px;
-    margin-left: 10px;
-    border: 1px solid var(--ts-color-primary);
+    justify-content: space-between;
+    gap: 6px;
+    padding: 4px 10px;
+    border: 1px solid var(--ts-accessibility-border);
     border-radius: 4px;
-    background-color: var(--ts-button-background);
+    background-color: var(--ts-background-secondary);
     color: var(--ts-color-primary);
-    font-family: 'Gill Sans', sans-serif;
-    font-weight: bold;
-    box-shadow: 0 2px 4px var(--ts-button-background);
-    appearance: none;
+    font-family: 'OptimusPrinceps', sans-serif;
+    font-size: 0.85em;
     cursor: pointer;
-    transition: background-color 0.3s, border-color 0.3s;
+    transition: background-color 0.2s, border-color 0.2s;
+    width: 100%;
+    white-space: nowrap;
     height: auto;
-    max-height: none;
-    overflow: visible;
+    line-height: 1.4;
+    box-sizing: border-box;
 }
 
-.creature-sort-list:hover,
-.roll-groups-sort-list:hover {
-    background-color: var(--ts-button-hover);
+.custom-dropdown-toggle:hover {
+    background-color: var(--ts-background-tertiary);
     border-color: var(--ts-color-secondary);
 }
 
-.creature-sort-list::-ms-expand,
-.roll-groups-sort-list::-ms-expand {
-    display: none;
+.custom-dropdown-toggle:focus-visible {
+    outline: 2px solid var(--ts-accessibility-focus);
+    outline-offset: -1px;
+    background-color: var(--ts-background-tertiary);
 }
 
-/* Dropdown Arrow Indicators */
-#sort-options-container, 
-#sort-rolls-options-container {
-    position: relative;
+.dropdown-arrow {
+    font-size: 11px;
+    color: var(--ts-color-secondary);
+    transition: transform 0.2s ease;
 }
 
-#sort-options-container:after, 
-#sort-rolls-options-container:after {
-    content: '\2193';
-    font-size: 15px;
-    color: var(--ts-color-primary);
+.custom-dropdown.open .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.custom-dropdown-menu {
     position: absolute;
-    right: 5px;
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
+    top: calc(100% + 4px);
+    right: 0;
+    min-width: 100%;
+    background-color: var(--ts-background-secondary);
+    border: 1px solid var(--ts-accessibility-border);
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    z-index: 100;
+    overflow: hidden;
+}
+
+.custom-dropdown-item {
+    padding: 6px 12px;
+    color: var(--ts-color-primary);
+    font-family: 'OptimusPrinceps', sans-serif;
+    font-size: 0.85em;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.15s;
+}
+
+.custom-dropdown-item:hover {
+    background-color: var(--ts-background-tertiary);
+}
+
+.custom-dropdown-item.selected {
+    background-color: var(--ts-button-background);
+    color: var(--ts-color-primary);
 }
 
 /* ====================================================================
@@ -1214,28 +1328,6 @@ i.ts-icon-size55::before {
     gap: 5px;
 }
 
-.counter-decrement,
-.counter-increment {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    border: 1px solid var(--ts-color-primary);
-    background-color: var(--ts-button-background);
-    color: var(--ts-color-primary);
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.2s;
-}
-
-.counter-decrement:hover,
-.counter-increment:hover {
-    background-color: var(--ts-button-hover);
-}
-
 .counter-value {
     width: 50px;
     height: 24px;
@@ -1266,10 +1358,316 @@ i.ts-icon-size55::before {
    11. MODALS & OVERLAYS
    ==================================================================== */
 
-#modal-overlay {
+/* Settings Layout */
+.settings-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.settings-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--ts-accessibility-border);
+}
+
+.settings-row .field-title {
+    font-size: 1.3em;
+    flex-shrink: 1;
+    margin-right: 8px;
+}
+
+.settings-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+/* Child Settings (indented sub-options) */
+.settings-child-options {
+    padding-left: 20px;
+    border-left: 2px solid var(--ts-accessibility-border);
+    margin-left: 10px;
+}
+
+.settings-child-row .field-title {
+    font-size: 0.9em;
+}
+
+/* Settings Dropdown Overrides */
+.settings-row .custom-dropdown-toggle {
+    font-size: 1.1em;
+}
+
+.settings-row .custom-dropdown-menu {
+    z-index: 1100;
+}
+
+
+.settings-row .custom-dropdown-item {
+    font-size: 1em;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+.toggle-slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--ts-background-tertiary);
+    border: 1px solid var(--ts-accessibility-border);
+    border-radius: 12px;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.toggle-slider::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 18px;
+    height: 18px;
+    background-color: var(--ts-color-secondary);
+    border-radius: 50%;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+    background-color: var(--ts-accent-primary);
+    border-color: var(--ts-accent-primary);
+}
+
+.toggle-switch input:checked + .toggle-slider::after {
+    transform: translateX(20px);
+    background-color: var(--ts-color-primary);
+}
+
+.toggle-switch input:focus-visible + .toggle-slider {
+    outline: 2px solid var(--ts-accessibility-focus);
+    outline-offset: 2px;
+}
+
+/* JS-generated modals (UIManager) — match HTML modal appearance */
+.ui-modal {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #1e2d3d;
+    border: 1px solid var(--ts-accessibility-border);
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    color: var(--ts-color-primary);
+    min-width: 300px;
+    max-width: 90vw;
+}
+
+.ui-modal .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid var(--ts-accessibility-border);
+}
+
+.ui-modal .modal-header h3 {
+    margin: 0;
+    color: var(--ts-color-primary);
+    font-size: 1.4em;
+}
+
+.ui-modal .modal-body {
+    padding: 20px;
+}
+
+.ui-modal .modal-body p {
+    margin: 0 0 15px 0;
+}
+
+.ui-modal .modal-body p:last-child {
+    margin-bottom: 0;
+}
+
+.ui-modal .modal-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.ui-modal .modal-input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid var(--ts-accessibility-border);
+    border-radius: 4px;
+    background-color: var(--ts-background-tertiary);
+    color: var(--ts-color-primary);
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+#ui-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 999;
     pointer-events: auto;
 }
 
-.overwrite-modal {
-    pointer-events: auto;
+/* Settings HR Divider */
+.modal-body hr {
+    border: none;
+    border-top: 1px solid var(--ts-accessibility-border);
+    margin: 16px 0;
+}
+
+/* Debug Options Section */
+.debug-section {
+    border: 1px solid var(--ts-accessibility-border);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+
+.debug-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 10px;
+    background-color: var(--ts-background-tertiary);
+    cursor: pointer;
+    font-size: 0.85em;
+    color: var(--ts-color-secondary);
+    user-select: none;
+}
+
+.debug-section-header:hover {
+    background-color: var(--ts-background-secondary);
+}
+
+.debug-section-content {
+    padding: 12px;
+    background-color: var(--ts-background-primary);
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out, opacity 0.2s ease;
+    max-height: 200px;
+    opacity: 1;
+}
+
+.debug-section-content.collapsed {
+    max-height: 0;
+    opacity: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.debug-copy-btn {
+    background: none;
+    border: 1px solid var(--ts-color-secondary);
+    color: var(--ts-color-secondary);
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+.debug-copy-btn:hover {
+    background-color: var(--ts-background-secondary);
+    color: var(--ts-color-primary);
+}
+
+.debug-copy-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.debug-hint {
+    margin: 0;
+    font-size: 0.75em;
+    color: var(--ts-color-secondary);
+    opacity: 0.8;
+}
+
+/* Controls Button */
+.controls-btn {
+    width: 100%;
+    background: none;
+    border: 1px solid var(--ts-color-secondary);
+    color: var(--ts-color-secondary);
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+.controls-btn:hover {
+    background-color: var(--ts-background-secondary);
+    color: var(--ts-color-primary);
+}
+
+/* Controls Modal */
+#controls-modal {
+    z-index: 1100;
+}
+
+.controls-section {
+    margin-bottom: 16px;
+}
+
+.controls-section:last-child {
+    margin-bottom: 0;
+}
+
+.controls-section-title {
+    font-size: 0.7em;
+    color: var(--ts-color-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+}
+
+.control-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 4px 0;
+}
+
+.control-key {
+    background-color: var(--ts-background-tertiary);
+    color: var(--ts-color-primary);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    white-space: nowrap;
+    min-width: 120px;
+    text-align: center;
+}
+
+.control-desc {
+    font-size: 0.85em;
+    color: var(--ts-color-secondary);
 }

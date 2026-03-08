@@ -49,23 +49,32 @@
             <button id="save-btn" class="wide-button" onclick="savedRollManager.save()">Pin</button>
             <button id="reset-btn" class="wide-button" onclick="savedRollManager.reset()">Reset</button>
             <button id="new-counter" class="wide-button" onclick="counterManager.newCounter()">New Counter</button>
-        </div><br>
+        </div>
 
         <div class="saved-rolls-header">
             <label class="field-title unselectable">Pinned Rolls</label>
             <div class="sort-options-container">
                 <div id="sort-options-container" class="sort-wrapper">
                     <label class="sort-label">Creature sort:</label>
-                    <select id="sort-options" class='creature-sort-list' onchange="rollSorter.sortSavedRolls()">
+                    <select id="sort-options" class="creature-sort-list hidden" onchange="rollSorter.sortSavedRolls()">
                         <option value="newest">Newest</option>
                         <option value="oldest">Oldest</option>
                         <option value="nameAsc">A-Z</option>
                         <option value="nameDesc">Z-A</option>
                     </select>
+                    <div class="custom-dropdown" data-select="sort-options">
+                        <button type="button" class="custom-dropdown-toggle">Newest<span class="dropdown-arrow">&#x25BE;</span></button>
+                        <div class="custom-dropdown-menu hidden">
+                            <div class="custom-dropdown-item selected" data-value="newest">Newest</div>
+                            <div class="custom-dropdown-item" data-value="oldest">Oldest</div>
+                            <div class="custom-dropdown-item" data-value="nameAsc">A-Z</div>
+                            <div class="custom-dropdown-item" data-value="nameDesc">Z-A</div>
+                        </div>
+                    </div>
                 </div>
                 <div id="sort-rolls-options-container" class="sort-wrapper">
                     <label class="sort-label">Groups sort:</label>
-                    <select id="sort-rolls-options" class='roll-groups-sort-list'
+                    <select id="sort-rolls-options" class="roll-groups-sort-list hidden"
                         onchange="rollSorter.sortRollsWithinGroups()">
                         <option value="default">Default</option>
                         <option value="newest">Newest</option>
@@ -73,6 +82,16 @@
                         <option value="nameAsc">A-Z</option>
                         <option value="nameDesc">Z-A</option>
                     </select>
+                    <div class="custom-dropdown" data-select="sort-rolls-options">
+                        <button type="button" class="custom-dropdown-toggle">Default<span class="dropdown-arrow">&#x25BE;</span></button>
+                        <div class="custom-dropdown-menu hidden">
+                            <div class="custom-dropdown-item selected" data-value="default">Default</div>
+                            <div class="custom-dropdown-item" data-value="newest">Newest</div>
+                            <div class="custom-dropdown-item" data-value="oldest">Oldest</div>
+                            <div class="custom-dropdown-item" data-value="nameAsc">A-Z</div>
+                            <div class="custom-dropdown-item" data-value="nameDesc">Z-A</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -133,61 +152,171 @@
                 <span class="modal-close" onclick="toggleSettingsDisplay()">&times;</span>
             </div>
             <div class="modal-body">
-                <table>
-                    <tr>
-                        <td><label class="field-title">Language</label></td>
-                        <td>
-                            <select id="language-select" onchange="changeLanguage()">
-                                <option value="en">English</option>
-                                <option value="es">Spanish</option>
-                                <option value="de">German</option>
-                                <option value="fr">French</option>
-                                <option value="it">Italian</option>
-                                <option value="pt-br">Portuguese (Brazil)</option>
-                            </select>
-                    </tr>
-                    <tr>
-                        <td><label class="field-title">Automatically load data</label></td>
-                        <td><input type="checkbox" id="auto-load" class="settings-input" onchange="saveGlobalSettings()"
-                                unchecked></td>
-                    </tr>
-                    <tr>
-                        <td><label class="field-title">Automatically save data</label></td>
-                        <td><input type="checkbox" id="auto-save" class="settings-input" onchange="saveGlobalSettings()"
-                                unchecked></td>
-                    </tr>
-                    <tr>
-                        <td><label class="field-title">Auto-Reset Dice on Save</label></td>
-                        <td><input type="checkbox" id="auto-reset" class="settings-input"
-                                onchange="saveGlobalSettings()" unchecked></td>
-                    </tr>
-                    <tr>
-                        <td><label class="field-title">Enable Daggerheart Duality</label></td>
-                        <td><input type="checkbox" id="enable-duality-groups" class="settings-input"
-                                onchange="saveGlobalSettings()" unchecked></td>
-                    </tr>
-                    <tr>
-                        <td><label class="field-title">Crit Behavior</label></td>
-                        <td>
-                            <select id="crit-behavior">
-                                <option value="one-point-five-total">1.5x Total</option>
-                                <option value="double-total">2x Total</option>
-                                <option value="triple-total">3x Total</option>
-                                <option value="quadruple-total">4x Total</option>
-                                <option value="double-die-count">2x Die Quantity</option>
-                                <option value="double-die-result">2x the Die Results</option>
-                                <option value="max-die">Max Die Result</option>
-                                <option value="max-plus">Max + Raw Die Result</option>
-                            </select>
-                        </td>
-                    </tr>
-                </table>
+                <div class="settings-body">
+                    <div class="settings-row">
+                        <label class="field-title">Language</label>
+                        <select id="language-select" class="hidden" onchange="changeLanguage()">
+                            <option value="en">English</option>
+                            <option value="es">Spanish</option>
+                            <option value="de">German</option>
+                            <option value="fr">French</option>
+                            <option value="it">Italian</option>
+                            <option value="pt-br">Portuguese (Brazil)</option>
+                        </select>
+                        <div class="custom-dropdown" data-select="language-select">
+                            <button type="button" class="custom-dropdown-toggle">English<span class="dropdown-arrow">&#x25BE;</span></button>
+                            <div class="custom-dropdown-menu hidden">
+                                <div class="custom-dropdown-item selected" data-value="en">English</div>
+                                <div class="custom-dropdown-item" data-value="es">Spanish</div>
+                                <div class="custom-dropdown-item" data-value="de">German</div>
+                                <div class="custom-dropdown-item" data-value="fr">French</div>
+                                <div class="custom-dropdown-item" data-value="it">Italian</div>
+                                <div class="custom-dropdown-item" data-value="pt-br">Portuguese (Brazil)</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="settings-row">
+                        <label class="field-title">Automatically load data</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="auto-load" class="settings-input" onchange="saveGlobalSettings()"
+                                    unchecked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="settings-row">
+                        <label class="field-title">Automatically save data</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="auto-save" class="settings-input" onchange="saveGlobalSettings()"
+                                    unchecked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="settings-row">
+                        <label class="field-title">Auto-Reset Dice on Save</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="auto-reset" class="settings-input"
+                                    onchange="saveGlobalSettings()" unchecked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="settings-row">
+                        <label class="field-title">Enable Daggerheart Duality</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="enable-duality-groups" class="settings-input"
+                                    onchange="saveGlobalSettings()" unchecked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <!-- Exploding Dice toggle -->
+                    <div class="settings-row">
+                        <label class="field-title">Enable Exploding Dice</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="enable-exploding-dice" class="settings-input"
+                                    onchange="saveGlobalSettings(); updateExplodingDiceVisibility()" unchecked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <!-- Child setting: Increase Die Size (indented, hidden when parent is off) -->
+                    <div id="exploding-dice-options" class="settings-child-options hidden">
+                        <div class="settings-row settings-child-row">
+                            <label class="field-title">Escalating Explosions</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="increase-exploded-die-size" class="settings-input"
+                                        onchange="saveGlobalSettings()" unchecked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="settings-row">
+                        <label class="field-title">Crit Behavior</label>
+                        <select id="crit-behavior" class="hidden" onchange="saveGlobalSettings()">
+                            <option value="one-point-five-total">1.5x Total</option>
+                            <option value="double-total">2x Total</option>
+                            <option value="triple-total">3x Total</option>
+                            <option value="quadruple-total">4x Total</option>
+                            <option value="double-die-count">2x Die Quantity</option>
+                            <option value="double-die-result">2x the Die Results</option>
+                            <option value="max-die">Max Die Result</option>
+                            <option value="max-plus">Max + Raw Die Result</option>
+                        </select>
+                        <div class="custom-dropdown" data-select="crit-behavior">
+                            <button type="button" class="custom-dropdown-toggle">1.5x Total<span class="dropdown-arrow">&#x25BE;</span></button>
+                            <div class="custom-dropdown-menu hidden">
+                                <div class="custom-dropdown-item selected" data-value="one-point-five-total">1.5x Total</div>
+                                <div class="custom-dropdown-item" data-value="double-total">2x Total</div>
+                                <div class="custom-dropdown-item" data-value="triple-total">3x Total</div>
+                                <div class="custom-dropdown-item" data-value="quadruple-total">4x Total</div>
+                                <div class="custom-dropdown-item" data-value="double-die-count">2x Die Quantity</div>
+                                <div class="custom-dropdown-item" data-value="double-die-result">2x the Die Results</div>
+                                <div class="custom-dropdown-item" data-value="max-die">Max Die Result</div>
+                                <div class="custom-dropdown-item" data-value="max-plus">Max + Raw Die Result</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <hr />
-                <button id="copy-backup-button" class="wide-button" onclick="handleCopyToClipboard()">Copy to
-                    Clipboard</button>
-                <br>
-                <br>
-                <div class="version">Version: 5.6</div>
+                <button class="controls-btn" onclick="toggleControlsDisplay()" type="button">&#x2328; Controls</button>
+                <hr />
+                <div class="debug-section">
+                    <div class="debug-section-header" tabindex="0" role="button"
+                        onclick="uiManager.toggleAccordion(this)"
+                        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();uiManager.toggleAccordion(this);}">
+                        <span>Debug Options</span>
+                        <span class="accordion-icon">+</span>
+                    </div>
+                    <div class="debug-section-content collapsed">
+                        <div class="debug-copy-row">
+                            <button id="copy-backup-button" class="debug-copy-btn" onclick="handleCopyToClipboard()" type="button">
+                                &#x1F4CB; Copy Data to Clipboard
+                            </button>
+                            <span class="debug-hint">Exports all vault data as JSON. Useful for backup or bug reporting.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="version">Version: 6.0</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Controls Modal -->
+    <div id="controls-modal" class="modal hidden">
+        <div class="modal-overlay" onclick="toggleControlsDisplay()"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Controls</h2>
+                <span class="modal-close" onclick="toggleControlsDisplay()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="controls-section">
+                    <div class="controls-section-title">Dice Icons</div>
+                    <div class="control-item"><span class="control-key">Click</span><span class="control-desc">Add one die</span></div>
+                    <div class="control-item"><span class="control-key">Right-click</span><span class="control-desc">Remove one die</span></div>
+                    <div class="control-item"><span class="control-key">Ctrl + Right-click</span><span class="control-desc">Reset die count to zero</span></div>
+                </div>
+                <div class="controls-section">
+                    <div class="controls-section-title">Dice Groups</div>
+                    <div class="control-item"><span class="control-key">Drag handle &#x2195;</span><span class="control-desc">Reorder groups</span></div>
+                    <div class="control-item"><span class="control-key">Reset icon</span><span class="control-desc">Clear all dice in group</span></div>
+                    <div class="control-item"><span class="control-key">Collapse icon &minus;/+</span><span class="control-desc">Toggle group visibility</span></div>
+                </div>
+                <div class="controls-section">
+                    <div class="controls-section-title">Text Fields</div>
+                    <div class="control-item"><span class="control-key">Enter</span><span class="control-desc">Confirms input</span></div>
+                </div>
+                <div class="controls-section">
+                    <div class="controls-section-title">Pinned Rolls</div>
+                    <div class="control-item"><span class="control-key">Edit icon</span><span class="control-desc">Rename the roll</span></div>
+                    <div class="control-item"><span class="control-key">Delete icon</span><span class="control-desc">Remove the roll</span></div>
+                </div>
+                <div class="controls-section">
+                    <div class="controls-section-title">Counters</div>
+                    <div class="control-item"><span class="control-key">Edit icon</span><span class="control-desc">Rename counter</span></div>
+                    <div class="control-item"><span class="control-key">Delete icon</span><span class="control-desc">Remove counter</span></div>
+                </div>
+                <div class="controls-section">
+                    <div class="controls-section-title">General</div>
+                    <div class="control-item"><span class="control-key">Escape</span><span class="control-desc">Close any open window</span></div>
+                </div>
             </div>
         </div>
     </div>
@@ -200,6 +329,7 @@
     <script type="text/javascript" src="scripts/RollManager.js"></script>
     <script type="text/javascript" src="scripts/DiceGroupManager.js"></script>
     <script type="text/javascript" src="scripts/RollSorter.js"></script>
+    <script type="text/javascript" src="scripts/ReorderManager.js"></script>
     <script type="text/javascript" src="scripts/SavedRollManager.js"></script>
     <script type="text/javascript" src="scripts/UIManager.js"></script>
     <script type="text/javascript" src="scripts/CounterManager.js"></script>

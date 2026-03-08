@@ -19,9 +19,14 @@ class UIManager {
      */
     toggleAccordion(header) {
         const content = header.nextElementSibling;
-        const isHidden = content.style.display === "none";
-        content.style.display = isHidden ? "block" : "none";
-        header.querySelector(".accordion-icon").textContent = isHidden ? "-" : "+";
+        const isCollapsed = content.classList.contains('collapsed');
+        if (isCollapsed) {
+            content.classList.remove('collapsed');
+            header.querySelector(".accordion-icon").textContent = "-";
+        } else {
+            content.classList.add('collapsed');
+            header.querySelector(".accordion-icon").textContent = "+";
+        }
     }
 
     /**
@@ -36,36 +41,26 @@ class UIManager {
 
             const modal = document.createElement('div');
             modal.className = 'ui-modal';
-            modal.style.position = 'fixed';
-            modal.style.left = '50%';
-            modal.style.top = '50%';
-            modal.style.transform = 'translate(-50%, -50%)';
-            modal.style.backgroundColor = 'var(--ts-background-primary)';
-            modal.style.padding = '20px';
-            modal.style.border = '4px solid var(--ts-accessibility-border)';
-            modal.style.zIndex = '1000';
-            modal.style.boxShadow = '0 4px 8px var(--ts-background-primary)';
-            modal.style.borderRadius = '4px';
-            modal.style.color = 'var(--ts-color-primary)';
-            modal.style.textAlign = 'center';
-            modal.style.minWidth = '300px';
 
-            // Add title if provided
             let modalHTML = '';
+
+            // Add header if title provided
             if (options.title) {
-                modalHTML += `<h3>${options.title}</h3>`;
+                modalHTML += `<div class="modal-header"><h3>${options.title}</h3></div>`;
             }
-            
-            modalHTML += content;
+
+            modalHTML += `<div class="modal-body">${content}`;
 
             // Add buttons if provided
             if (options.buttons && options.buttons.length > 0) {
-                modalHTML += '<div style="display: flex; justify-content: space-around; margin-top: 20px;">';
+                modalHTML += '<div class="modal-buttons">';
                 options.buttons.forEach((button, index) => {
                     modalHTML += `<button id="modal-btn-${index}" class="black-button">${button.text}</button>`;
                 });
                 modalHTML += '</div>';
             }
+
+            modalHTML += '</div>';
 
             modal.innerHTML = modalHTML;
             document.body.appendChild(modal);
@@ -108,8 +103,8 @@ class UIManager {
             {
                 title,
                 buttons: [
-                    { text: 'Yes', value: true },
-                    { text: 'No', value: false }
+                    { text: getTranslation('yes'), value: true },
+                    { text: getTranslation('no'), value: false }
                 ]
             }
         );
@@ -127,7 +122,7 @@ class UIManager {
             {
                 title,
                 buttons: [
-                    { text: 'OK', value: true }
+                    { text: getTranslation('ok'), value: true }
                 ]
             }
         );
@@ -145,7 +140,7 @@ class UIManager {
             {
                 title,
                 buttons: [
-                    { text: 'OK', value: true }
+                    { text: getTranslation('ok'), value: true }
                 ]
             }
         );
@@ -165,33 +160,18 @@ class UIManager {
 
             const modal = document.createElement('div');
             modal.className = 'ui-modal';
-            modal.style.position = 'fixed';
-            modal.style.left = '50%';
-            modal.style.top = '50%';
-            modal.style.transform = 'translate(-50%, -50%)';
-            modal.style.backgroundColor = 'var(--ts-background-primary)';
-            modal.style.padding = '20px';
-            modal.style.border = '4px solid var(--ts-accessibility-border)';
-            modal.style.zIndex = '1000';
-            modal.style.boxShadow = '0 4px 8px var(--ts-background-primary)';
-            modal.style.borderRadius = '4px';
-            modal.style.color = 'var(--ts-color-primary)';
-            modal.style.textAlign = 'center';
-            modal.style.minWidth = '300px';
 
             modal.innerHTML = `
-                <h3>${title}</h3>
-                <p style="margin-bottom: 15px;">${message}</p>
-                <input type="text" id="modal-input" 
-                       placeholder="${placeholder}" 
-                       value="${defaultValue}"
-                       style="width: 100%; padding: 8px; margin-bottom: 15px; 
-                              border: 1px solid var(--ts-accessibility-border); 
-                              border-radius: 4px; background-color: var(--ts-background-tertiary);
-                              color: var(--ts-color-primary); font-size: 14px;">
-                <div style="display: flex; justify-content: space-around; margin-top: 20px;">
-                    <button id="modal-ok" class="black-button"><i class="ts-icon-check ts-icon-xsmall"></i></button>
-                    <button id="modal-cancel" class="black-button"><i class="ts-icon-remove ts-icon-xsmall"></i></button>
+                <div class="modal-header"><h3>${title}</h3></div>
+                <div class="modal-body">
+                    <p>${message}</p>
+                    <input type="text" id="modal-input" class="modal-input"
+                           placeholder="${placeholder}"
+                           value="${defaultValue}">
+                    <div class="modal-buttons">
+                        <button id="modal-ok" class="black-button"><i class="ts-icon-check ts-icon-xsmall"></i></button>
+                        <button id="modal-cancel" class="black-button"><i class="ts-icon-remove ts-icon-xsmall"></i></button>
+                    </div>
                 </div>
             `;
 
@@ -252,14 +232,6 @@ class UIManager {
 
             const overlay = document.createElement('div');
             overlay.id = 'ui-overlay';
-            overlay.style.position = 'fixed';
-            overlay.style.top = '0';
-            overlay.style.left = '0';
-            overlay.style.width = '100%';
-            overlay.style.height = '100%';
-            overlay.style.backgroundColor = 'var(--ts-background-primary)';
-            overlay.style.zIndex = '999';
-            overlay.style.pointerEvents = 'auto';
             document.body.appendChild(overlay);
         } else {
             const overlay = document.getElementById('ui-overlay');
@@ -285,28 +257,19 @@ class UIManager {
 
         const loadingDiv = document.createElement('div');
         loadingDiv.id = 'loading-indicator';
-        loadingDiv.style.position = 'fixed';
-        loadingDiv.style.left = '50%';
-        loadingDiv.style.top = '50%';
-        loadingDiv.style.transform = 'translate(-50%, -50%)';
-        loadingDiv.style.backgroundColor = 'var(--ts-background-primary)';
-        loadingDiv.style.padding = '20px';
-        loadingDiv.style.border = '2px solid var(--ts-accessibility-border)';
-        loadingDiv.style.borderRadius = '4px';
-        loadingDiv.style.zIndex = '1001';
-        loadingDiv.style.color = 'var(--ts-color-primary)';
-        loadingDiv.style.textAlign = 'center';
+        loadingDiv.className = 'ui-modal';
 
-        // Simple text-based spinner
         loadingDiv.innerHTML = `
-            <div style="font-size: 24px; margin-bottom: 10px;">⟳</div>
-            <div>${message}</div>
+            <div class="modal-body" style="text-align: center;">
+                <div class="loading-spinner" style="font-size: 24px; margin-bottom: 10px;">⟳</div>
+                <div>${message}</div>
+            </div>
         `;
 
         document.body.appendChild(loadingDiv);
 
         // Animate the spinner
-        const spinner = loadingDiv.querySelector('div');
+        const spinner = loadingDiv.querySelector('.loading-spinner');
         let rotation = 0;
         const rotateSpinner = () => {
             rotation += 10;
@@ -477,6 +440,190 @@ class UIManager {
                 }
             }, 300);
         }, duration);
+    }
+
+    /**
+     * Initializes all custom dropdown elements on the page.
+     * Each custom dropdown is linked to a hidden <select> element via the
+     * data-select attribute. Selecting an item updates the hidden select
+     * and triggers its change event so existing sort logic works unchanged.
+     */
+    initCustomDropdowns() {
+        document.querySelectorAll('.custom-dropdown').forEach(dropdown => {
+            const toggle = dropdown.querySelector('.custom-dropdown-toggle');
+            const menu = dropdown.querySelector('.custom-dropdown-menu');
+            const selectId = dropdown.dataset.select;
+            const hiddenSelect = selectId ? document.getElementById(selectId) : null;
+
+            toggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isOpen = !menu.classList.contains('hidden');
+                this.closeAllCustomDropdowns();
+                if (!isOpen) {
+                    menu.classList.remove('hidden');
+                    dropdown.classList.add('open');
+
+                    // Position the menu with fixed coordinates so it escapes
+                    // any overflow:hidden/auto ancestor (e.g. modal-body scroll container).
+                    const rect = toggle.getBoundingClientRect();
+                    menu.style.position = 'fixed';
+                    menu.style.top = (rect.bottom + 4) + 'px';
+                    menu.style.left = rect.left + 'px';
+                    menu.style.right = 'auto';
+                    menu.style.minWidth = rect.width + 'px';
+
+                    // After the browser renders the menu, clamp it if it bleeds
+                    // past the right edge of the viewport.
+                    requestAnimationFrame(() => {
+                        const menuRect = menu.getBoundingClientRect();
+                        if (menuRect.right > window.innerWidth) {
+                            menu.style.left = Math.max(0, rect.right - menu.offsetWidth) + 'px';
+                        }
+                    });
+                }
+            });
+
+            dropdown.querySelectorAll('.custom-dropdown-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const value = item.dataset.value;
+                    const text = item.textContent;
+
+                    // Update visual state
+                    dropdown.querySelectorAll('.custom-dropdown-item').forEach(i => i.classList.remove('selected'));
+                    item.classList.add('selected');
+
+                    // Update toggle text (preserve the arrow span)
+                    const arrow = toggle.querySelector('.dropdown-arrow');
+                    toggle.textContent = text;
+                    if (arrow) toggle.appendChild(arrow);
+
+                    // Sync with hidden select and fire change event
+                    if (hiddenSelect) {
+                        hiddenSelect.value = value;
+                        hiddenSelect.dispatchEvent(new Event('change'));
+                    }
+
+                    // Close menu
+                    menu.classList.add('hidden');
+                    dropdown.classList.remove('open');
+                });
+            });
+        });
+
+        // Close dropdowns when clicking anywhere else
+        document.addEventListener('click', () => {
+            this.closeAllCustomDropdowns();
+        });
+
+        this.lockSettingsDropdownWidths();
+    }
+
+    /**
+     * Locks the min-width of each settings-row custom dropdown toggle to the
+     * width it would need to display its longest option. This prevents the
+     * toggle from resizing when the selected value changes.
+     *
+     * Because the settings modal is hidden at init time (display:none blocks
+     * layout), the modal is temporarily made invisible-but-renderable so that
+     * offsetWidth measurements return real values, then restored immediately.
+     */
+    lockSettingsDropdownWidths() {
+        const settingsModal = document.getElementById('settings-modal');
+        if (!settingsModal) return;
+
+        const wasHidden = settingsModal.classList.contains('hidden');
+        if (wasHidden) {
+            settingsModal.style.visibility = 'hidden';
+            settingsModal.style.pointerEvents = 'none';
+            settingsModal.classList.remove('hidden');
+        }
+
+        document.querySelectorAll('.settings-row .custom-dropdown').forEach(dropdown => {
+            const toggle = dropdown.querySelector('.custom-dropdown-toggle');
+            const arrow = toggle.querySelector('.dropdown-arrow');
+            const items = dropdown.querySelectorAll('.custom-dropdown-item');
+
+            // Save the current toggle text (without the arrow span)
+            const currentText = Array.from(toggle.childNodes)
+                .filter(n => n.nodeType === Node.TEXT_NODE)
+                .map(n => n.textContent)
+                .join('');
+
+            // Find the longest option text
+            let longestText = '';
+            items.forEach(item => {
+                if (item.textContent.trim().length > longestText.length) {
+                    longestText = item.textContent.trim();
+                }
+            });
+
+            // Temporarily render the toggle with the longest text and measure
+            toggle.textContent = longestText;
+            if (arrow) toggle.appendChild(arrow);
+            const maxWidth = toggle.offsetWidth;
+
+            // Restore original text
+            toggle.textContent = currentText;
+            if (arrow) toggle.appendChild(arrow);
+
+            if (maxWidth > 0) {
+                toggle.style.minWidth = maxWidth + 'px';
+            }
+        });
+
+        if (wasHidden) {
+            settingsModal.classList.add('hidden');
+            settingsModal.style.visibility = '';
+            settingsModal.style.pointerEvents = '';
+        }
+    }
+
+    /**
+     * Closes all open custom dropdown menus and clears any fixed positioning
+     * applied during open to escape overflow-clipping ancestors.
+     */
+    closeAllCustomDropdowns() {
+        document.querySelectorAll('.custom-dropdown').forEach(d => {
+            const menu = d.querySelector('.custom-dropdown-menu');
+            menu.classList.add('hidden');
+            menu.style.position = '';
+            menu.style.top = '';
+            menu.style.left = '';
+            menu.style.right = '';
+            menu.style.minWidth = '';
+            d.classList.remove('open');
+        });
+    }
+
+    /**
+     * Syncs custom dropdown display text with the options in the hidden <select>.
+     * Call this after language changes to keep labels in sync.
+     */
+    syncCustomDropdowns() {
+        document.querySelectorAll('.custom-dropdown').forEach(dropdown => {
+            const selectId = dropdown.dataset.select;
+            const hiddenSelect = selectId ? document.getElementById(selectId) : null;
+            if (!hiddenSelect) return;
+
+            const items = dropdown.querySelectorAll('.custom-dropdown-item');
+            const options = hiddenSelect.querySelectorAll('option');
+            const toggle = dropdown.querySelector('.custom-dropdown-toggle');
+            const arrow = toggle.querySelector('.dropdown-arrow');
+
+            options.forEach((opt, i) => {
+                if (items[i]) {
+                    items[i].textContent = opt.textContent;
+                    if (opt.value === hiddenSelect.value) {
+                        items[i].classList.add('selected');
+                        toggle.textContent = opt.textContent;
+                        if (arrow) toggle.appendChild(arrow);
+                    } else {
+                        items[i].classList.remove('selected');
+                    }
+                }
+            });
+        });
     }
 
     /**

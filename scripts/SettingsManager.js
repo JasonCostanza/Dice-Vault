@@ -6,6 +6,21 @@
 function toggleSettingsDisplay() {
     const settingsModal = document.getElementById('settings-modal');
     settingsModal.classList.toggle('hidden');
+    // Close controls modal when settings closes
+    if (settingsModal.classList.contains('hidden')) {
+        const controlsModal = document.getElementById('controls-modal');
+        if (controlsModal && !controlsModal.classList.contains('hidden')) {
+            controlsModal.classList.add('hidden');
+        }
+    }
+}
+
+/**
+ * Toggles the visibility of the controls/help modal.
+ */
+function toggleControlsDisplay() {
+    const controlsModal = document.getElementById('controls-modal');
+    controlsModal.classList.toggle('hidden');
 }
 
 /**
@@ -23,6 +38,8 @@ function defaultSettings(settingName) {
         autoSaveRolls: false,
         autoResetEdit: false,
         enableDualityGroups: false,
+        enableExplodingDice: false,
+        increaseExplodedDieSize: false,
         critBehavior: 'double-total',
         language: 'en'
     }
@@ -41,6 +58,8 @@ function saveGlobalSettings() {
         autoSaveRolls: document.getElementById('auto-save').checked,
         autoResetEdit: document.getElementById('auto-reset').checked,
         enableDualityGroups: document.getElementById('enable-duality-groups').checked,
+        enableExplodingDice: document.getElementById('enable-exploding-dice').checked,
+        increaseExplodedDieSize: document.getElementById('increase-exploded-die-size').checked,
         critBehavior: document.getElementById('crit-behavior').value,
         language: document.getElementById('language-select').value
     }
@@ -66,9 +85,16 @@ function loadGlobalSettings() {
         document.getElementById('auto-save').checked = settings.autoSaveRolls || defaultSettings('autoSaveRolls');
         document.getElementById('auto-reset').checked = settings.autoResetEdit || defaultSettings('autoResetEdit');
         document.getElementById('enable-duality-groups').checked = settings.enableDualityGroups || defaultSettings('enableDualityGroups');
+        document.getElementById('enable-exploding-dice').checked = settings.enableExplodingDice || defaultSettings('enableExplodingDice');
+        document.getElementById('increase-exploded-die-size').checked = settings.increaseExplodedDieSize || defaultSettings('increaseExplodedDieSize');
         document.getElementById('crit-behavior').value = settings.critBehavior || defaultSettings('critBehavior');
         const language = settings.language || defaultSettings('language');
         document.getElementById('language-select').value = language;
+
+        // Sync custom dropdown visuals to match the hidden select values loaded from storage
+        if (typeof uiManager !== 'undefined') {
+            uiManager.syncCustomDropdowns();
+        }
 
         // Apply translations after loading language preference
         if (typeof applyTranslations === 'function') {
@@ -77,6 +103,7 @@ function loadGlobalSettings() {
 
         performAutoLoads();
         updateDualityVisibility();
+        updateExplodingDiceVisibility();
     }).catch(error => {
         console.error('Failed to load settings:', error);
         // Apply default language (English) if loading fails
@@ -158,7 +185,7 @@ async function handleCopyToClipboard() {
  */
 function showCopySuccess(button, originalText, originalStyle) {
     button.textContent = 'Copied!';
-    button.style.backgroundColor = '#4CAF50';
+    button.style.backgroundColor = 'var(--ts-color-success, #4caf50)';
     button.style.color = 'white';
     button.disabled = true;
 
@@ -174,7 +201,7 @@ function showCopySuccess(button, originalText, originalStyle) {
  */
 function showCopyError(button, originalText, originalStyle, message) {
     button.textContent = '✗ Error';
-    button.style.backgroundColor = '#f44336';
+    button.style.backgroundColor = 'var(--ts-color-danger, #f44336)';
     button.style.color = 'white';
     button.disabled = true;
 
@@ -215,9 +242,9 @@ async function handleRetrieveBackup() {
             modal.style.transform = 'translate(-50%, -50%)';
             modal.style.width = '80%';
             modal.style.height = '50%';
-            modal.style.backgroundColor = 'white';
+            modal.style.backgroundColor = 'var(--ts-background-primary)';
             modal.style.padding = '20px';
-            modal.style.border = '1px solid black';
+            modal.style.border = '1px solid var(--ts-accessibility-border)';
             modal.style.zIndex = '1000';
 
             const heading = document.createElement('h2');
@@ -258,6 +285,13 @@ async function handleRetrieveBackup() {
  */
 document.addEventListener('keydown', function (event) {
     if (event.key === 'Escape') {
+        // Close controls modal first if open (it sits on top of settings)
+        const controlsModal = document.getElementById('controls-modal');
+        if (controlsModal && !controlsModal.classList.contains('hidden')) {
+            controlsModal.classList.add('hidden');
+            return;
+        }
+
         const settingsModal = document.getElementById('settings-modal');
         if (settingsModal && !settingsModal.classList.contains('hidden')) {
             settingsModal.classList.add('hidden');
@@ -265,7 +299,7 @@ document.addEventListener('keydown', function (event) {
 
         const mobileMenuModal = document.getElementById('mobile-menu-modal');
         if (mobileMenuModal && !mobileMenuModal.classList.contains('hidden')) {
-            mobileMenuModal.classList.add('hidden');
+            toggleMobileMenu();
         }
     }
 });
@@ -277,12 +311,47 @@ document.addEventListener('keydown', function (event) {
  */
 function toggleMobileMenu() {
     const mobileMenuModal = document.getElementById('mobile-menu-modal');
-    mobileMenuModal.classList.toggle('hidden');
+    if (mobileMenuModal.classList.contains('hidden')) {
+        // Open
+        mobileMenuModal.classList.remove('hidden');
+        mobileMenuModal.classList.remove('closing');
+    } else {
+        // Close with animation
+        mobileMenuModal.classList.add('closing');
+        setTimeout(() => {
+            mobileMenuModal.classList.remove('closing');
+            mobileMenuModal.classList.add('hidden');
+        }, 300);
+    }
 }
 
 // Export to global scope
 window.fetchSetting = fetchSetting;
 window.updateDualityVisibility = updateDualityVisibility;
+window.updateExplodingDiceVisibility = updateExplodingDiceVisibility;
+
+/**
+ * Updates the visibility of the "Escalating Explosions" child option
+ * based on the "Enable Exploding Dice" parent toggle. When the parent is
+ * disabled, the child checkbox is also forced unchecked and settings are saved.
+ */
+function updateExplodingDiceVisibility() {
+    const enableExploding = document.getElementById('enable-exploding-dice').checked;
+    const explodingOptions = document.getElementById('exploding-dice-options');
+    if (explodingOptions) {
+        if (enableExploding) {
+            explodingOptions.classList.remove('hidden');
+        } else {
+            explodingOptions.classList.add('hidden');
+            // Force child setting off when parent is disabled
+            const childCheckbox = document.getElementById('increase-exploded-die-size');
+            if (childCheckbox && childCheckbox.checked) {
+                childCheckbox.checked = false;
+                saveGlobalSettings();
+            }
+        }
+    }
+}
 
 /**
  * Updates the visibility of the Duality buttons based on the setting.

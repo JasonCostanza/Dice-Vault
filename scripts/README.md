@@ -6,11 +6,15 @@ The Dice Vault symbiote uses the following JavaScript files to deliver all of it
 
 ### main.js
 
-The `main.js` file serves as the application entry point and coordination layer for the Dice Vault symbiote. It initializes all class instances (DiceGroupManager, RollSorter, SavedRollManager, UIManager, CounterManager), handles dependency injection, and sets up essential event listeners. This file orchestrates the startup sequence and provides the bridge between HTML event handlers and the class-based architecture. The file has been designed as a clean, focused coordination layer that manages application initialization.
+The `main.js` file serves as the application entry point and coordination layer for the Dice Vault symbiote. It initializes all class instances (DiceGroupManager, RollSorter, ReorderManager, SavedRollManager, UIManager, CounterManager), handles dependency injection, and sets up essential event listeners. This file orchestrates the startup sequence and provides the bridge between HTML event handlers and the class-based architecture. The file has been designed as a clean, focused coordination layer that manages application initialization.
 
 ### globals.js
 
 The `globals.js` file serves as the foundation for the Dice Vault symbiote by defining and managing global variables and constants that are essential across the application. This includes configurations, state variables, utility functions, and dice type definitions that need to be accessed by multiple components or scripts within the Dice Vault.
+
+### LanguageManager.js
+
+The `LanguageManager` module handles internationalization (i18n) for the Dice Vault application. It maintains translation dictionaries for six supported languages (English, Spanish, German, French, Italian, and Portuguese Brazil), provides functions to apply translations to UI elements, and manages language preference persistence. The module includes utility functions for updating button text while preserving image/icon elements, and automatically loads saved language preferences on startup.
 
 ## Manager Classes
 
@@ -41,6 +45,10 @@ The `RollSorter` class handles all sorting functionality for saved rolls includi
 ### CounterManager.js
 
 The `CounterManager` class manages counter functionality within the application. It handles creating, updating, and removing counters that can be used for tracking various game states like persistent damage, spell slots, or other numerical game elements.
+
+### ReorderManager.js
+
+The `ReorderManager` class handles drag-and-drop reordering functionality for both dice groups and pinned saved rolls. It provides a clean interface for managing draggable elements, including visual feedback during dragging, drop position indicators, and constraint-based dropping (e.g., saved rolls can only be dropped within their own creature group). This class integrates with DiceGroupManager and RollSorter to persist reordering changes.
 
 ### CriticalManager.js
 

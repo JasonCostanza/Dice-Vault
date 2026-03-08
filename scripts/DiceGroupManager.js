@@ -75,6 +75,23 @@ class DiceGroupManager {
     }
 
     /**
+     * Resets a single die counter to 0.
+     * @param {string} type - The combined group-die identifier (e.g., "group-0-d6").
+     */
+    resetSingleDie(type) {
+        const lastDashIndex = type.lastIndexOf("-");
+        const groupId = type.substring(0, lastDashIndex);
+        const diceType = type.substring(lastDashIndex + 1);
+        const counterId = `${groupId}-${diceType}-counter-value`;
+        const counter = document.getElementById(counterId);
+
+        if (counter) {
+            counter.textContent = 0;
+            this.updateDiceGroupsData();
+        }
+    }
+
+    /**
      * Adds a new dice group to the interface
      */
     addDiceGroup() {
@@ -93,20 +110,25 @@ class DiceGroupManager {
         const accordionHeader = document.createElement("div");
         accordionHeader.className = "dice-group-header";
         accordionHeader.innerHTML = `
+            <span class="drag-handle" title="Drag to reorder"></span>
             <div class="header-content">
-                <input type="text" class="dice-group-name-input header-input" id="group-${groupIndex}-name" 
+                <input type="text" class="dice-group-name-input header-input" id="group-${groupIndex}-name"
                     placeholder="${groupNamePlaceholder}" oninput="diceGroupManager.updateDiceGroupsData()">
             </div>
-            <span class="accordion-toggle">-</span>
+            <i class="ts-icon-refresh header-action-btn" title="Reset group" data-group-index="${groupIndex}"></i>
+            <i class="ts-icon-minus ts-icon-xsmall header-action-btn accordion-toggle" title="Collapse group"></i>
         `;
 
-        accordionHeader.addEventListener('click', (event) => {
-            // Skip if we're clicking on the input
-            if (event.target.classList.contains('header-input') ||
-                event.target.classList.contains('dice-group-name-input')) {
-                return;
-            }
+        // Accordion toggle click handler
+        accordionHeader.querySelector('.accordion-toggle').addEventListener('click', (event) => {
+            event.stopPropagation();
             this.toggleDiceGroupAccordion(event);
+        });
+
+        // Reset button click handler
+        accordionHeader.querySelector('.ts-icon-refresh').addEventListener('click', (event) => {
+            event.stopPropagation();
+            this.resetDiceGroup(groupIndex, 'dice');
         });
 
         const content = document.createElement("div");
@@ -122,7 +144,7 @@ class DiceGroupManager {
             diceHTML += `
                 <div class="dice-counter unselectable" id="group-${groupIndex}-${type}-counter">
                     <i class="ts-icon-${type} ts-icon-size55" onclick="diceGroupManager.adjustDice('group-${groupIndex}-${type}', 1)"
-                    oncontextmenu="diceGroupManager.adjustDice('group-${groupIndex}-${type}', -1); return false;"></i>
+                    oncontextmenu="isCtrlHeld ? diceGroupManager.resetSingleDie('group-${groupIndex}-${type}') : diceGroupManager.adjustDice('group-${groupIndex}-${type}', -1); return false;"></i>
                     <div class="counter-overlay" id="group-${groupIndex}-${type}-counter-value">0</div>
                     <div class="dice-label">${type.toUpperCase()}</div>
                 </div>
@@ -133,8 +155,8 @@ class DiceGroupManager {
             <div class="plus-sign"><span>+</span></div>
             <div class="dice-counter unselectable" id="group-${groupIndex}-mod-counter">
                 <i class="ts-icon-circle-dotted ts-icon-size55 mod-holder"></i>
-                <input type="number" class="counter-overlay mod-counter-overlay" 
-                id="group-${groupIndex}-mod-counter-value" value="0" min="-999" max="999" onfocus="this.select()" oninput="diceGroupManager.updateDiceGroupsData()" />
+                <input type="number" class="counter-overlay mod-counter-overlay"
+                id="group-${groupIndex}-mod-counter-value" value="0" min="-999" max="999" onfocus="this.select()" oninput="diceGroupManager.updateDiceGroupsData()" onblur="if(this.value==='')this.value='0';diceGroupManager.updateDiceGroupsData()" />
                 <div class="dice-label">MOD</div>
             </div>
         `;
@@ -148,12 +170,15 @@ class DiceGroupManager {
 
         // Make sure the content is fully visible immediately
         content.classList.remove('collapsed');
-        content.style.display = 'flex';
-        content.style.maxHeight = 'none'; // Allow natural height
-
-        accordionHeader.querySelector('.accordion-toggle').textContent = '-';
 
         this.updateDiceGroupsData();
+        this.updateGroupButtonState();
+
+        // Initialize drag-and-drop for the new group
+        if (typeof reorderManager !== 'undefined') {
+            reorderManager.initDragForGroup(wrapper);
+        }
+
         return groupIndex;
     }
 
@@ -161,6 +186,9 @@ class DiceGroupManager {
      * Adds a new duality group to the interface
      */
     addDualityGroup() {
+        const existingDuality = document.querySelectorAll('[data-group-type="duality"]');
+        if (existingDuality.length >= 1) return;
+
         const diceGroupsContainer = document.querySelector(".content-col-dice");
         const groupIndex = this.nextGroupId++;
 
@@ -176,20 +204,25 @@ class DiceGroupManager {
         const accordionHeader = document.createElement("div");
         accordionHeader.className = "dice-group-header";
         accordionHeader.innerHTML = `
+            <span class="drag-handle" title="Drag to reorder"></span>
             <div class="header-content">
-                <input type="text" class="dice-group-name-input header-input" id="group-${groupIndex}-name" 
+                <input type="text" class="dice-group-name-input header-input" id="group-${groupIndex}-name"
                     placeholder="${groupNamePlaceholder}" oninput="diceGroupManager.updateDiceGroupsData()">
             </div>
-            <span class="accordion-toggle">-</span>
+            <i class="ts-icon-refresh header-action-btn" title="Reset group" data-group-index="${groupIndex}"></i>
+            <i class="ts-icon-minus ts-icon-xsmall header-action-btn accordion-toggle" title="Collapse group"></i>
         `;
 
-        accordionHeader.addEventListener('click', (event) => {
-            // Skip if we're clicking on the input
-            if (event.target.classList.contains('header-input') ||
-                event.target.classList.contains('dice-group-name-input')) {
-                return;
-            }
+        // Accordion toggle click handler
+        accordionHeader.querySelector('.accordion-toggle').addEventListener('click', (event) => {
+            event.stopPropagation();
             this.toggleDiceGroupAccordion(event);
+        });
+
+        // Reset button click handler
+        accordionHeader.querySelector('.ts-icon-refresh').addEventListener('click', (event) => {
+            event.stopPropagation();
+            this.resetDiceGroup(groupIndex, 'duality');
         });
 
         const content = document.createElement("div");
@@ -215,8 +248,8 @@ class DiceGroupManager {
             <div class="plus-sign"><span>+</span></div>
             <div class="dice-counter unselectable" id="group-${groupIndex}-mod-counter">
                 <i class="ts-icon-circle-dotted ts-icon-size55 mod-holder"></i>
-                <input type="number" class="counter-overlay mod-counter-overlay" 
-                id="group-${groupIndex}-mod-counter-value" value="0" min="-999" max="999" onfocus="this.select()" oninput="diceGroupManager.updateDiceGroupsData()" />
+                <input type="number" class="counter-overlay mod-counter-overlay"
+                id="group-${groupIndex}-mod-counter-value" value="0" min="-999" max="999" onfocus="this.select()" oninput="diceGroupManager.updateDiceGroupsData()" onblur="if(this.value==='')this.value='0';diceGroupManager.updateDiceGroupsData()" />
                 <div class="dice-label">MOD</div>
             </div>
         `;
@@ -230,12 +263,15 @@ class DiceGroupManager {
 
         // Make sure the content is fully visible immediately
         content.classList.remove('collapsed');
-        content.style.display = 'flex';
-        content.style.maxHeight = 'none'; // Allow natural height
-
-        accordionHeader.querySelector('.accordion-toggle').textContent = '-';
 
         this.updateDiceGroupsData();
+        this.updateDualityButtonState();
+
+        // Initialize drag-and-drop for the new group
+        if (typeof reorderManager !== 'undefined') {
+            reorderManager.initDragForGroup(wrapper);
+        }
+
         return groupIndex;
     }
 
@@ -288,6 +324,30 @@ class DiceGroupManager {
         if (typeof diceGroupsData !== 'undefined') {
             diceGroupsData = this.diceGroupsData;
         }
+
+        this.updateDualityButtonState();
+        this.updateGroupButtonState();
+    }
+
+    /**
+     * Enables or disables the duality button based on whether a duality group already exists.
+     * Only one duality group is allowed per roll.
+     */
+    updateDualityButtonState() {
+        const hasDuality = document.querySelectorAll('[data-group-type="duality"]').length >= 1;
+        const addBtn = document.getElementById('add-duality-btn');
+        const removeBtn = document.getElementById('remove-duality-btn');
+        if (addBtn) addBtn.disabled = hasDuality;
+        if (removeBtn) removeBtn.disabled = !hasDuality;
+    }
+
+    /**
+     * Enables or disables the remove group button based on whether any dice groups exist.
+     */
+    updateGroupButtonState() {
+        const hasGroups = document.querySelectorAll('[data-group-type="dice"]').length >= 1;
+        const removeBtn = document.getElementById('remove-group-btn');
+        if (removeBtn) removeBtn.disabled = !hasGroups;
     }
 
     /**
@@ -303,6 +363,7 @@ class DiceGroupManager {
             console.warn("No dice group to remove.");
         }
         this.updateDiceGroupsData();
+        this.updateGroupButtonState();
     }
 
     /**
@@ -318,6 +379,7 @@ class DiceGroupManager {
             console.warn("No duality group to remove.");
         }
         this.updateDiceGroupsData();
+        this.updateDualityButtonState();
     }
 
     /**
@@ -377,19 +439,45 @@ class DiceGroupManager {
             return;
         }
 
-        // Check if collapsed based on display style
-        const isCollapsed = content.style.display === 'none';
+        const isCollapsed = content.classList.contains('collapsed');
 
         if (isCollapsed) {
-            // Expand
-            content.style.display = 'flex';
-            content.style.maxHeight = 'none'; // Allow natural height
-            icon.textContent = '-';
+            content.classList.remove('collapsed');
+            icon.classList.remove('ts-icon-plus');
+            icon.classList.add('ts-icon-minus');
+            icon.title = 'Collapse group';
         } else {
-            // Collapse
-            content.style.display = 'none';
-            icon.textContent = '+';
+            content.classList.add('collapsed');
+            icon.classList.remove('ts-icon-minus');
+            icon.classList.add('ts-icon-plus');
+            icon.title = 'Expand group';
         }
+    }
+
+    /**
+     * Resets all dice counters and modifier for a specific dice group.
+     * Standard groups reset all dice to 0. Duality groups reset d12 to 2.
+     * Modifier is always reset to 0.
+     * @param {number} groupIndex - The group index to reset
+     * @param {string} groupType - The group type ('dice' or 'duality')
+     */
+    resetDiceGroup(groupIndex, groupType) {
+        const diceTypesToReset = groupType === 'duality' ? ['d12'] : this.diceTypes;
+
+        diceTypesToReset.forEach(type => {
+            const counter = document.getElementById(`group-${groupIndex}-${type}-counter-value`);
+            if (counter) {
+                counter.textContent = (groupType === 'duality' && type === 'd12') ? '2' : '0';
+            }
+        });
+
+        // Reset modifier to 0
+        const modCounter = document.getElementById(`group-${groupIndex}-mod-counter-value`);
+        if (modCounter) {
+            modCounter.value = '0';
+        }
+
+        this.updateDiceGroupsData();
     }
 
     /**

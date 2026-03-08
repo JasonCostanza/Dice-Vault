@@ -4,6 +4,13 @@
 let debugMode = true; // Set to false to disable console logging
 
 /**
+ * Tracks whether the Ctrl key is currently held down.
+ * Used as a fallback because TaleSpire's Electron environment
+ * may strip modifier key info from mouse events (e.g., event.ctrlKey).
+ */
+let isCtrlHeld = false;
+
+/**
  * Flag used to confirm overwriting of existing saved rolls.
  * This is set to true when the user confirms they want to overwrite
  * an existing roll with the same name and group structure.
@@ -31,6 +38,38 @@ let savedDiceGroups = [];
  * the symbiote.
  */
 let trackedRollIds = {};
+
+/**
+ * Tracks active explosion chains, keyed by the parent (original) rollId.
+ * Each entry stores accumulated results, explosion round, and chain metadata.
+ */
+let activeExplosionChains = {};
+
+/**
+ * Maps a child (explosion re-roll) rollId back to the parent rollId
+ * that started the explosion chain.
+ */
+let explosionChildToParent = {};
+
+/**
+ * Tracks the currently visible explosion waiting modal DOM element.
+ * Null when no modal is displayed.
+ */
+let explosionWaitingModal = null;
+
+/**
+ * Die size step-up progression for the "Escalating Explosions" setting.
+ * When enabled, each explosion re-rolls with the next larger die type.
+ * d20 stays d20 (already at max size).
+ */
+const dieStepUpMap = Object.freeze({
+    d4: "d6",
+    d6: "d8",
+    d8: "d10",
+    d10: "d12",
+    d12: "d20",
+    d20: "d20"
+});
 
 /**
  * Array containing all dice denominations that exist.

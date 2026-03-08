@@ -140,14 +140,14 @@ class SavedRollManager {
         if (modifierOnlyGroups.length > 0) {
             const groupNames = modifierOnlyGroups.map(group => group.name || 'Unnamed Group').join(', ');
             console.error(`Cannot pin/save groups with only modifiers and no dice: ${groupNames}`);
-            alert(`Error: Cannot pin groups with only modifiers and no dice.\n\nGroups with this issue: ${groupNames}\n\nPlease add at least one die to these groups or set their modifier to 0 before pinning.`);
+            uiManager.showError(`Cannot pin groups with only modifiers and no dice.\n\nGroups with this issue: ${groupNames}\n\nPlease add at least one die to these groups or set their modifier to 0 before pinning.`, "Invalid Pin");
             return;
         }
 
         // Check if all groups are empty
         if (savedDiceGroups.every(this.diceGroupManager.isDiceGroupEmpty.bind(this.diceGroupManager))) {
             console.warn("Attempted to pin/save empty dice groups");
-            alert("Error: No dice selected for pinning. Please add at least one die to a group before pinning.");
+            uiManager.showError("No dice selected for pinning. Please add at least one die to a group before pinning.", "Invalid Pin");
             return;
         }
 
@@ -263,30 +263,21 @@ class SavedRollManager {
         uiManager.showOverlay(true);
 
         const modal = document.createElement('div');
-        modal.className = 'overwrite-modal';
-        modal.style.position = 'fixed';
-        modal.style.left = '50%';
-        modal.style.top = '50%';
-        modal.style.transform = 'translate(-50%, -50%)';
-        modal.style.backgroundColor = 'var(--ts-background-primary)';
-        modal.style.padding = '20px';
-        modal.style.border = '4px solid var(--ts-accessibility-border)';
-        modal.style.zIndex = '1000';
-        modal.style.boxShadow = '0 4px 8px var(--ts-background-primary)';
-        modal.style.borderRadius = '4px';
-        modal.style.color = 'var(--ts-color-primary)';
-        modal.style.textAlign = 'center';
-        modal.style.minWidth = '300px';
+        modal.className = 'ui-modal';
 
         const overwriteMessage = getTranslation('overwriteRollMessage').replace('{creatureName}', creatureName);
         const overwriteQuestion = getTranslation('overwriteRollQuestion');
+        const overwriteTitle = getTranslation('overwriteRollTitle');
 
         modal.innerHTML = `
-            <p>${overwriteMessage}</p>
-            <p>${overwriteQuestion}</p>
-            <div style="display: flex; justify-content: space-around; margin-top: 20px;">
-                <button id="overwrite-yes" class="black-button"><i class="ts-icon-check ts-icon-xsmall"></i></button>
-                <button id="overwrite-no" class="black-button"><i class="ts-icon-remove ts-icon-xsmall"></i></button>
+            <div class="modal-header"><h3>${overwriteTitle}</h3></div>
+            <div class="modal-body">
+                <p>${overwriteMessage}</p>
+                <p>${overwriteQuestion}</p>
+                <div class="modal-buttons">
+                    <button id="overwrite-yes" class="black-button"><i class="ts-icon-check ts-icon-xsmall"></i></button>
+                    <button id="overwrite-no" class="black-button"><i class="ts-icon-remove ts-icon-xsmall"></i></button>
+                </div>
             </div>
         `;
 
@@ -483,7 +474,7 @@ class SavedRollManager {
 
             // Create collapsible header for the creature
             creatureGroup.innerHTML = `
-            <div class="saved-roll-header" onclick="uiManager.toggleAccordion(this)">
+            <div class="saved-roll-header" tabindex="0" role="button" onclick="uiManager.toggleAccordion(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();uiManager.toggleAccordion(this);}">
                 <span>${creatureName}</span> <span class="accordion-icon">-</span>
             </div>
             <div class="saved-rolls-content"></div>
@@ -544,11 +535,11 @@ class SavedRollManager {
 
         creatureEntry.innerHTML = `
             <div class="roll-entry-container">
-                
+                <span class="drag-handle" title="Drag to reorder"></span>
                 <div class="roll-entry-dice-container"></div>
                 <div class="buttons-container">
-                    <div class="edit-roll" onclick="savedRollManager.startEditingSavedRoll(this)">${editIcon}</div>
-                    <div class="delete-roll" onclick="savedRollManager.deleteSavedRoll(this)">${deleteIcon}</div>
+                    <button type="button" class="edit-roll" onclick="savedRollManager.startEditingSavedRoll(this)">${editIcon}</button>
+                    <button type="button" class="delete-roll" onclick="savedRollManager.deleteSavedRoll(this)">${deleteIcon}</button>
                 </div>
             </div>
             <div class="row-buttons-container"></div>
@@ -570,6 +561,11 @@ class SavedRollManager {
 
         // Ensure rolls remain sorted
         this.rollSorter.sortSavedRolls();
+
+        // Initialize drag-and-drop for the new roll entry
+        if (typeof reorderManager !== 'undefined') {
+            reorderManager.initDragForRoll(creatureEntry);
+        }
     }
 
     /**
@@ -604,12 +600,13 @@ class SavedRollManager {
      * @returns {Element} The created button element
      */
     createRollButton(imageName, rollType, rollGroups, cssClasses, parent, rollEntry = null) {
-        const rollButton = document.createElement("div");
+        const rollButton = document.createElement("button");
+        rollButton.type = "button";
         rollButton.className = cssClasses;
         rollButton.onclick = function () {
             if (!Array.isArray(rollGroups) || rollGroups.length === 0) {
                 console.error('Attempted to roll an empty or invalid saved roll');
-                alert('Error: This saved roll has no valid dice groups.');
+                uiManager.showError('This saved roll has no valid dice groups.', 'Invalid Roll');
                 return;
             }
 
@@ -630,13 +627,13 @@ class SavedRollManager {
             if (modifierOnlyGroups.length > 0) {
                 const groupNames = modifierOnlyGroups.map(group => group.name || 'Unnamed Group').join(', ');
                 console.error(`Cannot roll saved roll with groups that have only modifiers: ${groupNames}`);
-                alert(`Error: Cannot roll groups with only modifiers and no dice.\n\nGroups with this issue: ${groupNames}\n\nPlease edit this saved roll to add dice or remove the modifiers.`);
+                uiManager.showError(`Cannot roll groups with only modifiers and no dice.\n\nGroups with this issue: ${groupNames}\n\nPlease edit this saved roll to add dice or remove the modifiers.`, 'Invalid Roll');
                 return;
             }
 
             if (rollGroups.every(diceGroupManager.isDiceGroupEmpty.bind(diceGroupManager))) {
                 console.error('Attempted to roll an empty or invalid saved roll');
-                alert('Error: This saved roll has no dice selected. Please edit the saved roll to add at least one die.');
+                uiManager.showError('This saved roll has no dice selected. Please edit the saved roll to add at least one die.', 'Invalid Roll');
                 return;
             }
 

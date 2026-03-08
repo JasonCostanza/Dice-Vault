@@ -4,8 +4,27 @@
  */
 class RollSorter {
     constructor() {
+        /**
+         * Stores the last manually-set custom roll order per creature group.
+         * Keyed by creature name, value is an ordered array of rollId strings.
+         * @type {Object.<string, string[]>}
+         */
+        this._customRollOrder = {};
         // Initialize event listeners for sorting functionality
         this.initializeSortingFunctionality();
+    }
+
+    /**
+     * Captures the current DOM order of roll entries within each creature group
+     * and stores it as the active custom order. Call this after a drag-drop reorder.
+     */
+    captureCustomOrder() {
+        this._customRollOrder = {};
+        document.querySelectorAll('.saved-roll-group').forEach(group => {
+            const creatureName = group.dataset.creatureName;
+            const rollEntries = Array.from(group.querySelectorAll('.saved-roll-entry'));
+            this._customRollOrder[creatureName] = rollEntries.map(e => e.dataset.rollId);
+        });
     }
 
     /**
@@ -170,13 +189,26 @@ class RollSorter {
                         // Use the first group's name as the roll name for sorting
                         const aGroupDiv = a.querySelector('.dice-group[data-group-index="0"]');
                         const bGroupDiv = b.querySelector('.dice-group[data-group-index="0"]');
-                        
+
                         const aName = aGroupDiv ? aGroupDiv.querySelector('.dice-group-name-text')?.textContent || "" : "";
                         const bName = bGroupDiv ? bGroupDiv.querySelector('.dice-group-name-text')?.textContent || "" : "";
-                        
+
                         return bName.localeCompare(aName); // Z-A
                     });
                     break;
+                case "custom": {
+                    // Restore the last saved custom order for this creature group
+                    const savedOrder = this._customRollOrder[group.dataset.creatureName];
+                    if (savedOrder && savedOrder.length > 0) {
+                        rollEntries.sort((a, b) => {
+                            const aPos = savedOrder.indexOf(a.dataset.rollId);
+                            const bPos = savedOrder.indexOf(b.dataset.rollId);
+                            // Entries not in saved order (e.g. newly added) go to the end
+                            return (aPos === -1 ? Infinity : aPos) - (bPos === -1 ? Infinity : bPos);
+                        });
+                    }
+                    break;
+                }
             }
 
             // Clear and re-append the sorted roll entries

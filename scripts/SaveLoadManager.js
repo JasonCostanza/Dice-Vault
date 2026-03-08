@@ -21,18 +21,18 @@ function updateAutoButtons() {
     const saveButton = document.getElementById('save-rolls-button');
 
     if (fetchSetting('auto-load')) {
-        loadButton.innerHTML = '<i class="ts-icon-paste menu-button-icon"></i>Auto-Loading';
+        updateButtonWithIcon(loadButton, getTranslation('autoLoading'));
         disableButtonById('load-rolls-button');
     } else {
-        loadButton.innerHTML = '<i class="ts-icon-paste menu-button-icon"></i>Load Data';
+        updateButtonWithIcon(loadButton, getTranslation('loadData'));
         disableButtonById('load-rolls-button', false);
     }
 
     if (fetchSetting('auto-save')) {
-        saveButton.innerHTML = '<i class="ts-icon-copy menu-button-icon"></i>Auto-Saving';
+        updateButtonWithIcon(saveButton, getTranslation('autoSaving'));
         disableButtonById('save-rolls-button');
     } else {
-        saveButton.innerHTML = '<i class="ts-icon-copy menu-button-icon"></i>Save Data';
+        updateButtonWithIcon(saveButton, getTranslation('saveData'));
         disableButtonById('save-rolls-button', false);
     }
 }
@@ -50,6 +50,7 @@ function saveRollsToLocalStorage() {
     // Iterate over each creature group and save its rolls
     document.querySelectorAll('.saved-roll-group').forEach(group => {
         let creatureName = group.dataset.creatureName; // Get creature name
+        if (creatureName === 'Counters') return; // Counters are saved separately
         let allCreatureRolls = [];
 
         group.querySelectorAll('.saved-roll-entry').forEach(entry => {

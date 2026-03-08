@@ -4,6 +4,7 @@
 // Initialize all class instances
 const diceGroupManager = new DiceGroupManager();
 const rollSorter = new RollSorter();
+const reorderManager = new ReorderManager(diceGroupManager, rollSorter);
 const savedRollManager = new SavedRollManager(diceGroupManager, rollSorter);
 const uiManager = new UIManager();
 const counterManager = new CounterManager();
@@ -17,13 +18,16 @@ const rollsModule = rollManager;
 document.addEventListener("DOMContentLoaded", () => {
     // Initialize dice groups data
     diceGroupManager.updateDiceGroupsData();
-    
+
     // Add initial dice group if container is empty
     const diceGroupsContainer = document.querySelector(".content-col-dice");
     if (diceGroupsContainer && diceGroupsContainer.children.length === 0) {
         diceGroupManager.addDiceGroup();
     }
-    
+
+    // Initialize custom sort dropdowns
+    uiManager.initCustomDropdowns();
+
     // Language preference will be loaded when TaleSpire initializes via loadGlobalSettings()
 });
 
@@ -57,3 +61,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Save/load functions are implemented in SaveLoadManager.js
 // No need to redefine them here
+
+// === GLOBAL INPUT BEHAVIOR ===
+// Pressing Enter in any text or number input blurs it, confirming the entry
+// without requiring a click outside the field.
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && (e.target.tagName === "INPUT")) {
+        e.target.blur();
+    }
+});
+
+// === CTRL KEY STATE TRACKING ===
+// TaleSpire's Electron environment may strip modifier key info from mouse events,
+// so we track Ctrl state manually via keydown/keyup and store it in isCtrlHeld.
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Control") isCtrlHeld = true;
+});
+document.addEventListener("keyup", (e) => {
+    if (e.key === "Control") isCtrlHeld = false;
+});
